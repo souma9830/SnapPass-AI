@@ -60,7 +60,7 @@ function PrintPreviewPage() {
               <div key={i} className="sheet-slot">
                 <img
                   src={state.processedUrl}
-                  alt={`Passport photo ${i + 1}`}
+                  alt={`Sheet slot ${i + 1}`}
                   className="sheet-slot__img"
                 />
               </div>

@@ -19,7 +19,7 @@ function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
           <div className="photo-preview__frame">
             <img
               src={originalUrl}
-              alt="Original uploaded passport photo"
+              alt="Original uploaded — before processing"
               className="photo-preview__img"
             />
           </div>
@@ -36,7 +36,7 @@ function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
           {processedUrl && !isProcessing ? (
             <img
               src={processedUrl}
-              alt="AI-processed passport photo"
+              alt="AI-processed — background removed and centred"
               className="photo-preview__img"
             />
           ) : (

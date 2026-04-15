@@ -1,0 +1,44 @@
+/* ── LoadingSpinner ─────────────────────────────── */
+.spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+}
+
+.spinner-wrap--fullpage {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 999;
+  justify-content: center;
+}
+
+.spinner {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: var(--color-border);
+  border-top-color: var(--color-primary);
+  animation: spin 0.75s linear infinite;
+}
+
+.spinner--sm { width: 22px; height: 22px; border-width: 2px; }
+.spinner--md { width: 36px; height: 36px; border-width: 3px; }
+.spinner--lg { width: 52px; height: 52px; border-width: 4px; }
+
+.spinner-message {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

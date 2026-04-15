@@ -1,0 +1,72 @@
+/* ── QuantityInput ──────────────────────────────── */
+.qty-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.qty-input__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.qty-input__controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: fit-content;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.qty-input__btn {
+  width: 40px;
+  height: 42px;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-input__btn:hover:not(:disabled) {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.qty-input__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.qty-input__field {
+  width: 60px;
+  height: 42px;
+  text-align: center;
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--color-text);
+  border: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.qty-input__field:focus { outline: none; }
+.qty-input__field::-webkit-inner-spin-button,
+.qty-input__field::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.qty-input__hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+}

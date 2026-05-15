@@ -2,9 +2,10 @@
  * App configuration loaded from environment variables.
  * Centralised so controllers and services import from one place.
  */
-
+import dotenv from 'dotenv';
+dotenv.config();
 export default {
-  port: parseInt(process.env.PORT, 10) || 5000,
+  port: parseInt(process.env.PORT, 10) || 3000,
   nodeEnv: process.env.NODE_ENV || "development",
 
   aiServiceUrl: process.env.AI_SERVICE_URL || "http://localhost:8000",

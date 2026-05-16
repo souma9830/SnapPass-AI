@@ -13,7 +13,7 @@ import uploadRoutes from './routes/upload.routes.js';
 import imageRoutes from './routes/image.routes.js';
 import printRoutes from './routes/print.routes.js';
 
-import { notFound, errorHandler } from './middleware/error.middleware.js';
+import errorMiddleware from './middleware/error.middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,7 +41,12 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/process", imageRoutes);
 app.use("/api/print", printRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
+app.use((req, _res, next) => {
+   const error = new Error(`Route not found: ${req.originalUrl}`);
+   error.statusCode = 404;
+   next(error);
+});
+
+app.use(errorMiddleware);
 
 export default app;

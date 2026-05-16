@@ -1,35 +1,33 @@
 /**
- * Error Middleware
- * Provides 404 and global error handling for the Express app.
+ * @description A middleware function to handle errors in the application. It logs the error and sends a structured JSON response to the client.
+ * @param {Error} err - The error object that was thrown.
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @param {Function} next - The next middleware function in the stack.
  */
+const errorMiddleware = (
+  err,
+  req,
+  res,
+  next
+) => {
+  console.error(err);
 
-/**
- * 404 — Route not found handler
- */
-export const notFound = (req, res, next) => {
-  const error = new Error(`Not Found — ${req.originalUrl}`);
-  error.status = 404;
-  next(error);
-};
-
-/**
- * Global error handler
- * Formats all errors into a consistent JSON response.
- */
-export const errorHandler = (err, _req, res, _next) => {
-  const statusCode = err.status || err.statusCode || 500;
-
-  // Multer-specific error messages
-  if (err.code === "LIMIT_FILE_SIZE") {
-    return res.status(413).json({
-      success: false,
-      message: "File too large. Maximum size is 10 MB.",
-    });
-  }
+  const statusCode = err.statusCode || err.status || 500;
 
   res.status(statusCode).json({
     success: false,
-    message: err.message || "Internal Server Error",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    status: err.status || "error",
+    message:
+      err.message || "Internal Server Error",
+
+    errors: err.errors || undefined,
+
+    stack:
+      process.env.NODE_ENV === "development"
+        ? err.stack
+        : undefined,
   });
 };
+
+export default errorMiddleware;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UploadBox from '../components/UploadBox';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { uploadPhoto } from '../services/photoService';
 import './UploadPage.css';
 
 /**
@@ -11,32 +12,45 @@ import './UploadPage.css';
 function UploadPage() {
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleFileSelect = async (file) => {
     setIsUploading(true);
+    setUploadProgress(0);
 
     // Create a local preview URL immediately for snappy UX
     const localUrl = URL.createObjectURL(file);
 
-    // TODO: Upload file to backend POST /api/upload, get back { filename, fileUrl }
-    // const formData = new FormData();
-    // formData.append('photo', file);
-    // const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    // const data = await res.json();
+    try {
+      // Upload to backend with progress tracking
+      const uploadData = await uploadPhoto(file, (progress) => {
+        setUploadProgress(progress);
+      });
 
-    // Simulate a brief processing delay for demo purposes
-    await new Promise((r) => setTimeout(r, 800));
-
-    setIsUploading(false);
-
-    // Pass file info to EditorPage via navigation state
-    navigate('/editor', {
-      state: {
-        localUrl,
-        filename: file.name,
-        fileSize: file.size,
-      },
-    });
+      // Pass file info to EditorPage via navigation state
+      navigate('/editor', {
+        state: {
+          localUrl,
+          filename: uploadData.filename || file.name,
+          fileSize: file.size,
+          fileId: uploadData.fileId,
+        },
+      });
+    } catch (error) {
+      // On error, still allow proceeding with local preview (fallback)
+      console.error('Upload failed:', error);
+      navigate('/editor', {
+        state: {
+          localUrl,
+          filename: file.name,
+          fileSize: file.size,
+          uploadError: error.message,
+        },
+      });
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
   };
 
   return (
@@ -65,7 +79,7 @@ function UploadPage() {
 
       {/* Upload Box */}
       {isUploading ? (
-        <LoadingSpinner message="Uploading & preparing your photo…" size="lg" />
+        <UploadBox onFileSelect={handleFileSelect} progress={uploadProgress} />
       ) : (
         <UploadBox onFileSelect={handleFileSelect} />
       )}

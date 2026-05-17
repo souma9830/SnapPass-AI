@@ -10,13 +10,21 @@ import api from './api';
 /**
  * Upload a photo file to the backend.
  * @param {File} file
+ * @param {Function} onProgress - callback receiving progress (0-100)
  * @returns {Promise<{ fileId, filename, fileUrl }>}
  */
-export const uploadPhoto = async (file) => {
+export const uploadPhoto = async (file, onProgress) => {
   const formData = new FormData();
   formData.append('photo', file);
+
   const { data } = await api.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: (event) => {
+      if (onProgress && event.total) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        onProgress(percent);
+      }
+    },
   });
   return data.data;
 };

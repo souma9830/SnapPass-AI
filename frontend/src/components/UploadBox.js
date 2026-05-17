@@ -6,8 +6,9 @@ import './UploadBox.css';
  *
  * Props:
  *   onFileSelect(file) — called when a valid image file is chosen
+ *   progress(number) — optional upload progress percentage (0-100)
  */
-function UploadBox({ onFileSelect }) {
+function UploadBox({ onFileSelect, progress }) {
   const inputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
@@ -75,6 +76,20 @@ function UploadBox({ onFileSelect }) {
 
       {error && (
         <p className="upload-box__error" role="alert">{error}</p>
+      )}
+
+      {typeof progress === 'number' && progress > 0 && progress < 100 && (
+        <div className="upload-box__progress">
+          <div 
+            className="upload-box__progress-bar" 
+            style={{ width: `${progress}%` }}
+            role="progressbar"
+            aria-valuenow={progress}
+            aria-valuemin="0"
+            aria-valuemax="100"
+          />
+          <span className="upload-box__progress-text">{Math.round(progress)}%</span>
+        </div>
       )}
     </div>
   );

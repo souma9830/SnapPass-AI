@@ -6,8 +6,10 @@ import './UploadBox.css';
  *
  * Props:
  *   onFileSelect(file) — called when a valid image file is chosen
+ *   isUploading(bool) — when true, shows progress bar instead of drop zone
+ *   progress(number) — upload progress percentage (0-100)
  */
-function UploadBox({ onFileSelect }) {
+function UploadBox({ onFileSelect, isUploading, progress = 0 }) {
   const inputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
@@ -46,6 +48,26 @@ function UploadBox({ onFileSelect }) {
 
   /* Input change */
   const onChange = (e) => handleFile(e.target.files[0]);
+
+  if (isUploading) {
+    return (
+      <div className="upload-box upload-box--uploading">
+        <div className="upload-progress">
+          <div className="upload-progress__bar">
+            <div 
+              className="upload-progress__fill" 
+              style={{ width: `${progress}%` }}
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin="0"
+              aria-valuemax="100"
+            />
+          </div>
+          <p className="upload-progress__text">Uploading... {progress}%</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

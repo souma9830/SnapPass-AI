@@ -71,3 +71,36 @@
   margin-top: var(--space-sm);
   width: 100%;
 }
+
+/* Upload Progress Bar */
+.upload-box--uploading {
+  cursor: default;
+  border-style: solid;
+}
+
+.upload-progress {
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.upload-progress__bar {
+  width: 100%;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.upload-progress__fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-fast);
+}
+
+.upload-progress__text {
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  margin-top: var(--space-md);
+}

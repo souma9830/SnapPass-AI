@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import UploadBox from '../components/UploadBox';
-import LoadingSpinner from '../components/LoadingSpinner';
+import usePhotoUpload from '../hooks/usePhotoUpload';
 import './UploadPage.css';
 
 /**
@@ -10,24 +10,11 @@ import './UploadPage.css';
  */
 function UploadPage() {
   const navigate = useNavigate();
-  const [isUploading, setIsUploading] = useState(false);
+  const { uploadFile, isUploading, uploadProgress } = usePhotoUpload();
 
   const handleFileSelect = async (file) => {
-    setIsUploading(true);
-
     // Create a local preview URL immediately for snappy UX
     const localUrl = URL.createObjectURL(file);
-
-    // TODO: Upload file to backend POST /api/upload, get back { filename, fileUrl }
-    // const formData = new FormData();
-    // formData.append('photo', file);
-    // const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    // const data = await res.json();
-
-    // Simulate a brief processing delay for demo purposes
-    await new Promise((r) => setTimeout(r, 800));
-
-    setIsUploading(false);
 
     // Pass file info to EditorPage via navigation state
     navigate('/editor', {
@@ -37,6 +24,11 @@ function UploadPage() {
         fileSize: file.size,
       },
     });
+  };
+
+  const handleUpload = async (file) => {
+    await uploadFile(file);
+    handleFileSelect(file);
   };
 
   return (
@@ -64,11 +56,11 @@ function UploadPage() {
       </div>
 
       {/* Upload Box */}
-      {isUploading ? (
-        <LoadingSpinner message="Uploading & preparing your photo…" size="lg" />
-      ) : (
-        <UploadBox onFileSelect={handleFileSelect} />
-      )}
+      <UploadBox 
+        onFileSelect={handleUpload} 
+        isUploading={isUploading}
+        progress={uploadProgress}
+      />
 
       <p className="upload-page__privacy">
         🔒 Your photo is processed locally and never stored without your permission.

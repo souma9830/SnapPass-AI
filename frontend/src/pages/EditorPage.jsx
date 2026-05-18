@@ -28,6 +28,22 @@ function EditorPage() {
   const [sizePreset, setSizePreset] = useState('35x45');
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const iconMap = {
+    refresh: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M20 12a8 8 0 0 1-13.7 5.7" />
+        <path d="M4 12a8 8 0 0 1 13.7-5.7" />
+        <path d="M4 4v5h5" />
+        <path d="M20 20v-5h-5" />
+      </svg>
+    ),
+    spark: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3l1.9 5.7L19 11l-5.1 2.3L12 19l-1.9-5.7L5 11l5.1-2.3L12 3z" />
+      </svg>
+    ),
+  };
+
   const handleReplacePhoto = (event) => {
     const file = event.target.files[0];
 
@@ -128,7 +144,10 @@ function EditorPage() {
             className="btn editor-page__replace-btn"
             onClick={() => fileInputRef.current.click()}
           >
-            🔄 Replace Photo
+            <span className="editor-page__btn-icon" aria-hidden="true">
+              {iconMap.refresh}
+            </span>
+            Replace Photo
           </button>
 
           <button
@@ -136,7 +155,18 @@ function EditorPage() {
             onClick={handleProcess}
             disabled={isProcessing}
           >
-            {isProcessing ? <><ButtonSpinner /> Processing…</> : '✨ Process with AI →'}
+            {isProcessing ? (
+              <>
+                <ButtonSpinner /> Processing…
+              </>
+            ) : (
+              <>
+                <span className="editor-page__btn-icon" aria-hidden="true">
+                  {iconMap.spark}
+                </span>
+                Process with AI →
+              </>
+            )}
           </button>
         </aside>
       </div>

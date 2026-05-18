@@ -154,7 +154,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-### 3. Run the Backend *(optional — not fully implemented yet)*
+### 3. Run the Backend
 
 ```bash
 cd backend
@@ -163,6 +163,7 @@ npm run dev
 ```
 
 Backend runs at [http://localhost:5000](http://localhost:5000).
+Upload metadata is now stored in MongoDB. The `POST /api/upload` route is enabled.
 
 Health check: `GET http://localhost:5000/health`
 

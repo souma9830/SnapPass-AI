@@ -101,7 +101,12 @@ function PrintPreviewPage() {
           />
 
           <Link to="/editor" className="btn btn-ghost print-page__back-btn">
-            ← Back to Editor
+            <span className="print-page__back-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <path d="M15 6l-6 6 6 6" />
+              </svg>
+            </span>
+            Back to Editor
           </Link>
         </aside>
       </div>

@@ -4,9 +4,9 @@
  * Validates file, saves to disk, and forwards to AI service for initial processing.
  */
 
-import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { config } from "../config/config.js";
+import Upload from "../models/Upload.js";
 
 /**
  * POST /api/upload
@@ -22,8 +22,14 @@ export const uploadPhoto = async (req, res, next) => {
     const fileId = uuidv4();
     const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
-    // TODO: Save file metadata to database
-    // await FileModel.create({ id: fileId, originalName: req.file.originalname, path: req.file.path });
+    await Upload.create({
+      fileId,
+      filename: req.file.filename,
+      originalName: req.file.originalname,
+      fileUrl,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+    });
 
     res.status(201).json({
       success: true,
@@ -49,15 +55,13 @@ export const uploadPhoto = async (req, res, next) => {
 export const getUploadedPhoto = async (req, res, next) => {
   try {
     const { fileId } = req.params;
-    // TODO: Fetch from database
-    // const file = await FileModel.findById(fileId);
-    // if (!file) return res.status(404).json({ success: false, message: "File not found." });
+    const file = await Upload.findOne({ fileId }).lean();
 
-    // Placeholder response
-    res.json({
-      success: true,
-      data: { fileId, message: "DB integration pending." },
-    });
+    if (!file) {
+      return res.status(404).json({ success: false, message: "File not found." });
+    }
+
+    res.json({ success: true, data: file });
   } catch (error) {
     next(error);
   }

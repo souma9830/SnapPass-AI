@@ -23,6 +23,13 @@ function SizeSelector({ selected = '35x45', onChange, presets = DEFAULT_PRESETS 
   return (
     <div className="size-selector">
       <label className="size-selector__label" htmlFor="size-preset-select">
+        <span className="size-selector__label-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <rect x="4" y="5" width="8" height="12" rx="2" />
+            <rect x="12" y="7" width="8" height="12" rx="2" />
+            <path d="M7 9h2M7 12h2M15 11h2M15 14h2" />
+          </svg>
+        </span>
         Photo Size Preset
       </label>
       <select

@@ -27,7 +27,14 @@ function PrintButton({ onClick, isLoading = false, disabled = false, label = 'Ge
         </>
       ) : (
         <>
-          <span className="print-btn__icon" aria-hidden="true">🖨️</span>
+          <span className="print-btn__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+              <path d="M6 9V4h12v5" />
+              <rect x="4" y="10" width="16" height="7" rx="2" />
+              <path d="M7 17v3h10v-3" />
+              <path d="M9 13h6" />
+            </svg>
+          </span>
           {label}
         </>
       )}

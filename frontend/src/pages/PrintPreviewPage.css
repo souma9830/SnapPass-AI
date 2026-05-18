@@ -68,8 +68,29 @@
 }
 
 .print-page__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
   justify-content: center;
   font-size: var(--font-size-sm);
+}
+
+.print-page__back-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.print-page__back-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 @media (max-width: 768px) {

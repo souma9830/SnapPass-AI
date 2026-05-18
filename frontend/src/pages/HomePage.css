@@ -1,13 +1,28 @@
 /* ── HomePage ───────────────────────────────────── */
 .home-page {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-3xl);
   padding-bottom: var(--space-3xl);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(37, 99, 235, 0.12), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(14, 116, 144, 0.14), transparent 55%);
+}
+
+.home-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* Hero */
 .hero {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,6 +31,7 @@
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
+  z-index: 1;
 }
 
 .hero__inner {
@@ -32,6 +48,7 @@
   line-height: 1.15;
   color: var(--color-text);
   letter-spacing: -1px;
+  font-family: var(--font-family-display);
 }
 
 .hero__title-highlight {
@@ -68,15 +85,16 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   padding: var(--space-lg);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.4);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(6px);
 }
 
 .hero__photo-frame {
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+  background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 50%, #fef3c7 100%);
   border-radius: var(--radius-md);
 }
 
@@ -93,16 +111,48 @@
   box-shadow: var(--shadow-md);
 }
 
+@keyframes riseFade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero__inner,
+.hero__visual,
+.ai-showcase,
+.steps-section,
+.features-section,
+.cta-banner {
+  animation: riseFade 600ms ease both;
+}
+
+.hero__visual { animation-delay: 80ms; }
+.ai-showcase { animation-delay: 120ms; }
+.steps-section { animation-delay: 160ms; }
+.features-section { animation-delay: 200ms; }
+.cta-banner { animation-delay: 240ms; }
+
 /* Steps */
 .steps-section {
   padding: 0 var(--space-xl);
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
+  z-index: 1;
 }
 
 .text-center {
   text-align: center;
+}
+
+.home-page .section-title {
+  font-family: var(--font-family-display);
+  letter-spacing: -0.5px;
 }
 
 .steps-grid {
@@ -161,6 +211,7 @@
   max-width: 1100px;
   margin: 0 auto;
   width: 100%;
+  z-index: 1;
 }
 
 .features-grid {
@@ -177,8 +228,24 @@
 }
 
 .feature-card__icon {
-  font-size: 32px;
-  line-height: 1;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+.feature-card__icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .feature-card__title {
@@ -194,8 +261,22 @@
 
 /* CTA Banner */
 .cta-banner {
-  background: var(--color-primary);
+  background: linear-gradient(120deg, #1d4ed8 0%, #0ea5a4 100%);
   padding: var(--space-2xl) var(--space-xl);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cta-banner::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  background: rgba(255, 255, 255, 0.18);
+  top: -220px;
+  right: -160px;
+  border-radius: 50%;
 }
 
 .cta-banner__inner {
@@ -212,6 +293,7 @@
   font-size: var(--font-size-xl);
   font-weight: 700;
   color: #fff;
+  font-family: var(--font-family-display);
 }
 
 .cta-banner__subtitle {
@@ -259,6 +341,7 @@
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  z-index: 1;
 }
 
 .ai-showcase__content {
@@ -291,8 +374,32 @@
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
   transition: all 0.25s ease;
+}
+
+.ai-chip__icon {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(14, 116, 144, 0.12);
+  color: #0f766e;
+}
+
+.ai-chip__icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .ai-chip:hover {

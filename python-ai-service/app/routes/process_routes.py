@@ -2,9 +2,7 @@ import os
 import uuid
 from flask import Blueprint, request, jsonify, send_file
 import config
-
 from app.services.bg_remove import remove_background
-
 process_bp= Blueprint("process", __name__)
 
 
@@ -41,7 +39,6 @@ def remove_bg():
             as_attachment=False,
             download_name=filename,
         )
-
     except ValueError as e:
         return jsonify({"success": False, "message": str(e)}), 422
     except Exception as e:

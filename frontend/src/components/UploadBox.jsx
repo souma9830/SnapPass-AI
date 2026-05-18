@@ -68,7 +68,13 @@ function UploadBox({ onFileSelect }) {
         aria-hidden="true"
       />
 
-      <div className="upload-box__icon" aria-hidden="true">📤</div>
+      <div className="upload-box__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <path d="M12 16V5" />
+          <path d="M8 9l4-4 4 4" />
+          <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+        </svg>
+      </div>
       <p className="upload-box__title">Drag & drop your photo here</p>
       <p className="upload-box__subtitle">or <span className="upload-box__browse">browse files</span></p>
       <p className="upload-box__hint">JPEG, PNG, WebP · Max 10 MB</p>

@@ -137,7 +137,7 @@ function HomePage() {
             <div className="hero__photo-frame" />
             <div className="hero__photo-frame" />
           </div>
-          <span className="hero__ai-badge">✨ AI Processed</span>
+          <span className="hero__ai-badge"> AI Processed</span>
         </div>
       </section>
 

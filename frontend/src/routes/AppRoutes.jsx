@@ -13,12 +13,12 @@ const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
  * AppRoutes — central route configuration for SnapPass AI.
  * Add new pages here so contributors can find all routes in one place.
  */
-function AppRoutes() {
+function AppRoutes({darkMode, toggleTheme}) {
   return (
     <RouteErrorBoundary>
       <Suspense fallback={<DelayedFallback delayMs={250} />}>
         <Routes>
-          <Route path="/"             element={<HomePage />} />
+          <Route path="/" element={<HomePage darkMode={darkMode} toggleTheme={toggleTheme}/>} />
           <Route path="/upload"       element={<UploadPage />} />
           <Route path="/editor"       element={<EditorPage />} />
           <Route path="/print-preview" element={<PrintPreviewPage />} />

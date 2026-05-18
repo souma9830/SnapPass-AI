@@ -19,8 +19,9 @@
   /* Neutrals */
   --color-bg:             #f8fafc;
   --color-surface-light:  #ffffff;
-  --color-surface-dark:     #1f1f1f;
+  --color-surface-dark:     #0f0e0e;
   --color-border:         #e2e8f0;
+  --color-border-dark:#000000;
   --color-border-hover:   #cbd5e1;
   --color-text:           #0f172a;
   --color-text-muted:     #64748b;

@@ -111,7 +111,7 @@ function HomePage({darkMode, toggleTheme}) {
   };
 
   return (
-    <div className={`home-page ${darkMode? 'bg-black': bg-white}`}>
+    <div className={`home-page ${darkMode? 'home-page-dark': 'home-page-light' }`}>
       {/* ── Hero ── */}
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero__inner">
@@ -131,11 +131,13 @@ function HomePage({darkMode, toggleTheme}) {
           </div>
         </div>
         <div className="hero__visual" aria-hidden="true">
-          <div className="hero__photo-mock">
-            <div className="hero__photo-frame" />
-            <div className="hero__photo-frame" />
-            <div className="hero__photo-frame" />
-            <div className="hero__photo-frame" />
+          <div className={`hero__photo-mock ${darkMode? "hero__photo-mock-dark": "hero__photo-mock-light" }`}>
+  
+            <div className={`hero__photo-frame ${darkMode? "hero__photo-frame-dark": "hero__photo-frame-light"}`}/>
+            <div className={`hero__photo-frame ${darkMode? "hero__photo-frame-dark": "hero__photo-frame-light"}`}/>
+            <div className={`hero__photo-frame ${darkMode? "hero__photo-frame-dark": "hero__photo-frame-light"}`}/>
+            <div className={`hero__photo-frame ${darkMode? "hero__photo-frame-dark": "hero__photo-frame-light"}`}/>
+          
           </div>
           <span className="hero__ai-badge"> AI Processed</span>
         </div>

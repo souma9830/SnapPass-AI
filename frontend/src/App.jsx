@@ -13,7 +13,7 @@ function App() {
     <div className="app-shell">
       <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
       <main className="app-main">
-        <AppRoutes />
+        <AppRoutes darkMode={darkMode} toggleTheme={toggleTheme}/>
       </main>
       <Footer darkMode={darkMode} toggleTheme={toggleTheme} />
     </div>

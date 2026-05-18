@@ -5,9 +5,18 @@
   flex-direction: column;
   gap: var(--space-3xl);
   padding-bottom: var(--space-3xl);
+  
+}
+.home-page-light {
   background:
     radial-gradient(1200px 600px at 10% -10%, rgba(37, 99, 235, 0.12), transparent 60%),
     radial-gradient(900px 500px at 90% 0%, rgba(14, 116, 144, 0.14), transparent 55%);
+}
+.home-page-dark {
+  background:
+    radial-gradient(1400px 700px at 10% 10%, rgb(255, 233, 77, 0.32), transparent 35%),
+    radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
+    linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%); 
 }
 
 .home-page::after {
@@ -85,11 +94,19 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   padding: var(--space-lg);
+  box-shadow: var(--shadow-lg);
+  
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(6px);
+}
+.hero__photo-mock-light {
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(148, 163, 184, 0.4);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(6px);
+}
+
+.hero__photo-mock-dark {
+  background: rgb(19, 17, 17);
+  border: 1px solid rgba(63, 68, 74, 0.4);
 }
 
 .hero__photo-frame {

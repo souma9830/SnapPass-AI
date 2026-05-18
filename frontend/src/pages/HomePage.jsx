@@ -7,10 +7,34 @@ import './HomePage.css';
  */
 function HomePage() {
   const features = [
-    { icon: 'bg-remove', title: 'AI Background Removal', desc: 'Remove any background instantly with rembg — no manual selection needed.' },
-    { icon: 'face-center', title: 'Auto Face Centering', desc: 'OpenCV detects and centers your face to meet passport photo guidelines.' },
-    { icon: 'sizes', title: 'Standard Size Presets', desc: 'India, USA, UK, Schengen and more — pick a preset and we handle the DPI.' },
-    { icon: 'print', title: 'A4 Print Layout', desc: 'Generate a printable A4 sheet with multiple photos — save on printing costs.' },
+    {
+      icon: 'bg-remove',
+      title: 'AI Background Removal',
+      desc: 'Remove any background instantly with rembg — no manual selection needed.',
+      image: '/feature_1.png',
+      tag: 'AI Powered',
+    },
+    {
+      icon: 'face-center',
+      title: 'Auto Face Centering',
+      desc: 'OpenCV detects and centers your face to meet passport photo guidelines.',
+      image: '/feature_2.png',
+      tag: 'OpenCV',
+    },
+    {
+      icon: 'sizes',
+      title: 'Standard Size Presets',
+      desc: 'India, USA, UK, Schengen and more — pick a preset and we handle the DPI.',
+      image: '/feature_3.png',
+      tag: 'Multiple Formats',
+    },
+    {
+      icon: 'print',
+      title: 'A4 Print Layout',
+      desc: 'Generate a printable A4 sheet with multiple photos — save on printing costs.',
+      image: '/feature_4.png',
+      tag: 'Print Ready',
+    },
   ];
 
   const steps = [
@@ -201,13 +225,33 @@ function HomePage() {
         <h2 id="features-title" className="section-title text-center">Features</h2>
         <p className="section-subtitle text-center">Everything you need right out of the box</p>
         <div className="features-grid">
-          {features.map(({ icon, title, desc }) => (
+          {features.map(({ icon, title, desc, image, tag }) => (
             <div key={title} className="feature-card card">
+
+              <div className="feature-card__preview">
+                <img
+                  src={image}
+                  alt={title}
+                  className="feature-card__image"
+                />
+
+                <span className="feature-card__tag">
+                  {tag}
+                </span>
+              </div>
+
               <span className="feature-card__icon" aria-hidden="true">
                 {iconMap[icon]}
               </span>
-              <h3 className="feature-card__title">{title}</h3>
-              <p className="feature-card__desc">{desc}</p>
+
+              <h3 className="feature-card__title">
+                {title}
+              </h3>
+
+              <p className="feature-card__desc">
+                {desc}
+              </p>
+
             </div>
           ))}
         </div>

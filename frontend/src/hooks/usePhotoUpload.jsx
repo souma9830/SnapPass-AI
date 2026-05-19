@@ -32,7 +32,7 @@ function usePhotoUpload() {
 
       // Placeholder — simulate network delay
       await new Promise((r) => setTimeout(r, 600));
-      setUploadedFile({ filename: file.name, fileUrl: localUrl, localUrl });
+      setUploadedFile({ filename: file.name,fileSize: file.size, fileUrl: localUrl, localUrl });
     } catch (err) {
       setError(err.message || 'Upload failed. Please try again.');
     } finally {

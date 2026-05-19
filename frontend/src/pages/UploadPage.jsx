@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UploadBox from '../components/UploadBox';
 import LoadingSpinner from '../components/LoadingSpinner';
+import usePhotoUpload from '../hooks/usePhotoUpload';
 import './UploadPage.css';
 import { motion } from 'framer-motion';
 
@@ -11,7 +12,7 @@ import { motion } from 'framer-motion';
  */
 function UploadPage() {
   const navigate = useNavigate();
-  const [isUploading, setIsUploading] = useState(false);
+  const { uploadFile, uploadedFile, isUploading, error, } = usePhotoUpload();
 
   const tips = [
     { type: 'ok', text: 'Plain background preferred' },
@@ -41,32 +42,17 @@ function UploadPage() {
     ),
   };
 
-  const handleFileSelect = async (file) => {
-    setIsUploading(true);
-
-    // Create a local preview URL immediately for snappy UX
-    const localUrl = URL.createObjectURL(file);
-
-    // TODO: Upload file to backend POST /api/upload, get back { filename, fileUrl }
-    // const formData = new FormData();
-    // formData.append('photo', file);
-    // const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    // const data = await res.json();
-
-    // Simulate a brief processing delay for demo purposes
-    await new Promise((r) => setTimeout(r, 800));
-
-    setIsUploading(false);
-
-    // Pass file info to EditorPage via navigation state
+  const handleFileSelect = async (file) => {await uploadFile(file);};
+  useEffect(() => {
+    if (!uploadedFile) return;
     navigate('/editor', {
       state: {
-        localUrl,
-        filename: file.name,
-        fileSize: file.size,
+        localUrl: uploadedFile.localUrl,
+        filename: uploadedFile.filename,
+        fileSize: uploadedFile.fileSize,
       },
     });
-  };
+  }, [uploadedFile, navigate]);
 
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 30 },
@@ -92,6 +78,11 @@ function UploadPage() {
           Choose a clear, front-facing photo. The AI will handle the rest.
         </p>
       </motion.div>
+      {error && (
+        <p className="upload-page__error" role="alert">
+          {error}
+        </p>
+      )}
 
       {/* Tips */}
       <div className="upload-page__tips">

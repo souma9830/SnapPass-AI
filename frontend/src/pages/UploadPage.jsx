@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import UploadBox from '../components/UploadBox';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './UploadPage.css';
+import { motion } from 'framer-motion';
 
 /**
  * UploadPage — Step 1 of the flow.
@@ -67,40 +68,79 @@ function UploadPage() {
     });
   };
 
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (delay = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut", delay }
+    })
+  };
+
   return (
     <div className="upload-page page-content">
-      <div className="upload-page__header">
+      <motion.div
+        className="upload-page__header"
+        variants={fadeUpVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={0.1}
+      >
         <h1 className="section-title">Upload Your Photo</h1>
         <p className="section-subtitle">
           Choose a clear, front-facing photo. The AI will handle the rest.
         </p>
-      </div>
+      </motion.div>
 
       {/* Tips */}
       <div className="upload-page__tips">
-        {tips.map(({ type, text }) => (
-          <div key={text} className="upload-tip">
+        {tips.map(({ type, text }, idx) => (
+          <motion.div
+            key={text}
+            className="upload-tip"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0.2 + (idx * 0.1)} // Staggers each tip by 100ms
+          >
             <span className="upload-tip__icon" aria-hidden="true">
               {iconMap[type]}
             </span>
             <span className="upload-tip__text">{text}</span>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Upload Box */}
-      {isUploading ? (
-        <LoadingSpinner message="Uploading & preparing your photo…" size="lg" />
-      ) : (
-        <UploadBox onFileSelect={handleFileSelect} />
-      )}
+      {/* Upload Box (Wrapped in a motion div to animate together) */}
+      <motion.div
+        variants={fadeUpVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={0.5} // Loads after the tips
+      >
+        {isUploading ? (
+          <LoadingSpinner message="Uploading & preparing your photo…" size="lg" />
+        ) : (
+          <UploadBox onFileSelect={handleFileSelect} />
+        )}
+      </motion.div>
 
-      <p className="upload-page__privacy">
+      <motion.p
+        className="upload-page__privacy"
+        variants={fadeUpVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={0.6}
+      >
         <span className="upload-page__privacy-icon" aria-hidden="true">
           {iconMap.lock}
         </span>
         Your photo is processed locally and never stored without your permission.
-      </p>
+      </motion.p>
     </div>
   );
 }

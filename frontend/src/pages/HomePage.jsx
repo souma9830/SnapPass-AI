@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
+import { motion } from 'framer-motion';
 
 import {
   Upload,
@@ -8,6 +9,19 @@ import {
   Settings2,
   Download,
 } from "lucide-react";
+
+const fadeUpVariant = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+      delay
+    }
+  })
+};
 
 /**
  * HomePage — landing page with hero section and feature highlights.
@@ -114,7 +128,14 @@ function HomePage() {
     <div className="home-page">
       {/* ── Hero ── */}
       <section className="hero" aria-labelledby="hero-title">
-        <div className="hero__inner">
+        <motion.div
+          className="hero__inner"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          custom={0.1}
+        >
           <span className="badge badge-blue">Open Source · Free to Use</span>
           <h1 id="hero-title" className="hero__title">
             Passport Photos,<br />
@@ -129,8 +150,17 @@ function HomePage() {
               Upload Your Photo
             </Link>
           </div>
-        </div>
-        <div className="hero__visual" aria-hidden="true">
+        </motion.div>
+
+        <motion.div
+          className="hero__visual"
+          aria-hidden="true"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          custom={0.3}
+        >
           <div className="hero__photo-mock">
             <div className="hero__photo-frame" />
             <div className="hero__photo-frame" />
@@ -138,7 +168,7 @@ function HomePage() {
             <div className="hero__photo-frame" />
           </div>
           <span className="hero__ai-badge"> AI Processed</span>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── Showcase Section ── */}
@@ -146,10 +176,15 @@ function HomePage() {
         className="ai-showcase"
         aria-labelledby="ai-showcase-title"
       >
-
         {/* left  text */}
-        <div className="ai-showcase__content">
-
+        <motion.div
+          className="ai-showcase__content"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          custom={0.1}
+        >
           <span className="badge badge-blue">
             AI Powered Workflow
           </span>
@@ -179,105 +214,146 @@ function HomePage() {
               </div>
             ))}
           </div>
-
-        </div>
+        </motion.div>
 
         {/* images */}
         <div className="ai-showcase__visual">
-
           {/* original */}
-          <div className="showcase-photo-card">
+          <motion.div
+            className="showcase-photo-card"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0.2}
+          >
             <img
               src="/before.png"
               alt="Uploaded portrait"
               className="showcase-photo-card__image"
             />
-          </div>
+          </motion.div>
 
           {/* print sheet */}
-          <div className="showcase-sheet-card">
-
+          <motion.div
+            className="showcase-sheet-card"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0.4}
+          >
             <img
               src="/after.png"
               alt="Printable passport sheet"
               className="showcase-sheet-card__image"
             />
-
             <div className="showcase-sheet-card__badge">
               Print Ready
             </div>
-
-          </div>
-
+          </motion.div>
         </div>
-
       </section>
 
       {/* ── How it Works ── */}
       <section className="steps-section" aria-labelledby="steps-title">
-        <h2 id="steps-title" className="section-title text-center">How It Works</h2>
-        <p className="section-subtitle text-center">Four simple steps to a print-ready sheet</p>
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.1}
+        >
+          <h2 id="steps-title" className="section-title text-center">How It Works</h2>
+          <p className="section-subtitle text-center">Four simple steps to a print-ready sheet</p>
+        </motion.div>
+
         <div className="steps-grid">
-          {steps.map(({ label, icon, subtitle }) => (
-            <div key={label} className="step-card">
+          {steps.map(({ label, icon, subtitle }, idx) => (
+            <motion.div
+              key={label}
+              className="step-card"
+              variants={fadeUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={idx * 0.15}
+            >
               <span className="step-card__icon">{icon}</span>
               <div className="step-card__content">
                 <p className="step-card__label">{label}</p>
                 <p className="step-card__subtitle">{subtitle}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
 
       {/* ── Features ── */}
       <section className="features-section" aria-labelledby="features-title">
-        <h2 id="features-title" className="section-title text-center">Features</h2>
-        <p className="section-subtitle text-center">Everything you need right out of the box</p>
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.1}
+        >
+          <h2 id="features-title" className="section-title text-center">Features</h2>
+          <p className="section-subtitle text-center">Everything you need right out of the box</p>
+        </motion.div>
+
         <div className="features-grid">
-          {features.map(({ icon, title, desc, image, tag }) => (
-            <div key={title} className="feature-card card">
-
+          {features.map(({ icon, title, desc, image, tag }, idx) => (
+            <motion.div
+              key={title}
+              className="feature-card card"
+              variants={fadeUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={idx * 0.15}
+            >
               <div className="feature-card__preview">
-
                 <img
                   src={image}
                   alt={title}
                   className="feature-card__image"
                   loading="lazy"
                 />
-
                 <span className="feature-card__tag">
                   {tag}
                 </span>
-
               </div>
-
               <span className="feature-card__icon" aria-hidden="true">
                 {iconMap[icon]}
               </span>
-
               <h3 className="feature-card__title">
                 {title}
               </h3>
-
               <p className="feature-card__desc">
                 {desc}
               </p>
-
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
 
       {/* ── CTA Banner ── */}
-      <section className="cta-banner" aria-label="Call to action">
+      <motion.section
+        className="cta-banner"
+        aria-label="Call to action"
+        variants={fadeUpVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={0.1}
+      >
         <div className="cta-banner__inner">
           <h2 className="cta-banner__title">Ready to generate your passport photo?</h2>
           <p className="cta-banner__subtitle">No account required. Completely free and open-source.</p>
           <Link to="/upload" className="btn btn-primary">Get Started →</Link>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }

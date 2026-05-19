@@ -4,6 +4,7 @@ import QuantityInput from '../components/QuantityInput';
 import PrintButton from '../components/PrintButton';
 import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
+import { motion } from 'framer-motion';
 
 /**
  * PrintPreviewPage — Step 3 & 4.
@@ -40,27 +41,52 @@ function PrintPreviewPage() {
   // If user lands here directly without uploading, redirect
 
   if (!state?.processedUrl) {
-  return (
-    <EmptyState
-      title="No processed photo available"
-      description="Upload and process a photo before accessing print preview."
-      buttonText="Upload Photo"
-    />
-  );
-}
+    return (
+      <EmptyState
+        title="No processed photo available"
+        description="Upload and process a photo before accessing print preview."
+        buttonText="Upload Photo"
+      />
+    );
+  }
+
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (delay = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut", delay }
+    })
+  };
+
 
   return (
     <div className="print-page page-content">
-      <div className="print-page__header">
+      <motion.div
+        className="print-page__header"
+        variants={fadeUpVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={0.1}
+      >
         <h1 className="section-title">Print Preview</h1>
         <p className="section-subtitle">
           Adjust quantity and generate your printable A4 sheet.
         </p>
-      </div>
+      </motion.div>
 
       <div className="print-page__layout">
         {/* A4 Sheet Preview */}
-        <section className="print-page__sheet card" aria-label="A4 sheet preview">
+        <motion.section
+          className="print-page__sheet card"
+          aria-label="A4 sheet preview"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.2}
+        >
           <p className="print-page__sheet-label">A4 Sheet Preview</p>
           <div className="sheet-grid" style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}>
             {slots.map((_, i) => (
@@ -73,10 +99,18 @@ function PrintPreviewPage() {
               </div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* Controls */}
-        <aside className="print-page__controls card" aria-label="Print settings">
+        <motion.aside
+          className="print-page__controls card"
+          aria-label="Print settings"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.3}
+        >
           <div>
             <p className="print-info-label">Selected Preset</p>
             <p className="print-info-value">{state.sizePreset || '35x45 mm'}</p>
@@ -108,7 +142,7 @@ function PrintPreviewPage() {
             </span>
             Back to Editor
           </Link>
-        </aside>
+        </motion.aside>
       </div>
     </div>
   );

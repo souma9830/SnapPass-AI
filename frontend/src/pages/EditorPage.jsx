@@ -6,6 +6,7 @@ import SizeSelector from '../components/SizeSelector';
 import { ButtonSpinner } from '../components/LoadingSpinner';
 import './EditorPage.css';
 import EmptyState from '../components/EmptyState';
+import { motion } from 'framer-motion';
 
 /**
  * EditorPage — Step 2.
@@ -97,25 +98,58 @@ function EditorPage() {
     );
   }
 
+
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (delay = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut", delay }
+    })
+  };
+
   return (
     <div className="editor-page page-content">
-      <div className="editor-page__header">
+      <motion.div
+        className="editor-page__header"
+        variants={fadeUpVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={0.1} // Loads first
+      >
         <h1 className="section-title">Edit Your Photo</h1>
         <p className="section-subtitle">Choose a background and size, then let AI process your photo.</p>
-      </div>
+      </motion.div>
 
       <div className="editor-page__layout">
         {/* Preview panel */}
-        <section className="editor-page__preview card" aria-label="Photo preview">
+        <motion.section
+          className="editor-page__preview card"
+          aria-label="Photo preview"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.2} // Loads second
+        >
           <PhotoPreview
             originalUrl={photoData.localUrl}
             processedUrl={null}
             isProcessing={isProcessing}
           />
-        </section>
+        </motion.section>
 
         {/* Controls panel */}
-        <aside className="editor-page__controls card" aria-label="Photo settings">
+        <motion.aside
+          className="editor-page__controls card"
+          aria-label="Photo settings"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.3} // Loads third
+        >
           <BackgroundSelector selected={background} onChange={setBackground} />
           <hr className="divider" />
           <SizeSelector selected={sizePreset} onChange={setSizePreset} />
@@ -132,6 +166,7 @@ function EditorPage() {
             </p>
           </div>
 
+          {/* Hidden file input works exactly as before */}
           <input
             type="file"
             accept=".jpg,.jpeg,.png,.webp"
@@ -168,7 +203,7 @@ function EditorPage() {
               </>
             )}
           </button>
-        </aside>
+        </motion.aside>
       </div>
     </div>
   );

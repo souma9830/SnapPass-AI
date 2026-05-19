@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ExternalLink, Heart, ShieldCheck, Globe } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import './Footer.css';
 
 /**
@@ -36,38 +36,48 @@ function Footer() {
               SnapPass AI
             </span>
             <p className="footer__tagline">
-              Your open-source AI passport photo studio.<br />Fast, private, and completely free to use.
+              AI-powered passport photo generation for fast,
+              professional and print-ready results in seconds.
             </p>
           </div>
 
-          <div className="footer__info-grid">
+          <div className="footer__columns">
 
-            <div className="footer__info-card">
-              <ShieldCheck className="footer__info-icon" size={20} />
-              <div>
-                <h4>Privacy First</h4>
-                <p>Your photos stay secure and are processed safely.</p>
-              </div>
+            <div className="footer__column">
+              <h4 className="footer__heading">Product</h4>
+
+              <Link to="/upload" className="footer__item">
+                Upload Photo
+              </Link>
+
+              <Link to="/editor" className="footer__item">
+                AI Editor
+              </Link>
+
+              <Link to="/print-preview" className="footer__item">
+                Print Preview
+              </Link>
             </div>
 
-            <div className="footer__info-card">
-              <Globe className="footer__info-icon" size={20} />
-              <div>
-                <h4>Open Source</h4>
-                <p>Built transparently for developers and creators.</p>
-              </div>
-            </div>
+            <div className="footer__column">
+              <h4 className="footer__heading">Company</h4>
 
-            <div className="footer__socials">
-              <a
-                href="https://github.com/souma9830/SnapPass-AI"
-                target="_blank"
-                rel="noreferrer"
-                className="footer__social-link"
-              >
-                <ExternalLink size={18} />
-                GitHub
+              <a href="#" className="footer__item">
+                Privacy Policy
               </a>
+
+              <a href="#" className="footer__item">
+                Terms & Conditions
+              </a>
+            </div>
+
+            <div className="footer__column">
+              <h4 className="footer__heading">Contact</h4>
+
+              <div className="footer__contact">
+                <Mail size={16} />
+                support@snappassai.com
+              </div>
             </div>
 
           </div>
@@ -75,10 +85,11 @@ function Footer() {
 
         <div className="footer__bottom">
           <p className="footer__copy">
-            © {year} SnapPass AI. Released under the MIT License.
+            © {year} SnapPass AI. All rights reserved.
           </p>
+
           <p className="footer__status">
-            Built with ❤️ for the open-source community
+            Designed for fast and professional passport photo generation.
           </p>
         </div>
 

@@ -1,0 +1,54 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    branches: [ master, main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    env:
+      PORT: 3000
+      NODE_ENV: test
+      MONGO_URI: mongodb://localhost:27017/snappass_test
+      JWT_SECRET: testsecretkey123
+      RESEND_API_KEY: re_testkey123
+      EMAIL_FROM: test@snappassai.com
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: 'backend/package-lock.json'
+
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Run Backend Tests
+        run: npm run test
+        working-directory: backend

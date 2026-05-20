@@ -12,6 +12,13 @@ Upload → Auto-process → Generate a print-ready sheet — in seconds.</p>
 [![Node.js](https://img.shields.io/badge/Backend-Node.js-339933?logo=node.js)](https://nodejs.org)
 [![Python](https://img.shields.io/badge/AI%20Service-Python-3776ab?logo=python)](https://python.org)
 
+<br/>
+
+[![Frontend CI](https://github.com/souma9830/SnapPass-AI/actions/workflows/frontend.yml/badge.svg)](https://github.com/souma9830/SnapPass-AI/actions/workflows/frontend.yml)
+[![Backend CI](https://github.com/souma9830/SnapPass-AI/actions/workflows/backend.yml/badge.svg)](https://github.com/souma9830/SnapPass-AI/actions/workflows/backend.yml)
+[![Python AI Service CI](https://github.com/souma9830/SnapPass-AI/actions/workflows/python-ai.yml/badge.svg)](https://github.com/souma9830/SnapPass-AI/actions/workflows/python-ai.yml)
+[![Docker Compose CI](https://github.com/souma9830/SnapPass-AI/actions/workflows/docker.yml/badge.svg)](https://github.com/souma9830/SnapPass-AI/actions/workflows/docker.yml)
+
 </div>
 
 ---

@@ -1,0 +1,21 @@
+name: Docker Compose CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose Configuration
+        run: docker compose config
+
+      - name: Build Docker Containers
+        run: docker compose build

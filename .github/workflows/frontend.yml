@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22]   # 🔥 IMPORTANT: single version only
+        node-version: [22]
 
     steps:
       - name: Checkout Repository
@@ -32,18 +32,17 @@ jobs:
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Clean Install Dependencies (fix rolldown)
-        run: npm install --legacy-peer-deps --include=optional
+      - name: Clean Install (fix rolldown)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+          npm install --legacy-peer-deps --include=optional
         working-directory: frontend
 
-      - name: Verify install
-        run: npm ls
-        working-directory: frontend
-
-      - name: Build Vite App
+      - name: Build
         run: npm run build
         working-directory: frontend
 
-      - name: Run Tests
+      - name: Test
         run: npm run test
         working-directory: frontend

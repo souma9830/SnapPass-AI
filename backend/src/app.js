@@ -34,6 +34,10 @@ app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
+app.get("/", (_req, res) => {
+  res.json({ status: "ok", service: "SnapPass AI Backend API", message: "Welcome to the API" });
+});
+
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "SnapPass AI Backend", timestamp: new Date() });
 });

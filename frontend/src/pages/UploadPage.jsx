@@ -49,7 +49,7 @@ function UploadPage() {
       state: {
         localUrl: uploadedFile.localUrl,
         filename: uploadedFile.filename,
-        fileSize: uploadedFile.fileSize,
+        fileSize: uploadedFile.size || uploadedFile.fileSize,
       },
     });
   }, [uploadedFile, navigate]);

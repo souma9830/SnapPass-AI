@@ -139,6 +139,14 @@ snappass-ai/
 │   ├── server.js
 │   ├── Dockerfile
 │   └── package.json
+└── python-ai-service/          # Python Flask AI microservice
+|   ├── app/
+|   │   └── services/
+|   │       ├── bg_remove.py           # rembg background removal
+|   │       ├── face_center.py         # OpenCV face detection
+|   │       ├── dpi_optimizer.py       # DPI resize logic
+|   │       └── sheet_generator.py     # A4 sheet layout
+|   └── requirements.txt
 │
 ├── docker-compose.yml
 ├── CONTRIBUTING.md

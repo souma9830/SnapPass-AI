@@ -3,11 +3,11 @@
  *
  * Returns:
  *   { uploadFile, uploadedFile, isUploading, error, reset }
- *
- * TODO: Replace the simulated delay with a real fetch to POST /api/upload.
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { uploadPhoto } from '../services/photoService';
+
 
 function usePhotoUpload() {
   const [isUploading, setIsUploading]   = useState(false);
@@ -27,17 +27,23 @@ function usePhotoUpload() {
       const localUrl = URL.createObjectURL(file);
       localUrlRef.current = localUrl;
 
-      const formData = new FormData();
-      formData.append('photo', file);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5005/api';
-      const res = await fetch(`${apiUrl}/upload`, { method: 'POST', body: formData });
-      if (!res.ok) throw new Error('Upload failed');
-      const data = await res.json();
-      const nextUploaded = { ...data.data, localUrl };
+      // Delegate to photoService which uses the configured axios api instance.
+      // VITE_API_URL controls the backend URL — no hardcoded localhost here.
+      const data = await uploadPhoto(file);
+      const nextUploaded = { ...data, localUrl };
       setUploadedFile(nextUploaded);
       return nextUploaded;
     } catch (err) {
-      setError(err.message || 'Upload failed. Please try again.');
+      const isNetworkError =
+        err.message?.toLowerCase().includes('network') ||
+        err.message?.toLowerCase().includes('failed to fetch') ||
+        err.message?.toLowerCase().includes('err_connection_refused');
+
+      setError(
+        isNetworkError
+          ? 'Could not reach the server. Please check your connection or try again later.'
+          : err.message || 'Upload failed. Please try again.'
+      );
       if (localUrlRef.current) {
         URL.revokeObjectURL(localUrlRef.current);
         localUrlRef.current = null;
@@ -47,6 +53,7 @@ function usePhotoUpload() {
       setIsUploading(false);
     }
   }, []);
+
 
   const reset = useCallback(() => {
     if (localUrlRef.current) {

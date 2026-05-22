@@ -27,7 +27,7 @@ export const uploadPhoto = async (file) => {
         ? 'Upload timed out. Please try again.'
         : 'Upload failed. Please check your connection.');
     }
-    throw err;
+    throw new Error(err.message || 'Upload failed. Please try again.');
   }
 };
 
@@ -52,7 +52,7 @@ export const processPhoto = async ({ filename, backgroundColour, photoSizePreset
     if (err.originalError?.response?.status === 503) {
       throw new Error('AI service is currently unavailable. Please try again later.');
     }
-    throw err;
+    throw new Error(err.message || 'Photo processing failed. Please try a different image.');
   }
 };
 
@@ -74,7 +74,7 @@ export const generateSheet = async ({ filename, quantity, photoSizePreset }) => 
     if (err.isNetworkError) {
       throw new Error('Could not reach the server. Please check your connection.');
     }
-    throw err;
+    throw new Error(err.message || 'Failed to generate print sheet. Please try again.');
   }
 };
 

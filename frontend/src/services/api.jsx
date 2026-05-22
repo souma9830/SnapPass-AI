@@ -42,12 +42,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const normalizedMsg = (error.message || '').toLowerCase();
     const isNetworkError =
       !error.response &&
       (error.code === 'ERR_NETWORK' ||
        error.code === 'ECONNABORTED' ||
-       error.message?.toLowerCase().includes('network') ||
-       error.message?.toLowerCase().includes('failed to fetch'));
+       normalizedMsg.includes('network') ||
+       normalizedMsg.includes('failed to fetch'));
 
     const message =
       error.response?.data?.message ||

@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
+import useNetworkStatus from '../hooks/useNetworkStatus';
 import './RouteErrorBoundary.css';
 
-class RouteErrorBoundary extends Component {
+class RouteErrorBoundaryInner extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Log the error to the console for debugging
     console.error("Route loading failed:", error, errorInfo);
   }
 
@@ -23,13 +22,21 @@ class RouteErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      const isOffline = !this.props.isOnline;
+
+      const title = isOffline
+        ? 'You are offline'
+        : 'Something went wrong';
+
+      const subtitle = isOffline
+        ? 'Please check your internet connection and try again.'
+        : 'We couldn\'t load this part of the app. Please try reloading the page.';
+
       return (
         <div className="route-error-wrap">
           <div className="route-error-content card">
-            <h2 className="section-title">Oops! We lost connection.</h2>
-            <p className="section-subtitle">
-              We couldn't load this part of the app. Please check your internet connection and try again.
-            </p>
+            <h2 className="section-title">{title}</h2>
+            <p className="section-subtitle">{subtitle}</p>
             <button className="btn btn-primary" onClick={this.handleReload}>
               Reload Page
             </button>
@@ -40,6 +47,11 @@ class RouteErrorBoundary extends Component {
 
     return this.props.children; 
   }
+}
+
+function RouteErrorBoundary(props) {
+  const isOnline = useNetworkStatus();
+  return <RouteErrorBoundaryInner {...props} isOnline={isOnline} />;
 }
 
 export default RouteErrorBoundary;

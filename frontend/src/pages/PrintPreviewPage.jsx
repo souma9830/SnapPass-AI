@@ -1,3 +1,10 @@
+import React, { useState, useEffect } from 'react';
+import QuantityInput from '../components/QuantityInput';
+import PrintButton from '../components/PrintButton';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
+import { generateSheet } from '../services/photoService';
+import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import QuantityInput from '../components/QuantityInput';
@@ -6,15 +13,13 @@ import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
 import { calculatePasswordStrength } from '../utils/passwordStrength';
 
-/**
- * PrintPreviewPage — Step 3 & 4.
- * Shows the processed photo in a simulated A4 sheet grid.
- * User picks quantity, then downloads or prints the sheet.
- */
-function PrintPreviewPage() {
+const PrintPreviewPage = () => {
   const { state } = useLocation();
 
   const [quantity, setQuantity] = useState(6);
+  const [sheetUrl, setSheetUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [password, setPassword] = useState('');
   const [strength, setStrength] = useState(0);
@@ -32,118 +37,54 @@ function PrintPreviewPage() {
   return () => clearTimeout(timer);
 }, [password]);
 
-  const handleGenerateSheet = async () => {
-    setIsGenerating(true);
+  const fetchSheet = async () => {
+    setError(null);
+    setLoading(true);
     try {
-      const blob = await generateSheet({
-        filename: state.filename,
+      const result = await generateSheet({
+        processedId: state?.processedId,
         quantity,
-        photoSizePreset: state.sizePreset,
       });
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `snappass_sheet_${Date.now()}.png`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      alert(error.message || 'Sheet generation failed.');
+      setSheetUrl(result.sheetUrl);
+    } catch (err) {
+      setError(
+        err.message || 'Failed to generate print sheet. Please try again.'
+      );
     } finally {
-      setIsGenerating(false);
+      setLoading(false);
     }
   };
 
-  // Build grid of photo slots
-  const slots = Array.from({ length: quantity });
-
-  // If user lands here directly without uploading, redirect
-
-  if (!state?.processedUrl) {
-    return (
-      <EmptyState
-        title="No processed photo available"
-        description="Upload and process a photo before accessing print preview."
-        buttonText="Upload Photo"
-      />
-    );
-  }
-
-  const fadeUpVariant = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (delay = 0) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay }
-    })
-  };
-
+  useEffect(() => {
+    fetchSheet();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className="print-page page-content">
-      <motion.div
-        className="print-page__header"
-        variants={fadeUpVariant}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        custom={0.1}
-      >
-        <h1 className="section-title">Print Preview</h1>
-        <p className="section-subtitle">
-          Adjust quantity and generate your printable A4 sheet.
-        </p>
-      </motion.div>
+    <div className="page print-preview-page">
+      <h1>Print Preview</h1>
+      <p className="page__subtitle">
+        Your A4 print-ready sheet is ready to download.
+      </p>
 
-      <div className="print-page__layout">
-        {/* A4 Sheet Preview */}
-        <motion.section
-          className="print-page__sheet card"
-          aria-label="A4 sheet preview"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={0.2}
-        >
-          <p className="print-page__sheet-label">A4 Sheet Preview</p>
-          <div className="sheet-grid" style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}>
-            {slots.map((_, i) => (
-              <div key={i} className="sheet-slot">
-                <img
-                  src={state.processedUrl}
-                  alt={`Sheet slot ${i + 1}`}
-                  className="sheet-slot__img"
-                />
-              </div>
-            ))}
-          </div>
-        </motion.section>
+      <ErrorMessage message={error} onRetry={fetchSheet} />
 
-        {/* Controls */}
-        <motion.aside
-          className="print-page__controls card"
-          aria-label="Print settings"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={0.3}
-        >
-          <div>
-            <p className="print-info-label">Selected Preset</p>
-            <p className="print-info-value">{state.sizePreset || '35x45 mm'}</p>
-          </div>
-          <div>
-            <p className="print-info-label">Background</p>
-            <p className="print-info-value" style={{ textTransform: 'capitalize' }}>
-              {state.background || 'White'}
-            </p>
-          </div>
-
-          <hr className="divider" />
-
+      {loading ? (
+        <LoadingSpinner message="Generating your A4 print sheet..." />
+      ) : (
+        <>
+          {sheetUrl && (
+            <img
+              className="print-preview__sheet"
+              src={sheetUrl}
+              alt="A4 passport photo print sheet"
+            />
+          )}
           <QuantityInput value={quantity} onChange={setQuantity} />
+          <PrintButton
+            sheetUrl={sheetUrl}
+            onRegenerate={fetchSheet}
+            disabled={!sheetUrl}
 
           <hr className="divider" />
 
@@ -198,19 +139,10 @@ function PrintPreviewPage() {
             isLoading={isGenerating}
             disabled={isGenerating || strength === 0}
           />
-
-          <Link to="/editor" className="btn btn-ghost print-page__back-btn">
-            <span className="print-page__back-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                <path d="M15 6l-6 6 6 6" />
-              </svg>
-            </span>
-            Back to Editor
-          </Link>
-        </motion.aside>
-      </div>
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default PrintPreviewPage;

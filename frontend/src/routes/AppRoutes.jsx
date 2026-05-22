@@ -1,38 +1,59 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import DelayedFallback from '../components/DelayedFallback';
-import RouteErrorBoundary from '../components/RouteErrorBoundary';
+import ErrorBoundary from '../components/ErrorBoundary';
 
+import HomePage from '../pages/HomePage';
+import UploadPage from '../pages/UploadPage';
+import EditorPage from '../pages/EditorPage';
+import PrintPreviewPage from '../pages/PrintPreviewPage';
+import AdminDashboard from '../pages/AdminDashboard';
 
-const HomePage = lazy(() => import('../pages/HomePage'));
-const UploadPage = lazy(() => import('../pages/UploadPage'));
-const EditorPage = lazy(() => import('../pages/EditorPage'));
-const PrintPreviewPage = lazy(() => import('../pages/PrintPreviewPage'));
-const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
-const TermsPage = lazy(() => import('../pages/TermsPage'));
-const PrivacyPage = lazy(() => import('../pages/PrivacyPage'));
-/**
- * AppRoutes — central route configuration for SnapPass AI.
- * Add new pages here so contributors can find all routes in one place.
- */
-function AppRoutes() {
+const AppRoutes = () => {
   return (
-    <RouteErrorBoundary>
-      <Suspense fallback={<DelayedFallback delayMs={250} />}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/upload" element={<UploadPage />} />
-          <Route path="/editor" element={<EditorPage />} />
-          <Route path="/print-preview" element={<PrintPreviewPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          {/* Fallback — redirect unknown paths to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
-    </RouteErrorBoundary>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <ErrorBoundary>
+            <HomePage />
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="/upload"
+        element={
+          <ErrorBoundary>
+            <UploadPage />
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="/editor"
+        element={
+          <ErrorBoundary>
+            <EditorPage />
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="/print-preview"
+        element={
+          <ErrorBoundary>
+            <PrintPreviewPage />
+          </ErrorBoundary>
+        }
+      />
+        <Route
+        path="/admin"
+        element={
+          <ErrorBoundary>
+            <AdminDashboard />
+          </ErrorBoundary>
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
-}
+};
 
 export default AppRoutes;

@@ -1,0 +1,56 @@
+/* ErrorBoundary.css */
+.error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 2rem;
+  text-align: center;
+  background: #fff8f8;
+  border: 1px solid #ffd6d6;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 480px;
+  animation: fadeIn 0.3s ease;
+}
+
+.error-boundary__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-boundary__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #c0392b;
+  margin-bottom: 0.5rem;
+}
+
+.error-boundary__message {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.error-boundary__btn {
+  padding: 0.6rem 1.5rem;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.error-boundary__btn:hover {
+  background: #a93226;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

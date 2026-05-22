@@ -8,8 +8,9 @@ import './UploadBox.css';
  *   onFileSelect(file) — called when a valid image file is chosen
  *   isUploading(bool) — when true, shows progress bar instead of drop zone
  *   progress(number) — upload progress percentage (0-100)
+ *   fileName(string) — name of the file being uploaded
  */
-function UploadBox({ onFileSelect, isUploading, progress = 0 }) {
+function UploadBox({ onFileSelect, isUploading, progress = 0, fileName }) {
   const inputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
@@ -49,21 +50,56 @@ function UploadBox({ onFileSelect, isUploading, progress = 0 }) {
   /* Input change */
   const onChange = (e) => handleFile(e.target.files[0]);
 
+  /* Determine status text based on progress */
+  const getStatusText = (pct) => {
+    if (pct >= 100) return 'Upload complete!';
+    if (pct >= 75)  return 'Almost there…';
+    if (pct >= 40)  return 'Processing your photo…';
+    return 'Uploading your photo…';
+  };
+
+  const isDone = progress >= 100;
+
   if (isUploading) {
     return (
-      <div className="upload-box upload-box--uploading">
+      <div className="upload-box upload-box--uploading" id="upload-progress-container">
         <div className="upload-progress">
+          {/* Animated icon */}
+          <div
+            className={`upload-progress__icon ${isDone ? 'upload-progress__icon--done' : ''}`}
+            aria-hidden="true"
+          >
+            {isDone ? '✅' : '☁️'}
+          </div>
+
+          {/* Progress bar track */}
           <div className="upload-progress__bar">
-            <div 
-              className="upload-progress__fill" 
+            <div
+              className={`upload-progress__fill ${isDone ? 'upload-progress__fill--done' : ''}`}
               style={{ width: `${progress}%` }}
               role="progressbar"
+              id="upload-progress-bar"
               aria-valuenow={progress}
               aria-valuemin="0"
               aria-valuemax="100"
+              aria-label={`Upload progress: ${progress}%`}
             />
           </div>
-          <p className="upload-progress__text">Uploading... {progress}%</p>
+
+          {/* Percentage readout */}
+          <p className="upload-progress__percentage">{Math.round(progress)}%</p>
+
+          {/* Status message */}
+          <p className={`upload-progress__text ${isDone ? 'upload-progress__text--done' : ''}`}>
+            {getStatusText(progress)}
+          </p>
+
+          {/* File name pill */}
+          {fileName && (
+            <span className="upload-progress__filename" title={fileName}>
+              📄 {fileName}
+            </span>
+          )}
         </div>
       </div>
     );

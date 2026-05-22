@@ -10,7 +10,7 @@ import './UploadPage.css';
  */
 function UploadPage() {
   const navigate = useNavigate();
-  const { uploadFile, isUploading, uploadProgress } = usePhotoUpload();
+  const { uploadFile, isUploading, uploadProgress, uploadFileName } = usePhotoUpload();
 
   const handleFileSelect = async (file) => {
     // Create a local preview URL immediately for snappy UX
@@ -60,6 +60,7 @@ function UploadPage() {
         onFileSelect={handleUpload} 
         isUploading={isUploading}
         progress={uploadProgress}
+        fileName={uploadFileName}
       />
 
       <p className="upload-page__privacy">

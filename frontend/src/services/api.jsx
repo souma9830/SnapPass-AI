@@ -54,7 +54,10 @@ api.interceptors.response.use(
       error.message ||
       'An unexpected error occurred.';
 
-    const enhanced = new Error(message);
+    const enhanced = new Error(message, { cause: error });
+    if (error.stack) {
+      enhanced.stack = error.stack;
+    }
     enhanced.isNetworkError = isNetworkError;
     enhanced.originalError = error;
     return Promise.reject(enhanced);

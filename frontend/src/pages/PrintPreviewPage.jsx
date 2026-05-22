@@ -17,6 +17,9 @@ function PrintPreviewPage({darkMode, toggleTheme}) {
   const { state } = useLocation();
 
   const [quantity, setQuantity] = useState(6);
+  const [sheetUrl, setSheetUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [password, setPassword] = useState('');
   const [strength, setStrength] = useState(0);
@@ -40,13 +43,20 @@ function PrintPreviewPage({darkMode, toggleTheme}) {
         photoSizePreset: state.sizePreset,
       });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `snappass_sheet_${Date.now()}.png`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      alert(error.message || 'Sheet generation failed.');
+      
+      setSheetUrl(prev => {
+        if (prev) URL.revokeObjectURL(prev);
+        return url;
+      });
+
+      if (!isInitial) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `snappass_sheet_${Date.now()}.png`;
+        a.click();
+      }
+    } catch (err) {
+      setError(err.message || 'Sheet generation failed.');
     } finally {
       setIsGenerating(false);
     }

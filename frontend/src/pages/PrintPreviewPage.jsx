@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import QuantityInput from '../components/QuantityInput';
 import PrintButton from '../components/PrintButton';
+import { useToast } from '../contexts/ToastContext';
 import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
 
@@ -12,6 +13,7 @@ import EmptyState from '../components/EmptyState';
  */
 function PrintPreviewPage() {
   const { state } = useLocation();
+  const { showToast } = useToast();
 
   const [quantity, setQuantity] = useState(6);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -31,7 +33,7 @@ function PrintPreviewPage() {
 
     await new Promise((r) => setTimeout(r, 1200));
     setIsGenerating(false);
-    alert('Sheet generation coming soon! Connect python-ai-service to complete this step.');
+    showToast('Sheet generation coming soon! Connect python-ai-service to complete this step.', 'info');
   };
 
   // Build grid of photo slots

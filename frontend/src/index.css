@@ -66,6 +66,29 @@
   --content-max-width: 1100px;
 }
 
+[data-theme='dark'] {
+  --color-primary:        #3b82f6;
+  --color-primary-hover:  #60a5fa;
+  --color-primary-light:  #1e3a8a;
+  
+  --color-secondary:      #94a3b8;
+  --color-success:        #22c55e;
+  --color-warning:        #f59e0b;
+  --color-danger:         #ef4444;
+
+  --color-bg:             #0f172a;
+  --color-surface:        #1e293b;
+  --color-border:         #334155;
+  --color-border-hover:   #475569;
+  --color-text:           #f8fafc;
+  --color-text-muted:     #94a3b8;
+  --color-text-light:     #64748b;
+  
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2);
+  --shadow-lg:  0 10px 30px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+}
+
 /* ── Reset ──────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -148,6 +171,10 @@ button { font-family: var(--font-family); cursor: pointer; border: none; backgro
 .badge-blue  { background: #dbeafe; color: #1d4ed8; }
 .badge-green { background: #dcfce7; color: #15803d; }
 .badge-amber { background: #fef3c7; color: #b45309; }
+
+[data-theme='dark'] .badge-blue  { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+[data-theme='dark'] .badge-green { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+[data-theme='dark'] .badge-amber { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
 
 .section-title {
   font-size: var(--font-size-2xl);

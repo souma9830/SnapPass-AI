@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { path: '/', label: 'Home' },
@@ -59,6 +62,14 @@ function Navbar() {
 
         {/* Right Side */}
         <div className="navbar__actions">
+
+          <button 
+            className="navbar__theme-toggle" 
+            onClick={toggleTheme}
+            aria-label="Toggle Theme"
+          >
+            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
 
           <Link to="/upload" className="navbar__cta">
             Get Started

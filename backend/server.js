@@ -5,7 +5,7 @@ import connectDatabase from './src/config/db.js';
 const PORT = config.port;
 
 
-// connectDatabase();
+connectDatabase();
 
 app.listen(PORT, () => {
   console.log(`✅  SnapPass AI backend running on http://localhost:${PORT}`);

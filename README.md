@@ -33,6 +33,35 @@ No expensive studio. No complicated software. Just upload, click, and print.
 
 ---
 
+## 📸 Website Preview
+
+<div align="center">
+
+### 🏠 Home Page
+<img src="./frontend/public/screenshots/home.png" width="90%" alt="Home Page"/>
+
+<br/><br/>
+
+### 📤 Upload Interface
+<img src="./frontend/public/screenshots/upload.png" width="90%" alt="Upload Interface"/>
+
+<br/><br/>
+
+### ✂️ Editor / Passport Processing
+<img src="./frontend/public/screenshots/editor.png" width="90%" alt="Editor Page"/>
+
+<br/><br/>
+
+### 📄 Print Preview
+<img src="./frontend/public/screenshots/print.png" width="90%" alt="Print Preview"/>
+
+<br/><br/>
+
+</div>
+
+
+---
+
 ## 🧭 Project Status
 
 > ⚠️ **This project is in active early development.** The frontend scaffold is complete and functional. The backend and Python AI service stubs are ready for contributors to build on.
@@ -62,64 +91,98 @@ No expensive studio. No complicated software. Just upload, click, and print.
 ```
 snappass-ai/
 │
-├── frontend/                   # React.js web app
-│   └── src/
-│       ├── components/
-│       │   ├── layout/
-│       │   │   ├── Navbar.js          # Top navigation bar
-│       │   │   └── Footer.js          # Site footer
-│       │   ├── UploadBox.js           # Drag-and-drop upload
-│       │   ├── PhotoPreview.js        # Before/after photo viewer
-│       │   ├── BackgroundSelector.js  # BG colour picker
-│       │   ├── SizeSelector.js        # Country preset dropdown
-│       │   ├── QuantityInput.js       # Number of photos stepper
-│       │   ├── PrintButton.js         # Download/print CTA
-│       │   └── LoadingSpinner.js      # Reusable spinner
-│       ├── pages/
-│       │   ├── HomePage.js            # Landing page
-│       │   ├── UploadPage.js          # Step 1 — upload
-│       │   ├── EditorPage.js          # Step 2 — AI editor
-│       │   ├── PrintPreviewPage.js    # Step 3 — preview & print
-│       │   └── AdminDashboard.js      # Admin panel
-│       ├── hooks/
-│       │   ├── usePhotoUpload.js      # Upload state management
-│       │   └── useImageProcessor.js   # AI processing state
-│       ├── services/
-│       │   ├── api.js                 # Axios base instance
-│       │   └── photoService.js        # All photo API calls
-│       ├── utils/
-│       │   ├── fileValidation.js      # Client-side validation
-│       │   └── formatters.js          # String/number formatting
-│       └── routes/
-│           └── AppRoutes.js           # Central route config
+├── frontend/                          # React frontend application
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── layout/               # Shared layout components
+│   │   │   │   ├── Navbar.jsx
+│   │   │   │   └── Footer.jsx
+│   │   │   ├── UploadBox.jsx         # Drag-and-drop uploader
+│   │   │   ├── PhotoPreview.jsx      # Image preview component
+│   │   │   ├── LoadingSpinner.jsx    # Reusable loading UI
+│   │   │   └── ...
+│   │   │
+│   │   ├── pages/                    # Application pages
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── UploadPage.jsx
+│   │   │   ├── EditorPage.jsx
+│   │   │   ├── PrintPreviewPage.jsx
+│   │   │   └── AdminDashboard.jsx
+│   │   │
+│   │   ├── hooks/                    # Custom React hooks
+│   │   │   ├── usePhotoUpload.js
+│   │   │   └── useImageProcessor.js
+│   │   │
+│   │   ├── services/                 # API communication layer
+│   │   │   ├── api.js
+│   │   │   └── photoService.js
+│   │   │
+│   │   ├── utils/                    # Utility/helper functions
+│   │   │   ├── fileValidation.js
+│   │   │   └── formatters.js
+│   │   │
+│   │   └── routes/                   # App routing configuration
+│   │       └── AppRoutes.jsx
+│   │
+│   ├── Dockerfile
+│   ├── package.json
+│   └── README.md
 │
-├── backend/                    # Express.js REST API
-│   └── src/
-│       ├── config/app.config.js
-│       ├── controllers/
-│       │   ├── upload.controller.js
-│       │   ├── image.controller.js
-│       │   └── print.controller.js
-│       ├── routes/
-│       │   ├── upload.routes.js
-│       │   ├── image.routes.js
-│       │   └── print.routes.js
-│       └── middlewares/
-│           ├── upload.middleware.js
-│           ├── error.middleware.js
-│           └── validate.middleware.js
-│
+├── backend/                           # Express.js backend API
+│   ├── src/
+│   │   ├── config/                   # Environment & DB configs
+│   │   │   ├── config.js
+│   │   │   └── db.js
+│   │   │
+│   │   ├── controllers/              # Route controllers
+│   │   │   ├── auth.controller.js
+│   │   │   ├── upload.controller.js
+│   │   │   ├── image.controller.js
+│   │   │   └── print.controller.js
+│   │   │
+│   │   ├── routes/                   # Express route definitions
+│   │   │   ├── auth.routes.js
+│   │   │   ├── upload.routes.js
+│   │   │   ├── image.routes.js
+│   │   │   └── print.routes.js
+│   │   │
+│   │   ├── middleware/               # Express middlewares
+│   │   │   ├── auth.middleware.js
+│   │   │   ├── upload.middleware.js
+│   │   │   ├── validate.middleware.js
+│   │   │   └── error.middleware.js
+│   │   │
+│   │   ├── models/                   # MongoDB/Mongoose models
+│   │   │   ├── user.model.js
+│   │   │   ├── upload.model.js
+│   │   │   ├── processedImage.model.js
+│   │   │   └── printSheet.model.js
+│   │   │
+│   │   ├── dao/                      # Database access layer
+│   │   ├── service/                  # Business logic/services
+│   │   ├── validation/               # Request validation rules
+│   │   └── utils/                    # Shared backend utilities
+│   │       └── errors/
+│   │
+│   ├── docs/                         # Backend documentation
+│   ├── server.js
+│   ├── Dockerfile
+│   └── package.json
 └── python-ai-service/          # Python Flask AI microservice
-    ├── app/
-    │   └── services/
-    │       ├── bg_remove.py           # rembg background removal
-    │       ├── face_center.py         # OpenCV face detection
-    │       ├── dpi_optimizer.py       # DPI resize logic
-    │       └── sheet_generator.py     # A4 sheet layout
-    └── requirements.txt
-```
+|   ├── app/
+|   │   └── services/
+|   │       ├── bg_remove.py           # rembg background removal
+|   │       ├── face_center.py         # OpenCV face detection
+|   │       ├── dpi_optimizer.py       # DPI resize logic
+|   │       └── sheet_generator.py     # A4 sheet layout
+|   └── requirements.txt
+│
+├── docker-compose.yml
+├── CONTRIBUTING.md
+├── SECURITY.md
+└── README.md
 
----
+```
 
 ## 🚀 Getting Started
 

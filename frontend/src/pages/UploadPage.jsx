@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import UploadBox from '../components/UploadBox';
-import LoadingSpinner from '../components/LoadingSpinner';
-import usePhotoUpload from '../hooks/usePhotoUpload';
-import './UploadPage.css';
-import { motion } from 'framer-motion';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import UploadBox from "../components/UploadBox";
+import LoadingSpinner from "../components/LoadingSpinner";
+import usePhotoUpload from "../hooks/usePhotoUpload";
+import "./UploadPage.css";
+import { motion } from "framer-motion";
+
+import { tips, iconMap } from "../data/UploadPageData";
+import { fadeUpVariant } from "../animations/variants.js";
 
 /**
  * UploadPage — Step 1 of the flow.
@@ -12,40 +15,14 @@ import { motion } from 'framer-motion';
  */
 function UploadPage() {
   const navigate = useNavigate();
-  const { uploadFile, uploadedFile, isUploading, error, } = usePhotoUpload();
+  const { uploadFile, uploadedFile, isUploading, error } = usePhotoUpload();
 
-  const tips = [
-    { type: 'ok', text: 'Plain background preferred' },
-    { type: 'ok', text: 'Face clearly visible & centred' },
-    { type: 'ok', text: 'Neutral expression, eyes open' },
-    { type: 'no', text: 'Avoid sunglasses or hats' },
-  ];
-
-  const iconMap = {
-    ok: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <rect x="3" y="3" width="18" height="18" rx="6" />
-        <path d="M8 12.5l2.5 2.5L16 9" />
-      </svg>
-    ),
-    no: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <rect x="3" y="3" width="18" height="18" rx="6" />
-        <path d="M9 9l6 6M15 9l-6 6" />
-      </svg>
-    ),
-    lock: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <rect x="5" y="10" width="14" height="10" rx="3" />
-        <path d="M8 10V8a4 4 0 0 1 8 0v2" />
-      </svg>
-    ),
+  const handleFileSelect = async (file) => {
+    await uploadFile(file);
   };
-
-  const handleFileSelect = async (file) => {await uploadFile(file);};
   useEffect(() => {
     if (!uploadedFile) return;
-    navigate('/editor', {
+    navigate("/editor", {
       state: {
         localUrl: uploadedFile.localUrl,
         filename: uploadedFile.filename,
@@ -53,15 +30,6 @@ function UploadPage() {
       },
     });
   }, [uploadedFile, navigate]);
-
-  const fadeUpVariant = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (delay = 0) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay }
-    })
-  };
 
   return (
     <div className="upload-page page-content">
@@ -94,7 +62,7 @@ function UploadPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            custom={0.2 + (idx * 0.1)} // Staggers each tip by 100ms
+            custom={0.2 + idx * 0.1} // Staggers each tip by 100ms
           >
             <span className="upload-tip__icon" aria-hidden="true">
               {iconMap[type]}
@@ -113,7 +81,10 @@ function UploadPage() {
         custom={0.5} // Loads after the tips
       >
         {isUploading ? (
-          <LoadingSpinner message="Uploading & preparing your photo…" size="lg" />
+          <LoadingSpinner
+            message="Uploading & preparing your photo…"
+            size="lg"
+          />
         ) : (
           <UploadBox onFileSelect={handleFileSelect} />
         )}
@@ -130,7 +101,8 @@ function UploadPage() {
         <span className="upload-page__privacy-icon" aria-hidden="true">
           {iconMap.lock}
         </span>
-        Your photo is processed locally and never stored without your permission.
+        Your photo is processed locally and never stored without your
+        permission.
       </motion.p>
     </div>
   );

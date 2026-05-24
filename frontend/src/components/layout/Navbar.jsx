@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,43 +17,25 @@ function Navbar() {
     { path: '/admin', label: 'Admin' },
   ];
 
-  // Close menu on resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
   return (
-    <header className="navbar">
+    <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`} role="banner">
       <div className="navbar__inner">
-
         {/* Logo */}
-        <Link to="/" className="navbar__brand">
-          <span className="navbar__logo-icon">📷</span>
-
+        <Link to="/" className="navbar__brand" aria-label="SnapPass AI Home">
+          <span className="navbar__logo-icon" aria-hidden="true">📷</span>
           <span className="navbar__brand-name">
             SnapPass <span className="navbar__brand-highlight">AI</span>
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="navbar__links">
+        <nav className="navbar__links" aria-label="Main navigation">
           {navLinks.map(({ path, label }) => (
             <NavLink
               key={path}
               to={path}
               end={path === '/'}
               className={({ isActive }) =>
-                `navbar__link ${isActive ? 'navbar__link--active' : ''}`
+                `navbar__link${isActive ? ' navbar__link--active' : ''}`
               }
             >
               {label}
@@ -60,7 +43,7 @@ function Navbar() {
           ))}
         </nav>
 
-        {/* Right Side */}
+        {/* CTA */}
         <div className="navbar__actions">
 
           <button 
@@ -74,33 +57,43 @@ function Navbar() {
           <Link to="/upload" className="navbar__cta">
             Get Started
           </Link>
-
-          {/* Hamburger */}
           <button
             className="navbar__hamburger"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle Menu"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(o => !o)}
           >
-            <span className={`hamburger-icon ${menuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-icon${menuOpen ? ' open' : ''}`} />
           </button>
-
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div className={`navbar__mobile-menu ${menuOpen ? 'active' : ''}`}>
-        {navLinks.map(({ path, label }) => (
-          <NavLink
-            key={path}
-            to={path}
-            end={path === '/'}
-            className="navbar__mobile-link"
-            onClick={() => setMenuOpen(false)}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            className="navbar__mobile-menu"
+            aria-label="Mobile navigation"
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
-            {label}
-          </NavLink>
-        ))}
-      </div>
+            {navLinks.map(({ path, label }) => (
+              <NavLink
+                key={path}
+                to={path}
+                end={path === '/'}
+                className={({ isActive }) =>
+                  `navbar__mobile-link${isActive ? ' navbar__mobile-link--active' : ''}`
+                }
+                onClick={() => setMenuOpen(false)}
+              >
+                {label}
+              </NavLink>
+            ))}
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

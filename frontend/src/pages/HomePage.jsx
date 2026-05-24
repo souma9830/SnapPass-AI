@@ -6,6 +6,7 @@ import AIShowcaseSection from "../components/HomePage/AIShowcaseSection";
 import StepsSection from "../components/HomePage/StepsSection";
 import FeaturesSection from "../components/HomePage/FeaturesSection";
 import CTABanner from "../components/HomePage/CTABanner";
+import BackToTop from "../components/HomePage/BackToTop";
 
 import { features, steps, chips, iconMap } from "../data/HomePageData";
 
@@ -29,6 +30,7 @@ function HomePage() {
 
       {/* ── CTA Banner ── */}
       <CTABanner />
+      <BackToTop />
     </div>
   );
 }

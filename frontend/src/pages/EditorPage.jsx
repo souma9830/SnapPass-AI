@@ -1,14 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import PhotoPreview from '../components/PhotoPreview';
-import BackgroundSelector from '../components/BackgroundSelector';
-import SizeSelector from '../components/SizeSelector';
-import { ButtonSpinner } from '../components/LoadingSpinner';
-import './EditorPage.css';
-import EmptyState from '../components/EmptyState';
-import { motion } from 'framer-motion';
-import useImageProcessor from '../hooks/useImageProcessor';
-import usePhotoUpload from '../hooks/usePhotoUpload';
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import PhotoPreview from "../components/PhotoPreview";
+import BackgroundSelector from "../components/BackgroundSelector";
+import SizeSelector from "../components/SizeSelector";
+import { ButtonSpinner } from "../components/LoadingSpinner";
+import "./EditorPage.css";
+import EmptyState from "../components/EmptyState";
+import { motion } from "framer-motion";
+import useImageProcessor from "../hooks/useImageProcessor";
+import usePhotoUpload from "../hooks/usePhotoUpload";
+
+import { iconMap, backgroundHexMap } from "../data/EditorPageData";
+import { fadeUpVariant } from "../animations/variants.js";
 
 /**
  * EditorPage — Step 2.
@@ -27,31 +30,20 @@ function EditorPage() {
 
   const fileInputRef = useRef(null);
 
-  const [background, setBackground] = useState('white');
-  const [sizePreset, setSizePreset] = useState('35x45');
-  const { processImage, processedUrl, isProcessing, error: processError } = useImageProcessor();
+  const [background, setBackground] = useState("white");
+  const [sizePreset, setSizePreset] = useState("35x45");
+  const {
+    processImage,
+    processedUrl,
+    isProcessing,
+    error: processError,
+  } = useImageProcessor();
   const {
     uploadFile,
     uploadedFile,
     isUploading: isUploadingPhoto,
     error: uploadError,
   } = usePhotoUpload();
-
-  const iconMap = {
-    refresh: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M20 12a8 8 0 0 1-13.7 5.7" />
-        <path d="M4 12a8 8 0 0 1 13.7-5.7" />
-        <path d="M4 4v5h5" />
-        <path d="M20 20v-5h-5" />
-      </svg>
-    ),
-    spark: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 3l1.9 5.7L19 11l-5.1 2.3L12 19l-1.9-5.7L5 11l5.1-2.3L12 3z" />
-      </svg>
-    ),
-  };
 
   const handleReplacePhoto = (event) => {
     const file = event.target.files[0];
@@ -70,23 +62,16 @@ function EditorPage() {
     }
   }, [uploadedFile]);
 
-
   const handleProcess = async () => {
     try {
-      const backgroundHex = {
-        'white': '#ffffff',
-        'off-white': '#f5f0e8',
-        'light-grey': '#d1d5db',
-        'light-blue': '#bfdbfe',
-        'light-red': '#fecaca'
-      }[background] || '#ffffff';
+      const backgroundHex = backgroundHexMap[background] || "#ffffff";
       const nextProcessedUrl = await processImage({
         filename: photoData.filename,
         backgroundColour: backgroundHex,
         photoSizePreset: sizePreset,
       });
 
-      navigate('/print-preview', {
+      navigate("/print-preview", {
         state: {
           processedUrl: nextProcessedUrl,
           filename: photoData.filename,
@@ -95,8 +80,10 @@ function EditorPage() {
         },
       });
     } catch (error) {
-      console.error('Processing error:', error);
-      alert('Failed to process image. Please check if backend services are running.');
+      console.error("Processing error:", error);
+      alert(
+        "Failed to process image. Please check if backend services are running.",
+      );
     }
   };
   // If user lands here directly without uploading, redirect
@@ -111,16 +98,6 @@ function EditorPage() {
     );
   }
 
-
-  const fadeUpVariant = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (delay = 0) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay }
-    })
-  };
-
   return (
     <div className="editor-page page-content">
       <motion.div
@@ -132,7 +109,9 @@ function EditorPage() {
         custom={0.1} // Loads first
       >
         <h1 className="section-title">Edit Your Photo</h1>
-        <p className="section-subtitle">Choose a background and size, then let AI process your photo.</p>
+        <p className="section-subtitle">
+          Choose a background and size, then let AI process your photo.
+        </p>
       </motion.div>
 
       <div className="editor-page__layout">
@@ -175,7 +154,9 @@ function EditorPage() {
             </p>
             <p className="editor-info-row">
               <span className="editor-info-label">Size</span>
-              <span className="editor-info-value">{(photoData.fileSize / 1024).toFixed(1)} KB</span>
+              <span className="editor-info-value">
+                {(photoData.fileSize / 1024).toFixed(1)} KB
+              </span>
             </p>
           </div>
 
@@ -185,7 +166,7 @@ function EditorPage() {
             accept=".jpg,.jpeg,.png,.webp"
             ref={fileInputRef}
             onChange={handleReplacePhoto}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
 
           <button

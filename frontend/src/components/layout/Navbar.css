@@ -1,3 +1,4 @@
+/* ── Floating Pill Navbar ─────────────────────────────────────── */
 .navbar {
   position: fixed;
   top: 0;
@@ -9,47 +10,57 @@
 
 .navbar__inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  max-width: 1200px;
-  margin: auto;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 12px 0 24px;
+  gap: var(--space-lg);
 }
 
-/* Brand */
 .navbar__brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
   color: var(--color-text);
 }
 
 .navbar__logo-icon {
-  font-size: 22px;
+  font-size: 24px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.navbar__brand:hover .navbar__logo-icon {
+  transform: scale(1.1) rotate(-5deg);
 }
 
 .navbar__brand-name {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
 }
 
 .navbar__brand-highlight {
   color: var(--color-primary);
 }
 
-/* Desktop Links */
 .navbar__links {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
 }
 
 .navbar__link {
   text-decoration: none;
   color: var(--color-text);
   font-weight: 500;
-  transition: 0.3s;
-  position: relative;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .navbar__link:hover {
@@ -60,11 +71,11 @@
   color: var(--color-primary);
 }
 
-/* Actions */
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 .navbar__cta {
@@ -97,16 +108,23 @@
   background: var(--color-border);
 }
 
-/* Hamburger */
 .navbar__hamburger {
   display: none;
-  background: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
   border: none;
   cursor: pointer;
-  z-index: 1100;
+  transition: background 0.2s ease;
 }
 
-/* Hamburger Lines */
+.navbar__hamburger:hover {
+  background: color-mix(in srgb, var(--color-text) 5%, transparent);
+}
+
 .hamburger-icon,
 .hamburger-icon::before,
 .hamburger-icon::after {
@@ -114,9 +132,12 @@
   height: 3px;
   background: var(--color-text);
   display: block;
-  position: relative;
+  width: 18px;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: 2px;
   transition: all 0.3s ease;
-  border-radius: 5px;
+  position: relative;
 }
 
 .hamburger-icon::before,
@@ -126,14 +147,13 @@
 }
 
 .hamburger-icon::before {
-  top: -8px;
+  top: -6px;
 }
 
 .hamburger-icon::after {
-  top: 8px;
+  top: 6px;
 }
 
-/* Animation */
 .hamburger-icon.open {
   background: transparent;
 }
@@ -148,13 +168,11 @@
   transform: rotate(-45deg);
 }
 
-/* Mobile Menu */
 .navbar__mobile-menu {
   position: absolute;
-  top: 70px;
+  top: calc(100% + 12px);
   left: 0;
-  width: 100%;
-
+  right: 0;
   display: flex;
   flex-direction: column;
 
@@ -180,8 +198,10 @@
   text-decoration: none;
   color: var(--color-text);
   font-weight: 500;
-  border-radius: 8px;
-  transition: 0.3s;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all var(--transition-fast);
 }
 
 .navbar__mobile-link:hover {
@@ -189,8 +209,11 @@
   transform: translateX(5px);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
+  .navbar {
+    width: calc(100% - 32px);
+    top: 16px;
+  }
 
   .navbar__links {
     display: none;
@@ -201,17 +224,10 @@
   }
 
   .navbar__hamburger {
-    display: block;
+    display: flex;
   }
 
   .navbar__inner {
-    padding: 15px;
-  }
-}
-
-/* Desktop Hide Mobile Menu */
-@media (min-width: 769px) {
-  .navbar__mobile-menu {
-    display: none;
+    padding: 0 8px 0 20px;
   }
 }

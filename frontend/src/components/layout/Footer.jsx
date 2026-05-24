@@ -62,9 +62,9 @@ function Footer() {
             <div className="footer__column">
               <h4 className="footer__heading">Company</h4>
 
-              <a href="#" className="footer__item">
+              <Link to="/privacy" className="footer__item">
                 Privacy Policy
-              </a>
+              </Link>
 
               <Link to="/terms" className="footer__item">
                 Terms & Conditions

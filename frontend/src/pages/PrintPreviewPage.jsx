@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import QuantityInput from '../components/QuantityInput';
 import PrintButton from '../components/PrintButton';
@@ -6,6 +6,7 @@ import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
+import { calculatePasswordStrength } from '../utils/passwordStrength';
 
 /**
  * PrintPreviewPage — Step 3 & 4.
@@ -17,6 +18,18 @@ function PrintPreviewPage() {
 
   const [quantity, setQuantity] = useState(6);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [password, setPassword] = useState('');
+  const [strength, setStrength] = useState(0);
+  const [strengthLabel, setStrengthLabel] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const result = calculatePasswordStrength(password);
+      setStrength(result.score);
+      setStrengthLabel(result.label);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [password]);
 
   const handleGenerateSheet = async () => {
     setIsGenerating(true);
@@ -26,7 +39,6 @@ function PrintPreviewPage() {
         quantity,
         photoSizePreset: state.sizePreset,
       });
-
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -44,7 +56,6 @@ function PrintPreviewPage() {
   const slots = Array.from({ length: quantity });
 
   // If user lands here directly without uploading, redirect
-
   if (!state?.processedUrl) {
     return (
       <EmptyState
@@ -63,7 +74,6 @@ function PrintPreviewPage() {
       transition: { duration: 0.8, ease: "easeOut", delay }
     })
   };
-
 
   return (
     <div className="print-page page-content">
@@ -133,10 +143,53 @@ function PrintPreviewPage() {
 
           <hr className="divider" />
 
+          <div className="password-section">
+            <label className="print-info-label">
+              Secure Access Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter secure password"
+              className="password-input"
+            />
+            <div className="password-meter">
+              <div
+                className={`password-meter__fill ${
+                  strength <= 1
+                    ? 'password-meter__fill--weak'
+                    : strength === 2
+                    ? 'password-meter__fill--medium'
+                    : strength === 3
+                    ? 'password-meter__fill--strong'
+                    : 'password-meter__fill--excellent'
+                }`}
+                style={{ width: `${(strength / 4) * 100}%` }}
+              />
+            </div>
+            <span
+              aria-live="polite"
+              className={`password-feedback ${
+                strength <= 1
+                  ? 'password-feedback--weak'
+                  : strength === 2
+                  ? 'password-feedback--medium'
+                  : strength === 3
+                  ? 'password-feedback--strong'
+                  : 'password-feedback--excellent'
+              }`}
+            >
+              {strengthLabel}
+            </span>
+          </div>
+
+          <hr className="divider" />
+
           <PrintButton
             onClick={handleGenerateSheet}
             isLoading={isGenerating}
-            disabled={isGenerating}
+            disabled={isGenerating || strength === 0}
           />
 
           <Link to="/editor" className="btn btn-ghost print-page__back-btn">

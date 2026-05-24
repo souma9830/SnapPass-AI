@@ -391,7 +391,7 @@ When you open a PR, please copy, paste, and fill in this exact template:
 
 ### JavaScript / React
 - Use **functional components** with hooks exclusively (no class components).
-- Each component must have **its own `.js` + `.css` file**.
+- Each component must have **its own `.jsx` + `.css` file**.
 - Use **highly descriptive variable names** (`uploadedFile` not `uf`, `handleFormSubmit` not `submit`).
 - Add a **JSDoc comment block** at the top of every component and utility function.
 - Keep components **focused**: if a file is over 200 lines, consider splitting it.
@@ -483,11 +483,11 @@ Looking for something specific to do? These are the most impactful areas where w
 ### 🟢 Good First Issues (Frontend - Stages 1 & 2)
 | Task | File | Description |
 |------|------|-------------|
-| Progress Bar | `src/components/UploadBox.js` | Show an interactive upload progress percentage bar |
+| Progress Bar | `src/components/UploadBox.jsx` | Show an interactive upload progress percentage bar |
 | Error Toast | `src/components/` | Create a global, reusable toast notification component for errors |
-| Admin Stats UI | `src/pages/AdminDashboard.js` | Build the UI to connect statistics to the real API once the backend is ready |
-| Sidebar Navigation | `src/components/layout/Sidebar.js` | Build a clean, collapsible sidebar for the main editor view |
-| Dark Mode Toggle | `src/index.css` & `Navbar.js` | Add `prefers-color-scheme: dark` styles and a manual toggle switch |
+| Admin Stats UI | `src/pages/AdminDashboard.jsx` | Build the UI to connect statistics to the real API once the backend is ready |
+| Sidebar Navigation | `src/components/layout/Sidebar.jsx` | Build a clean, collapsible sidebar for the main editor view |
+| Dark Mode Toggle | `src/index.css` & `src/components/layout/Navbar.jsx` | Add `prefers-color-scheme: dark` styles and a manual toggle switch |
 
 ---
 

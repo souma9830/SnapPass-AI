@@ -11,10 +11,10 @@ import './BackgroundSelector.css';
 
 const BACKGROUNDS = [
   { id: 'white',    label: 'White',      hex: '#ffffff' },
-  { id: 'offwhite', label: 'Off-White',  hex: '#f5f0e8' },
+  { id: 'off-white', label: 'Off-White',  hex: '#f5f0e8' },
   { id: 'light-grey', label: 'Light Grey', hex: '#d1d5db' },
-  { id: 'blue',     label: 'Light Blue', hex: '#bfdbfe' },
-  { id: 'red',      label: 'Light Red',  hex: '#fecaca' },
+  { id: 'light-blue', label: 'Light Blue', hex: '#bfdbfe' },
+  { id: 'light-red',  label: 'Light Red',  hex: '#fecaca' },
 ];
 
 function BackgroundSelector({ selected = 'white', onChange }) {

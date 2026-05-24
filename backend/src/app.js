@@ -4,11 +4,13 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 
 import uploadRoutes from './routes/upload.routes.js';
 import imageRoutes from './routes/image.routes.js';
 import printRoutes from './routes/print.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
 
@@ -28,13 +30,19 @@ app.use(
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+
+app.get("/", (_req, res) => {
+  res.json({ status: "ok", service: "SnapPass AI Backend API", message: "Welcome to the API" });
+});
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "SnapPass AI Backend", timestamp: new Date() });
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/process", imageRoutes);
 app.use("/api/print", printRoutes);

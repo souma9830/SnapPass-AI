@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import './UploadBox.css';
+import { validateImageFile } from '../utils/fileValidation';
 
 /**
  * UploadBox — drag-and-drop + click-to-browse photo uploader.
@@ -14,25 +15,20 @@ function UploadBox({ onFileSelect, isUploading, progress = 0 }) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState('');
 
-  const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-  const MAX_SIZE_MB = 10;
-
-  const validateFile = (file) => {
-    if (!ACCEPTED_TYPES.includes(file.type)) {
-      setError('Only JPEG, PNG, or WebP images are accepted.');
-      return false;
+  const handleFile = (file) => {
+    if (!file) {
+      setError('Please select an image file.');
+      return;
     }
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      setError(`File must be smaller than ${MAX_SIZE_MB} MB.`);
-      return false;
+
+    const result = validateImageFile(file);
+    if (!result.valid) {
+      setError(result.error);
+      return;
     }
     setError('');
-    return true;
-  };
-
-  const handleFile = (file) => {
-    if (file && validateFile(file)) {
-      onFileSelect && onFileSelect(file);
+    if (onFileSelect) {
+      onFileSelect(file);
     }
   };
 
@@ -90,7 +86,13 @@ function UploadBox({ onFileSelect, isUploading, progress = 0 }) {
         aria-hidden="true"
       />
 
-      <div className="upload-box__icon" aria-hidden="true">📤</div>
+      <div className="upload-box__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+          <path d="M12 16V5" />
+          <path d="M8 9l4-4 4 4" />
+          <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+        </svg>
+      </div>
       <p className="upload-box__title">Drag & drop your photo here</p>
       <p className="upload-box__subtitle">or <span className="upload-box__browse">browse files</span></p>
       <p className="upload-box__hint">JPEG, PNG, WebP · Max 10 MB</p>

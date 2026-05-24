@@ -2,71 +2,113 @@
  * usePhotoUpload — custom hook that encapsulates the upload state machine.
  *
  * Returns:
- *   { uploadFile, uploadedFile, isUploading, error, reset }
- *
- * TODO: Replace the simulated delay with a real fetch to POST /api/upload.
+ *   { uploadFile, uploadedFile, isUploading, uploadProgress, uploadFileName, error, reset }
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { uploadPhoto } from '../services/photoService';
 
 function usePhotoUpload() {
   const [isUploading, setIsUploading]   = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadFileName, setUploadFileName] = useState('');
   const [uploadedFile, setUploadedFile] = useState(null); // { filename, fileUrl, localUrl }
   const [error, setError]               = useState(null);
+
+  const localUrlRef = useRef(null);
+  const progressRef = useRef(null);
 
   const uploadFile = useCallback(async (file) => {
     setIsUploading(true);
     setUploadProgress(0);
+    setUploadFileName(file.name);
     setError(null);
 
     try {
-      // Create local preview immediately
-      const localUrl = URL.createObjectURL(file);
+      if (localUrlRef.current) {
+        URL.revokeObjectURL(localUrlRef.current);
+      }
 
-      // Simulate progress for placeholder
-      const progressInterval = setInterval(() => {
+      const localUrl = URL.createObjectURL(file);
+      localUrlRef.current = localUrl;
+
+      // Simulate realistic upload progress with variable speed
+      // Fast at start, slows down in the middle, pauses near the end
+      progressRef.current = setInterval(() => {
         setUploadProgress((prev) => {
           if (prev >= 90) {
-            clearInterval(progressInterval);
+            clearInterval(progressRef.current);
             return 90;
           }
-          return prev + 10;
+          // Variable increment: faster early, slower later
+          let increment;
+          if (prev < 30) {
+            increment = Math.random() * 8 + 4;   // 4–12% jumps
+          } else if (prev < 60) {
+            increment = Math.random() * 5 + 2;   // 2–7% jumps
+          } else {
+            increment = Math.random() * 3 + 1;   // 1–4% jumps
+          }
+          return Math.min(prev + increment, 90);
         });
-      }, 100);
+      }, 150);
 
-      // TODO: uncomment when backend is ready
-      // const xhr = new XMLHttpRequest();
-      // xhr.upload.onprogress = (e) => {
-      //   if (e.lengthComputable) {
-      //     const progress = Math.round((e.loaded / e.total) * 100);
-      //     setUploadProgress(progress);
-      //   }
-      // };
-      // const formData = new FormData();
-      // formData.append('photo', file);
-      // xhr.open('POST', '/api/upload');
-      // xhr.send(formData);
-
-      // Placeholder — simulate network delay
-      await new Promise((r) => setTimeout(r, 1000));
-      clearInterval(progressInterval);
+      // Delegate to photoService which uses the configured axios api instance.
+      const data = await uploadPhoto(file);
+      
+      clearInterval(progressRef.current);
       setUploadProgress(100);
-      setUploadedFile({ filename: file.name, fileUrl: localUrl, localUrl });
+
+      // Brief pause at 100% so the user sees the completion state
+      await new Promise((r) => setTimeout(r, 500));
+
+      const nextUploaded = { ...data, localUrl };
+      setUploadedFile(nextUploaded);
+      return nextUploaded;
     } catch (err) {
-      setError(err.message || 'Upload failed. Please try again.');
+      const isNetworkError =
+        err.message?.toLowerCase().includes('network') ||
+        err.message?.toLowerCase().includes('failed to fetch') ||
+        err.message?.toLowerCase().includes('err_connection_refused');
+
+      setError(
+        isNetworkError
+          ? 'Could not reach the server. Please check your connection or try again later.'
+          : err.message || 'Upload failed. Please try again.'
+      );
       setUploadProgress(0);
+      if (localUrlRef.current) {
+        URL.revokeObjectURL(localUrlRef.current);
+        localUrlRef.current = null;
+      }
+      throw err;
     } finally {
       setIsUploading(false);
+      setUploadFileName('');
+      if (progressRef.current) clearInterval(progressRef.current);
     }
   }, []);
 
   const reset = useCallback(() => {
+    if (localUrlRef.current) {
+      URL.revokeObjectURL(localUrlRef.current);
+      localUrlRef.current = null;
+    }
     setUploadedFile(null);
     setError(null);
+    setUploadProgress(0);
+    setUploadFileName('');
   }, []);
 
-  return { uploadFile, uploadedFile, isUploading, uploadProgress, error, reset };
+  useEffect(() => {
+    return () => {
+      if (localUrlRef.current) {
+        URL.revokeObjectURL(localUrlRef.current);
+      }
+    };
+  }, []);
+
+  return { uploadFile, uploadedFile, isUploading, uploadProgress, uploadFileName, error, reset };
 }
 
 export default usePhotoUpload;

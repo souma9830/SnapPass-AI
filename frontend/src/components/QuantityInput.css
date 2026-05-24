@@ -6,11 +6,35 @@
 }
 
 .qty-input__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.qty-input__label-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(14, 116, 144, 0.12);
+  color: #0f766e;
+}
+
+.qty-input__label-icon svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .qty-input__controls {

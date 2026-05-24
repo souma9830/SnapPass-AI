@@ -41,7 +41,7 @@ export const processImage = async (req, res, next) => {
     form.append("background_colour", backgroundColour);
     form.append("photo_size_preset", photoSizePreset);
 
-    const aiResponse = await axios.post(`${config.aiServiceUrl}/process`, form, {
+    const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, form, {
       headers: form.getHeaders(),
       responseType: "arraybuffer",
     });

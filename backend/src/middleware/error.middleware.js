@@ -11,7 +11,9 @@ const errorMiddleware = (
   res,
   next
 ) => {
-  console.error(err);
+  if (!err.isOperational) {
+    console.error(err);
+  }
 
   const statusCode = err.statusCode || err.status || 500;
 

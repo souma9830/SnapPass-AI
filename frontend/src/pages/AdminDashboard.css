@@ -58,7 +58,26 @@
   text-align: center;
 }
 
-.stat-card__icon  { font-size: 28px; line-height: 1; }
+.stat-card__icon  {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+.stat-card__icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .stat-card__value { font-size: var(--font-size-2xl); font-weight: 800; color: var(--color-text); }
 .stat-card__label { font-size: var(--font-size-sm); color: var(--color-text-muted); }
 
@@ -71,7 +90,26 @@
   padding: var(--space-2xl);
   text-align: center;
 }
-.admin-placeholder__icon  { font-size: 40px; }
+.admin-placeholder__icon  {
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: rgba(14, 116, 144, 0.12);
+  color: #0f766e;
+}
+
+.admin-placeholder__icon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .admin-placeholder__title { font-size: var(--font-size-lg); font-weight: 700; color: var(--color-text); }
 .admin-placeholder__desc  {
   font-size: var(--font-size-sm);

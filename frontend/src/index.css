@@ -2,7 +2,7 @@
    SnapPass AI — Global Styles & Design Tokens
    =================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap');
 
 /* ── CSS Variables ──────────────────────────────── */
 :root {
@@ -46,7 +46,8 @@
   --shadow-lg:  0 10px 30px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
 
   /* Typography */
-  --font-family:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family:  'Manrope', 'Segoe UI', sans-serif;
+  --font-family-display: 'Sora', 'Segoe UI', sans-serif;
   --font-size-xs: 11px;
   --font-size-sm: 13px;
   --font-size-md: 15px;
@@ -149,14 +150,14 @@ button { font-family: var(--font-family); cursor: pointer; border: none; backgro
 .badge-amber { background: #fef3c7; color: #b45309; }
 
 .section-title {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: var(--space-xs);
 }
 
 .section-subtitle {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   color: var(--color-text-muted);
   margin-bottom: var(--space-lg);
 }

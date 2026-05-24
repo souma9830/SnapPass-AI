@@ -1,11 +1,17 @@
-import React, { useState, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import PhotoPreview from '../components/PhotoPreview';
-import BackgroundSelector from '../components/BackgroundSelector';
-import SizeSelector from '../components/SizeSelector';
-import { ButtonSpinner } from '../components/LoadingSpinner';
-import './EditorPage.css';
-import EmptyState from '../components/EmptyState';
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import PhotoPreview from "../components/PhotoPreview";
+import BackgroundSelector from "../components/BackgroundSelector";
+import SizeSelector from "../components/SizeSelector";
+import { ButtonSpinner } from "../components/LoadingSpinner";
+import "./EditorPage.css";
+import EmptyState from "../components/EmptyState";
+import { motion } from "framer-motion";
+import useImageProcessor from "../hooks/useImageProcessor";
+import usePhotoUpload from "../hooks/usePhotoUpload";
+
+import { iconMap, backgroundHexMap } from "../data/EditorPageData";
+import { fadeUpVariant } from "../animations/variants.js";
 
 /**
  * EditorPage — Step 2.
@@ -24,50 +30,61 @@ function EditorPage() {
 
   const fileInputRef = useRef(null);
 
-  const [background, setBackground] = useState('white');
-  const [sizePreset, setSizePreset] = useState('35x45');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [background, setBackground] = useState("white");
+  const [sizePreset, setSizePreset] = useState("35x45");
+  const {
+    processImage,
+    processedUrl,
+    isProcessing,
+    error: processError,
+  } = useImageProcessor();
+  const {
+    uploadFile,
+    uploadedFile,
+    isUploading: isUploadingPhoto,
+    error: uploadError,
+  } = usePhotoUpload();
 
   const handleReplacePhoto = (event) => {
     const file = event.target.files[0];
 
     if (!file) return;
-
-    const newLocalUrl = URL.createObjectURL(file);
-
-    setPhotoData({
-      localUrl: newLocalUrl,
-      filename: file.name,
-      fileSize: file.size,
-    });
+    uploadFile(file).catch(() => {});
   };
 
+  useEffect(() => {
+    if (uploadedFile) {
+      setPhotoData({
+        localUrl: uploadedFile.localUrl,
+        filename: uploadedFile.filename,
+        fileSize: uploadedFile.size ?? photoData.fileSize,
+      });
+    }
+  }, [uploadedFile]);
 
   const handleProcess = async () => {
-    setIsProcessing(true);
+    try {
+      const backgroundHex = backgroundHexMap[background] || "#ffffff";
+      const nextProcessedUrl = await processImage({
+        filename: photoData.filename,
+        backgroundColour: backgroundHex,
+        photoSizePreset: sizePreset,
+      });
 
-    // TODO: Call backend POST /api/process with { filename, backgroundColour, photoSizePreset }
-    // const res = await fetch('/api/process', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ filename: state.filename, backgroundColour: background, photoSizePreset: sizePreset }),
-    // });
-    // const blob = await res.blob();
-    // const processedUrl = URL.createObjectURL(blob);
-
-    // Simulate processing delay
-    await new Promise((r) => setTimeout(r, 1500));
-
-    setIsProcessing(false);
-
-    // Navigate to print preview — pass original url as placeholder for processed for now
-    navigate('/print-preview', {
-      state: {
-        processedUrl: photoData.localUrl, // replace with real processedUrl after backend integration
-        background,
-        sizePreset,
-      },
-    });
+      navigate("/print-preview", {
+        state: {
+          processedUrl: nextProcessedUrl,
+          filename: photoData.filename,
+          background,
+          sizePreset,
+        },
+      });
+    } catch (error) {
+      console.error("Processing error:", error);
+      alert(
+        "Failed to process image. Please check if backend services are running.",
+      );
+    }
   };
   // If user lands here directly without uploading, redirect
 
@@ -83,23 +100,48 @@ function EditorPage() {
 
   return (
     <div className="editor-page page-content">
-      <div className="editor-page__header">
+      <motion.div
+        className="editor-page__header"
+        variants={fadeUpVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={0.1} // Loads first
+      >
         <h1 className="section-title">Edit Your Photo</h1>
-        <p className="section-subtitle">Choose a background and size, then let AI process your photo.</p>
-      </div>
+        <p className="section-subtitle">
+          Choose a background and size, then let AI process your photo.
+        </p>
+      </motion.div>
 
       <div className="editor-page__layout">
         {/* Preview panel */}
-        <section className="editor-page__preview card" aria-label="Photo preview">
+        <motion.section
+          className="editor-page__preview card"
+          aria-label="Photo preview"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.2} // Loads second
+        >
           <PhotoPreview
             originalUrl={photoData.localUrl}
-            processedUrl={null}
+            processedUrl={processedUrl}
             isProcessing={isProcessing}
           />
-        </section>
+        </motion.section>
 
         {/* Controls panel */}
-        <aside className="editor-page__controls card" aria-label="Photo settings">
+        <motion.aside
+          className="editor-page__controls card"
+          aria-label="Photo settings"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.3} // Loads third
+        >
           <BackgroundSelector selected={background} onChange={setBackground} />
           <hr className="divider" />
           <SizeSelector selected={sizePreset} onChange={setSizePreset} />
@@ -112,33 +154,65 @@ function EditorPage() {
             </p>
             <p className="editor-info-row">
               <span className="editor-info-label">Size</span>
-              <span className="editor-info-value">{(photoData.fileSize / 1024).toFixed(1)} KB</span>
+              <span className="editor-info-value">
+                {(photoData.fileSize / 1024).toFixed(1)} KB
+              </span>
             </p>
           </div>
 
+          {/* Hidden file input works exactly as before */}
           <input
             type="file"
             accept=".jpg,.jpeg,.png,.webp"
             ref={fileInputRef}
             onChange={handleReplacePhoto}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
 
           <button
             className="btn editor-page__replace-btn"
             onClick={() => fileInputRef.current.click()}
+            disabled={isUploadingPhoto}
           >
-            🔄 Replace Photo
+            <span className="editor-page__btn-icon" aria-hidden="true">
+              {iconMap.refresh}
+            </span>
+            Replace Photo
           </button>
 
           <button
             className="btn btn-primary editor-page__process-btn"
             onClick={handleProcess}
-            disabled={isProcessing}
+            disabled={isProcessing || isUploadingPhoto}
           >
-            {isProcessing ? <><ButtonSpinner /> Processing…</> : '✨ Process with AI →'}
+            {isProcessing ? (
+              <>
+                <ButtonSpinner /> Processing…
+              </>
+            ) : (
+              <>
+                <span className="editor-page__btn-icon" aria-hidden="true">
+                  {iconMap.spark}
+                </span>
+                Process with AI →
+              </>
+            )}
           </button>
-        </aside>
+
+          {processError ? (
+            <p className="editor-info-row">
+              <span className="editor-info-label">Error</span>
+              <span className="editor-info-value">{processError}</span>
+            </p>
+          ) : null}
+
+          {uploadError ? (
+            <p className="editor-info-row">
+              <span className="editor-info-label">Error</span>
+              <span className="editor-info-value">{uploadError}</span>
+            </p>
+          ) : null}
+        </motion.aside>
       </div>
     </div>
   );

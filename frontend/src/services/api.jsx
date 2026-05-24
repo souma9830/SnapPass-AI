@@ -2,12 +2,25 @@
  * api.js — Axios instance pre-configured for the SnapPass AI backend.
  *
  * Import this in service files instead of raw fetch/axios calls.
+ *
+ * Requires the VITE_API_URL environment variable to be set.
+ * In development: create frontend/.env and set VITE_API_URL=http://localhost:5005/api
+ * In production:  set VITE_API_URL to your deployed backend URL in your hosting dashboard.
  */
 
 import axios from 'axios';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
+if (!apiBaseUrl && import.meta.env.DEV) {
+  console.warn(
+    '[SnapPass] VITE_API_URL is not set. ' +
+    'Copy frontend/.env.example to frontend/.env and fill in the backend URL.'
+  );
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: apiBaseUrl,
   timeout: 60000, // 60s — AI processing can take time
   headers: {
     Accept: 'application/json',

@@ -6,6 +6,7 @@
 
 import axios from "axios";
 import { config } from "../config/config.js";
+import { PHOTO_SIZE_DETAILS } from "../utils/photoPresets.js";
 
 /**
  * POST /api/print/generate-sheet
@@ -45,13 +46,5 @@ export const generateSheet = async (req, res, next) => {
  * Returns the list of supported passport photo size presets.
  */
 export const getSizePresets = async (_req, res) => {
-  const presets = [
-    { id: "35x45", label: "35×45 mm (India / UK)", widthMm: 35, heightMm: 45 },
-    { id: "51x51", label: "51×51 mm (USA Visa)", widthMm: 51, heightMm: 51 },
-    { id: "33x48", label: "33×48 mm (Schengen Visa)", widthMm: 33, heightMm: 48 },
-    { id: "40x60", label: "40×60 mm (China Visa)", widthMm: 40, heightMm: 60 },
-    { id: "2x2in", label: '2×2 inch (US Passport)', widthMm: 50.8, heightMm: 50.8 },
-  ];
-
-  res.json({ success: true, data: presets });
+  res.json({ success: true, data: PHOTO_SIZE_DETAILS });
 };

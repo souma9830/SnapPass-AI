@@ -2,9 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { fadeUpVariant } from "../../animations/variants.js";
 
-const AIShowcaseSection = ({ chips, iconMap }) => {
+const AIShowcaseSection = ({ darkMode, toggleTheme, chips, iconMap }) => {
   return (
-    <section className="ai-showcase" aria-labelledby="ai-showcase-title">
+    <div className={`ai-showcase-toggle ${ darkMode? "ai-showcase-toggle-dark": "" }`}>
+    <section className= "ai-showcase" aria-labelledby="ai-showcase-title">
       {/* left  text */}
       <motion.div
         className="ai-showcase__content"
@@ -14,15 +15,15 @@ const AIShowcaseSection = ({ chips, iconMap }) => {
         viewport={{ once: true, amount: 0.1 }}
         custom={0.1}
       >
-        <span className="badge badge-blue">AI Powered Workflow</span>
+        <span className={`badge ${darkMode?"badge-blue-dark": "badge-blue"}`}> </span>
 
-        <h2 id="ai-showcase-title" className="section-title">
+        <h2 id="ai-showcase-title" className={`section-title ${darkMode? "section-title-dark": "section-title-light"}`}>
           From Simple Upload
           <br />
           to Print-Ready Sheet
         </h2>
 
-        <p className="section-subtitle">
+        <p className={`section-subtitle ${darkMode? "section-subtitle-dark": "section-subtitle-light"}`}>
           Upload a portrait photo and let AI automatically remove the
           background, align your face and generate a professional passport photo
           sheet.
@@ -31,8 +32,8 @@ const AIShowcaseSection = ({ chips, iconMap }) => {
         {/* feature */}
         <div className="ai-showcase__chips">
           {chips.map(({ icon, label }) => (
-            <div key={label} className="ai-chip">
-              <span className="ai-chip__icon" aria-hidden="true">
+            <div key={label} className={`ai-chip ${darkMode ? "ai-chip-dark" : "ai-chip-light"}`}>
+              <span className={`ai-chip__icon ${darkMode ? "ai-chip__icon-dark" : "ai-chip__icon-light"}`} aria-hidden="true">
                 {iconMap[icon]}
               </span>
               {label}
@@ -73,10 +74,13 @@ const AIShowcaseSection = ({ chips, iconMap }) => {
             alt="Printable passport sheet"
             className="showcase-sheet-card__image"
           />
-          <div className="showcase-sheet-card__badge">Print Ready</div>
+          <div className={`showcase-sheet-card__badge ${darkMode ? "showcase-sheet-card__badge-dark" : "showcase-sheet-card__badge-light"}`}>
+            Print Ready
+          </div>
         </motion.div>
       </div>
     </section>
+    </div>
   );
 };
 

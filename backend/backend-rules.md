@@ -118,3 +118,11 @@ src/
   "errors": []
 }
 ```
+
+---
+
+## Upload + Processing Flow Notes
+
+- Uploads are stored locally for AI processing even when Cloudinary is enabled.
+- When Cloudinary is configured, local files are removed after `/api/process` finishes.
+- This prevents `/api/process` from failing due to missing local files while still avoiding long-term disk growth.

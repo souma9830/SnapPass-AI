@@ -10,27 +10,30 @@ const PrintPreviewPage = lazy(() => import('../pages/PrintPreviewPage'));
 const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
 const TermsPage = lazy(() => import('../pages/TermsPage'));
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage'));
+const PhotoStudio = lazy(() => import('../pages/PhotoStudio'));
+
 
 /**
  * AppRoutes — central route configuration for SnapPass AI.
  * Add new pages here so contributors can find all routes in one place.
  */
-function AppRoutes() {
+function AppRoutes({darkMode, toggleTheme}) {
   const location = useLocation();
 
   return (
     <RouteErrorBoundary key={location.pathname}>
       <Suspense fallback={<DelayedFallback delayMs={250} />}>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/upload" element={<UploadPage />} />
-          <Route path="/editor" element={<EditorPage />} />
-          <Route path="/print-preview" element={<PrintPreviewPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/"             element={<HomePage darkMode={darkMode} toggleTheme={toggleTheme}/>} />
+          <Route path="/upload"       element={<UploadPage darkMode={darkMode} toggleTheme={toggleTheme}/>} />
+          <Route path="/editor"       element={<EditorPage darkMode={darkMode} toggleTheme={toggleTheme}/>} />
+          <Route path="/print-preview" element={<PrintPreviewPage darkMode={darkMode} toggleTheme={toggleTheme}/>} />
+          <Route path="/admin"        element={<AdminDashboard darkMode={darkMode} toggleTheme={toggleTheme}/>} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/studio" element={<PhotoStudio />} />
           {/* Fallback — redirect unknown paths to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace /> } />
         </Routes>
       </Suspense>
     </RouteErrorBoundary>

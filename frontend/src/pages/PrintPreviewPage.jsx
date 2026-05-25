@@ -14,7 +14,7 @@ import { calculatePasswordStrength } from '../utils/passwordStrength';
  * Shows the processed photo in a simulated A4 sheet grid.
  * User picks quantity, then downloads or prints the sheet.
  */
-function PrintPreviewPage() {
+function PrintPreviewPage({darkMode, toggleTheme}) {
   const { state } = useLocation();
   const { showToast } = useToast();
 
@@ -65,6 +65,8 @@ function PrintPreviewPage() {
         title="No processed photo available"
         description="Upload and process a photo before accessing print preview."
         buttonText="Upload Photo"
+        darkMode={darkMode}
+        toggleTheme={toggleTheme}
       />
     );
   }
@@ -79,6 +81,7 @@ function PrintPreviewPage() {
   };
 
   return (
+    <div className = {`print-preview-toggle ${darkMode? "print-preview-toggle-dark": "" }`}> 
     <div className="print-page page-content">
       <motion.div
         className="print-page__header"
@@ -88,8 +91,8 @@ function PrintPreviewPage() {
         viewport={{ once: true }}
         custom={0.1}
       >
-        <h1 className="section-title">Print Preview</h1>
-        <p className="section-subtitle">
+        <h1 className={`section-title ${darkMode? "section-title-dark": "section-title-light"}`}>Print Preview</h1>
+        <p className={`section-subtitle ${darkMode? "section-subtitle-dark": "section-subtitle-light"}`}>
           Adjust quantity and generate your printable A4 sheet.
         </p>
       </motion.div>
@@ -131,18 +134,20 @@ function PrintPreviewPage() {
         >
           <div>
             <p className="print-info-label">Selected Preset</p>
-            <p className="print-info-value">{state.sizePreset || '35x45 mm'}</p>
+            <p className={`print-info-value ${darkMode ? "print-info-value-dark" : ""}`}>
+              {state.sizePreset || '35x45 mm'}
+            </p>
           </div>
           <div>
             <p className="print-info-label">Background</p>
-            <p className="print-info-value" style={{ textTransform: 'capitalize' }}>
+            <p className={`print-info-value ${darkMode ? "print-info-value-dark" : "print-info-value-light"}`} style={{ textTransform: 'capitalize' }}>
               {state.background || 'White'}
             </p>
           </div>
 
           <hr className="divider" />
 
-          <QuantityInput value={quantity} onChange={setQuantity} />
+          <QuantityInput darkMode = {darkMode} toggleTheme = {toggleTheme} value={quantity} onChange={setQuantity} />
 
           <hr className="divider" />
 
@@ -192,10 +197,12 @@ function PrintPreviewPage() {
           <PrintButton
             onClick={handleGenerateSheet}
             isLoading={isGenerating}
+            darkMode={darkMode}
+            toggleTheme={toggleTheme}
             disabled={isGenerating || strength === 0}
           />
 
-          <Link to="/editor" className="btn btn-ghost print-page__back-btn">
+          <Link to="/editor" className={`btn btn-ghost print-page__back-btn ${darkMode ? "print-page__back-btn-dark" : ""}`}>
             <span className="print-page__back-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
                 <path d="M15 6l-6 6 6 6" />
@@ -205,6 +212,7 @@ function PrintPreviewPage() {
           </Link>
         </motion.aside>
       </div>
+    </div>
     </div>
   );
 }

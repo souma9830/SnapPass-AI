@@ -1,29 +1,24 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import InteractiveCropper from './InteractiveCropper';
 import './PhotoPreview.css';
 
 /**
- * PhotoPreview — displays original and processed passport photo side by side.
+ * PhotoPreview — displays original (interactive) and processed passport photo side by side.
  *
  * Props:
  *   originalUrl  (string) — blob URL or server URL of the original photo
  *   processedUrl (string) — URL of the AI-processed photo (optional)
  *   isProcessing (bool)   — shows loading state over the processed panel
  */
-function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
+const PhotoPreview = forwardRef(({ originalUrl, processedUrl, isProcessing }, ref) => {
   return (
     <div className="photo-preview">
-      {/* Original */}
+      {/* Original (Interactive Cropper) */}
       {originalUrl && (
         <div className="photo-preview__panel">
           <span className="photo-preview__label">Original</span>
-          <div className="photo-preview__frame">
-            <img
-              src={originalUrl}
-              alt="Original uploaded — before processing"
-              className="photo-preview__img"
-            />
-          </div>
+          <InteractiveCropper imageUrl={originalUrl} ref={ref} />
         </div>
       )}
 
@@ -55,6 +50,6 @@ function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
       </div>
     </div>
   );
-}
+});
 
 export default PhotoPreview;

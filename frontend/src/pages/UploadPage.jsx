@@ -105,8 +105,5 @@ function UploadPage() {
     </div>
   );
 }
-    </div>
-  );
-}
 
 export default UploadPage;

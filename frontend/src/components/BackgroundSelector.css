@@ -47,3 +47,20 @@
   border: 1px solid var(--color-border);
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+  .bg-selector__list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .bg-selector__list::-webkit-scrollbar {
+    display: none; /* Safari/Chrome */
+  }
+  
+  .bg-selector__item {
+    flex-shrink: 0;
+  }
+}

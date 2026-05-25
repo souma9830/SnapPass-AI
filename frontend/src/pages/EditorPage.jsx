@@ -29,6 +29,7 @@ function EditorPage() {
   });
 
   const fileInputRef = useRef(null);
+  const cropperRef = useRef(null);
 
   const [background, setBackground] = useState("white");
   const [sizePreset, setSizePreset] = useState("35x45");
@@ -64,9 +65,29 @@ function EditorPage() {
 
   const handleProcess = async () => {
     try {
+      let activeFilename = photoData.filename;
+
+      if (cropperRef.current) {
+        try {
+          const croppedBlob = await cropperRef.current.getCroppedBlob();
+          // Create a File object from the blob to preserve naming/mimetype
+          const croppedFile = new File([croppedBlob], `cropped_${photoData.filename}`, {
+            type: "image/png"
+          });
+          
+          // Upload the cropped file to backend
+          const nextUploaded = await uploadFile(croppedFile);
+          if (nextUploaded && nextUploaded.filename) {
+            activeFilename = nextUploaded.filename;
+          }
+        } catch (err) {
+          console.warn("Failed client-side crop, falling back to original:", err);
+        }
+      }
+
       const backgroundHex = backgroundHexMap[background] || "#ffffff";
       const nextProcessedUrl = await processImage({
-        filename: photoData.filename,
+        filename: activeFilename,
         backgroundColour: backgroundHex,
         photoSizePreset: sizePreset,
       });
@@ -74,7 +95,7 @@ function EditorPage() {
       navigate("/print-preview", {
         state: {
           processedUrl: nextProcessedUrl,
-          filename: photoData.filename,
+          filename: activeFilename,
           background,
           sizePreset,
         },
@@ -129,6 +150,7 @@ function EditorPage() {
             originalUrl={photoData.localUrl}
             processedUrl={processedUrl}
             isProcessing={isProcessing}
+            ref={cropperRef}
           />
         </motion.section>
 
@@ -172,7 +194,7 @@ function EditorPage() {
           <button
             className="btn editor-page__replace-btn"
             onClick={() => fileInputRef.current.click()}
-            disabled={isUploadingPhoto}
+            disabled={isUploadingPhoto || isProcessing}
           >
             <span className="editor-page__btn-icon" aria-hidden="true">
               {iconMap.refresh}
@@ -185,9 +207,9 @@ function EditorPage() {
             onClick={handleProcess}
             disabled={isProcessing || isUploadingPhoto}
           >
-            {isProcessing ? (
+            {isProcessing || isUploadingPhoto ? (
               <>
-                <ButtonSpinner /> Processing…
+                <ButtonSpinner /> {isUploadingPhoto ? "Uploading Crop…" : "Processing…"}
               </>
             ) : (
               <>

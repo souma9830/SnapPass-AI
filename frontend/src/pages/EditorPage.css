@@ -154,25 +154,105 @@
   stroke-linejoin: round;
 }
 
+/* ── Tablet breakpoint ─────────────────────────── */
 @media (max-width: 992px) {
   .editor-page__layout {
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 280px;
     gap: var(--space-lg, 1.5rem);
   }
 }
 
+/* ── Mobile breakpoint ─────────────────────────── */
 @media (max-width: 768px) {
   .editor-page {
-    padding: var(--space-md, 1.25rem 1rem);
-    gap: var(--space-md, 1.25rem);
+    padding: 1rem;
+    gap: 1rem;
   }
 
+  .editor-page__header {
+    margin-top: 8px;
+  }
+
+  /* Stack preview on top, controls below */
   .editor-page__layout {
     grid-template-columns: 1fr;
-    gap: var(--space-lg, 1.5rem);
+    grid-template-rows: auto auto;
+    gap: 1rem;
+  }
+
+  /* Preview comes first (order:1 is default) */
+  .editor-page__preview {
+    order: 1;
+    padding: 0.75rem;
+    border-radius: 16px;
+  }
+
+  /* Controls panel below preview */
+  .editor-page__controls {
+    order: 2;
+    position: static; /* un-stick on mobile */
+    padding: 1rem;
+    border-radius: 16px;
+    gap: 0.5rem;
+  }
+
+  /* Touch-safe buttons — minimum 48px hit-target */
+  .editor-page__process-btn {
+    padding: 14px 20px;
+    font-size: 1rem;
+    min-height: 48px;
+    border-radius: 14px;
+    margin-top: 0.5rem;
+  }
+
+  .editor-page__replace-btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    min-height: 48px;
+    border-radius: 14px;
+    margin-top: 0.25rem;
+  }
+
+  /* Keep info rows readable on small screens */
+  .editor-info-row {
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .editor-info-value {
+    font-size: 0.75rem;
+    word-break: break-all;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ── Extra-small screens (< 480px) ─────────────── */
+@media (max-width: 480px) {
+  .editor-page {
+    padding: 0.75rem;
+  }
+
+  .editor-page__preview {
+    padding: 0.5rem;
+    border-radius: 12px;
   }
 
   .editor-page__controls {
-    position: static;
+    padding: 0.75rem;
+    border-radius: 12px;
+  }
+
+  .editor-page__process-btn {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .editor-page__replace-btn {
+    padding: 12px 16px;
+    font-size: 0.875rem;
   }
 }

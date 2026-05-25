@@ -42,11 +42,26 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const normalizedMsg = (error.message || '').toLowerCase();
+    const isNetworkError =
+      !error.response &&
+      (error.code === 'ERR_NETWORK' ||
+       error.code === 'ECONNABORTED' ||
+       normalizedMsg.includes('network') ||
+       normalizedMsg.includes('failed to fetch'));
+
     const message =
       error.response?.data?.message ||
       error.message ||
       'An unexpected error occurred.';
-    return Promise.reject(new Error(message));
+
+    const enhanced = new Error(message, { cause: error });
+    if (error.stack) {
+      enhanced.stack = error.stack;
+    }
+    enhanced.isNetworkError = isNetworkError;
+    enhanced.originalError = error;
+    return Promise.reject(enhanced);
   }
 );
 

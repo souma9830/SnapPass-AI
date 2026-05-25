@@ -34,13 +34,8 @@ function usePhotoUpload() {
       setUploadedFile(nextUploaded);
       return nextUploaded;
     } catch (err) {
-      const isNetworkError =
-        err.message?.toLowerCase().includes('network') ||
-        err.message?.toLowerCase().includes('failed to fetch') ||
-        err.message?.toLowerCase().includes('err_connection_refused');
-
       setError(
-        isNetworkError
+        err.isNetworkError
           ? 'Could not reach the server. Please check your connection or try again later.'
           : err.message || 'Upload failed. Please try again.'
       );

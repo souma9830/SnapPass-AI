@@ -15,10 +15,20 @@ import api from './api';
 export const uploadPhoto = async (file) => {
   const formData = new FormData();
   formData.append('photo', file);
-  const { data } = await api.post('/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-  return data.data;
+  try {
+    const { data } = await api.post('/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data.data;
+  } catch (err) {
+    if (err.isNetworkError) {
+      const isTimeout = err.originalError?.code === 'ECONNABORTED';
+      throw new Error(isTimeout
+        ? 'Upload timed out. Please try again.'
+        : 'Upload failed. Please check your connection.');
+    }
+    throw new Error(err.message || 'Upload failed. Please try again.');
+  }
 };
 
 /**
@@ -28,12 +38,22 @@ export const uploadPhoto = async (file) => {
  * @returns {Promise<Blob>}
  */
 export const processPhoto = async ({ filename, backgroundColour, photoSizePreset }) => {
-  const { data } = await api.post(
-    '/process',
-    { filename, backgroundColour, photoSizePreset },
-    { responseType: 'blob' }
-  );
-  return data;
+  try {
+    const { data } = await api.post(
+      '/process',
+      { filename, backgroundColour, photoSizePreset },
+      { responseType: 'blob' }
+    );
+    return data;
+  } catch (err) {
+    if (err.isNetworkError) {
+      throw new Error('Could not reach the server. Please check your connection.');
+    }
+    if (err.originalError?.response?.status === 503) {
+      throw new Error('AI service is currently unavailable. Please try again later.');
+    }
+    throw new Error(err.message || 'Photo processing failed. Please try a different image.');
+  }
 };
 
 /**
@@ -43,12 +63,19 @@ export const processPhoto = async ({ filename, backgroundColour, photoSizePreset
  * @returns {Promise<Blob>}
  */
 export const generateSheet = async ({ filename, quantity, photoSizePreset }) => {
-  const { data } = await api.post(
-    '/print/generate-sheet',
-    { filename, quantity, photoSizePreset },
-    { responseType: 'blob' }
-  );
-  return data;
+  try {
+    const { data } = await api.post(
+      '/print/generate-sheet',
+      { filename, quantity, photoSizePreset },
+      { responseType: 'blob' }
+    );
+    return data;
+  } catch (err) {
+    if (err.isNetworkError) {
+      throw new Error('Could not reach the server. Please check your connection.');
+    }
+    throw new Error(err.message || 'Failed to generate print sheet. Please try again.');
+  }
 };
 
 /**

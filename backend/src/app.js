@@ -11,6 +11,7 @@ import uploadRoutes from './routes/upload.routes.js';
 import imageRoutes from './routes/image.routes.js';
 import printRoutes from './routes/print.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
 
@@ -21,12 +22,11 @@ const app = express();
 
 
 app.use(helmet());
-app.use(
-  cors({
-    origin: config.CORS_ORIGIN,
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:5174"],
+  credentials: true
+}));
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,6 +42,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/process", imageRoutes);
 app.use("/api/print", printRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use((req, _res, next) => {
    const error = new Error(`Route not found: ${req.originalUrl}`);

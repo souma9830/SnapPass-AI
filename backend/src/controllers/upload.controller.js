@@ -5,7 +5,6 @@
  */
 
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs/promises";
 import { uploadImage } from "../service/cloudinary.service.js";
 import Upload from "../models/upload.model.js";
 import { config } from "../config/config.js";
@@ -66,14 +65,6 @@ export const uploadPhoto = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  } finally {
-    if (localPath && isCloudinaryUsed) {
-      try {
-        await fs.unlink(localPath);
-      } catch (_error) {
-        // Best-effort cleanup, ignore failures.
-      }
-    }
   }
 };
 

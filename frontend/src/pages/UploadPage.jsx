@@ -4,20 +4,53 @@ import UploadBox from "../components/UploadBox";
 import usePhotoUpload from "../hooks/usePhotoUpload";
 import "./UploadPage.css";
 import { motion } from "framer-motion";
-
-import { tips, iconMap } from "../data/UploadPageData";
 import { fadeUpVariant } from "../animations/variants.js";
 
 /**
  * UploadPage — Step 1 of the flow.
- * User selects a photo; we create a local object URL and navigate to EditorPage.
+ * User selects a photo; we upload it with progress tracking and navigate to EditorPage.
  */
-function UploadPage() {
+function UploadPage({ darkMode, toggleTheme }) {
   const navigate = useNavigate();
-  const { uploadFile, uploadedFile, isUploading, uploadProgress, uploadFileName, error } = usePhotoUpload();
+  const {
+    uploadFile,
+    uploadedFile,
+    isUploading,
+    uploadProgress,
+    uploadFileName,
+    error,
+  } = usePhotoUpload();
 
   const handleFileSelect = async (file) => {
     await uploadFile(file);
+  };
+
+  const tips = [
+    { type: "ok", text: "Plain background preferred" },
+    { type: "ok", text: "Face clearly visible & centred" },
+    { type: "ok", text: "Neutral expression, eyes open" },
+    { type: "no", text: "Avoid sunglasses or hats" },
+  ];
+
+  const iconMap = {
+    ok: (
+      <svg className={`tips ${darkMode ? "tips-dark" : ""}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="3" y="3" width="18" height="18" rx="6" />
+        <path d="M8 12.5l2.5 2.5L16 9" />
+      </svg>
+    ),
+    no: (
+      <svg className={`tips ${darkMode ? "tips-dark" : ""}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="3" y="3" width="18" height="18" rx="6" />
+        <path d="M9 9l6 6M15 9l-6 6" />
+      </svg>
+    ),
+    lock: (
+      <svg className={`tips ${darkMode ? "tips-dark" : ""}`} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="5" y="10" width="14" height="10" rx="3" />
+        <path d="M8 10V8a4 4 0 0 1 8 0v2" />
+      </svg>
+    ),
   };
 
   useEffect(() => {
@@ -32,76 +65,80 @@ function UploadPage() {
   }, [uploadedFile, navigate]);
 
   return (
-    <div className="upload-page page-content">
-      <motion.div
-        className="upload-page__header"
-        variants={fadeUpVariant}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        custom={0.1}
-      >
-        <h1 className="section-title">Upload Your Photo</h1>
-        <p className="section-subtitle">
-          Choose a clear, front-facing photo. The AI will handle the rest.
-        </p>
-      </motion.div>
-      {error && (
-        <p className="upload-page__error" role="alert">
-          {error}
-        </p>
-      )}
+    <div className={`upload-toggle ${darkMode ? "upload-toggle-dark" : ""}`}> 
+      <div className="upload-page">
+        <motion.div
+          className="upload-page__header"
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.1}
+        >
+          <h1 className={`section-title ${darkMode ? "section-title-dark" : ""}`}>
+            Upload Your Photo
+          </h1>
+          <p className={`section-subtitle ${darkMode ? "section-subtitle-dark" : ""}`}>
+            Choose a clear, front-facing photo. The AI will handle the rest.
+          </p>
+        </motion.div>
 
-      {/* Tips */}
-      <div className="upload-page__tips">
-        {tips.map(({ type, text }, idx) => (
-          <motion.div
-            key={text}
-            className="upload-tip"
-            variants={fadeUpVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0.2 + idx * 0.1} // Staggers each tip by 100ms
-          >
-            <span className="upload-tip__icon" aria-hidden="true">
-              {iconMap[type]}
-            </span>
-            <span className="upload-tip__text">{text}</span>
-          </motion.div>
-        ))}
+        {error && (
+          <p className="upload-page__error" role="alert">
+            {error}
+          </p>
+        )}
+
+        {/* Tips */}
+        <div className="upload-page__tips">
+          {tips.map(({ type, text }, idx) => (
+            <motion.div
+              key={text}
+              className={`upload-tip ${darkMode ? "upload-tip-dark" : "upload-tip-light"}`}
+              variants={fadeUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={0.2 + idx * 0.1} // Staggers each tip by 100ms
+            >
+              <span className="upload-tip__icon" aria-hidden="true">
+                {iconMap[type]}
+              </span>
+              <span className="upload-tip__text">{text}</span>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Upload Box with Premium Upload Progress Bar */}
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.5} // Loads after the tips
+        >
+          <UploadBox 
+            onFileSelect={handleFileSelect} 
+            isUploading={isUploading}
+            progress={uploadProgress}
+            fileName={uploadFileName}
+          />
+        </motion.div>
+
+        <motion.p 
+          className={`upload-page__privacy ${darkMode ? "upload-page__privacy-dark" : ""}`}
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.6}
+        >
+          <span className="upload-page__privacy-icon" aria-hidden="true">
+            {iconMap.lock}
+          </span>
+          Your photo is processed locally and never stored without your permission.
+        </motion.p>
       </div>
-
-      {/* Upload Box (Wrapped in a motion div to animate together) */}
-      <motion.div
-        variants={fadeUpVariant}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        custom={0.5} // Loads after the tips
-      >
-        <UploadBox 
-          onFileSelect={handleFileSelect} 
-          isUploading={isUploading}
-          progress={uploadProgress}
-          fileName={uploadFileName}
-        />
-      </motion.div>
-
-      <motion.p
-        className="upload-page__privacy"
-        variants={fadeUpVariant}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        custom={0.6}
-      >
-        <span className="upload-page__privacy-icon" aria-hidden="true">
-          {iconMap.lock}
-        </span>
-        Your photo is processed locally and never stored without your
-        permission.
-      </motion.p>
     </div>
   );
 }

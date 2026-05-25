@@ -17,6 +17,13 @@
   width: 100%;
   max-width: 360px;
 }
+.print-btn-dark {
+  background: var(--color-text-dark);
+}
+
+.print-btn--loading-dark{
+  background: var(--color-text-dark);
+}
 
 .print-btn:hover:not(:disabled) {
   background: var(--color-primary-hover);
@@ -24,6 +31,11 @@
   box-shadow: var(--shadow-md);
 }
 
+.print-btn-dark:hover:not(:disabled) {
+  background: var(--color-text-dark2);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
 .print-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;

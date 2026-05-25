@@ -8,13 +8,21 @@
   gap: var(--space-xl);
   align-items: start;
 }
+.print-preview-toggle-dark{
+  width: 100%;
+  height: 100vh;
+  background:
+    radial-gradient(1400px 700px at 10% 10%, rgba(255, 233, 77, 0.32), transparent 35%),
+    radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
+    linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
+}
 
 /* Sheet */
 .print-page__sheet { display: flex; flex-direction: column; gap: var(--space-md); }
 .print-page__sheet-label {
   font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -66,6 +74,9 @@
   font-weight: 600;
   color: var(--color-text);
 }
+.print-info-value-dark{
+  color: white;
+}
 
 .print-page__back-btn {
   display: inline-flex;
@@ -73,6 +84,12 @@
   gap: var(--space-sm);
   justify-content: center;
   font-size: var(--font-size-sm);
+}
+.print-page__back-btn-dark:hover {
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+background: transparent;
+  color: white;
 }
 
 .print-page__back-icon {

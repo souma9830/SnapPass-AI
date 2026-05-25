@@ -2,9 +2,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import { fadeUpVariant } from "../../animations/variants.js";
 
-const FeaturesSection = ({ features, iconMap }) => {
+const FeaturesSection = ({darkMode, toggleTheme, features, iconMap }) => {
   return (
+    <div className={`features-toggle ${darkMode ? 'features-toggle-dark' : ''}`} aria-labelledby="features-title"> 
     <section className="features-section" aria-labelledby="features-title">
+      
       <motion.div
         variants={fadeUpVariant}
         initial="hidden"
@@ -12,10 +14,10 @@ const FeaturesSection = ({ features, iconMap }) => {
         viewport={{ once: true }}
         custom={0.1}
       >
-        <h2 id="features-title" className="text-center section-title">
+        <h2 id="features-title" className={`section-title ${darkMode ? 'section-title-dark' : ''}`}>
           Features
         </h2>
-        <p className="text-center section-subtitle">
+        <p className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}>
           Everything you need right out of the box
         </p>
       </motion.div>
@@ -24,7 +26,7 @@ const FeaturesSection = ({ features, iconMap }) => {
         {features.map(({ icon, title, desc, image, tag }, idx) => (
           <motion.div
             key={title}
-            className="feature-card card"
+            className={`feature-card ${darkMode ? 'feature-card-dark' : ''}`}
             variants={fadeUpVariant}
             initial="hidden"
             whileInView="visible"
@@ -38,17 +40,24 @@ const FeaturesSection = ({ features, iconMap }) => {
                 className="feature-card__image"
                 loading="lazy"
               />
-              <span className="feature-card__tag">{tag}</span>
+              <span className={`feature-card__tag ${darkMode ? 'feature-card__tag-dark' : ''}`}>
+                {tag}
+              </span>
             </div>
-            <span className="feature-card__icon" aria-hidden="true">
+            <span className={`feature-card__icon ${darkMode ? 'feature-card__icon-dark' : ''}`} aria-hidden="true">
               {iconMap[icon]}
             </span>
-            <h3 className="feature-card__title">{title}</h3>
-            <p className="feature-card__desc">{desc}</p>
+            <h3 className={`feature-card__title ${darkMode ? 'feature-card__title-dark' : ''}`}>
+              {title}
+            </h3>
+            <p className={`feature-card__desc ${darkMode ? 'feature-card__desc-dark' : ''}`}>
+              {desc}
+            </p>
           </motion.div>
         ))}
       </div>
     </section>
+    </div>
   );
 };
 

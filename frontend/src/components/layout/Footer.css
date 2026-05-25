@@ -1,12 +1,21 @@
 /* ── Footer ─────────────────────────────────────── */
 .footer {
   position: relative;
-  background: var(--color-surface);
-  color: var(--color-text);
   margin-top: 60px;
-  border-radius: 24px 24px 0 0;
   box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.02);
 }
+
+.footer-dark {
+  background:
+    linear-gradient(145deg, #000000f6 10%, #0d0800 50%, #1a1200 100%); 
+    margin-top: -1px;
+  color: var(--color-text);
+}
+.footer-light {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
 
 .footer__wave-container {
   position: absolute;
@@ -77,11 +86,14 @@
   font-weight: 800;
   font-size: 1.4rem;
   letter-spacing: -0.02em;
-  color: var(--color-text);
+  color: black;
 }
 
 .footer__logo-icon {
   font-size: 1.6rem;
+}
+.footer__logo-dark{
+  color: var(--color-text-dark2);
 }
 
 .footer__tagline {
@@ -89,6 +101,9 @@
   color: var(--color-text-muted);
   line-height: 1.5;
   margin: 0;
+}
+.footer__tagline-dark{
+  color: var(--color-text-light)
 }
 
 .footer__nav-group {
@@ -117,6 +132,9 @@
   color: var(--color-text);
   margin-bottom: 8px;
 }
+.footer__heading-dark{
+  color: var(--color-text-dark2);
+}
 
 .footer__item {
   text-decoration: none;
@@ -124,9 +142,15 @@
   font-size: 0.95rem;
   transition: color 0.2s ease;
 }
+.footer__item-dark{
+color: var(--color-text-light)
+}
 
 .footer__item:hover {
   color: var(--color-primary);
+}
+.footer__item-dark:hover {
+  color: var(--color-text-dark);
 }
 
 .footer__contact {

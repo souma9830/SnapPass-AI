@@ -9,6 +9,15 @@
   margin: 0 auto;
   padding: 4rem 2rem;
   box-sizing: border-box;
+  height: 100vh;
+}
+
+.upload-toggle-dark {
+
+  background:
+    radial-gradient(1400px 700px at 10% 10%, rgba(255, 233, 77, 0.32), transparent 35%),
+    radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
+    linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
 }
 
 .upload-page>* {
@@ -38,6 +47,12 @@
   gap: 12px;
   text-align: left;
 }
+.section-title-dark{
+  color: var( --color-text-dark);
+}
+.section-subtitle-dark{
+color: var(--color-text-light);
+}
 
 .upload-page__tips {
   display: flex;
@@ -51,22 +66,37 @@
   align-items: center;
   gap: 10px;
   padding: 10px 20px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 9999px;
   font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: default;
+}
+.upload-tip-light {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   color: #334155;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04), inset 0 2px 4px rgba(255, 255, 255, 0.6);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  cursor: default;
 }
+.upload-tip-dark {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(156, 130, 0, 0.5) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  color: var(--color-text-light);
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04), inset 0 2px 4px rgba(255, 255, 255, 0.6);
 
-.upload-tip:hover {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.upload-tip-light:hover {
   transform: translateY(-4px) scale(1.02);
   background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 100%);
   box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.08), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 1);
+}
+.upload-tip-dark:hover {
+  transform: translateY(-4px) scale(1.02);
+  scale: 1.02;
   border-color: rgba(255, 255, 255, 1);
 }
 
@@ -118,6 +148,15 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+.upload-page__privacy-dark {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(156, 130, 0, 0.5) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  color: var(--color-text-light);
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .upload-page__privacy-icon {

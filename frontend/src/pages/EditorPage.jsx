@@ -7,6 +7,7 @@ import { ButtonSpinner } from '../components/LoadingSpinner';
 import './EditorPage.css';
 import EmptyState from '../components/EmptyState';
 import { motion } from 'framer-motion';
+import useImageProcessor from '../hooks/useImageProcessor';
 
 /**
  * EditorPage — Step 2.
@@ -27,7 +28,7 @@ function EditorPage({darkMode, toggleTheme}) {
 
   const [background, setBackground] = useState('white');
   const [sizePreset, setSizePreset] = useState('35x45');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { processImage, isProcessing, error } = useImageProcessor();
 
   const iconMap = {
     refresh: (
@@ -61,31 +62,24 @@ function EditorPage({darkMode, toggleTheme}) {
 
 
   const handleProcess = async () => {
-    setIsProcessing(true);
-
-    // TODO: Call backend POST /api/process with { filename, backgroundColour, photoSizePreset }
-    // const res = await fetch('/api/process', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ filename: state.filename, backgroundColour: background, photoSizePreset: sizePreset }),
-    // });
-    // const blob = await res.blob();
-    // const processedUrl = URL.createObjectURL(blob);
-
-    // Simulate processing delay
-    await new Promise((r) => setTimeout(r, 1500));
-
-    setIsProcessing(false);
-
-    // Navigate to print preview — pass original url as placeholder for processed for now
-    navigate('/print-preview', {
-      state: {
-        processedUrl: photoData.localUrl, // replace with real processedUrl after backend integration
+    try {
+      const processedUrl = await processImage({
         filename: photoData.filename,
-        background,
-        sizePreset,
-      },
-    });
+        backgroundColour: background,
+        photoSizePreset: sizePreset,
+      });
+
+      navigate('/print-preview', {
+        state: {
+          processedUrl,
+          filename: photoData.filename,
+          background,
+          sizePreset,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
   // If user lands here directly without uploading, redirect
 
@@ -188,6 +182,12 @@ function EditorPage({darkMode, toggleTheme}) {
             </span>
             Replace Photo
           </button>
+
+          {error && (
+            <div className="editor-page__error" style={{ color: '#ef4444', margin: '1rem 0', fontSize: '0.875rem', textAlign: 'center' }}>
+              {error}
+            </div>
+          )}
 
           <button
             className={`btn btn-primary editor-page__process-btn ${darkMode ? "editor-page__process-btn-dark" : ""}`}

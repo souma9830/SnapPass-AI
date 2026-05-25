@@ -21,6 +21,8 @@
     radial-gradient(1400px 700px at 10% 10%, rgb(255, 233, 77, 0.32), transparent 35%),
     radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
     linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
+    margin-top: -70px;
+    padding-top: 70px;
 }
 
 .home-page::after {

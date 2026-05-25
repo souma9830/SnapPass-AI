@@ -1,0 +1,48 @@
+.admin-login {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.admin-login__title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+.admin-login__desc {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.admin-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.admin-login__label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.admin-login__label input {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-base);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.admin-login__error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: var(--font-size-sm);
+}

@@ -9,21 +9,11 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   timeout: 60000, // 60s — AI processing can take time
+  withCredentials: true,
   headers: {
     Accept: 'application/json',
   },
 });
-
-// ── Request interceptor (add auth token in the future) ─────────────────────
-api.interceptors.request.use(
-  (config) => {
-    // TODO: attach JWT if admin auth is added
-    // const token = localStorage.getItem('token');
-    // if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
 
 // ── Response interceptor (global error normalisation) ─────────────────────
 api.interceptors.response.use(

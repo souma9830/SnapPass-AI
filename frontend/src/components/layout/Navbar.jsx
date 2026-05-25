@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 function Navbar() {
+  const { isAdmin } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -16,13 +18,15 @@ function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/upload', label: 'Upload' },
-    { path: '/editor', label: 'Editor' },
-    { path: '/print-preview', label: 'Print' },
-    { path: '/admin', label: 'Admin' },
-  ];
+  const navLinks = useMemo(() => {
+    return [
+      { path: '/', label: 'Home' },
+      { path: '/upload', label: 'Upload' },
+      { path: '/editor', label: 'Editor' },
+      { path: '/print-preview', label: 'Print' },
+      { path: '/admin', label: 'Admin' },
+    ];
+  }, []);
 
   return (
     <header className={`navbar ${isScrolled ? 'navbar--scrolled' : ''}`} role="banner">

@@ -20,9 +20,10 @@
 .admin-page-toggle-dark{ 
   background:
     radial-gradient(1400px 700px at 10% 30%, rgba(255, 233, 77, 0.32), transparent 35%),
-
     radial-gradient(1000px 1000px at 90% 50%,rgba(255, 191, 0, 0.12),transparent 40%),
     linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
+      margin-top: -140px;
+  padding-top: 140px;
 }
 
 .admin-page__header {

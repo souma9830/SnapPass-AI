@@ -6,10 +6,12 @@
 
 import express from "express";
 import { processImage, getPreview } from "../controllers/image.controller.js";
+import validate from "../middleware/validate.middleware.js";
+import { processImageValidation } from "../validation/image.validation.js";
 
 const router = express.Router();
 
-router.post("/", processImage);
+router.post("/", processImageValidation, validate,processImage);
 router.get("/preview/:filename", getPreview);
 
 export default router;

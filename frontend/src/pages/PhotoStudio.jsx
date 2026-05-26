@@ -12,8 +12,12 @@ import {
     Check
 } from "lucide-react";
 import "./PhotoStudio.css";
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations/translations';
 
 function PhotoStudio() {
+    const { language } = useLanguage();
+    const t = translations[language];
     const [imageSrc, setImageSrc] = useState(null);
     const [croppedImageSrc, setCroppedImageSrc] = useState(null);
     const [fileName, setFileName] = useState("edited-photo.png");
@@ -164,8 +168,8 @@ function PhotoStudio() {
     return (
         <div className="photo-studio-page">
             <div className="studio-header">
-                <h1 className="section-title">Photo <span className="text-highlight">Studio</span></h1>
-                <p className="section-subtitle">Edit and perfect your passport photo.</p>
+                <h1 className="section-title">{t.photoStudio.split(' ')[0]} <span className="text-highlight">{t.photoStudio.split(' ')[1] || ''}</span></h1>
+                <p className="section-subtitle">{t.photoStudioSubtitle}</p>
             </div>
 
 
@@ -178,10 +182,10 @@ function PhotoStudio() {
                             <span className="file-name-display">{fileName}</span>
                             <div className="top-actions-buttons">
                                 <button className="top-action-btn outline" onClick={handleReset}>
-                                    <RotateCcw size={16} /> <span className="hide-mobile">Reset</span>
+                                    <RotateCcw size={16} /> <span className="hide-mobile">{t.reset}</span>
                                 </button>
                                 <button className="top-action-btn primary" onClick={() => fileInputRef.current.click()}>
-                                    <Upload size={16} /> <span className="hide-mobile">Change Photo</span>
+                                    <Upload size={16} /> <span className="hide-mobile">{t.changePhoto}</span>
                                 </button>
                             </div>
                         </div>
@@ -190,8 +194,8 @@ function PhotoStudio() {
                     {!imageSrc ? (
                         <div className="upload-placeholder" onClick={() => fileInputRef.current.click()}>
                             <Upload className="upload-icon" size={48} />
-                            <p>Click to upload a photo</p>
-                            <span className="upload-hint">JPG, PNG, WEBP</span>
+                            <p>{t.clickUploadPhoto}</p>
+                            <span className="upload-hint">{t.uploadFormats}</span>
                         </div>
                     ) : (
                         <div className="image-container crop-container">
@@ -243,7 +247,7 @@ function PhotoStudio() {
 
                     <div className={`floating-panel ${activeTool === 'brightness' ? 'panel-visible' : ''}`}>
                         <div className="panel-header">
-                            <span>Brightness</span>
+                            <span>{t.brightness}</span>
                             <span className="value-display">{brightness}%</span>
                         </div>
                         <input
@@ -256,7 +260,7 @@ function PhotoStudio() {
 
                     <div className={`floating-panel ${activeTool === 'contrast' ? 'panel-visible' : ''}`}>
                         <div className="panel-header">
-                            <span>Contrast</span>
+                            <span>{t.contrast}</span>
                             <span className="value-display">{contrast}%</span>
                         </div>
                         <input
@@ -269,7 +273,7 @@ function PhotoStudio() {
 
                     <div className={`floating-panel ${activeTool === 'saturation' ? 'panel-visible' : ''}`}>
                         <div className="panel-header">
-                            <span>Saturation</span>
+                            <span>{t.saturation}</span>
                             <span className="value-display">{saturation}%</span>
                         </div>
                         <input
@@ -293,15 +297,15 @@ function PhotoStudio() {
                             </button>
                             <button className={`tool-btn ${activeTool === 'brightness' ? 'active' : ''}`} onClick={() => handleToolSelect('brightness')} disabled={isCropping}>
                                 <Sun size={22} />
-                                <span>Bright</span>
+                                <span>{t.brightness}</span>
                             </button>
                             <button className={`tool-btn ${activeTool === 'contrast' ? 'active' : ''}`} onClick={() => handleToolSelect('contrast')} disabled={isCropping}>
                                 <Contrast size={22} />
-                                <span>Contrast</span>
+                                <span>{t.contrast}</span>
                             </button>
                             <button className={`tool-btn ${activeTool === 'saturation' ? 'active' : ''}`} onClick={() => handleToolSelect('saturation')} disabled={isCropping}>
                                 <Droplets size={22} />
-                                <span>Color</span>
+                                <span>{t.saturation}</span>
                             </button>
                         </div>
 
@@ -310,7 +314,7 @@ function PhotoStudio() {
                         <div className="toolbar-group">
                             <button className="export-btn" onClick={handleDownload} disabled={isCropping}>
                                 <Download size={18} />
-                                <span className="hide-mobile">Export</span>
+                                <span className="hide-mobile">{t.download}</span>
                             </button>
                         </div>
                     </div>

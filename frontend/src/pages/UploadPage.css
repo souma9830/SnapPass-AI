@@ -47,11 +47,13 @@
   gap: 12px;
   text-align: left;
 }
-.section-title-dark{
-  color: var( --color-text-dark);
+
+.section-title-dark {
+  color: var(--color-text-dark);
 }
-.section-subtitle-dark{
-color: var(--color-text-light);
+
+.section-subtitle-dark {
+  color: var(--color-text-light);
 }
 
 .upload-page__tips {
@@ -71,6 +73,7 @@ color: var(--color-text-light);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: default;
 }
+
 .upload-tip-light {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%);
   border: 1px solid rgba(255, 255, 255, 0.8);
@@ -79,6 +82,7 @@ color: var(--color-text-light);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04), inset 0 2px 4px rgba(255, 255, 255, 0.6);
 }
+
 .upload-tip-dark {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(156, 130, 0, 0.5) 100%);
   border: 1px solid rgba(0, 0, 0, 0.8);
@@ -88,12 +92,14 @@ color: var(--color-text-light);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
+
 .upload-tip-light:hover {
   transform: translateY(-4px) scale(1.02);
   background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 100%);
   box-shadow: 0 14px 28px -6px rgba(15, 23, 42, 0.08), inset 0 2px 4px rgba(255, 255, 255, 0.9);
   border-color: rgba(255, 255, 255, 1);
 }
+
 .upload-tip-dark:hover {
   transform: translateY(-4px) scale(1.02);
   scale: 1.02;
@@ -149,6 +155,7 @@ color: var(--color-text-light);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.8);
 }
+
 .upload-page__privacy-dark {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(156, 130, 0, 0.5) 100%);
   border: 1px solid rgba(0, 0, 0, 0.8);

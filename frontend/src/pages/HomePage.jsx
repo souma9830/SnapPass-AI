@@ -12,70 +12,74 @@ import BackToTop from "../components/HomePage/BackToTop";
 import TestimonialsSection from '../components/testimonials/TestimonialsSection';
 
 import { features, steps, chips, iconMap } from "../data/HomePageData";
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations/translations';
 
 /**
  * HomePage — landing page with hero section and feature highlights.
  */
 function HomePage({darkMode, toggleTheme}) {
+  const { language } = useLanguage();
+  const t = translations[language];
   const features = [
     {
       icon: "bg-remove",
-      title: "AI Background Removal",
-      desc: "Remove any background instantly with rembg — no manual selection needed.",
+      title: t.aiBackgroundRemoval,
+      desc: t.aiBackgroundRemovalDesc,
       image: "/f-1.png",
-      tag: "AI Powered",
+      tag: t.aiPowered,
     },
     {
       icon: "face-center",
-      title: "Auto Face Centering",
-      desc: "OpenCV detects and centers your face to meet passport photo guidelines.",
+      title: t.autoFaceCentering,
+      desc: t.autoFaceCenteringDesc,
       image: "/f-2.png",
-      tag: "OpenCV",
+      tag: t.openCV,
     },
     {
       icon: "sizes",
-      title: "Standard Size Presets",
-      desc: "India, USA, UK, Schengen and more — pick a preset and we handle the DPI.",
+      title: t.standardSizePresets,
+      desc: t.standardSizePresetsDesc,
       image: "/f-3.png",
-      tag: "Multiple Formats",
+      tag: t.multipleFormats,
     },
     {
       icon: "print",
-      title: "A4 Print Layout",
-      desc: "Generate a printable A4 sheet with multiple photos — save on printing costs.",
+      title: t.a4PrintLayout,
+      desc: t.a4PrintLayoutDesc,
       image: "/f-4.png",
-      tag: "Print Ready",
+      tag: t.printReady,
     },
   ];
 
   const steps = [
     {
-      label: "Upload your photo",
+      label: t.stepUpload,
       icon: <Upload size={22} />,
-      subtitle: "Choose a photo from your device",
+      subtitle: t.stepUploadSubtitle,
     },
     {
-      label: "AI processes & centers",
+      label: t.stepAIProcess,
       icon: <Sparkles size={22} />,
-      subtitle: "Advanced AI optimization for your photo",
+      subtitle: t.stepAIProcessSubtitle,
     },
     {
-      label: "Choose size & quantity",
+      label: t.stepChooseSize,
       icon: <Settings2 size={22} />,
-      subtitle: "Select your required photo format and copies",
+      subtitle: t.stepChooseSizeSubtitle,
     },
     {
-      label: "Download & print",
+      label: t.stepDownload,
       icon: <Download size={22} />,
-      subtitle: "Get a high-quality print-ready photo instantly",
+      subtitle: t.stepDownloadSubtitle,
     },
   ];
 
   const chips = [
-    { icon: "spark", label: "Background Removed" },
-    { icon: "target", label: "Auto Centered" },
-    { icon: "printer", label: "Print Ready" },
-  ];
+  { icon: "spark", label: t.backgroundRemoved },
+  { icon: "target", label: t.autoCentered },
+  { icon: "printer", label: t.printReady },
+];
 
   const iconMap = {
     spark: (

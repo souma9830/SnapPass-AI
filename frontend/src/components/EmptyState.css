@@ -7,12 +7,13 @@
   text-align: center;
   padding: 2rem;
 }
+
 .empty-state-dark {
   max-height: 100vh;
   background:
     radial-gradient(1400px 700px at 10% 10%, rgb(255, 233, 77, 0.32), transparent 35%),
     radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
-    linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%); 
+    linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
 }
 
 .empty-state__illustration {
@@ -24,11 +25,13 @@
   justify-content: center;
   border-radius: 32px;
 }
+
 .empty-state__illustration-dark {
   background-color: rgba(51, 55, 21, 0.654);
   border-color: #000000;
   color: #ffffff
 }
+
 .empty-state__illustration-light {
   background: rgba(37, 99, 235, 0.12);
   color: #1d4ed8;
@@ -49,6 +52,7 @@
   font-weight: 700;
   margin-bottom: 1rem;
 }
+
 .empty-state__title-dark {
   color: var(--color-text-dark);
 }
@@ -58,15 +62,22 @@
   max-width: 500px;
   color: var(--color-text-light);
   line-height: 1.6;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
+/* bug-> changes the width ratio for the button */
 .empty-state__button {
-  padding: 0.9rem 1.5rem;
+  min-width: 150px;
+  max-width: 200px !important;
+  margin: 0 auto !important;
+  justify-content: center;
+  padding: 10px 2px !important;
 }
+
 .empty-state__button-dark {
   background-color: var(--color-text-dark2);
 }
-.empty-state__button-dark:hover{
+
+.empty-state__button-dark:hover {
   background-color: var(--color-text-dark);
 }

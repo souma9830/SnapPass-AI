@@ -1,3 +1,5 @@
+import { config } from "../config/config.js";
+
 /**
  * @description A middleware function to handle errors in the application. It logs the error and sends a structured JSON response to the client.
  * @param {Error} err - The error object that was thrown.
@@ -26,7 +28,7 @@ const errorMiddleware = (
     errors: err.errors || undefined,
 
     stack:
-      process.env.NODE_ENV === "development"
+      config.NODE_ENV === "development"
         ? err.stack
         : undefined,
   });

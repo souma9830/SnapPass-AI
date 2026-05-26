@@ -21,8 +21,6 @@
     radial-gradient(1400px 700px at 10% 10%, rgb(255, 233, 77, 0.32), transparent 35%),
     radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
     linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
-    margin-top: -70px;
-    padding-top: 70px;
 }
 
 .home-page::after {
@@ -358,10 +356,10 @@
   border-color: #bfdbfe;
 }
 
+/* bug fixed -> here the white line is overwritten with the icon so to correct it we have changed the background to a premium black color */
 .step-card__icon-dark {
-  background: linear-gradient(135deg, rgba(69, 66, 9, 0.206), #353824bb);
+  background: #0f0f0f;
   color: white;
-
 }
 
 .step-card__label {
@@ -994,9 +992,20 @@
   }
 }
 
+/* dark border layout */
+.steps-toggle-dark .step-card__content,
+.steps-toggle-dark .step-card__content::before {
+  background: rgba(15, 15, 15, 0.7);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
 .steps-toggle-dark {
   width: 100%;
   display: flex;
+  background: #141414;
+  border-color: #facc15;
+  color: #facc15;
+  box-shadow: 0 0 0 0.5rem #090909;
 
 
   background:
@@ -1108,4 +1117,20 @@
     right: 18px;
     bottom: 18px;
   }
+}
+
+/* upscroll button dark mode */
+[data-theme='dark'] .back-to-top {
+  background: linear-gradient(135deg, #facc15, #e8c500);
+  color: #0c0a00;
+}
+
+/* banner dark mode */
+[data-theme='dark'] .cta-banner {
+  background: linear-gradient(120deg, #9a7d0a, #4a3600);
+}
+
+[data-theme='dark'] .cta-banner .btn-primary {
+  background: #facc15;
+  color: #000;
 }

@@ -7,13 +7,17 @@ import EmptyState from '../components/EmptyState';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
 import { calculatePasswordStrength } from '../utils/passwordStrength';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations/translations';
 
 /**
  * PrintPreviewPage — Step 3 & 4.
  * Shows the processed photo in a simulated A4 sheet grid.
  * User picks quantity, then downloads or prints the sheet.
  */
-function PrintPreviewPage({darkMode, toggleTheme}) {
+function PrintPreviewPage({ darkMode, toggleTheme }) {
+  const { language } = useLanguage();
+  const t = translations[language];
   const { state } = useLocation();
 
   const [quantity, setQuantity] = useState(6);
@@ -59,9 +63,9 @@ function PrintPreviewPage({darkMode, toggleTheme}) {
   if (!state?.processedUrl) {
     return (
       <EmptyState
-        title="No processed photo available"
-        description="Upload and process a photo before accessing print preview."
-        buttonText="Upload Photo"
+        title={t.noProcessedPhoto}
+        description={t.uploadBeforePrint}
+        buttonText={t.uploadPhotoButton}
         darkMode={darkMode}
         toggleTheme={toggleTheme}
       />
@@ -78,138 +82,136 @@ function PrintPreviewPage({darkMode, toggleTheme}) {
   };
 
   return (
-    <div className = {`print-preview-toggle ${darkMode? "print-preview-toggle-dark": "" }`}> 
-    <div className="print-page page-content">
-      <motion.div
-        className="print-page__header"
-        variants={fadeUpVariant}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        custom={0.1}
-      >
-        <h1 className={`section-title ${darkMode? "section-title-dark": "section-title-light"}`}>Print Preview</h1>
-        <p className={`section-subtitle ${darkMode? "section-subtitle-dark": "section-subtitle-light"}`}>
-          Adjust quantity and generate your printable A4 sheet.
-        </p>
-      </motion.div>
-
-      <div className="print-page__layout">
-        {/* A4 Sheet Preview */}
-        <motion.section
-          className="print-page__sheet card"
-          aria-label="A4 sheet preview"
+    <div className={`print-preview-toggle ${darkMode ? "print-preview-toggle-dark" : ""}`}>
+      <div className="print-page page-content">
+        <motion.div
+          className="print-page__header"
           variants={fadeUpVariant}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          custom={0.2}
+          custom={0.1}
         >
-          <p className="print-page__sheet-label">A4 Sheet Preview</p>
-          <div className="sheet-grid" style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}>
-            {slots.map((_, i) => (
-              <div key={i} className="sheet-slot">
-                <img
-                  src={state.processedUrl}
-                  alt={`Sheet slot ${i + 1}`}
-                  className="sheet-slot__img"
+          <h1 className={`section-title ${darkMode ? "section-title-dark" : "section-title-light"}`}>{t.printPreviewTitle}</h1>
+          <p className={`section-subtitle ${darkMode ? "section-subtitle-dark" : "section-subtitle-light"}`}>
+            {t.printPreviewSubtitle}
+          </p>
+        </motion.div>
+
+        <div className="print-page__layout">
+          {/* A4 Sheet Preview */}
+          <motion.section
+            className="print-page__sheet card"
+            aria-label="A4 sheet preview"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0.2}
+          >
+            <p className="print-page__sheet-label">{t.a4SheetPreview}</p>
+            <div className="sheet-grid" style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}>
+              {slots.map((_, i) => (
+                <div key={i} className="sheet-slot">
+                  <img
+                    src={state.processedUrl}
+                    alt={`Sheet slot ${i + 1}`}
+                    className="sheet-slot__img"
+                  />
+                </div>
+              ))}
+            </div>
+          </motion.section>
+
+          {/* Controls */}
+          <motion.aside
+            className="print-page__controls card"
+            aria-label="Print settings"
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            custom={0.3}
+          >
+            <div>
+              <p className="print-info-label">{t.selectedPreset}</p>
+              <p className={`print-info-value ${darkMode ? "print-info-value-dark" : ""}`}>
+                {state.sizePreset || '35x45 mm'}
+              </p>
+            </div>
+            <div>
+              <p className="print-info-label">{t.backgroundLabel}</p>
+              <p className={`print-info-value ${darkMode ? "print-info-value-dark" : "print-info-value-light"}`} style={{ textTransform: 'capitalize' }}>
+                {state.background || 'White'}
+              </p>
+            </div>
+
+            <hr className="divider" />
+
+            <QuantityInput darkMode={darkMode} toggleTheme={toggleTheme} value={quantity} onChange={setQuantity} />
+
+            <hr className="divider" />
+
+            <div className="password-section">
+              <label className="print-info-label">
+                {t.securePassword}
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={t.enterPassword}
+                className="password-input"
+              />
+              <div className="password-meter">
+                <div
+                  className={`password-meter__fill ${strength <= 1
+                      ? 'password-meter__fill--weak'
+                      : strength === 2
+                        ? 'password-meter__fill--medium'
+                        : strength === 3
+                          ? 'password-meter__fill--strong'
+                          : 'password-meter__fill--excellent'
+                    }`}
+                  style={{ width: `${(strength / 4) * 100}%` }}
                 />
               </div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* Controls */}
-        <motion.aside
-          className="print-page__controls card"
-          aria-label="Print settings"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={0.3}
-        >
-          <div>
-            <p className="print-info-label">Selected Preset</p>
-            <p className={`print-info-value ${darkMode ? "print-info-value-dark" : ""}`}>
-              {state.sizePreset || '35x45 mm'}
-            </p>
-          </div>
-          <div>
-            <p className="print-info-label">Background</p>
-            <p className={`print-info-value ${darkMode ? "print-info-value-dark" : "print-info-value-light"}`} style={{ textTransform: 'capitalize' }}>
-              {state.background || 'White'}
-            </p>
-          </div>
-
-          <hr className="divider" />
-
-          <QuantityInput darkMode = {darkMode} toggleTheme = {toggleTheme} value={quantity} onChange={setQuantity} />
-
-          <hr className="divider" />
-
-          <div className="password-section">
-            <label className="print-info-label">
-              Secure Access Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter secure password"
-              className="password-input"
-            />
-            <div className="password-meter">
-              <div
-                className={`password-meter__fill ${
-                  strength <= 1
-                    ? 'password-meter__fill--weak'
+              <span
+                aria-live="polite"
+                className={`password-feedback ${strength <= 1
+                    ? 'password-feedback--weak'
                     : strength === 2
-                    ? 'password-meter__fill--medium'
-                    : strength === 3
-                    ? 'password-meter__fill--strong'
-                    : 'password-meter__fill--excellent'
-                }`}
-                style={{ width: `${(strength / 4) * 100}%` }}
-              />
+                      ? 'password-feedback--medium'
+                      : strength === 3
+                        ? 'password-feedback--strong'
+                        : 'password-feedback--excellent'
+                  }`}
+              >
+                {strengthLabel}
+              </span>
             </div>
-            <span
-              aria-live="polite"
-              className={`password-feedback ${
-                strength <= 1
-                  ? 'password-feedback--weak'
-                  : strength === 2
-                  ? 'password-feedback--medium'
-                  : strength === 3
-                  ? 'password-feedback--strong'
-                  : 'password-feedback--excellent'
-              }`}
-            >
-              {strengthLabel}
-            </span>
-          </div>
 
-          <hr className="divider" />
+            <hr className="divider" />
 
-          <PrintButton
-            onClick={handleGenerateSheet}
-            isLoading={isGenerating}
-            darkMode={darkMode}
-            toggleTheme={toggleTheme}
-            disabled={isGenerating || strength === 0}
-          />
+            <PrintButton
+              onClick={handleGenerateSheet}
+              isLoading={isGenerating}
+              darkMode={darkMode}
+              toggleTheme={toggleTheme}
+              disabled={isGenerating || strength === 0}
+            />
 
-          <Link to="/editor" className={`btn btn-ghost print-page__back-btn ${darkMode ? "print-page__back-btn-dark" : ""}`}>
-            <span className="print-page__back-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                <path d="M15 6l-6 6 6 6" />
-              </svg>
-            </span>
-            Back to Editor
-          </Link>
-        </motion.aside>
+            <Link to="/editor" className={`btn btn-ghost print-page__back-btn ${darkMode ? "print-page__back-btn-dark" : ""}`}>
+              <span className="print-page__back-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M15 6l-6 6 6 6" />
+                </svg>
+              </span>
+              {t.backToEditor}
+            </Link>
+          </motion.aside>
+        </div>
       </div>
-    </div>
     </div>
   );
 }

@@ -7,13 +7,15 @@ import { createUser, findUserByEmail,findUserById,updateUserPassword } from "../
 import AppError from "../utils/errors/AppError.js";
 import NotFoundError from "../utils/errors/NotFoundError.js";
 
-export async function registerUser(userData) {
-    const existingUser = await findUserByEmail(userData.email);
+export async function registerAdmin(adminData) {
+    // Ensure role is admin irrespective of client input
+    const data = { ...adminData, role: 'admin' };
+    const existingUser = await findUserByEmail(data.email);
     if (existingUser) {
-        throw new AppError("Email already in use", 409);
+        throw new AppError('Email already in use', 409);
     }
-    const user = await createUser(userData);
-    return user;
+    const adminUser = await createUser(data);
+    return adminUser;
 }
 
 export async function loginUser(email, password) {

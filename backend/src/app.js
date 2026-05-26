@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import uploadRoutes from './routes/upload.routes.js';
 import imageRoutes from './routes/image.routes.js';
 import printRoutes from './routes/print.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 import authRoutes from './routes/auth.routes.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
@@ -46,6 +47,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/process", imageRoutes);
 app.use("/api/print", printRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use((req, _res, next) => {
    const error = new Error(`Route not found: ${req.originalUrl}`);

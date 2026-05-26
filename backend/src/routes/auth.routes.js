@@ -3,16 +3,17 @@ import { loginValidation, registerValidation, passwordResetRequestValidation, ve
 import validate from "../middleware/validate.middleware.js";
 import * as authController from "../controllers/auth.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
+import adminMiddleware from "../middleware/admin.middleware.js";
 import { otpActionLimiter } from "../middleware/rateLimit.middleware.js";
 
 const router = Router();
 
 /**
  * @route POST /api/auth/register
- * @description Register a new user
- * @access Public
+ * @description Register a new admin user
+ * @access Private (Admin only)
  */
-router.post("/register", registerValidation, validate, authController.register);
+router.post("/admin/register", authMiddleware, adminMiddleware, registerValidation, validate, authController.registerAdmin);
 
 /**
  * @route POST /api/auth/login

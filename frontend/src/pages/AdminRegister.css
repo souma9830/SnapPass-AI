@@ -1,0 +1,122 @@
+/* AdminRegister.css */
+/* Premium, responsive admin registration form */
+
+.admin-register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f0f4ff, #e6e8ff);
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-register-page-dark {
+  background: linear-gradient(135deg, #1e1e2f, #2a2a3d);
+  color: #f0f0f0;
+}
+
+.admin-register-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.admin-register-page-dark .admin-register-title {
+  color: #e0e4ff;
+}
+
+.admin-register-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.admin-register-page-dark .admin-register-form {
+  background: #2c2c3a;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.admin-register-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #34495e;
+}
+
+.admin-register-page-dark .admin-register-form label {
+  color: #c0c0d4;
+}
+
+.admin-register-form input {
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d1d9e6;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-register-page-dark .admin-register-form input {
+  background: #38384f;
+  border-color: #555566;
+  color: #e0e0ff;
+}
+
+.admin-register-form input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.admin-register-btn {
+  margin-top: 1rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #4a90e2, #6c5ce7);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.3s;
+}
+
+.admin-register-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-register-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #6c5ce7, #4a90e2);
+}
+
+.admin-register-error {
+  margin-top: 0.5rem;
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.admin-register-success {
+  margin-top: 0.5rem;
+  color: #27ae60;
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .admin-register-form {
+    padding: 1.5rem;
+  }
+  .admin-register-title {
+    font-size: 1.6rem;
+  }
+}

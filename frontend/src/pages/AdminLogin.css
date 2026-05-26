@@ -1,0 +1,101 @@
+/* AdminLogin.css */
+/* Full‑screen container with subtle gradient for better visibility */
+.admin-login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* Light gradient background */
+  background: linear-gradient(135deg, #f0f4ff, #d9e6ff);
+  backdrop-filter: blur(8px);
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+/* Dark mode background */
+.admin-login-page-dark {
+  background: linear-gradient(135deg, #151515, #2a2a2a);
+  color: #f0f0f0;
+}
+
+.admin-login-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+.admin-login-page-dark .admin-login-title {
+  color: #fafafa;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 340px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.admin-login-page-dark .admin-login-form {
+  background: rgba(30, 30, 30, 0.9);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.admin-login-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.admin-login-page-dark .admin-login-form label {
+  color: #ddd;
+}
+
+.admin-login-form input {
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fff;
+}
+
+.admin-login-page-dark .admin-login-form input {
+  background: #222;
+  border-color: #555;
+  color: #eee;
+}
+
+.admin-login-btn {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #0066ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.admin-login-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.admin-login-page-dark .admin-login-btn {
+  background: #2196f3;
+}
+
+.admin-login-error {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+}

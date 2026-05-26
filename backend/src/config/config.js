@@ -16,6 +16,7 @@ if (!process.env.EMAIL_FROM) {
 }
 
 export const config = {
+    NODE_ENV: process.env.NODE_ENV || "development",
     port: process.env.PORT || 3000,
     aiServiceUrl: process.env.AI_SERVICE_URL || 'http://localhost:8000',
     MONGO_URI: process.env.MONGO_URI,

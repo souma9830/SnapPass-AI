@@ -11,7 +11,7 @@ import { generateSheetValidation } from "../validation/print.validation.js";
 
 const router = express.Router();
 
-router.post("/generate-sheet",generateSheetValidation,validate,generateSheet);
+router.post("/generate-sheet", generateSheetValidation, validate, generateSheet);
 router.get("/presets", getSizePresets);
 
 export default router;

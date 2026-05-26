@@ -15,6 +15,7 @@ export const generateSheetValidation = [
     body("photoSizePreset")
         .optional()
         .isIn(PHOTO_SIZE_PRESETS)
+        .toInt()
         .withMessage(
             `photoSizePreset must be one of: ${PHOTO_SIZE_PRESETS.join(", ")}`
         ),

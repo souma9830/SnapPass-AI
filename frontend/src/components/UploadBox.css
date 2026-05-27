@@ -87,3 +87,16 @@
   margin-top: var(--space-sm);
   width: 100%;
 }
+
+/* bug ->since there is no proper dark mode color variables , so applying dark mode theme  */
+/* dark mode variables */
+[data-theme='dark'] .upload-box {
+  background: rgba(20, 20, 20, 0.6);
+  border-color: rgba(63, 68, 74, 0.6);
+}
+
+[data-theme='dark'] .upload-box:hover,
+[data-theme='dark'] .upload-box:focus {
+  background: rgba(30, 30, 30, 0.8);
+  border-color: #3b82f6;
+}

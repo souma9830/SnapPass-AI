@@ -3,13 +3,16 @@
  * @use This service is used in the password reset flow to create OTPs, verify them, and update their state as needed.
  */
 
+import bcrypt from "bcryptjs";
 import { createPasswordResetOtp, findLatestPendingOtp, incrementOtpAttempts, updateOtpState } from "../dao/passwordResetOtp.dao.js";
 import { generateOTP } from "../utils/generateOTP.js";
 import AppError from "../utils/errors/AppError.js";
 
 export async function generateAndStoreOtp(userId) {
     const otp = generateOTP();
-    const passwordResetOtp = await createPasswordResetOtp(userId, otp);
+    const hashedOtp = await bcrypt.hash(otp, 10);
+    const passwordResetOtp = await createPasswordResetOtp(userId, hashedOtp);
+    passwordResetOtp.otp = otp;
     return passwordResetOtp;
 }
 
@@ -19,7 +22,8 @@ export async function checkOtpValidity(userId, otp) {
         throw new AppError("Invalid or expired OTP", 400);
     }
     
-    if (pendingOtpRecord.otp !== otp) {
+    const isMatch = await bcrypt.compare(otp, pendingOtpRecord.otp);
+    if (!isMatch) {
         // Increment attempts and fail
         const updatedRecord = await incrementOtpAttempts(pendingOtpRecord._id);
         if (updatedRecord.attempts >= 5) {

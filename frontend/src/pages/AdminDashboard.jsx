@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './AdminDashboard.css';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations/translations';
 
 // Icon components (unchanged)
 const IconUpload = ({ darkMode }) => (

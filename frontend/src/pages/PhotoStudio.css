@@ -18,7 +18,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(var(--color-bg)) 1px, transparent 1px);
     background-size: 28px 28px;
     opacity: 0.5;
     pointer-events: none;
@@ -421,4 +421,96 @@
         min-height: 320px;
         padding: 0.75rem;
     }
+}
+
+/* implementing dark theme over the photo studio page   */
+
+/* ── DARK MODE OVERRIDES FOR PHOTO STUDIO ── */
+
+[data-theme='dark'] .photo-studio-page {
+    background:
+        radial-gradient(1400px 700px at 10% 10%, rgba(255, 233, 77, 0.32), transparent 35%),
+        radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
+        linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
+    color: #ffffff;
+}
+
+[data-theme='dark'] .photo-studio-page::after {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+[data-theme='dark'] .text-highlight {
+    color: var(--color-text-dark2, #d7b703);
+}
+
+[data-theme='dark'] .section-subtitle {
+    color: #a1a1aa;
+}
+
+[data-theme='dark'] .upload-placeholder {
+    background: rgba(15, 15, 15, 0.6);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme='dark'] .upload-placeholder:hover {
+    background: rgba(25, 25, 25, 0.8);
+    border-color: var(--color-text-dark2, #d7b703);
+}
+
+[data-theme='dark'] .upload-placeholder p {
+    color: #ffffff;
+}
+
+[data-theme='dark'] .upload-hint {
+    color: #3a85ed;
+}
+
+[data-theme='dark'] .image-container,
+[data-theme='dark'] .controls-card {
+    background: rgba(15, 15, 15, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .controls-title {
+    color: #ffffff;
+}
+
+[data-theme='dark'] .slider-header {
+    color: #e2e8f0;
+}
+
+[data-theme='dark'] .slider-header span {
+    color: #94a3b8;
+}
+
+[data-theme='dark'] .slider {
+    background: #27272a;
+}
+
+[data-theme='dark'] .change-photo-btn {
+    background: #27272a;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+[data-theme='dark'] .change-photo-btn:hover {
+    background: var(--color-text-dark2, #d7b703);
+    color: #000000;
+    border-color: var(--color-text-dark2, #d7b703);
+}
+
+[data-theme='dark'] .btn-outline {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+}
+
+[data-theme='dark'] .btn-outline:hover {
+    border-color: rgba(18, 16, 16, 0.2);
+    color: #000000;
+}
+
+[data-theme='dark'] .btn-outline:hover:not(:disabled) {
+    border-color: #29ccf1;
+    color: #6a6666;
 }

@@ -388,3 +388,92 @@
         max-width: 90%;
     }
 }
+
+/* similar implementation of dark mode theme over chatbot  */
+[data-theme='dark'] .chatbot-floating-button {
+    background: linear-gradient(135deg, #facc15, #e8c500);
+    color: black;
+}
+
+[data-theme='dark'] .chatbot-floating-button:hover {
+    box-shadow: 0 10px 20px rgba(244, 197, 11, 0.895);
+}
+
+/* chatbot window */
+
+[data-theme='dark'] .chatbot-window {
+    background: rgba(12, 10, 0, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+/* header heading and para font color white  */
+[data-theme='dark'] .chatbot-header h3 {
+    color: #ffffff;
+}
+
+[data-theme='dark'] .chatbot-header p {
+    color: #94a3b8;
+}
+
+/* close chat button text color dark mode */
+[data-theme='dark'] .close-chat-btn {
+    color: #94a3b8;
+}
+
+[data-theme='dark'] .close-chat-btn:hover {
+    color: #ffffff;
+}
+
+[data-theme='dark'] .bot-message .message-bubble {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* recommeded prompt section */
+[data-theme='dark'] .prompt-chip {
+    background: rgba(194, 174, 94, 0.156);
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.15);
+}
+
+[data-theme='dark'] .prompt-chip:hover {
+    background: rgba(250, 204, 21, 0.18);
+    border-color: rgba(250, 204, 21, 0.35);
+    transform: translateY(-2px);
+}
+
+
+[data-theme='dark'] .chatbot-input-area {
+    background: rgba(12, 10, 0, 0.9);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .chatbot-input-area input {
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffffff;
+    /* White typed text */
+}
+
+[data-theme='dark'] .chatbot-input-area input:focus {
+    border-color: #facc15;
+}
+
+/* same code as light theme with bg color change  */
+[data-theme='dark'] .bot-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background:
+        linear-gradient(135deg, #facc15, #e8c500);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme='dark'] .chatbot-input-area button {
+    background: linear-gradient(135deg, #facc15, #e8c500);
+    color: #0c0a00;
+}

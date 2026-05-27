@@ -44,7 +44,7 @@
   -webkit-backdrop-filter: blur(24px);
   box-shadow: 0 10px 40px -8px rgba(15, 23, 42, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.8);
 }
- 
+
 
 .editor-page__controls {
   display: flex;
@@ -114,6 +114,7 @@
   cursor: pointer;
   margin-top: 0.25rem;
 }
+
 .editor-page__process-btn-dark {
   background: linear-gradient(135deg, #939e00, #595f00);
   color: #ffffff;
@@ -126,17 +127,19 @@
   box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #3b82f6, #1e40af);
 }
+
 .editor-page__process-btn-dark:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #4c5500, #272c00);
 }
 
+/* bug-> changes the width ratio for the button */
 .editor-page__replace-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 50%;
   padding: 8px 16px;
   font-size: var(--font-size-sm, 0.85rem);
   font-weight: 600;

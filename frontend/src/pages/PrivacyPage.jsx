@@ -1,8 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import './PrivacyPage.css';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations/translations';
 
 const PrivacyPage = () => {
+    const { language } = useLanguage();
+    const t = translations[language];
     const fadeUpVariant = {
         hidden: { opacity: 0, y: 30 },
         visible: (delay = 0) => ({
@@ -22,8 +26,8 @@ const PrivacyPage = () => {
                 viewport={{ once: true }}
                 custom={0.1}
             >
-                <h1 className="section-title">Privacy Policy</h1>
-                <p className="section-subtitle">How we handle your data with transparency and care.</p>
+                <h1 className="section-title">{t.privacyPolicy}</h1>
+                <p className="section-subtitle">{t.privacySubtitle}</p>
             </motion.div>
 
             <motion.section
@@ -35,41 +39,55 @@ const PrivacyPage = () => {
                 custom={0.2}
             >
                 <div className="privacy-text">
-                    <h2>1. Introduction</h2>
+                    <h2>{t.privacyIntroTitle}</h2>
                     <p>
-                        At SnapPass AI, your privacy is our priority. Because our tool deals with personal photographs, we have designed our open-source architecture to be inherently privacy-respecting. This policy explains what data we collect and how it is used.
+                        {t.privacyIntroText}
                     </p>
 
-                    <h2>2. What Data We Collect</h2>
+                    <h2>{t.privacyDataTitle}</h2>
                     <p>
-                        When you use SnapPass AI, we collect only the absolute minimum required to provide the service:
+                        {t.privacyDataText}
                     </p>
                     <ul>
-                        <li><strong>Images:</strong> The portrait photo you upload for processing.</li>
-                        <li><strong>Settings:</strong> The country standard, size, and background color you select.</li>
-                        <li><strong>Analytics:</strong> Anonymous, aggregated usage data (such as page views or error rates) to help us improve the open-source platform. We do not track individual users.</li>
+                        <li>
+                            <strong>{t.imagesLabel}</strong> {t.privacyImages}
+                        </li>
+
+                        <li>
+                            <strong>{t.settingsLabel}</strong> {t.privacySettings}
+                        </li>
+
+                        <li>
+                            <strong>{t.analyticsLabel}</strong> {t.privacyAnalytics}
+                        </li>
                     </ul>
 
-                    <h2>3. How We Process Your Data (Zero Retention)</h2>
+                    <h2>{t.privacyProcessTitle}</h2>
                     <p>
-                        SnapPass AI is built on a "Zero Retention" model. Here is exactly what happens to your photo:
+                        {t.privacyProcessText}
                     </p>
                     <ul>
-                        <li>Your photo is uploaded directly to our secure processing server (or processed locally if you are running the app yourself).</li>
-                        <li>Our AI models analyze the image in memory to remove the background and center your face.</li>
-                        <li>Once the final print-ready sheet is generated and downloaded, <strong>your original and processed photos are immediately and permanently deleted from our servers</strong>.</li>
-                        <li>We do not use your photos to train our AI models.</li>
+                        <li>{t.privacyProcess1}</li>
+
+                        <li>{t.privacyProcess2}</li>
+
+                        <li>
+                            {t.privacyProcess3Part1}
+                            <strong>{t.privacyProcess3Highlight}</strong>
+                            {t.privacyProcess3Part2}
+                        </li>
+
+                        <li>{t.privacyProcess4}</li>
                     </ul>
 
-                    <h2>4. Third-Party Services</h2>
+                    <h2>{t.privacyThirdPartyTitle}</h2>
                     <p>
-                        Because this is an open-source tool, the hosted version may rely on basic infrastructure providers (like Vercel or standard cloud hosting). These providers handle secure data transit (HTTPS) but do not have access to store or view your personal photos during our automated processing.
+                        {t.privacyThirdPartyText}
                     </p>
 
-                    <h2>5. Your Rights</h2>
-                    <p>
-                        Because we do not store your personal data, there is no account to delete or personal archive to request. If you have concerns about the open-source code or how data is routed, you are welcome to audit our public repository or self-host your own instance of SnapPass AI.
-                    </p>
+                    <h2>{t.privacyRightsTitle}</h2>
+
+                    <p>{t.privacyRightsText}</p>
 
                     <p className="privacy-date">Last updated: {new Date().toLocaleDateString()}</p>
                 </div>

@@ -1,4 +1,11 @@
-import * as authService  from "../service/auth.service.js";
+import AppError from "../utils/errors/AppError.js";
+import * as authService from "../service/auth.service.js";
+
+export const register = catchAsync(async (req, res, next) => {
+    // Public registration disabled; admins must use /admin/register
+    const err = new AppError('User registration is disabled', 403);
+    return next(err);
+});
 import * as passwordResetOtpService from "../service/passwordResetOtp.service.js";
 import { setToken } from "../utils/setToken.js";
 import catchAsync from "../utils/catchAsync.js";
@@ -13,14 +20,19 @@ const sendResponse = (res, statusCode, success, message, data) => {
     });
 }
 
-export const register = catchAsync(async (req, res) => {
-    const user = await authService.registerUser(req.body);
-    setToken(res, user);
-    sendResponse(res, 201, true, "User registered successfully", {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
+// Duplicate public register removed – the disabled version above handles registration
+
+
+export const registerAdmin = catchAsync(async (req, res) => {
+    // Force role to admin regardless of client input
+    const adminData = { ...req.body, role: "admin" };
+    const adminUser = await authService.registerAdmin(adminData);
+    setToken(res, adminUser);
+    sendResponse(res, 201, true, "Admin registered successfully", {
+        id: adminUser._id,
+        fullName: adminUser.fullName,
+        email: adminUser.email,
+        role: adminUser.role,
     });
 });
 

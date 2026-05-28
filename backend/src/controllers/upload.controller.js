@@ -81,6 +81,11 @@ export const getUploadedPhoto = async (req, res, next) => {
       return res.status(404).json({ success: false, message: "File not found." });
     }
 
+    // Secure ownership validation check
+    if (file.user && file.user.toString() !== req.user.id && req.user.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Access denied: Unauthorized access." });
+    }
+
     res.json({ success: true, data: file });
   } catch (error) {
     next(error);

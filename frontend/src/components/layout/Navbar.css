@@ -274,13 +274,6 @@
   transition: all var(--transition-fast);
 }
 
-.navbar__mobile-link:hover,
-.navbar__mobile-link:focus,
-.navbar__mobile-link:focus-visible,
-.navbar__mobile-link:active {
-  text-decoration: none !important;
-}
-
 .navbar__mobile-link-light {
   color: var(--color-text-muted);
 }

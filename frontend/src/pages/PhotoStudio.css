@@ -8,7 +8,7 @@
         radial-gradient(1200px 600px at 10% -10%, rgba(37, 99, 235, 0.12), transparent 60%),
         radial-gradient(900px 500px at 90% 0%, rgba(14, 116, 144, 0.14), transparent 55%);
     margin-top: -120px;
-    padding-top: 140px;
+    padding-top: 220px;
     min-height: 100vh;
     padding-bottom: 120px;
     overflow-x: hidden;
@@ -513,4 +513,10 @@
 [data-theme='dark'] .btn-outline:hover:not(:disabled) {
     border-color: #29ccf1;
     color: #6a6666;
+}
+
+.compare-active {
+    background: #2563eb !important;
+    color: white !important;
+    border-color: #2563eb !important;
 }

@@ -329,10 +329,14 @@ export const translations = {
     browseFiles: 'browse files',
 
     uploadFormatsLimit: 'JPEG, PNG, WebP · Max 10 MB',
+    showOriginal: "Show Original",
+    backToEdit: "Back To Edit",
   },
 
   hi: {
     home: 'होम',
+    showOriginal: "मूल फोटो दिखाएँ",
+    backToEdit: "संपादन पर वापस जाएँ",
     studio: 'स्टूडियो',
     upload: 'अपलोड',
     editor: 'एडिटर',

@@ -24,6 +24,7 @@ function PhotoStudio() {
 
     // Toolbar States
     const [activeTool, setActiveTool] = useState(null);
+    const [showOriginal, setShowOriginal] = useState(false);
 
     // Crop States
     const [isCropping, setIsCropping] = useState(false);
@@ -181,6 +182,12 @@ function PhotoStudio() {
                         <div className="top-actions">
                             <span className="file-name-display">{fileName}</span>
                             <div className="top-actions-buttons">
+                                <button
+                                    className={`top-action-btn outline ${showOriginal ? "compare-active" : ""}`}
+                                    onClick={() => setShowOriginal(!showOriginal)}
+                                >
+                                    {showOriginal ? t.backToEdit : t.showOriginal}
+                                </button>
                                 <button className="top-action-btn outline" onClick={handleReset}>
                                     <RotateCcw size={16} /> <span className="hide-mobile">{t.reset}</span>
                                 </button>
@@ -192,7 +199,7 @@ function PhotoStudio() {
                     )}
 
                     {!imageSrc ? (
-                        <div className="upload-placeholder" onClick={() => fileInputRef.current.click()}>
+                        <div className="upload-placeholder tour-upload" onClick={() => fileInputRef.current.click()}>
                             <Upload className="upload-icon" size={48} />
                             <p>{t.clickUploadPhoto}</p>
                             <span className="upload-hint">{t.uploadFormats}</span>
@@ -221,9 +228,9 @@ function PhotoStudio() {
                                 </ReactCrop>
                             ) : (
                                 <img
-                                    src={croppedImageSrc || imageSrc}
+                                    src={showOriginal ? imageSrc : (croppedImageSrc || imageSrc)}
                                     alt="Preview"
-                                    style={filterStyle}
+                                    style={showOriginal ? {} : filterStyle}
                                     className="shared-image-style"
                                 />
                             )}
@@ -284,26 +291,27 @@ function PhotoStudio() {
                         />
                     </div>
 
-                    <div className="main-toolbar">
+                    <div className="main-toolbar tour-toolbar">
                         <div className="toolbar-group tools-group">
                             <button
                                 className={`tool-btn ${isCropping ? 'active-crop' : ''}`}
                                 onClick={handleCropAction}
+                                disabled={showOriginal}
                             >
                                 {isCropping ? <Check size={22} className="text-emerald-500" /> : <Crop size={22} />}
                                 <span className={isCropping ? "text-emerald-500" : ""}>
                                     {isCropping ? 'Save' : 'Crop'}
                                 </span>
                             </button>
-                            <button className={`tool-btn ${activeTool === 'brightness' ? 'active' : ''}`} onClick={() => handleToolSelect('brightness')} disabled={isCropping}>
+                            <button className={`tool-btn ${activeTool === 'brightness' ? 'active' : ''}`} onClick={() => handleToolSelect('brightness')} disabled={isCropping || showOriginal}>
                                 <Sun size={22} />
                                 <span>{t.brightness}</span>
                             </button>
-                            <button className={`tool-btn ${activeTool === 'contrast' ? 'active' : ''}`} onClick={() => handleToolSelect('contrast')} disabled={isCropping}>
+                            <button className={`tool-btn ${activeTool === 'contrast' ? 'active' : ''}`} onClick={() => handleToolSelect('contrast')} disabled={isCropping || showOriginal}>
                                 <Contrast size={22} />
                                 <span>{t.contrast}</span>
                             </button>
-                            <button className={`tool-btn ${activeTool === 'saturation' ? 'active' : ''}`} onClick={() => handleToolSelect('saturation')} disabled={isCropping}>
+                            <button className={`tool-btn ${activeTool === 'saturation' ? 'active' : ''}`} onClick={() => handleToolSelect('saturation')} disabled={isCropping || showOriginal}>
                                 <Droplets size={22} />
                                 <span>{t.saturation}</span>
                             </button>
@@ -312,7 +320,7 @@ function PhotoStudio() {
                         <div className="toolbar-divider" />
 
                         <div className="toolbar-group">
-                            <button className="export-btn" onClick={handleDownload} disabled={isCropping}>
+                            <button className="export-btn tour-download" onClick={handleDownload} disabled={isCropping}>
                                 <Download size={18} />
                                 <span className="hide-mobile">{t.download}</span>
                             </button>

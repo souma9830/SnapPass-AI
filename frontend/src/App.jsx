@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import AppRoutes from './routes/AppRoutes';
 import SnapPassAssistant from './chatbot/SnapPassAssistant';
+import OnboardingTour from './components/OnboardingTour';
 import './App.css';
 
 // bug-> when toggle is clicked , to change html over browser we need to alter dom
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <div className="app-shell">
+      <OnboardingTour />
       <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
       <main className="app-main">
         <AppRoutes darkMode={darkMode} toggleTheme={toggleTheme} />

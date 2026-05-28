@@ -60,8 +60,13 @@ function Navbar({ darkMode, toggleTheme }) {
               to={path}
               end={path === '/'}
               className={({ isActive }) =>
-                `navbar__link ${darkMode ? 'navbar__link-dark' : 'navbar__link-light'
-                } ${isActive
+                `navbar__link
+  ${path === '/upload' ? 'tour-nav-upload' : ''}
+  ${path === '/studio' ? 'tour-nav-studio' : ''}
+  ${path === '/editor' ? 'tour-nav-editor' : ''}
+  ${path === '/print-preview' ? 'tour-nav-print' : ''}
+  ${darkMode ? 'navbar__link-dark' : 'navbar__link-light'}
+  ${isActive
                   ? darkMode
                     ? ' navbar__mobile-link--active-dark'
                     : ' navbar__mobile-link--active-light'
@@ -79,9 +84,10 @@ function Navbar({ darkMode, toggleTheme }) {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className={`navbar__language-selector ${darkMode
-              ? 'navbar__language-selector-dark'
-              : 'navbar__language-selector-light'
+            className={`navbar__language-selector
+               ${darkMode
+                ? 'navbar__language-selector-dark'
+                : 'navbar__language-selector-light'
               }`}
           >
             <option value="en">English</option>
@@ -122,8 +128,8 @@ function Navbar({ darkMode, toggleTheme }) {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               className={`navbar__language-selector ${darkMode
-                  ? 'navbar__language-selector-dark'
-                  : 'navbar__language-selector-light'
+                ? 'navbar__language-selector-dark'
+                : 'navbar__language-selector-light'
                 }`}
             >
               <option value="en">English</option>

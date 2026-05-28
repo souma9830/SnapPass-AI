@@ -1,7 +1,7 @@
 /* ── Navbar ─────────────────────────────────────── */
 .navbar {
   position: fixed;
-  top: 0;
+  top: 5px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -19,6 +19,7 @@
 
   transition: all 0.3s ease;
 }
+ 
 
 .navbar--light {
   background: rgba(255, 255, 255, 0.45);
@@ -243,12 +244,10 @@
 
 .navbar__mobile-menu-dark {
   background: var(--color-surface-dark);
-  border-top: 1px solid var(--color-border-dark);
 }
 
 .navbar__mobile-menu-light {
   background: var(--color-surface-light);
-  border-top: 1px solid var(--color-border);
 }
 
 .navbar__mobile-link {

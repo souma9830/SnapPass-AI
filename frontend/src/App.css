@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top: 34px;
+  /* padding-top: 34px; */
 }
 
 .app-main {
@@ -11,7 +11,6 @@
   display: flex;
   flex-direction: column;
   margin-top: 0;
-  padding-top: 34px;
 }
 
 [data-theme='dark'] {
@@ -19,7 +18,11 @@
 }
 
 [data-theme='dark'] .app-shell {
-  background-color: #000000;
+  /* background-color: #000000; */
+  background:
+        radial-gradient(1400px 700px at 10% 10%, rgba(255, 233, 77, 0.32), transparent 35%),
+        radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
+        linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
 }
 
 [data-theme='dark'] .studio-header .section-title {

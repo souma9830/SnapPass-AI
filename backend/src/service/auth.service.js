@@ -47,8 +47,8 @@ export async function getUserByEmail(email) {
 }
 
 export async function updatePassword(userId, newPassword) {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const user = await updateUserPassword(userId, hashedPassword);
+    // Raw password is passed to the DAO; Mongoose pre-save hook in user.model.js automatically hashes it to prevent double-hashing lockouts
+    const user = await updateUserPassword(userId, newPassword);
     if (!user) {
         throw new NotFoundError("User not found");
     }

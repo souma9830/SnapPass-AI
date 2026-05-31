@@ -5,4 +5,4 @@ Pillow==10.1.0
 rembg==2.0.55
 numpy==1.26.2
 gunicorn==21.2.0
-python-dotenv==1.0.0
+python-dotenv==1.2.2

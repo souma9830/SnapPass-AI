@@ -397,3 +397,4 @@ You are free to use, modify, and distribute this project for both personal and c
 [⭐ Star on GitHub](https://github.com/souma9830/SnapPass-AI) · [🐞 Report a Bug](https://github.com/souma9830/SnapPass-AI/issues/new?template=bug_report.md) · [💡 Request a Feature](https://github.com/souma9830/SnapPass-AI/issues/new?template=feature_request.md)
 
 </div>
+\n<!-- Fix for #273 -->\n

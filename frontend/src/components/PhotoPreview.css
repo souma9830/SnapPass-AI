@@ -44,6 +44,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .photo-preview__frame--processed {
@@ -74,6 +75,182 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-light);
   line-height: 1.8;
+}
+
+/* 📐 Glassmorphic Guidelines Button */
+.photo-preview__toggle-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md, 6px);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.photo-preview__toggle-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(15, 23, 42, 0.8);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.photo-preview__toggle-btn--active {
+  background: rgba(13, 148, 136, 0.85); /* Teal accent */
+  border-color: rgba(45, 212, 191, 0.3);
+  color: #ffffff;
+}
+
+.photo-preview__toggle-btn--active:hover {
+  background: rgba(20, 184, 166, 0.95);
+  border-color: rgba(45, 212, 191, 0.5);
+}
+
+.photo-preview__toggle-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* 📐 Smart Compliance Guidelines Overlay Grid */
+.photo-preview__overlay-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Do not intercept image interactions */
+  z-index: 5;
+}
+
+/* L-Shaped Outer Crop Corners */
+.photo-preview__corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.photo-preview__corner--tl {
+  top: 16px;
+  left: 16px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.photo-preview__corner--tr {
+  top: 16px;
+  right: 16px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.photo-preview__corner--bl {
+  bottom: 16px;
+  left: 16px;
+  border-right: none;
+  border-top: none;
+}
+
+.photo-preview__corner--br {
+  bottom: 16px;
+  right: 16px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Vertical Symmetry Line */
+.photo-preview__guide--center-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  border-left: 1.5px dashed rgba(255, 255, 255, 0.25);
+  transform: translateX(-50%);
+}
+
+/* Head Oval Silhouette (Dashed Neon Coral) */
+.photo-preview__guide--head-oval {
+  position: absolute;
+  width: 54%;
+  height: 60%;
+  top: 15%;
+  left: 23%;
+  border: 2px dashed rgba(244, 63, 94, 0.75); /* Neon rose */
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Perfect egg/head silhouette */
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.15);
+}
+
+/* Horizontal Guideline Base Class */
+.photo-preview__guide--eye-line,
+.photo-preview__guide--chin-line {
+  position: absolute;
+  left: 6%;
+  width: 88%;
+  height: 1px;
+}
+
+/* Eye Level Line (Dashed Neon Cyan) */
+.photo-preview__guide--eye-line {
+  top: 45%;
+  border-top: 1.5px dashed rgba(6, 182, 212, 0.85);
+}
+
+/* Chin Level Line (Dashed Neon Emerald) */
+.photo-preview__guide--chin-line {
+  top: 73%;
+  border-top: 1.5px dashed rgba(16, 185, 129, 0.85);
+}
+
+/* Guideline Tag Styling */
+.photo-preview__guide-tag {
+  position: absolute;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 1px 4px 2px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.photo-preview__guide-tag--oval {
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fda4af; /* Rose 300 */
+  background: rgba(244, 63, 94, 0.25);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+}
+
+.photo-preview__guide-tag--eye {
+  top: -8px;
+  right: 2px;
+  color: #67e8f9; /* Cyan 300 */
+  background: rgba(6, 182, 212, 0.25);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.photo-preview__guide-tag--chin {
+  top: -8px;
+  right: 2px;
+  color: #6ee7b7; /* Emerald 300 */
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
 [data-theme='dark'] .studio-header .section-title {

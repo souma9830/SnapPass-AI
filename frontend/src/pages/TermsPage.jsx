@@ -64,7 +64,7 @@ const TermsPage = () => {
                     <h2>{t.termsChangesTitle}</h2>
                     <p>{t.termsChangesText}</p>
 
-                    <p className="terms-date">{t.lastUpdated}: {new Date().toLocaleDateString()}</p>
+                    <p className="terms-date">Last updated: {new Date().toLocaleDateString()}</p>
                 </div>
             </motion.section>
         </div>

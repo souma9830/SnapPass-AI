@@ -110,16 +110,16 @@ snappass-ai/
 │   │   │   └── AdminDashboard.jsx
 │   │   │
 │   │   ├── hooks/                    # Custom React hooks
-│   │   │   ├── usePhotoUpload.js
-│   │   │   └── useImageProcessor.js
+│   │   │   ├── usePhotoUpload.jsx
+│   │   │   └── useImageProcessor.jsx
 │   │   │
 │   │   ├── services/                 # API communication layer
-│   │   │   ├── api.js
-│   │   │   └── photoService.js
+│   │   │   ├── api.jsx
+│   │   │   └── photoService.jsx
 │   │   │
 │   │   ├── utils/                    # Utility/helper functions
-│   │   │   ├── fileValidation.js
-│   │   │   └── formatters.js
+│   │   │   ├── fileValidation.jsx
+│   │   │   └── formatters.jsx
 │   │   │
 │   │   └── routes/                   # App routing configuration
 │   │       └── AppRoutes.jsx

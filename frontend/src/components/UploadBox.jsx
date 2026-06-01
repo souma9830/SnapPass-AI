@@ -45,7 +45,10 @@ function UploadBox({ onFileSelect }) {
   };
 
   /* Input change */
-  const onChange = (e) => handleFile(e.target.files[0]);
+  const onChange = (e) => {
+    handleFile(e.target.files[0]);
+    e.target.value = '';
+  };
 
   return (
     <div
@@ -62,7 +65,7 @@ function UploadBox({ onFileSelect }) {
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
         className="upload-box__input"
         onChange={onChange}
         aria-hidden="true"

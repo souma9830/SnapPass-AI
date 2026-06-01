@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PhotoPreview from '../components/PhotoPreview';
 import BackgroundSelector from '../components/BackgroundSelector';
 import SizeSelector from '../components/SizeSelector';
+import CropPlayground from '../components/CropPlayground';
+import ComplianceStatus from '../components/ComplianceStatus';
 import { ButtonSpinner } from '../components/LoadingSpinner';
 import './EditorPage.css';
 import EmptyState from '../components/EmptyState';
@@ -38,8 +40,13 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [sizePreset, setSizePreset] = useState(
     savedSession?.sizePreset || '35x45'
   );
+
+  // Preserve crop adjustments so users can continue editing after refresh
+  const [cropData, setCropData] = useState(savedSession?.cropData || null);
+
   const { processImage, isProcessing, error } = useImageProcessor();
 
+  // Persist editor state so users can recover their workflow after refresh
   useEffect(() => {
     if (!photoData?.localUrl) return;
 
@@ -50,10 +57,11 @@ function EditorPage({ darkMode, toggleTheme }) {
       fileSize: photoData.fileSize,
       background,
       sizePreset,
+      cropData,
     };
 
     saveSession(sessionData);
-  }, [photoData, background, sizePreset]);
+  }, [photoData, background, sizePreset, cropData]);
 
   const iconMap = {
     refresh: (
@@ -77,6 +85,9 @@ function EditorPage({ darkMode, toggleTheme }) {
     if (!file) return;
 
     const newLocalUrl = URL.createObjectURL(file);
+
+    // Reset crop data when user replaces photo to avoid stale crop coordinates
+    setCropData(null);
 
     setPhotoData({
       localUrl: newLocalUrl,
@@ -168,6 +179,14 @@ function EditorPage({ darkMode, toggleTheme }) {
               processedUrl={null}
               isProcessing={isProcessing}
             />
+
+            {/* Allow users to fine-tune framing before AI processing */}
+            <CropPlayground
+              imageUrl={photoData.localUrl}
+              onCropChange={setCropData}
+            />
+
+            <ComplianceStatus cropData={cropData} />
           </motion.section>
 
           {/* Controls panel */}

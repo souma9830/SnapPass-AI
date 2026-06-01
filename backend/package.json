@@ -1,7 +1,7 @@
 {
   "name": "snappass-ai-backend",
   "version": "1.0.0",
-  "description": "SnapPass AI — Express.js backend for passport photo processing",
+  "description": "SnapPass AI \u2014 Express.js backend for passport photo processing",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -24,7 +24,8 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "resend": "^6.12.3",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "redis": "^4.6.13"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.0",

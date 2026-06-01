@@ -44,6 +44,7 @@ function Navbar({ darkMode, toggleTheme }) {
     { path: '/upload', label: t.upload },
     { path: '/editor', label: t.editor },
     { path: '/print-preview', label: t.print },
+    { path: '/history', label: 'History' },
     { path: '/admin', label: t.admin },
   ];
 

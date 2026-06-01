@@ -127,7 +127,7 @@ function HomePage({darkMode, toggleTheme}) {
     print: (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M6 9V4h12v5" />
-        <rect x="4z" y="10" width="16" height="7" rx="2" />
+        <rect x="4" y="10" width="16" height="7" rx="2" />
         <path d="M7 17v3h10v-3" />
         <path d="M9 13h6" />
       </svg>

@@ -19,6 +19,9 @@ const DEFAULT_PRESETS = [
   { id: '2x2in', label: 'Passport Size Photo — US Passport', width: 50.8, height: 50.8 },
   { id: '100x150', label: 'Postcard Size Photo', width: 100, height: 150 },
   { id: '25x25', label: 'Stamp Size Photo', width: 25, height: 25 },
+  { id: '50x70', label: 'Passport Size Photo — Canada Passport', width: 50, height: 70 },
+  { id: '45x45', label: 'Passport Size Photo — Japan Passport / Visa', width: 45, height: 45 },
+  { id: '35x50', label: 'Passport Size Photo — Malaysia Passport', width: 35, height: 50 },
 ];
 
 function SizeSelector({ selected = '35x45', onChange, presets = DEFAULT_PRESETS }) {

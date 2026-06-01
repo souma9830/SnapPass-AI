@@ -11,8 +11,8 @@ import { fileURLToPath } from "url";
 import { config } from "../config/config.js";
 import { PHOTO_SIZE_DETAILS } from "../utils/photoPresets.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const localFilename = fileURLToPath(import.meta.url);
+const localDirname = path.dirname(localFilename);
 
 /**
  * POST /api/print/generate-sheet
@@ -46,7 +46,7 @@ export const generateSheet = async (req, res, next) => {
     }
 
     // 4. Strict directory containment (prevent path traversal completely)
-    const uploadsDir = path.resolve(__dirname, "..", "..", "uploads");
+    const uploadsDir = path.resolve(localDirname, "..", "..", "uploads");
     const filePath = path.resolve(uploadsDir, filename);
 
     const relative = path.relative(uploadsDir, filePath);

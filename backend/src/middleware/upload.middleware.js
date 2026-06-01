@@ -9,11 +9,11 @@ import fs from "fs";
 import { fileURLToPath } from 'url';
 import { config } from "../config/config.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const localFilename = fileURLToPath(import.meta.url);
+const localDirname = path.dirname(localFilename);
 
 // Ensure uploads directory exists
-const uploadDir = path.join(__dirname, "..", "..", config.UPLOAD_DIR);
+const uploadDir = path.join(localDirname, "..", "..", config.UPLOAD_DIR);
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }

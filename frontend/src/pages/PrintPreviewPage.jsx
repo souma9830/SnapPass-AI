@@ -9,6 +9,11 @@ import { generateSheet } from '../services/photoService';
 import { calculatePasswordStrength } from '../utils/passwordStrength';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
+import {
+  saveSession,
+  getSession,
+  saveSessionToHistory,
+} from '../utils/sessionManager';
 
 /**
  * PrintPreviewPage — Step 3 & 4.
@@ -19,8 +24,9 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
   const { state } = useLocation();
+  const savedSession = getSession();
 
-  const [quantity, setQuantity] = useState(6);
+  const [quantity, setQuantity] = useState(savedSession?.quantity || 6);
   const [isGenerating, setIsGenerating] = useState(false);
   const [password, setPassword] = useState('');
   const [strength, setStrength] = useState(0);
@@ -35,13 +41,28 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
     return () => clearTimeout(timer);
   }, [password]);
 
+  useEffect(() => {
+    const sessionData = {
+      step: 'print-preview',
+      processedUrl: state?.processedUrl || savedSession?.processedUrl,
+      filename: state?.filename || savedSession?.filename,
+      background: state?.background || savedSession?.background,
+      sizePreset: state?.sizePreset || savedSession?.sizePreset,
+      quantity,
+    };
+
+    if (sessionData.processedUrl) {
+      saveSession(sessionData);
+    }
+  }, [state, quantity]);
+
   const handleGenerateSheet = async () => {
     setIsGenerating(true);
     try {
       const blob = await generateSheet({
-        filename: state.filename,
+        filename: state?.filename || savedSession?.filename,
         quantity,
-        photoSizePreset: state.sizePreset,
+        photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -49,6 +70,18 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
       a.download = `snappass_sheet_${Date.now()}.png`;
       a.click();
       URL.revokeObjectURL(url);
+
+      saveSessionToHistory({
+        step: 'print-preview',
+        filename: state?.filename || savedSession?.filename,
+        background: state?.background || savedSession?.background,
+        photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
+        quantity,
+        status: 'processed',
+        outputStatus: 'downloaded',
+        hasOutput: true,
+        exportType: 'print-sheet',
+      });
     } catch (error) {
       alert(error.message || 'Sheet generation failed.');
     } finally {
@@ -60,7 +93,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   const slots = Array.from({ length: quantity });
 
   // If user lands here directly without uploading, redirect
-  if (!state?.processedUrl) {
+  if (!(state?.processedUrl || savedSession?.processedUrl)) {
     return (
       <EmptyState
         title={t.noProcessedPhoto}
@@ -77,12 +110,14 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
     visible: (delay = 0) => ({
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay }
-    })
+      transition: { duration: 0.8, ease: 'easeOut', delay },
+    }),
   };
 
   return (
-    <div className={`print-preview-toggle ${darkMode ? "print-preview-toggle-dark" : ""}`}>
+    <div
+      className={`print-preview-toggle ${darkMode ? 'print-preview-toggle-dark' : ''}`}
+    >
       <div className="print-page page-content">
         <motion.div
           className="print-page__header"
@@ -92,8 +127,14 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
           viewport={{ once: true }}
           custom={0.1}
         >
-          <h1 className={`section-title ${darkMode ? "section-title-dark" : "section-title-light"}`}>{t.printPreviewTitle}</h1>
-          <p className={`section-subtitle ${darkMode ? "section-subtitle-dark" : "section-subtitle-light"}`}>
+          <h1
+            className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}
+          >
+            {t.printPreviewTitle}
+          </h1>
+          <p
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}
+          >
             {t.printPreviewSubtitle}
           </p>
         </motion.div>
@@ -110,11 +151,14 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
             custom={0.2}
           >
             <p className="print-page__sheet-label">{t.a4SheetPreview}</p>
-            <div className="sheet-grid" style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}>
+            <div
+              className="sheet-grid"
+              style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}
+            >
               {slots.map((_, i) => (
                 <div key={i} className="sheet-slot">
                   <img
-                    src={state.processedUrl}
+                    src={state?.processedUrl || savedSession?.processedUrl}
                     alt={`Sheet slot ${i + 1}`}
                     className="sheet-slot__img"
                   />
@@ -135,27 +179,35 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
           >
             <div>
               <p className="print-info-label">{t.selectedPreset}</p>
-              <p className={`print-info-value ${darkMode ? "print-info-value-dark" : ""}`}>
-                {state.sizePreset || '35x45 mm'}
+              <p
+                className={`print-info-value ${darkMode ? 'print-info-value-dark' : ''}`}
+              >
+                {state?.sizePreset || savedSession?.sizePreset || '35x45 mm'}
               </p>
             </div>
             <div>
               <p className="print-info-label">{t.backgroundLabel}</p>
-              <p className={`print-info-value ${darkMode ? "print-info-value-dark" : "print-info-value-light"}`} style={{ textTransform: 'capitalize' }}>
-                {state.background || 'White'}
+              <p
+                className={`print-info-value ${darkMode ? 'print-info-value-dark' : 'print-info-value-light'}`}
+                style={{ textTransform: 'capitalize' }}
+              >
+                {state?.background || savedSession?.background || 'White'}
               </p>
             </div>
 
             <hr className="divider" />
 
-            <QuantityInput darkMode={darkMode} toggleTheme={toggleTheme} value={quantity} onChange={setQuantity} />
+            <QuantityInput
+              darkMode={darkMode}
+              toggleTheme={toggleTheme}
+              value={quantity}
+              onChange={setQuantity}
+            />
 
             <hr className="divider" />
 
             <div className="password-section">
-              <label className="print-info-label">
-                {t.securePassword}
-              </label>
+              <label className="print-info-label">{t.securePassword}</label>
               <input
                 type="password"
                 value={password}
@@ -165,27 +217,29 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               />
               <div className="password-meter">
                 <div
-                  className={`password-meter__fill ${strength <= 1
+                  className={`password-meter__fill ${
+                    strength <= 1
                       ? 'password-meter__fill--weak'
                       : strength === 2
                         ? 'password-meter__fill--medium'
                         : strength === 3
                           ? 'password-meter__fill--strong'
                           : 'password-meter__fill--excellent'
-                    }`}
+                  }`}
                   style={{ width: `${(strength / 4) * 100}%` }}
                 />
               </div>
               <span
                 aria-live="polite"
-                className={`password-feedback ${strength <= 1
+                className={`password-feedback ${
+                  strength <= 1
                     ? 'password-feedback--weak'
                     : strength === 2
                       ? 'password-feedback--medium'
                       : strength === 3
                         ? 'password-feedback--strong'
                         : 'password-feedback--excellent'
-                  }`}
+                }`}
               >
                 {strengthLabel}
               </span>
@@ -201,7 +255,10 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               disabled={isGenerating || strength === 0}
             />
 
-            <Link to="/editor" className={`btn btn-ghost print-page__back-btn ${darkMode ? "print-page__back-btn-dark" : ""}`}>
+            <Link
+              to="/editor"
+              className={`btn btn-ghost print-page__back-btn ${darkMode ? 'print-page__back-btn-dark' : ''}`}
+            >
               <span className="print-page__back-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
                   <path d="M15 6l-6 6 6 6" />

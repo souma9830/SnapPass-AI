@@ -3,6 +3,56 @@
    Add below your existing CSS
 ========================================================= */
 
+/* Base footer layout */
+.footer {
+  padding: 3rem 1.25rem;
+  background: var(--color-surface, #ffffff);
+  color: var(--color-text, #111827);
+}
+
+.footer-dark {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+/* Container to center content */
+.footer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Top area layout */
+.footer__top {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 1.5rem 0;
+}
+
+/* Ensure columns lay out horizontally on desktop */
+.footer__columns {
+  display: flex;
+  gap: 5rem;
+}
+
+.footer__column {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+}
+
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+
 /* ───────────────── CTA SECTION ───────────────── */
 
 .footer__cta {

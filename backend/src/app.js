@@ -26,7 +26,6 @@ app.set('trust proxy', 1);
 // Apply rate limiter to all API routes
 app.use('/api', apiLimiter);
 
-
 app.use(helmet());
 app.use(
   cors({

@@ -26,8 +26,11 @@ function Footer({ darkMode }) {
       role="contentinfo"
     >
       {/* Decorative top wave */}
-      {!darkMode && (
-        <div className="footer__wave-container">
+          <div
+            className={`footer__wave-container ${
+              darkMode ? 'footer__wave-container-dark' : ''
+            }`}
+          >
           <svg
             className="footer__wave"
             xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +67,7 @@ function Footer({ darkMode }) {
             </g>
           </svg>
         </div>
-      )}
+      
 
       <div className="footer__container">
         {/* CTA SECTION */}

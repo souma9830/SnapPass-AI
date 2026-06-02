@@ -6,8 +6,12 @@ import {
   Globe,
   BadgeCheck,
   ArrowRight,
+  Instagram,
+  Twitter,
+  Linkedin,
   Share2,
   User,
+  Bug,
 } from 'lucide-react';
 
 import './Footer.css';
@@ -223,6 +227,19 @@ function Footer({ darkMode }) {
                 <Mail size={16} />
                 <span>support@snappassai.com</span>
               </div>
+
+              <a
+                href="https://github.com/souma9830/SnapPass-AI/issues/new?template=bug_report.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`footer__item ${
+                  darkMode ? 'footer__item-dark' : ''
+                }`}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '10px' }}
+              >
+                <Bug size={16} />
+                <span>Report a Bug</span>
+              </a>
             </div>
           </div>
         </div>

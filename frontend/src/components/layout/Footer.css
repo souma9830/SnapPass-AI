@@ -1,7 +1,67 @@
-/* =========================================================
-   UPDATED FOOTER ENHANCEMENTS
-   Add below your existing CSS
-========================================================= */
+/* ── Base Footer Layout ── */
+.footer {
+  position: relative;
+  margin-top: 60px;
+  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.02);
+  border-radius: 28px 28px 0 0;
+  background: var(--color-surface, #ffffff);
+  color: var(--color-text, #1f2937);
+}
+
+.footer-dark {
+  background: linear-gradient(145deg, #090d16 10%, #05070c 50%, #020306 100%);
+  color: #f3f4f6;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.footer__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 4rem;
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 400px;
+}
+
+.footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+  color: #111827;
+}
+
+.footer__logo-dark {
+  color: #ffffff;
+}
+
+.footer__tagline {
+  font-size: 1rem;
+  color: var(--color-text-muted, #4b5563);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.footer__tagline-dark {
+  color: #9ca3af;
+}
 
 /* ───────────────── CTA SECTION ───────────────── */
 
@@ -243,33 +303,60 @@
 /* ───────────────── COLUMN & TYPOGRAPHY ───────────────── */
 
 .footer__columns {
+  display: flex;
   gap: 5rem;
+  flex-wrap: wrap;
 }
 
 .footer__column {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
+  min-width: 160px;
 }
 
 .footer__heading {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.8rem;
+}
 
-  margin-bottom: 0.7rem;
+.footer__heading-dark {
+  color: #ffffff;
 }
 
 .footer__item {
+  text-decoration: none !important;
+  color: var(--color-text-muted, #4b5563);
+  font-size: 0.98rem;
+  display: inline-block;
   position: relative;
+  transition: all 0.25s ease;
+}
 
-  transition:
-    color 0.25s ease,
-    transform 0.25s ease;
+.footer__item-dark {
+  color: #9ca3af;
 }
 
 .footer__item:hover {
+  color: var(--color-primary, #3b82f6);
   transform: translateX(4px);
 }
 
+.footer__item-dark:hover {
+  color: #ffffff;
+}
+
 /* ───────────────── CONTACT ───────────────── */
+
+.footer__contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted, #4b5563);
+  font-size: 0.98rem;
+}
 
 .footer__contact svg {
   color: #f59e0b;

@@ -76,25 +76,24 @@
     }
 }
 
-/* dark mode implementation similar to other pages*/
-[data-theme="dark"] .terms-page__content {
-    background: linear-gradient(145deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 30, 0.85));
+/* Dark Theme Support */
+[data-theme='dark'] .terms-page__content {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.75));
     border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.05);
 }
 
-[data-theme="dark"] .terms-text h2 {
-    color: #e2e8f0;
+[data-theme='dark'] .terms-text h2,
+[data-theme='dark'] .terms-text strong,
+[data-theme='dark'] .section-title {
+    color: #f8fafc;
 }
 
-[data-theme="dark"] .section-title {
-    color: #e2e8f0;
+[data-theme='dark'] .terms-text p,
+[data-theme='dark'] .terms-text ul {
+    color: #cbd5e1;
 }
 
-[data-theme="dark"] .terms-text p,
-[data-theme="dark"] .terms-text ul {
-    color: #94a3b8;
-}
-
-[data-theme="dark"] .terms-date {
-    color: #64748b !important;
+[data-theme='dark'] .terms-date {
+    color: #94a3b8 !important;
 }

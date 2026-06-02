@@ -195,16 +195,14 @@ function Footer({ darkMode }) {
 
               <Link
                 to="/privacy"
-                className={`footer__item ${darkMode ? 'footer__item-dark' : ''
-                  }`}
+                className={`footer__item ${darkMode ? 'footer__item-dark' : ''}`}
               >
                 {t.privacyPolicy}
               </Link>
 
               <Link
                 to="/terms"
-                className={`footer__item ${darkMode ? 'footer__item-dark' : ''
-                  }`}
+                className={`footer__item ${darkMode ? 'footer__item-dark' : ''}`}
               >
                 {t.termsConditions}
               </Link>

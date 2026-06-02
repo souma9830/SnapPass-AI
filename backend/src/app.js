@@ -2,6 +2,7 @@ import express from 'express';
 import { config } from './config/config.js';
 import cors from 'cors';
 import helmet from 'helmet';
+import compression from 'compression';
 import morgan from 'morgan';
 import path from 'path';
 import cookieParser from 'cookie-parser';
@@ -19,6 +20,8 @@ const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);
 
 const app = express();
+
+app.use(compression());
 
 // Enable trust proxy for rate limiting behind reverse proxies
 app.set('trust proxy', 1);

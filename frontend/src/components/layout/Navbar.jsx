@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import './Navbar.css';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 
@@ -12,7 +12,6 @@ import { translations } from '../../translations/translations';
  */
 function Navbar({ darkMode, toggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const { language, setLanguage } = useLanguage();
@@ -20,8 +19,6 @@ function Navbar({ darkMode, toggleTheme }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-
       const scrollTop = window.scrollY;
       const docHeight =
         document.documentElement.scrollHeight - window.innerHeight;
@@ -32,7 +29,6 @@ function Navbar({ darkMode, toggleTheme }) {
     };
 
     window.addEventListener('scroll', handleScroll);
-
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
@@ -65,61 +61,70 @@ function Navbar({ darkMode, toggleTheme }) {
         role="banner"
       >
         <div className="navbar__inner">
-          {/* Logo */}
-          <Link to="/" className="navbar__brand" aria-label="SnapPass AI Home">
-            <span className="navbar__logo-icon" aria-hidden="true">
-              📷
-            </span>
-            <span
-              className={`navbar__brand-name ${darkMode ? 'navbar__brand-name-dark' : 'navbar__brand-name-light'}`}
-            >
-              SnapPass{' '}
-              <span
-                className={`navbar__brand-highlight ${darkMode ? 'navbar__brand-highlight-dark' : 'navbar__brand-highlight-light'}`}
-              >
-                AI
+          {/* Left Section - Logo on FAR LEFT */}
+          <div className="navbar__left">
+            <Link to="/" className="navbar__brand" aria-label="SnapPass AI Home">
+              <span className="navbar__logo-icon" aria-hidden="true">
+                📷
               </span>
-            </span>
-          </Link>
-
-          <nav className="navbar__links" aria-label="Main navigation">
-            {navLinks.map(({ path, label }) => (
-              <NavLink
-                key={path}
-                to={path}
-                end={path === '/'}
-                className={({ isActive }) =>
-                  `navbar__link
-  ${path === '/upload' ? 'tour-nav-upload' : ''}
-  ${path === '/studio' ? 'tour-nav-studio' : ''}
-  ${path === '/editor' ? 'tour-nav-editor' : ''}
-  ${path === '/print-preview' ? 'tour-nav-print' : ''}
-  ${darkMode ? 'navbar__link-dark' : 'navbar__link-light'}
-  ${
-    isActive
-      ? darkMode
-        ? ' navbar__mobile-link--active-dark'
-        : ' navbar__mobile-link--active-light'
-      : ''
-  }`
-                }
+              <span
+                className={`navbar__brand-name ${
+                  darkMode ? 'navbar__brand-name-dark' : 'navbar__brand-name-light'
+                }`}
               >
-                {label}
-              </NavLink>
-            ))}
-          </nav>
+                SnapPass{' '}
+                <span
+                  className={`navbar__brand-highlight ${
+                    darkMode ? 'navbar__brand-highlight-dark' : 'navbar__brand-highlight-light'
+                  }`}
+                >
+                  AI
+                </span>
+              </span>
+            </Link>
+          </div>
 
-          {/* CTA */}
-          <div className="navbar__actions">
+          {/* Center Section - Navigation Links */}
+          <div className="navbar__center">
+            <nav className="navbar__links" aria-label="Main navigation">
+              {navLinks.map(({ path, label }) => (
+                <NavLink
+                  key={path}
+                  to={path}
+                  end={path === '/'}
+                  className={({ isActive }) =>
+                    `navbar__link
+                      ${path === '/upload' ? 'tour-nav-upload' : ''}
+                      ${path === '/studio' ? 'tour-nav-studio' : ''}
+                      ${path === '/editor' ? 'tour-nav-editor' : ''}
+                      ${path === '/print-preview' ? 'tour-nav-print' : ''}
+                      ${darkMode ? 'navbar__link-dark' : 'navbar__link-light'}
+                      ${
+                        isActive
+                          ? darkMode
+                            ? 'navbar__link--active-dark'
+                            : 'navbar__link--active-light'
+                          : ''
+                      }`
+                  }
+                >
+                  {label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+
+          {/* Right Section - Actions */}
+          <div className="navbar__right">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               className={`navbar__language-selector
-               ${
-                 darkMode
-                   ? 'navbar__language-selector-dark'
-                   : 'navbar__language-selector-light'
-               }`}
+                ${
+                  darkMode
+                    ? 'navbar__language-selector-dark'
+                    : 'navbar__language-selector-light'
+                }`}
             >
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
@@ -127,21 +132,27 @@ function Navbar({ darkMode, toggleTheme }) {
 
             <button
               onClick={toggleTheme}
-              className={`flex items-center justify-center w-10 ml-auto p-2 hover:no-underline h-10 rounded-full ${darkMode ? 'bg-gray-700' : 'bg-[#a2bece]'}`}
+              className={`theme-toggle ${
+                darkMode ? 'theme-toggle-dark' : 'theme-toggle-light'
+              }`}
             >
               {darkMode ? <Sun className="text-amber-500" /> : <Moon />}
             </button>
 
             <Link
               to="/upload"
-              className={`navbar__cta hover:no-underline ${darkMode ? 'navbar__cta-dark' : 'navbar__cta-light'}`}
+              className={`navbar__cta ${
+                darkMode ? 'navbar__cta-dark' : 'navbar__cta-light'
+              }`}
             >
               {t.getStarted}
             </Link>
 
             {/* Mobile hamburger */}
             <button
-              className={`navbar__hamburger ${darkMode ? 'navbar__hamburger-dark' : 'navbar__hamburger-light'}`}
+              className={`navbar__hamburger ${
+                darkMode ? 'navbar__hamburger-dark' : 'navbar__hamburger-light'
+              }`}
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((o) => !o)}
@@ -163,20 +174,18 @@ function Navbar({ darkMode, toggleTheme }) {
           aria-label="Mobile navigation"
         >
           <div className="navbar__mobile-language">
-            <div className="navbar__desktop-language">
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className={`navbar__language-selector ${
-                  darkMode
-                    ? 'navbar__language-selector-dark'
-                    : 'navbar__language-selector-light'
-                }`}
-              >
-                <option value="en">English</option>
-                <option value="hi">हिन्दी</option>
-              </select>
-            </div>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className={`navbar__language-selector ${
+                darkMode
+                  ? 'navbar__language-selector-dark'
+                  : 'navbar__language-selector-light'
+              }`}
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+            </select>
           </div>
 
           {navLinks.map(({ path, label }) => (

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StarRating from './StarRating';
 import './AddTestimonialForm.css';
 
-const AddTestimonialForm = ({ onSubmit, darkMode }) => {
+const AddTestimonialForm = ({ onSubmit, onCancel, darkMode }) => {
   const [formData, setFormData] = useState({
     name: '',
     rating: 0,
@@ -39,6 +39,12 @@ const AddTestimonialForm = ({ onSubmit, darkMode }) => {
     } else {
       setErrors(newErrors);
     }
+  };
+
+  const handleCancel = () => {
+    setFormData({ name: '', rating: 0, comment: '' });
+    setErrors({});
+    if (onCancel) onCancel();
   };
 
   const handleChange = (field, value) => {
@@ -86,9 +92,18 @@ const AddTestimonialForm = ({ onSubmit, darkMode }) => {
           {errors.comment && <span className="error-message">{errors.comment}</span>}
         </div>
         
-        <button type="submit" className={`submit-btn ${darkMode ? 'submit-btn-dark' : 'submit-btn-light'}`}>
-          Submit Review
-        </button>
+        <div className="form-actions">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className={`cancel-btn ${darkMode ? 'cancel-btn-dark' : 'cancel-btn-light'}`}
+          >
+            Cancel
+          </button>
+          <button type="submit" className={`submit-btn ${darkMode ? 'submit-btn-dark' : 'submit-btn-light'}`}>
+            Submit Review
+          </button>
+        </div>
       </form>
     </div>
   );

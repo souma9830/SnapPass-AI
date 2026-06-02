@@ -32,6 +32,11 @@ PRESETS = {
     "33x48": {"label": "Schengen Visa",     "w": 33,   "h": 48},
     "40x60": {"label": "China Visa",        "w": 40,   "h": 60},
     "2x2in": {"label": "US Passport",       "w": 50.8, "h": 50.8},
+    "100x150": {"label": "Postcard Size",   "w": 100,  "h": 150},
+    "25x25": {"label": "Stamp Size",        "w": 25,   "h": 25},
+    "50x70": {"label": "Canada Passport",   "w": 50,   "h": 70},
+    "45x45": {"label": "Japan Passport/Visa", "w": 45, "h": 45},
+    "35x50": {"label": "Malaysia Passport", "w": 35,   "h": 50},
 }
 
 # ── Main Function ─────────────────────────────────────────────────────────────

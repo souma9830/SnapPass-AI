@@ -102,6 +102,7 @@ const TestimonialsSection = ({ darkMode }) => {
         ) : (
           <AddTestimonialForm 
             onSubmit={addTestimonial} 
+            onCancel={() => setShowForm(false)}
             darkMode={darkMode}  
           />
         )}

@@ -19,7 +19,6 @@
 
   transition: all 0.3s ease;
 }
- 
 
 .navbar--light {
   background: rgba(255, 255, 255, 0.45);
@@ -68,7 +67,7 @@
 }
 
 .navbar__brand-name-dark {
-  color: var(--color-text-dark)
+  color: var(--color-text-dark);
 }
 
 .navbar__brand-highlight-light {
@@ -104,7 +103,7 @@
 
 .navbar__link-light:hover {
   color: var(--color-primary);
-  background-color: #E7F4FE;
+  background-color: #e7f4fe;
 }
 
 .navbar__link-dark {
@@ -270,7 +269,7 @@
 
 .navbar__mobile-link-light:hover {
   transform: translateX(5px);
-  background: #EDF5FF;
+  background: #edf5ff;
   color: var(--color-primary);
 }
 
@@ -475,4 +474,27 @@
   .navbar__desktop-language {
     display: none;
   }
+}
+
+/* Scroll Progress Bar */
+
+.navbar__progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0%;
+  z-index: 9999;
+  transition: width 0.2s ease-out;
+  backdrop-filter: blur(8px);
+}
+
+.navbar__progress-bar-light {
+  background: linear-gradient(90deg, #2563eb, #38bdf8, #0ea5e9);
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+}
+
+.navbar__progress-bar-dark {
+  background: linear-gradient(90deg, #60a5fa, #22d3ee, #38bdf8);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
 }

@@ -1,0 +1,213 @@
+.history-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  padding-top: 6rem;
+}
+
+.history-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.history-page__title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  margin: 0;
+}
+
+.history-page__clear-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #ef4444;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.history-page__clear-btn:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.history-page__empty {
+  text-align: center;
+  margin-top: 4rem;
+  font-size: 1.125rem;
+  color: #6b7280;
+  padding: 3rem;
+  background: #f9fafb;
+  border-radius: 16px;
+}
+
+.history-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.history-page__card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.history-page__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #d1d5db;
+}
+
+.history-page__card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.history-page__filename {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #1f2937;
+}
+
+.history-page__step {
+  color: #6b7280;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+}
+
+.history-page__status {
+  color: #2563eb;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.history-page__photo-size {
+  color: #9333ea;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.history-page__output-status {
+  color: #16a34a;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.history-page__has-output {
+  color: #14b8a6;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.history-page__export-type {
+  color: #f97316;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.history-page__date {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.history-page__card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-left: 1rem;
+  flex-wrap: wrap;
+}
+
+.history-page__restore-btn {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.history-page__restore-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.history-page__delete-btn {
+  padding: 0.6rem 1.25rem;
+  border: 1.5px solid #ef4444;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+  color: #ef4444;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.history-page__delete-btn:hover {
+  background-color: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+@media (max-width: 768px) {
+  .history-page {
+    padding: 1rem;
+    padding-top: 5rem;
+  }
+
+  .history-page__title {
+    font-size: 1.75rem;
+  }
+
+  .history-page__card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .history-page__card-actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .history-page__restore-btn,
+  .history-page__delete-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .history-page__clear-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .history-page__status,
+  .history-page__photo-size,
+  .history-page__output-status,
+  .history-page__has-output,
+  .history-page__export-type {
+    font-size: 0.75rem;
+  }
+}

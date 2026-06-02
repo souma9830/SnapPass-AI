@@ -4,7 +4,7 @@
     gap: var(--space-xl, 1.5rem);
     max-width: 900px;
     width: 100%;
-    margin: 0 auto;
+    margin-top: calc(var(--navbar-height, 64px));
     padding: var(--space-lg, 1.5rem);
     box-sizing: border-box;
 }
@@ -74,4 +74,27 @@
     .terms-page__content {
         padding: 2rem 1.5rem;
     }
+}
+
+/* dark mode implementation similar to other pages*/
+[data-theme="dark"] .terms-page__content {
+    background: linear-gradient(145deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 30, 0.85));
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .terms-text h2 {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .section-title {
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .terms-text p,
+[data-theme="dark"] .terms-text ul {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .terms-date {
+    color: #64748b !important;
 }

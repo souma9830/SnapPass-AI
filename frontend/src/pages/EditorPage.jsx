@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PhotoPreview from '../components/PhotoPreview';
 import BackgroundSelector from '../components/BackgroundSelector';
@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import useImageProcessor from '../hooks/useImageProcessor';
+import { saveSession, getSession } from '../utils/sessionManager';
 
 /**
  * EditorPage — Step 2.
@@ -21,20 +22,38 @@ function EditorPage({ darkMode, toggleTheme }) {
   const t = translations[language];
   const { state } = useLocation();
   const navigate = useNavigate();
+  const savedSession = getSession();
 
   const [photoData, setPhotoData] = useState({
-    localUrl: state?.localUrl,
-    filename: state?.filename,
-    fileSize: state?.fileSize,
+    localUrl: state?.localUrl || savedSession?.localUrl,
+    filename: state?.filename || savedSession?.filename,
+    fileSize: state?.fileSize || savedSession?.fileSize,
   });
-
-
 
   const fileInputRef = useRef(null);
 
-  const [background, setBackground] = useState('white');
-  const [sizePreset, setSizePreset] = useState('35x45');
+  const [background, setBackground] = useState(
+    savedSession?.background || 'white'
+  );
+  const [sizePreset, setSizePreset] = useState(
+    savedSession?.sizePreset || '35x45'
+  );
   const { processImage, isProcessing, error } = useImageProcessor();
+
+  useEffect(() => {
+    if (!photoData?.localUrl) return;
+
+    const sessionData = {
+      step: 'editor',
+      localUrl: photoData.localUrl,
+      filename: photoData.filename,
+      fileSize: photoData.fileSize,
+      background,
+      sizePreset,
+    };
+
+    saveSession(sessionData);
+  }, [photoData, background, sizePreset]);
 
   const iconMap = {
     refresh: (
@@ -66,7 +85,6 @@ function EditorPage({ darkMode, toggleTheme }) {
     });
   };
 
-
   const handleProcess = async () => {
     try {
       const processedUrl = await processImage({
@@ -89,7 +107,7 @@ function EditorPage({ darkMode, toggleTheme }) {
   };
   // If user lands here directly without uploading, redirect
 
-  if (!state?.localUrl) {
+  if (!photoData?.localUrl) {
     return (
       <EmptyState
         title={t.noPhotoSelected}
@@ -101,18 +119,17 @@ function EditorPage({ darkMode, toggleTheme }) {
     );
   }
 
-
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 30 },
     visible: (delay = 0) => ({
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: "easeOut", delay }
-    })
+      transition: { duration: 0.8, ease: 'easeOut', delay },
+    }),
   };
 
   return (
-    <div className={`editor-toggle ${darkMode ? "editor-toggle-dark" : ""}`}>
+    <div className={`editor-toggle ${darkMode ? 'editor-toggle-dark' : ''}`}>
       <div className="editor-page">
         <motion.div
           className="editor-page__header"
@@ -122,8 +139,16 @@ function EditorPage({ darkMode, toggleTheme }) {
           viewport={{ once: true }}
           custom={0.1} // Loads first
         >
-          <h1 className={`section-title ${darkMode ? "section-title-dark" : "section-title-light"}`}>{t.editPhotoTitle}</h1>
-          <p className={`section-subtitle ${darkMode ? "section-subtitle-dark" : "section-subtitle-light"}`}>{t.editPhotoSubtitle}</p>
+          <h1
+            className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}
+          >
+            {t.editPhotoTitle}
+          </h1>
+          <p
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}
+          >
+            {t.editPhotoSubtitle}
+          </p>
         </motion.div>
 
         <div className="editor-page__layout">
@@ -162,10 +187,7 @@ function EditorPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <SizeSelector
-              selected={sizePreset}
-              onChange={setSizePreset}
-            />
+            <SizeSelector selected={sizePreset} onChange={setSizePreset} />
 
             <hr className="divider" />
 
@@ -176,7 +198,7 @@ function EditorPage({ darkMode, toggleTheme }) {
                   color: '#ef4444',
                   margin: '1rem 0',
                   fontSize: '0.875rem',
-                  textAlign: 'center'
+                  textAlign: 'center',
                 }}
               >
                 {error}
@@ -190,7 +212,9 @@ function EditorPage({ darkMode, toggleTheme }) {
               </p>
               <p className="editor-info-row">
                 <span className="editor-info-label">{t.sizeLabel}</span>
-                <span className="editor-info-value">{(photoData.fileSize / 1024).toFixed(1)} KB</span>
+                <span className="editor-info-value">
+                  {(photoData.fileSize / 1024).toFixed(1)} KB
+                </span>
               </p>
             </div>
 
@@ -214,7 +238,7 @@ function EditorPage({ darkMode, toggleTheme }) {
             </button>
 
             <button
-              className={`btn btn-primary editor-page__process-btn ${darkMode ? "editor-page__process-btn-dark" : ""}`}
+              className={`btn btn-primary editor-page__process-btn ${darkMode ? 'editor-page__process-btn-dark' : ''}`}
               onClick={handleProcess}
               disabled={isProcessing}
             >

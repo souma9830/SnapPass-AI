@@ -5,6 +5,7 @@
  */
 
 import { v4 as uuidv4 } from "uuid";
+import fs from "fs";
 import { uploadImage } from "../service/cloudinary.service.js";
 import Upload from "../models/upload.model.js";
 import { config } from "../config/config.js";
@@ -34,6 +35,9 @@ export const uploadPhoto = async (req, res, next) => {
       fileUrl = cloudinaryResult.secure_url;
       publicId = cloudinaryResult.public_id;
       isCloudinaryUsed = true;
+      try {
+        fs.unlinkSync(localPath);
+      } catch (_err) {}
     } else {
       // Fallback to local URL
       fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
@@ -64,6 +68,11 @@ export const uploadPhoto = async (req, res, next) => {
       },
     });
   } catch (error) {
+    if (localPath) {
+      try {
+        fs.unlinkSync(localPath);
+      } catch (_err) {}
+    }
     next(error);
   }
 };

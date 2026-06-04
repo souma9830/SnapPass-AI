@@ -4,11 +4,25 @@
  */
 
 import bcrypt from "bcryptjs";
-import { createPasswordResetOtp, findLatestPendingOtp, incrementOtpAttempts, updateOtpState } from "../dao/passwordResetOtp.dao.js";
+import { createPasswordResetOtp, findLatestPendingOtp, incrementOtpAttempts, updateOtpState, invalidateAllPendingOtps, findLatestOtpIncludingExpired } from "../dao/passwordResetOtp.dao.js";
 import { generateOTP } from "../utils/generateOTP.js";
 import AppError from "../utils/errors/AppError.js";
 
 export async function generateAndStoreOtp(userId) {
+    // 1. Cooldown Check (60 seconds)
+    const latestOtp = await findLatestOtpIncludingExpired(userId);
+    if (latestOtp) {
+        const timePassed = Date.now() - new Date(latestOtp.createdAt).getTime();
+        const cooldown = 60 * 1000; // 60 seconds
+        if (timePassed < cooldown) {
+            const waitTime = Math.ceil((cooldown - timePassed) / 1000);
+            throw new AppError(`Please wait ${waitTime} seconds before requesting a new OTP.`, 429);
+        }
+    }
+
+    // 2. Invalidate previous pending OTPs
+    await invalidateAllPendingOtps(userId);
+
     const otp = generateOTP();
     const hashedOtp = await bcrypt.hash(otp, 10);
     const passwordResetOtp = await createPasswordResetOtp(userId, hashedOtp);

@@ -12,6 +12,9 @@ const TermsPage = lazy(() => import('../pages/TermsPage'));
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage'));
 const PhotoStudio = lazy(() => import('../pages/PhotoStudio'));
 const HistoryPage = lazy(() => import('../pages/HistoryPage'));
+const PassportComparatorPage = lazy(
+  () => import('../pages/PassportComparatorPage')
+);
 
 /**
  * AppRoutes — central route configuration for SnapPass AI.
@@ -59,6 +62,15 @@ function AppRoutes({ darkMode, toggleTheme }) {
             path="/history"
             element={
               <HistoryPage darkMode={darkMode} toggleTheme={toggleTheme} />
+            }
+          />
+          <Route
+            path="/compare-requirements"
+            element={
+              <PassportComparatorPage
+                darkMode={darkMode}
+                toggleTheme={toggleTheme}
+              />
             }
           />
           {/* Fallback — redirect unknown paths to home */}

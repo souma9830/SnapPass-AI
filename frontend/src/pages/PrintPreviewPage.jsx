@@ -89,6 +89,10 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
     }
   };
 
+  const handlePrintDirect = () => {
+    window.print();
+  };
+
   // Build grid of photo slots
   const slots = Array.from({ length: quantity });
 
@@ -254,6 +258,25 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               toggleTheme={toggleTheme}
               disabled={isGenerating || strength === 0}
             />
+
+            <button
+              onClick={handlePrintDirect}
+              className={`btn btn-secondary ${darkMode ? 'btn-secondary-dark' : ''}`}
+              style={{
+                marginTop: '10px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600'
+              }}
+            >
+              📷 Print Direct (A4 / PDF)
+            </button>
 
             <Link
               to="/editor"

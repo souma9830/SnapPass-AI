@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, HelpCircle } from 'lucide-react';
 import './Navbar.css';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -13,6 +13,7 @@ import { translations } from '../../translations/translations';
 function Navbar({ darkMode, toggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [languageOpen, setLanguageOpen] = useState(false);
 
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
@@ -34,12 +35,24 @@ function Navbar({ darkMode, toggleTheme }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [menuOpen]);
+
   const navLinks = [
     { path: '/', label: t.home },
     { path: '/studio', label: t.studio },
     { path: '/upload', label: t.upload },
     { path: '/editor', label: t.editor },
     { path: '/print-preview', label: t.print },
+    { path: '/compare-requirements', label: 'Compare' },
     { path: '/history', label: 'History' },
     { path: '/admin', label: t.admin },
   ];
@@ -48,9 +61,8 @@ function Navbar({ darkMode, toggleTheme }) {
     <>
       {/* Scroll Progress Bar */}
       <motion.div
-        className={`navbar__progress-bar ${
-          darkMode ? 'navbar__progress-bar-dark' : 'navbar__progress-bar-light'
-        }`}
+        className={`navbar__progress-bar ${darkMode ? 'navbar__progress-bar-dark' : 'navbar__progress-bar-light'
+          }`}
         initial={{ width: 0 }}
         animate={{ width: `${scrollProgress}%` }}
         transition={{ ease: 'easeOut', duration: 0.2 }}
@@ -129,6 +141,82 @@ function Navbar({ darkMode, toggleTheme }) {
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
             </select>
+            </span>
+          </Link>
+
+          <nav className="navbar__links" aria-label="Main navigation">
+            {navLinks.map(({ path, label }) => (
+              <NavLink
+                key={path}
+                to={path}
+                end={path === '/'}
+                className={({ isActive }) =>
+                  `navbar__link
+  ${path === '/upload' ? 'tour-nav-upload' : ''}
+  ${path === '/studio' ? 'tour-nav-studio' : ''}
+  ${path === '/editor' ? 'tour-nav-editor' : ''}
+  ${path === '/print-preview' ? 'tour-nav-print' : ''}
+  ${darkMode ? 'navbar__link-dark' : 'navbar__link-light'}
+  ${isActive
+                    ? darkMode
+                      ? ' navbar__mobile-link--active-dark'
+                      : ' navbar__mobile-link--active-light'
+                    : ''
+                  }`
+                }
+              >
+                {label}
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* CTA */}
+          <div className="navbar__actions">
+            <div className="navbar__language-dropdown">
+              <button
+                className={`navbar__language-selector ${darkMode
+                  ? 'navbar__language-selector-dark'
+                  : 'navbar__language-selector-light'
+                  }`}
+                onClick={() => setLanguageOpen(!languageOpen)}
+              >
+                {language === 'en' ? 'English' : 'हिन्दी'}
+
+                <span
+                  className={`dropdown-arrow ${languageOpen ? 'open' : ''
+                    }`}
+                >
+                  ▼
+                </span>
+              </button>
+
+              {languageOpen && (
+                <div
+                  className={`navbar__language-menu ${darkMode
+                    ? 'navbar__language-menu-dark'
+                    : 'navbar__language-menu-light'
+                    }`}
+                >
+                  <button
+                    onClick={() => {
+                      setLanguage('en');
+                      setLanguageOpen(false);
+                    }}
+                  >
+                    English
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setLanguage('hi');
+                      setLanguageOpen(false);
+                    }}
+                  >
+                    हिन्दी
+                  </button>
+                </div>
+              )}
+            </div>
 
             <button
               onClick={toggleTheme}
@@ -137,6 +225,15 @@ function Navbar({ darkMode, toggleTheme }) {
               }`}
             >
               {darkMode ? <Sun className="text-amber-500" /> : <Moon />}
+            </button>
+
+            <button
+              onClick={() => window.dispatchEvent(new Event('trigger-snappass-tour'))}
+              title="Start Tour Guide"
+              className={`flex items-center justify-center w-10 p-2 hover:no-underline h-10 rounded-full ${darkMode ? 'bg-gray-700 text-white' : 'bg-[#a2bece] text-gray-800'}`}
+              style={{ border: 'none', cursor: 'pointer' }}
+            >
+              <HelpCircle size={20} />
             </button>
 
             <Link
@@ -165,13 +262,13 @@ function Navbar({ darkMode, toggleTheme }) {
         {/* Mobile Drawer */}
         <nav
           className={`navbar__mobile-menu ${menuOpen ? 'active' : ''} 
-            ${
-              darkMode
-                ? 'navbar__mobile-menu-dark'
-                : 'navbar__mobile-menu-light'
+            ${darkMode
+              ? 'navbar__mobile-menu-dark'
+              : 'navbar__mobile-menu-light'
             }
             `}
           aria-label="Mobile navigation"
+          aria-hidden={!menuOpen}
         >
           <div className="navbar__mobile-language">
             <select
@@ -186,6 +283,53 @@ function Navbar({ darkMode, toggleTheme }) {
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
             </select>
+            <div className="navbar__desktop-language">
+              <div className="navbar__language-dropdown">
+                <button
+                  className={`navbar__language-selector ${darkMode
+                      ? 'navbar__language-selector-dark'
+                      : 'navbar__language-selector-light'
+                    }`}
+                  onClick={() => setLanguageOpen(!languageOpen)}
+                >
+                  {language === 'en' ? 'English' : 'हिन्दी'}
+
+                  <span
+                    className={`dropdown-arrow ${languageOpen ? 'open' : ''
+                      }`}
+                  >
+                    ▼
+                  </span>
+                </button>
+
+                {languageOpen && (
+                  <div
+                    className={`navbar__language-menu ${darkMode
+                        ? 'navbar__language-menu-dark'
+                        : 'navbar__language-menu-light'
+                      }`}
+                  >
+                    <button
+                      onClick={() => {
+                        setLanguage('en');
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      English
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setLanguage('hi');
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      हिन्दी
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {navLinks.map(({ path, label }) => (
@@ -194,16 +338,14 @@ function Navbar({ darkMode, toggleTheme }) {
               to={path}
               end={path === '/'}
               className={({ isActive }) =>
-                `navbar__mobile-link ${
-                  darkMode
-                    ? 'navbar__mobile-link-dark'
-                    : 'navbar__mobile-link-light'
-                } ${
-                  isActive
-                    ? darkMode
-                      ? ' navbar__mobile-link--active-dark'
-                      : ' navbar__mobile-link--active-light'
-                    : ''
+                `navbar__mobile-link ${darkMode
+                  ? 'navbar__mobile-link-dark'
+                  : 'navbar__mobile-link-light'
+                } ${isActive
+                  ? darkMode
+                    ? ' navbar__mobile-link--active-dark'
+                    : ' navbar__mobile-link--active-light'
+                  : ''
                 }`
               }
               onClick={() => setMenuOpen(false)}

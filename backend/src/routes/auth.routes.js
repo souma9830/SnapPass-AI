@@ -3,7 +3,7 @@ import { loginValidation, registerValidation, passwordResetRequestValidation, ve
 import validate from "../middleware/validate.middleware.js";
 import * as authController from "../controllers/auth.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
-import { otpActionLimiter } from "../middleware/rateLimit.middleware.js";
+import { otpActionLimiter, authLimiter } from "../middleware/rateLimit.middleware.js";
 
 const router = Router();
 
@@ -12,14 +12,14 @@ const router = Router();
  * @description Register a new user
  * @access Public
  */
-router.post("/register", registerValidation, validate, authController.register);
+router.post("/register", authLimiter, registerValidation, validate, authController.register);
 
 /**
  * @route POST /api/auth/login
  * @description Login a user and return a JWT token in an HTTP-only cookie
  * @access Public
  */
-router.post("/login", loginValidation, validate, authController.login);
+router.post("/login", authLimiter, loginValidation, validate, authController.login);
 
 /**
  * @route POST /api/auth/logout

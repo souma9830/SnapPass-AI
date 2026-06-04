@@ -12,7 +12,7 @@ export function setToken(res,user){
     res.cookie("token", token, {
         httpOnly: true,
         secure: isProduction,
-        sameSite: "none",
+        sameSite: isProduction ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/",
     });

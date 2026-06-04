@@ -1,0 +1,9 @@
+.passport-comparator-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.passport-comparator-page__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}

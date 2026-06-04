@@ -29,11 +29,39 @@ app.set('trust proxy', 1);
 app.use('/api', apiLimiter);
 
 
-app.use(helmet());
+// Setup security headers using Helmet
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com"],
+        connectSrc: ["'self'", config.aiServiceUrl],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+
+// Configure CORS dynamic origin checking
+const allowedOrigins = config.CORS_ORIGIN
+  ? config.CORS_ORIGIN.split(',').map((o) => o.trim())
+  : ["http://localhost:5173"];
+
 app.use(
   cors({
-    origin: config.CORS_ORIGIN,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes('*') || allowedOrigins.indexOf(origin) !== -1) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
 app.use(morgan("dev"));

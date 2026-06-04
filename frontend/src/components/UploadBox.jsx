@@ -60,6 +60,8 @@ function UploadBox({ onFileSelect }) {
       role="button"
       tabIndex={0}
       aria-label="Click or drag a photo to upload"
+      aria-describedby={error ? "upload-error-msg" : undefined}
+      aria-invalid={!!error}
       onKeyDown={(e) => e.key === 'Enter' && inputRef.current.click()}
     >
       <input
@@ -83,7 +85,7 @@ function UploadBox({ onFileSelect }) {
       <p className="upload-box__hint">{t.uploadFormatsLimit}</p>
 
       {error && (
-        <p className="upload-box__error" role="alert">{error}</p>
+        <p className="upload-box__error" id="upload-error-msg" role="alert">{error}</p>
       )}
     </div>
   );

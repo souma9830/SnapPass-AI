@@ -4,6 +4,7 @@ Flask entry point for the SnapPass AI Python service.
 Runs on http://localhost:8000
 """
 
+import logging
 import os
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
@@ -11,12 +12,18 @@ import config
 from app.routes.process_routes import process_bp
 from app.services.errors import ai_error_handler
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
+
 app = Flask(__name__)
 CORS(app)
 
 os.makedirs(config.UPLOAD_DIR, exist_ok=True)
 
-# Blueprints 
+# Blueprints
 app.register_blueprint(process_bp)
 
 # Health Check
@@ -27,13 +34,13 @@ def health():
 @app.route("/face-quality-check", methods=["POST"])
 def face_quality_check():
     from app.services.face_quality_gate import assess_face_quality
-    
+
     data = request.get_json()
     file_path = data.get("file_path")
-    
+
     if not file_path:
         return jsonify({"error": "file_path is required"}), 400
-    
+
     try:
         report = assess_face_quality(file_path)
         return jsonify({
@@ -51,7 +58,7 @@ def face_quality_check():
 @ai_error_handler
 def generate_sheet():
     from app.services.sheet_generator import generate_a4_sheet
-    
+
     data= request.get_json()
     photo_path= data.get("photo_path")
     preset_id= data.get("preset_id", "35x45")
@@ -77,6 +84,6 @@ def generate_sheet():
     )
     return send_file(saved, mimetype="image/jpeg")
 
-# Run 
+# Run
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG)

@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 from flask import Blueprint, request, jsonify, send_file
@@ -5,6 +6,8 @@ import config
 from app.services.bg_remove import remove_background
 from app.services.face_center import center_face
 from app.services.dpi_optimizer import optimise_dpi
+
+logger = logging.getLogger(__name__)
 process_bp= Blueprint("process", __name__)
 
 
@@ -46,6 +49,13 @@ def remove_bg():
             download_name=filename,
         )
     except ValueError as e:
+        # ValueError is raised for expected user-facing issues (e.g. invalid colour).
+        # Log at warning level and return only the message — no internal paths or
+        # library details that could aid an attacker.
+        logger.warning("remove_bg validation error: %s", e)
         return jsonify({"success": False, "message": str(e)}), 422
-    except Exception as e:
-        return jsonify({"success": False, "message": "Background removal failed.", "detail": str(e)}), 500
+    except Exception:
+        # Log full traceback server-side; return a generic message to the client
+        # so internal filesystem paths and library internals are never exposed.
+        logger.exception("Unhandled error in /remove-bg")
+        return jsonify({"success": False, "message": "Background removal failed. Please try again."}), 500

@@ -10,11 +10,11 @@ import './PhotoPreview.css';
  *   processedUrl (string) — URL of the AI-processed photo (optional)
  *   isProcessing (bool)   — shows loading state over the processed panel
  */
-function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
+function PhotoPreview({ originalUrl, processedUrl, isProcessing,darkMode }) {
   const [showGuidelines, setShowGuidelines] = useState(true);
 
   return (
-    <div className="photo-preview">
+    <div className={`photo-preview ${darkMode ? 'photo-preview-dark' : ''}`}>
       {/* Original */}
       {originalUrl && (
         <div className="photo-preview__panel">

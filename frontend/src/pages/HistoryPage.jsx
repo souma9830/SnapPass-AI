@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SkeletonLoader from '../components/SkeletonLoader';
 import {
   getSessionHistory,
   deleteSessionFromHistory,
@@ -11,9 +12,14 @@ import './HistoryPage.css';
 function HistoryPage() {
   const navigate = useNavigate();
   const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadSessions();
+    const timer = setTimeout(() => {
+      loadSessions();
+      setLoading(false);
+    }, 600);
+    return () => clearTimeout(timer);
   }, []);
 
   const loadSessions = () => {
@@ -54,7 +60,11 @@ function HistoryPage() {
         )}
       </div>
 
-      {sessions.length === 0 ? (
+      {loading ? (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', width: '100%' }}>
+          <SkeletonLoader type="card" count={3} />
+        </div>
+      ) : sessions.length === 0 ? (
         <p className="history-page__empty">No saved sessions found.</p>
       ) : (
         <div className="history-page__list">

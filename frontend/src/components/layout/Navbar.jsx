@@ -129,6 +129,8 @@ function Navbar({ darkMode, toggleTheme }) {
                   : 'navbar__language-selector-light'
                   }`}
                 onClick={() => setLanguageOpen(!languageOpen)}
+                aria-label="Select language"
+                aria-expanded={languageOpen}
               >
                 {language === 'en' ? 'English' : 'हिन्दी'}
 
@@ -146,8 +148,10 @@ function Navbar({ darkMode, toggleTheme }) {
                     ? 'navbar__language-menu-dark'
                     : 'navbar__language-menu-light'
                     }`}
+                  role="menu"
                 >
                   <button
+                    role="menuitem"
                     onClick={() => {
                       setLanguage('en');
                       setLanguageOpen(false);
@@ -157,6 +161,7 @@ function Navbar({ darkMode, toggleTheme }) {
                   </button>
 
                   <button
+                    role="menuitem"
                     onClick={() => {
                       setLanguage('hi');
                       setLanguageOpen(false);
@@ -171,6 +176,7 @@ function Navbar({ darkMode, toggleTheme }) {
             <button
               onClick={toggleTheme}
               className={`flex items-center justify-center w-10 ml-auto p-2 hover:no-underline h-10 rounded-full ${darkMode ? 'bg-gray-700' : 'bg-[#a2bece]'}`}
+              aria-label={darkMode ? "Switch to light theme" : "Switch to dark theme"}
             >
               {darkMode ? <Sun className="text-amber-500" /> : <Moon />}
             </button>
@@ -180,6 +186,7 @@ function Navbar({ darkMode, toggleTheme }) {
               title="Start Tour Guide"
               className={`flex items-center justify-center w-10 p-2 hover:no-underline h-10 rounded-full ${darkMode ? 'bg-gray-700 text-white' : 'bg-[#a2bece] text-gray-800'}`}
               style={{ border: 'none', cursor: 'pointer' }}
+              aria-label="Start interactive guide"
             >
               <HelpCircle size={20} />
             </button>

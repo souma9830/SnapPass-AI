@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import DelayedFallback from '../components/DelayedFallback';
 import RouteErrorBoundary from '../components/RouteErrorBoundary';
 
@@ -25,8 +26,17 @@ function AppRoutes({ darkMode, toggleTheme }) {
 
   return (
     <RouteErrorBoundary key={location.pathname}>
-      <Suspense fallback={<DelayedFallback delayMs={250} />}>
-        <Routes>
+      <AnimatePresence mode="wait">
+        <Suspense fallback={<DelayedFallback delayMs={250} />}>
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            style={{ width: '100%', minHeight: '100%' }}
+          >
+            <Routes location={location}>
           <Route
             path="/"
             element={<HomePage darkMode={darkMode} toggleTheme={toggleTheme} />}
@@ -75,8 +85,10 @@ function AppRoutes({ darkMode, toggleTheme }) {
           />
           {/* Fallback — redirect unknown paths to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
+            </Routes>
+          </motion.div>
+        </Suspense>
+      </AnimatePresence>
     </RouteErrorBoundary>
   );
 }

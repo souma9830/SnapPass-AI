@@ -16,17 +16,79 @@ class FaceQualityReport:
     rejection_reason: Optional[str] = None
     user_hint: Optional[str] = None
 
+import os
+
 def assess_face_quality(image_path: str) -> FaceQualityReport:
-    img = cv2.imread(image_path)
+    # 1. Existence and size validations
+    if not os.path.exists(image_path):
+        return FaceQualityReport(
+            passed=False,
+            rejection_code="FILE_NOT_FOUND",
+            rejection_reason="The specified image file does not exist.",
+            user_hint="Please select and upload a valid image file."
+        )
+
+    if os.path.getsize(image_path) == 0:
+        return FaceQualityReport(
+            passed=False,
+            rejection_code="EMPTY_FILE",
+            rejection_reason="The uploaded file is empty.",
+            user_hint="The file appears to contain no data. Please upload a fresh photo."
+        )
+
+    # 2. File header magic bytes validation (JPEG / PNG / WebP)
+    try:
+        with open(image_path, "rb") as f:
+            header = f.read(12)
+            # JPEG starts with FF D8 FF
+            # PNG starts with 89 50 4E 47 0D 0A 1A 0A
+            # WebP starts with RIFF .... WEBP
+            is_jpeg = header.startswith(b"\xff\xd8\xff")
+            is_png = header.startswith(b"\x89PNG\r\n\x1a\n")
+            is_webp = header.startswith(b"RIFF") and b"WEBP" in header
+
+            if not (is_jpeg or is_png or is_webp):
+                return FaceQualityReport(
+                    passed=False,
+                    rejection_code="INVALID_FORMAT",
+                    rejection_reason="Unapproved file format or invalid image header.",
+                    user_hint="Only standard JPEG, PNG, or WebP images are accepted."
+                )
+    except Exception as e:
+        return FaceQualityReport(
+            passed=False,
+            rejection_code="UNREADABLE_IMAGE",
+            rejection_reason=f"Failed to read image headers: {str(e)}",
+            user_hint="The file couldn't be opened. Please verify it isn't corrupted."
+        )
+
+    try:
+        img = cv2.imread(image_path)
+    except Exception as e:
+        return FaceQualityReport(
+            passed=False,
+            rejection_code="UNREADABLE_IMAGE",
+            rejection_reason=f"OpenCV failed to read image array: {str(e)}",
+            user_hint="The file is formatted improperly. Please try re-saving it."
+        )
+
     if img is None:
         return FaceQualityReport(
             passed=False,
             rejection_code="UNREADABLE_IMAGE",
-            rejection_reason="Image could not be decoded.",
+            rejection_reason="Image could not be decoded by OpenCV.",
             user_hint="Please upload a valid JPEG or PNG file."
         )
 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    try:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    except Exception as e:
+        return FaceQualityReport(
+            passed=False,
+            rejection_code="COLOR_CONVERSION_ERROR",
+            rejection_reason=f"Failed to convert image to grayscale: {str(e)}",
+            user_hint="Please verify the image is a standard RGB portrait."
+        )
 
     # 1. Blur detection
     blur_score = float(cv2.Laplacian(gray, cv2.CV_64F).var())

@@ -300,26 +300,44 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+
   width: 4rem;
   height: 4rem;
-  background: #ffffff;
-  border: 4px solid #3b82f6;
+
+  background: #111111;
+  border: 4px solid #d4af37;
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #3b82f6;
+
+  color: #f5d76e;
   font-size: 1.5rem;
+
   z-index: 3;
+
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 0 0.5rem #fafafa;
+
+  box-shadow:
+    0 0 0 0.5rem #fafafa,
+    0 0 12px rgba(212, 175, 55, 0.15);
 }
 
 .step-card:hover .step-card__icon {
-  background: #3b82f6;
-  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    #f8d568,
+    #d4af37
+  );
+
+  color: #111111;
+
   transform: translateX(-50%) scale(1.15);
-  box-shadow: 0 0 0 0.5rem #dbeafe;
+
+  box-shadow:
+    0 0 0 0.5rem rgba(255, 255, 255, 0.8),
+    0 0 25px rgba(212, 175, 55, 0.4);
 }
 
 .step-card__content {
@@ -362,8 +380,9 @@
 
 /* bug fixed -> here the white line is overwritten with the icon so to correct it we have changed the background to a premium black color */
 .step-card__icon-dark {
-  background: #0f0f0f;
-  color: white;
+  background: #111111;
+  border: 4px solid #d4af37;
+  color: #d4af37;
 }
 
 .step-card__label {
@@ -395,6 +414,7 @@
     right: auto;
     width: 4px;
     height: 100%;
+    
   }
 
   .step-card {
@@ -412,7 +432,10 @@
   }
 
   .step-card:hover .step-card__icon {
+    background: #d4af37;
+    color: #111111;
     transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 0 0 0.5rem #dbeafe;
   }
 
   .step-card__content {

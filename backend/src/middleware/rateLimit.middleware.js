@@ -25,3 +25,15 @@ export const apiLimiter = rateLimit({
     standardHeaders: true, 
     legacyHeaders: false, 
 });
+
+// Strict rate limit for authentication (login/register) to prevent brute-forcing
+export const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 attempts
+    message: {
+        success: false,
+        message: "Too many login or registration attempts. Please try again after 15 minutes."
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});

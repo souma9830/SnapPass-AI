@@ -56,11 +56,11 @@
   background:
     linear-gradient(
       135deg,
-      #1b2432 0%,
-      #111827 100%
+      rgba(255, 193, 7, 0.12) 0%,
+      rgba(255, 193, 7, 0.04) 100%
     );
 
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
 .footer__cta-content {
@@ -166,7 +166,11 @@
 /* ───────────────── BRAND IMPROVEMENTS ───────────────── */
 
 .footer__brand {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
+  flex: 1;
+  max-width: 450px;
 }
 
 .footer__logo {
@@ -240,25 +244,30 @@
   color: #f3f4f6;
 }
 
+
 /* ───────────────── COLUMN & TYPOGRAPHY ───────────────── */
 
 .footer__columns {
+  display: flex;
   gap: 5rem;
 }
 
 .footer__column {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
 .footer__heading {
   font-size: 1.05rem;
   font-weight: 700;
-
   margin-bottom: 0.7rem;
 }
 
 .footer__item {
+  display: block;
   position: relative;
+  margin-bottom: 0.5rem;
 
   transition:
     color 0.25s ease,
@@ -268,7 +277,6 @@
 .footer__item:hover {
   transform: translateX(4px);
 }
-
 /* ───────────────── CONTACT ───────────────── */
 
 .footer__contact svg {
@@ -277,8 +285,19 @@
 
 /* ───────────────── BOTTOM BAR ───────────────── */
 
+.footer__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .footer__bottom {
-  margin-top: 1rem;
+  max-width: 1200px;
+  margin: 2rem auto 0;
   padding-top: 2rem;
 }
 

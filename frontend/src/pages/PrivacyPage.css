@@ -4,8 +4,8 @@
     gap: var(--space-xl, 1.5rem);
     max-width: 900px;
     width: 100%;
-    margin-top: calc(var(--navbar-height, 64px));
-    padding: var(--space-lg, 1.5rem);
+    margin: 0 auto;
+    padding: 120px var(--space-lg, 1.5rem) var(--space-lg, 1.5rem);
     box-sizing: border-box;
 }
 
@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-top: 20px;
+    margin-top: 0;
     text-align: center;
 }
 
@@ -73,37 +73,10 @@
 
 @media (max-width: 768px) {
     .privacy-page {
-        padding: var(--space-md, 1.25rem 1rem);
+        padding: 90px 1rem 1.25rem;
     }
 
     .privacy-page__content {
         padding: 2rem 1.5rem;
     }
-}
-
-/* same changes as that of termspage*/
-[data-theme="dark"] .privacy-page__content {
-    background: linear-gradient(145deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 30, 0.85));
-    border-color: rgba(255, 255, 255, 0.08);
-}
-
-[data-theme="dark"] .privacy-text h2 {
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] .section-title {
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] .privacy-text p,
-[data-theme="dark"] .privacy-text ul {
-    color: #94a3b8;
-}
-
-[data-theme="dark"] .privacy-text strong {
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] .privacy-date {
-    color: #64748b !important;
-}
+} n

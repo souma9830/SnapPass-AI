@@ -32,3 +32,14 @@ export async function incrementOtpAttempts(id) {
 export async function updateOtpState(id, newState) {
     return await PasswordResetOtp.findByIdAndUpdate(id, { state: newState }, { returnDocument: "after" });
 }
+
+export async function invalidateAllPendingOtps(userId) {
+    return await PasswordResetOtp.updateMany(
+        { userId, state: "pending" },
+        { state: "reject" }
+    );
+}
+
+export async function findLatestOtpIncludingExpired(userId) {
+    return await PasswordResetOtp.findOne({ userId }).sort({ createdAt: -1 });
+}

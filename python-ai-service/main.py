@@ -9,11 +9,13 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import config
 from app.routes.process_routes import process_bp
+from app.utils.logger import logger
 
 app = Flask(__name__)
 CORS(app)
 
 os.makedirs(config.UPLOAD_DIR, exist_ok=True)
+logger.info("Starting SnapPass AI Python service...")
 
 # Blueprints 
 app.register_blueprint(process_bp)
@@ -21,6 +23,7 @@ app.register_blueprint(process_bp)
 # Health Check
 @app.get("/health")
 def health():
+    logger.debug("Received health check request")
     return {"status": "ok", "service": "python-ai-service"}
 
 # Sheet Generator

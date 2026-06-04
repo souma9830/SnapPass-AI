@@ -1,19 +1,20 @@
 import mongoose from "mongoose";
 import { config } from "./config.js";
+import logger from "../utils/logger.js";
 const connectDatabase = async () => {
   const mongoUri = config.MONGO_URI;
 
   // basic error handling, Update it later. 
   mongoose.connection.on("connected", () => {
-    console.log(" MongoDB connected");
+    logger.info("MongoDB connected");
   });
 
   mongoose.connection.on("error", (error) => {
-    console.error("MongoDB connection error:", error.message);
+    logger.error(`MongoDB connection error: ${error.message}`);
   });
 
   mongoose.connection.on("disconnected", () => {
-    console.warn("MongoDB disconnected");
+    logger.warn("MongoDB disconnected");
   });
 
   await mongoose.connect(mongoUri);

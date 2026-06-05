@@ -20,3 +20,46 @@
 .route-error-content .section-subtitle {
   margin-bottom: var(--space-xl);
 }
+
+.route-error-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.route-error-details {
+  text-align: left;
+  margin: var(--space-lg) 0;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-alt, #f9fafb);
+}
+
+[data-theme='dark'] .route-error-details {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.route-error-details summary {
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.route-error-details pre {
+  margin-top: var(--space-sm);
+  font-family: monospace;
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-x: auto;
+  color: #ef4444;
+}
+
+.route-error-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-lg);
+}

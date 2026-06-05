@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Sun, Moon, HelpCircle } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 import './Navbar.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -39,25 +39,13 @@ function Navbar({ darkMode, toggleTheme }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (!menuOpen) return;
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setMenuOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [menuOpen]);
-
   const navLinks = [
     { path: '/', label: t.home },
     { path: '/studio', label: t.studio },
     { path: '/upload', label: t.upload },
     { path: '/editor', label: t.editor },
     { path: '/print-preview', label: t.print },
-    { path: '/compare-requirements', label: 'Compare' },
-    { path: '/history', label: 'History' },
+    { path: '/history', label: t.history },
     { path: '/admin', label: t.admin },
   ];
 
@@ -175,15 +163,6 @@ function Navbar({ darkMode, toggleTheme }) {
               {darkMode ? <Sun className="text-amber-500" /> : <Moon />}
             </button>
 
-            <button
-              onClick={() => window.dispatchEvent(new Event('trigger-snappass-tour'))}
-              title="Start Tour Guide"
-              className={`flex items-center justify-center w-10 p-2 hover:no-underline h-10 rounded-full ${darkMode ? 'bg-gray-700 text-white' : 'bg-[#a2bece] text-gray-800'}`}
-              style={{ border: 'none', cursor: 'pointer' }}
-            >
-              <HelpCircle size={20} />
-            </button>
-
             <Link
               to="/upload"
               className={`navbar__cta hover:no-underline ${darkMode ? 'navbar__cta-dark' : 'navbar__cta-light'}`}
@@ -212,7 +191,6 @@ function Navbar({ darkMode, toggleTheme }) {
             }
             `}
           aria-label="Mobile navigation"
-          aria-hidden={!menuOpen}
         >
           <div className="navbar__mobile-language">
             <div className="navbar__desktop-language">

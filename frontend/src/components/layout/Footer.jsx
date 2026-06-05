@@ -25,60 +25,62 @@ function Footer({ darkMode }) {
       role="contentinfo"
     >
       {/* Decorative top wave */}
-          <div
-            className={`footer__wave-container ${
-              darkMode ? 'footer__wave-container-dark' : ''
-            }`}
-          >
-          <svg
-            className="footer__wave"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 24 150 28"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <path
-                id="thin-wave"
-                d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18"
-              />
-            </defs>
+      <div
+        className={`footer__wave-container ${darkMode ? 'footer__wave-container-dark' : ''
+          }`}
+      >
+        <svg
+          className="footer__wave"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 24 150 28"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <path
+              id="thin-wave"
+              d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18"
+            />
+          </defs>
 
-            <g className="footer__wave-parallax">
-              <use
-                href="#thin-wave"
-                x="48"
-                y="0"
-                fill="none"
-                stroke="var(--color-primary)"
-                strokeWidth="1"
-                opacity="0.25"
-              />
+          <g className="footer__wave-parallax">
+            <use
+              href="#thin-wave"
+              x="48"
+              y="0"
+              fill="none"
+              stroke="var(--color-primary)"
+              strokeWidth="1"
+              opacity="0.25"
+            />
 
-              <use
-                href="#thin-wave"
-                x="48"
-                y="3"
-                fill="none"
-                stroke="var(--color-primary)"
-                strokeWidth="2"
-                opacity="0.45"
-              />
-            </g>
-          </svg>
-        </div>
-      
+            <use
+              href="#thin-wave"
+              x="48"
+              y="3"
+              fill="none"
+              stroke="var(--color-primary)"
+              strokeWidth="2"
+              opacity="0.45"
+            />
+          </g>
+        </svg>
+      </div>
+
 
       <div className="footer__container">
         {/* CTA SECTION */}
         <div className={`footer__cta ${darkMode ? 'footer__cta-dark' : ''}`}>
           <div className="footer__cta-content">
             <h2 className="footer__cta-title">
-              Create Passport Photos in Seconds
+              {language === 'hi'
+                ? 'कुछ ही सेकंड में पासपोर्ट फोटो बनाएं'
+                : 'Create Passport Photos in Seconds'}
             </h2>
 
             <p className="footer__cta-text">
-              AI-powered biometric passport photos accepted worldwide — secure,
-              fast, and professional.
+              {language === 'hi'
+                ? 'AI-संचालित बायोमेट्रिक पासपोर्ट फोटो, जो विश्वभर में स्वीकार्य हैं — सुरक्षित, तेज़ और पेशेवर।'
+                : 'AI-powered biometric passport photos accepted worldwide — secure, fast, and professional.'}
             </p>
           </div>
 
@@ -92,17 +94,23 @@ function Footer({ darkMode }) {
         <div className="footer__trust">
           <div className="footer__trust-item">
             <BadgeCheck size={18} />
-            <span>Biometric Compliant</span>
+            <span>
+              {language === 'hi' ? 'बायोमेट्रिक अनुरूप' : 'Biometric Compliant'}
+            </span>
           </div>
 
           <div className="footer__trust-item">
             <ShieldCheck size={18} />
-            <span>Secure & Private</span>
+            <span>
+              {language === 'hi' ? 'सुरक्षित और निजी' : 'Secure & Private'}
+            </span>
           </div>
 
           <div className="footer__trust-item">
             <Globe size={18} />
-            <span>Accepted Worldwide</span>
+            <span>
+              {language === 'hi' ? 'विश्वव्यापी स्वीकार किया गया' : 'Accepted Worldwide'}
+            </span>
           </div>
         </div>
 
@@ -131,8 +139,9 @@ function Footer({ darkMode }) {
             </p>
 
             <p className="footer__value-text">
-              Professional AI passport photos with smart background correction,
-              biometric validation, and instant export.
+              {language === 'hi'
+                ? 'स्मार्ट बैकग्राउंड सुधार, बायोमेट्रिक सत्यापन और त्वरित निर्यात के साथ पेशेवर AI पासपोर्ट फोटो।'
+                : 'Professional AI passport photos with smart background correction, biometric validation, and instant export.'}
             </p>
 
             {/* SOCIALS */}

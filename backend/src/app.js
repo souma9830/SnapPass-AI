@@ -61,6 +61,14 @@ app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "SnapPass AI Backend", timestamp: new Date() });
 });
 
+// API Version 1 Routes
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/upload", uploadRoutes);
+app.use("/api/v1/process", imageRoutes);
+app.use("/api/v1/print", printRoutes);
+app.use("/api/v1/health", healthRoutes);
+
+// Legacy backward-compatibility routes
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/process", imageRoutes);

@@ -7,12 +7,13 @@ export const otpActionLimiter = rateLimit({
     max: 5, 
     message: {
         success: false,
-        message: "Too many attempts from this IP, please try again after 15 minutes"
+        message: "Too many attempts from this IP, please try again after 15 minutes",
+        errorType: "OTP_RATE_LIMIT_EXCEEDED",
+        retryAfterSeconds: 900
     },
-    standardHeaders: true, 
+    standardHeaders: 'draft-7', 
     legacyHeaders: false, 
 });
-
 
 // General rate limiting for API endpoints to protect against brute-force and scraping
 export const apiLimiter = rateLimit({
@@ -20,9 +21,11 @@ export const apiLimiter = rateLimit({
     max: 100, // Limit each IP to 100 requests per windowMs
     message: {
         success: false,
-        message: "Too many requests from this IP, please try again after 15 minutes"
+        message: "Too many requests from this IP, please try again after 15 minutes",
+        errorType: "API_RATE_LIMIT_EXCEEDED",
+        retryAfterSeconds: 900
     },
-    standardHeaders: true, 
+    standardHeaders: 'draft-7', 
     legacyHeaders: false, 
 });
 
@@ -32,8 +35,11 @@ export const authLimiter = rateLimit({
     max: 10, // Limit each IP to 10 attempts
     message: {
         success: false,
-        message: "Too many login or registration attempts. Please try again after 15 minutes."
+        message: "Too many login or registration attempts. Please try again after 15 minutes.",
+        errorType: "AUTH_RATE_LIMIT_EXCEEDED",
+        retryAfterSeconds: 900
     },
-    standardHeaders: true,
+    standardHeaders: 'draft-7',
     legacyHeaders: false,
 });
+

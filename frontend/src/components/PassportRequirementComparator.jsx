@@ -47,25 +47,54 @@ function PassportRequirementComparator() {
         presets.
       </p>
 
-      <input
-        type="text"
-        placeholder="Search country or document type..."
-        className="passport-comparator__search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      <div className="passport-comparator__search-wrapper">
+        <input
+          type="text"
+          placeholder="Search country or document type..."
+          className="passport-comparator__search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search country or document type"
+        />
+        {search && (
+          <button 
+            className="passport-comparator__clear-btn" 
+            onClick={() => setSearch('')}
+            aria-label="Clear search"
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
-      <div className="passport-comparator__selection">
-        {filteredRequirements.map((requirement) => (
-          <label key={requirement.id} className="passport-comparator__checkbox">
-            <input
-              type="checkbox"
-              checked={selectedIds.includes(requirement.id)}
-              onChange={() => handleSelection(requirement.id)}
-            />
-            {requirement.label}
-          </label>
-        ))}
+      <div className="passport-comparator__selection" role="group" aria-label="Select standards to compare">
+        {filteredRequirements.length === 0 ? (
+          <div className="passport-comparator__empty-state">
+            No matching passport or visa standards found.
+          </div>
+        ) : (
+          filteredRequirements.map((requirement) => (
+            <label 
+              key={requirement.id} 
+              className="passport-comparator__checkbox"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSelection(requirement.id);
+                }
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={selectedIds.includes(requirement.id)}
+                onChange={() => handleSelection(requirement.id)}
+                tabIndex={-1}
+              />
+              {requirement.label}
+            </label>
+          ))
+        )}
       </div>
 
       {selectedRequirements.length > 0 && (

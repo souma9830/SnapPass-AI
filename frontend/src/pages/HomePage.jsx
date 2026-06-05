@@ -13,6 +13,7 @@ import TestimonialsSection from '../components/testimonials/TestimonialsSection'
 
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
+import SEOMetadata from '../components/layout/SEOMetadata';
 
 /**
  * HomePage — landing page with hero section and feature highlights.
@@ -151,6 +152,10 @@ function HomePage({ darkMode, toggleTheme }) {
 
   return (
     <div>
+      <SEOMetadata 
+        title="AI-Powered Passport Photo Studio" 
+        description="Generate professional, standard-compliant passport photos in seconds using AI background removal and face centering."
+      />
       <HeroSection darkMode={darkMode} toggleTheme={toggleTheme} />
 
       {/* ── Showcase Section ── */}

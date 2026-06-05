@@ -10,6 +10,7 @@ from flask_cors import CORS
 import config
 from app.routes.process_routes import process_bp
 from app.utils.env_validator import validate_environment
+from app.services.errors import ai_error_handler
 
 # Perform pre-flight configuration validations
 validate_environment()
@@ -51,6 +52,7 @@ def face_quality_check():
         return jsonify({"error": str(e)}), 500
 # Sheet Generator
 @app.route("/generate-sheet", methods=["POST"])
+@ai_error_handler
 def generate_sheet():
     from app.services.sheet_generator import generate_a4_sheet
     
@@ -68,20 +70,16 @@ def generate_sheet():
     os.makedirs(output_dir, exist_ok=True)
     output_path= os.path.join(output_dir, f"sheet_{preset_id}.jpg")
 
-    try:
-        from app.services.sheet_generator import generate_a4_sheet
-        saved = generate_a4_sheet(
-            photo_path= photo_path,
-            preset_id= preset_id,
-            quantity= quantity,
-            bg_color= bg_color,
-            draw_guides= draw_guides,
-            output_path= output_path,
-        )
-        return send_file(saved, mimetype="image/jpeg")
-
-    except (ValueError, FileNotFoundError) as e:
-        return jsonify({"error": str(e)}), 400
+    from app.services.sheet_generator import generate_a4_sheet
+    saved = generate_a4_sheet(
+        photo_path= photo_path,
+        preset_id= preset_id,
+        quantity= quantity,
+        bg_color= bg_color,
+        draw_guides= draw_guides,
+        output_path= output_path,
+    )
+    return send_file(saved, mimetype="image/jpeg")
 
 # Run 
 if __name__ == "__main__":

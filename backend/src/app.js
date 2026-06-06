@@ -14,6 +14,7 @@ import imageRoutes from './routes/image.routes.js';
 import printRoutes from './routes/print.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import healthRoutes from './routes/health.routes.js';
+import docsRoutes from './routes/docs.routes.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
 import { apiLimiter } from './middleware/rateLimit.middleware.js';
@@ -38,7 +39,17 @@ app.use(helmet({
         maxAge: 31536000,
         includeSubDomains: true,
         preload: true
-    }
+    },
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
+            connectSrc: ["'self'", "https://api.cloudinary.com"],
+        },
+    },
 }));
 const allowedOrigins = config.CORS_ORIGIN.split(',').map(o => o.trim());
 
@@ -61,6 +72,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(sanitizeInput);
 app.use(hpp());
 app.use(cookieParser());
+
+// Anti-CSRF Custom Header Validation for State-Changing Requests
+app.use((req, res, next) => {
+  const secureMethods = ['POST', 'PUT', 'DELETE', 'PATCH'];
+  if (secureMethods.includes(req.method)) {
+    const origin = req.headers.origin || req.headers.referer;
+    const allowedOrigin = config.CORS_ORIGIN || 'http://localhost:5173';
+    if (origin && !origin.startsWith(allowedOrigin)) {
+      return res.status(403).json({
+        status: 'error',
+        message: 'CSRF validation failed: Request origin not allowed.'
+      });
+    }
+  }
+  next();
+});
 
 app.use("/uploads", express.static(path.join(localDirname, "..", "uploads")));
 
@@ -85,12 +112,13 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/process", imageRoutes);
 app.use("/api/print", printRoutes);
 app.use("/api/health", healthRoutes);
+app.use("/api-docs", docsRoutes);
 
 app.use((req, _res, next) => {
    const error = new Error(`Route not found: ${req.originalUrl}`);
    error.statusCode = 404;
    next(error);
-});
+ });
 
 
 app.get("/metrics", (_req, res) => {

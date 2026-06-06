@@ -4,16 +4,14 @@ import './RouteErrorBoundary.css';
 class RouteErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Log the error to the console for debugging
     console.error("Route loading failed:", error, errorInfo);
   }
 
@@ -21,18 +19,45 @@ class RouteErrorBoundary extends Component {
     window.location.reload();
   };
 
+  handleResetAppState = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '/';
+  };
+
   render() {
     if (this.state.hasError) {
       return (
         <div className="route-error-wrap">
-          <div className="route-error-content card">
-            <h2 className="section-title">Oops! We lost connection.</h2>
+          <div className="route-error-content card" style={{ padding: '2rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <h2 className="section-title">Oops! An unexpected error occurred.</h2>
             <p className="section-subtitle">
-              We couldn't load this part of the app. Please check your internet connection and try again.
+              We encountered a runtime problem loading this section.
             </p>
-            <button className="btn btn-primary" onClick={this.handleReload}>
-              Reload Page
-            </button>
+            {this.state.error && (
+              <div style={{
+                background: 'rgba(255, 0, 0, 0.1)',
+                border: '1px solid rgba(255, 0, 0, 0.2)',
+                borderRadius: '8px',
+                padding: '1rem',
+                margin: '1rem 0',
+                fontFamily: 'monospace',
+                fontSize: '0.85rem',
+                textAlign: 'left',
+                color: '#ff4d4d',
+                overflowX: 'auto'
+              }}>
+                {this.state.error.toString()}
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+              <button className="btn btn-primary" onClick={this.handleReload}>
+                Reload Page
+              </button>
+              <button className="btn" style={{ background: 'rgba(255,255,255,0.05)', color: '#fff' }} onClick={this.handleResetAppState}>
+                Reset App & Go Home
+              </button>
+            </div>
           </div>
         </div>
       );

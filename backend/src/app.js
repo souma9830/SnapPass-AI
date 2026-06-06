@@ -1,3 +1,4 @@
+import { requestId } from './middleware/requestId.middleware.js';
 import express from 'express';
 import { config } from './config/config.js';
 import cors from 'cors';
@@ -28,6 +29,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Apply rate limiter to all API routes
+app.use(requestId);
 app.use('/api', apiLimiter);
 
 

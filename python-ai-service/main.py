@@ -22,6 +22,21 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def validate_file_magic(file_path: str) -> bool:
+    # Basic check for JPEG, PNG, WEBP magic bytes
+    try:
+        with open(file_path, "rb") as f:
+            header = f.read(4)
+            if header.startswith(b"\xff\xd8\xff"): # JPEG
+                return True
+            if header.startswith(b"\x89PNG"): # PNG
+                return True
+            if header.startswith(b"RIFF") and b"WEBP" in header: # WEBP
+                return True
+    except Exception:
+        pass
+    return False
+
 def _safe_photo_path(raw: str) -> str:
     """
     Resolve raw to an absolute path and confirm it sits inside UPLOAD_DIR.

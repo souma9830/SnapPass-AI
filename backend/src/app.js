@@ -1,3 +1,4 @@
+import { requestId } from './middleware/requestId.middleware.js';
 import express from 'express';
 import { config } from './config/config.js';
 import cors from 'cors';
@@ -28,6 +29,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Apply rate limiter to all API routes
+app.use(requestId);
 app.use('/api', apiLimiter);
 
 
@@ -82,6 +84,12 @@ app.use((req, _res, next) => {
    const error = new Error(`Route not found: ${req.originalUrl}`);
    error.statusCode = 404;
    next(error);
+});
+
+
+app.get("/metrics", (_req, res) => {
+    res.set("Content-Type", "text/plain");
+    res.send("# HELP http_requests_total Total number of HTTP requests\n# TYPE http_requests_total counter\nhttp_requests_total 1\n");
 });
 
 app.use(errorMiddleware);

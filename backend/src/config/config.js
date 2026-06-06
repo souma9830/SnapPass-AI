@@ -16,6 +16,7 @@ if (!process.env.EMAIL_FROM) {
 }
 
 export const config = {
+    BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12,
     NODE_ENV: process.env.NODE_ENV || "development",
     port: process.env.PORT || 3000,
     aiServiceUrl: process.env.AI_SERVICE_URL || 'http://localhost:8000',

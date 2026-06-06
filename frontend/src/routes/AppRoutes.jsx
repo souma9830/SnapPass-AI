@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import DelayedFallback from '../components/DelayedFallback';
 import RouteErrorBoundary from '../components/RouteErrorBoundary';
+import ScrollToTop from './ScrollToTop';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const UploadPage = lazy(() => import('../pages/UploadPage'));
@@ -25,6 +26,7 @@ function AppRoutes({ darkMode, toggleTheme }) {
 
   return (
     <RouteErrorBoundary key={location.pathname}>
+      <ScrollToTop />
       <Suspense fallback={<DelayedFallback delayMs={250} />}>
         <Routes>
           <Route

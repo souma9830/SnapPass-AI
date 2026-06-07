@@ -1,9 +1,12 @@
 import app from './src/app.js';
 import { config } from './src/config/config.js';
 import connectDatabase from './src/config/db.js';
+import { verifyEnvironment } from './src/utils/envCheck.js';
+
+// Verify required configurations
+verifyEnvironment();
 
 const PORT = config.port;
-
 
 connectDatabase();
 

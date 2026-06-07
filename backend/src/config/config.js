@@ -2,18 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-if (!process.env.MONGO_URI) {
-    throw new Error("MONGO_URI is not defined in environment variables");
-}
-if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in environment variables");
-}
-if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY is not defined in environment variables");
-}
-if (!process.env.EMAIL_FROM) {
-    throw new Error("EMAIL_FROM is not defined in environment variables");
-}
+// Env variables are checked at startup using verifyEnvironment() in server.js
 
 export const config = {
     BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12,

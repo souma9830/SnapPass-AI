@@ -117,6 +117,9 @@ function Navbar({ darkMode, toggleTheme }) {
                   : 'navbar__language-selector-light'
                   }`}
                 onClick={() => setLanguageOpen(!languageOpen)}
+                aria-haspopup="listbox"
+                aria-expanded={languageOpen}
+                aria-label="Select language"
               >
                 {language === 'en' ? 'English' : 'हिन्दी'}
 
@@ -140,6 +143,7 @@ function Navbar({ darkMode, toggleTheme }) {
                       setLanguage('en');
                       setLanguageOpen(false);
                     }}
+                    aria-label="Switch to English"
                   >
                     English
                   </button>
@@ -149,6 +153,7 @@ function Navbar({ darkMode, toggleTheme }) {
                       setLanguage('hi');
                       setLanguageOpen(false);
                     }}
+                    aria-label="हिन्दी में बदलें"
                   >
                     हिन्दी
                   </button>
@@ -159,8 +164,10 @@ function Navbar({ darkMode, toggleTheme }) {
             <button
               onClick={toggleTheme}
               className={`flex items-center justify-center w-10 ml-auto p-2 hover:no-underline h-10 rounded-full ${darkMode ? 'bg-gray-700' : 'bg-[#a2bece]'}`}
+              aria-label={darkMode ? "Switch to light theme" : "Switch to dark theme"}
+              aria-pressed={darkMode}
             >
-              {darkMode ? <Sun className="text-amber-500" /> : <Moon />}
+              {darkMode ? <Sun className="text-amber-500" aria-hidden="true" /> : <Moon aria-hidden="true" />}
             </button>
 
             <Link

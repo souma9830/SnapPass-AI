@@ -12,7 +12,7 @@
     "axios": "^1.15.0",
     "driver.js": "^1.4.0",
     "framer-motion": "^12.39.0",
-    "fuse.js": "^7.3.0",
+    "fuse.js": "^7.4.2",
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

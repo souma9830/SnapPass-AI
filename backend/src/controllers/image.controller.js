@@ -72,6 +72,32 @@ export const processImage = async (req, res, next) => {
     if (req.user && req.user.id) {
       // Future scope: ensure req.user.id has ownership of this uploaded file resource
     }
+    // Face quality gate — reject blurry, multi-face, or non-frontal photos early
+    try {
+      const qualityCheck = await axios.post(`${config.aiServiceUrl}/face-quality-check`, 
+        { file_path: filePath },
+        { headers: { "Content-Type": "application/json" } }
+      );
+      if (!qualityCheck.data.passed) {
+        return res.status(422).json({
+          success: false,
+          stage: "face_quality_gate",
+          error: {
+            code: qualityCheck.data.rejection_code,
+            message: qualityCheck.data.rejection_reason,
+            user_hint: qualityCheck.data.user_hint,
+          }
+        });
+      }
+    } catch (gateError) {
+      if (gateError.response?.status === 422) {
+        return res.status(422).json(gateError.response.data);
+      }
+      // If quality gate service is down, fail safe and continue
+    }
+
+    // Forward to Python AI service
+    const form = new FormData();
 
     // Forward to Python AI service
     const form = new FormData();

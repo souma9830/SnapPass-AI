@@ -73,6 +73,18 @@
   --content-max-width: 1100px;
 }
 
+/* ---------- Dark theme variables ------------ */
+[data-theme='dark'] {
+  --color-bg: #000000;
+  --color-surface-light: #111827;
+
+  --color-text: #f8fafc;
+  --color-text-muted: #cbd5e1;
+  --color-text-light: #94a3b8;
+
+  --color-border: #374151;
+}
+
 /* ── Reset ──────────────────────────────────────── */
 *,
 *::before,

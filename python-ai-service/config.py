@@ -9,3 +9,5 @@ UPLOAD_DIR=os.getenv("UPLOAD_DIR", "uploads")
 MAX_FILE_MB=int(os.getenv("MAX_FILE_MB", 10))
 
 TARGET_DPI=300
+# Environment assertions
+assert PORT > 0, 'PORT config cannot be zero'

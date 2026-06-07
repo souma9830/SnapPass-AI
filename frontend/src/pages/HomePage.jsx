@@ -1,53 +1,61 @@
-import React from "react";
-import "./HomePage.css";
-import { motion } from "framer-motion";
+import React from 'react';
+import './HomePage.css';
+import { motion } from 'framer-motion';
 
-import { Upload, Sparkles, Settings2, Download } from "lucide-react";
-import HeroSection from "../components/HomePage/HeroSection";
-import AIShowcaseSection from "../components/HomePage/AIShowcaseSection";
-import StepsSection from "../components/HomePage/StepsSection";
-import FeaturesSection from "../components/HomePage/FeaturesSection";
-import CTABanner from "../components/HomePage/CTABanner";
-import BackToTop from "../components/HomePage/BackToTop";
+import { Upload, Sparkles, Settings2, Download } from 'lucide-react';
+import HeroSection from '../components/HomePage/HeroSection';
+import AIShowcaseSection from '../components/HomePage/AIShowcaseSection';
+import StepsSection from '../components/HomePage/StepsSection';
+import FeaturesSection from '../components/HomePage/FeaturesSection';
+import CTABanner from '../components/HomePage/CTABanner';
+import BackToTop from '../components/HomePage/BackToTop';
 import TestimonialsSection from '../components/testimonials/TestimonialsSection';
 
-import { features, steps, chips, iconMap } from "../data/HomePageData";
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
+import SEOMetadata from '../components/layout/SEOMetadata';
 
 /**
  * HomePage — landing page with hero section and feature highlights.
  */
-function HomePage({darkMode, toggleTheme}) {
+function HomePage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
-  const features = [
+  const featureCards = [
     {
-      icon: "bg-remove",
+      icon: 'bg-remove',
       title: t.aiBackgroundRemoval,
       desc: t.aiBackgroundRemovalDesc,
-      image: "/f-1.png",
+      image: '/f-1.png',
       tag: t.aiPowered,
     },
     {
-      icon: "face-center",
+      icon: 'face-center',
       title: t.autoFaceCentering,
       desc: t.autoFaceCenteringDesc,
-      image: "/f-2.png",
+      image: '/f-2.png',
       tag: t.openCV,
     },
     {
-      icon: "sizes",
+      icon: 'sizes',
       title: t.standardSizePresets,
       desc: t.standardSizePresetsDesc,
-      image: "/f-3.png",
+      image: '/f-3.png',
       tag: t.multipleFormats,
     },
     {
-      icon: "print",
+      icon: 'compare',
+      title: 'Passport Requirement Comparator',
+      desc: 'Compare passport and visa photo requirements across multiple countries before generating your photo.',
+      image: '/f-3.png',
+      tag: 'Compare Standards',
+      link: '/compare-requirements',
+    },
+    {
+      icon: 'print',
       title: t.a4PrintLayout,
       desc: t.a4PrintLayoutDesc,
-      image: "/f-4.png",
+      image: '/f-4.png',
       tag: t.printReady,
     },
   ];
@@ -76,10 +84,10 @@ function HomePage({darkMode, toggleTheme}) {
   ];
 
   const chips = [
-  { icon: "spark", label: t.backgroundRemoved },
-  { icon: "target", label: t.autoCentered },
-  { icon: "printer", label: t.printReady },
-];
+    { icon: 'spark', label: t.backgroundRemoved },
+    { icon: 'target', label: t.autoCentered },
+    { icon: 'printer', label: t.printReady },
+  ];
 
   const iconMap = {
     spark: (
@@ -102,14 +110,14 @@ function HomePage({darkMode, toggleTheme}) {
         <path d="M8.5 13.5h7" />
       </svg>
     ),
-    "bg-remove": (
+    'bg-remove': (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <rect x="3" y="3" width="18" height="18" rx="4" />
         <path d="M7 14l3-3 3 3 4-5" />
         <path d="M8 8h3" />
       </svg>
     ),
-    "face-center": (
+    'face-center': (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <rect x="4" y="4" width="16" height="16" rx="4" />
         <circle cx="12" cy="10" r="2" />
@@ -124,6 +132,14 @@ function HomePage({darkMode, toggleTheme}) {
         <path d="M7 9h2M7 12h2M15 11h2M15 14h2" />
       </svg>
     ),
+    compare: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M4 6h7v5H4z" />
+        <path d="M13 6h7v5h-7z" />
+        <path d="M4 13h7v5H4z" />
+        <path d="M13 13h7v5h-7z" />
+      </svg>
+    ),
     print: (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M6 9V4h12v5" />
@@ -136,16 +152,34 @@ function HomePage({darkMode, toggleTheme}) {
 
   return (
     <div>
-      <HeroSection darkMode = {darkMode} toggleTheme={toggleTheme}/>
+      <SEOMetadata 
+        title="AI-Powered Passport Photo Studio" 
+        description="Generate professional, standard-compliant passport photos in seconds using AI background removal and face centering."
+      />
+      <HeroSection darkMode={darkMode} toggleTheme={toggleTheme} />
 
       {/* ── Showcase Section ── */}
-      <AIShowcaseSection darkMode = {darkMode} toggleTheme={toggleTheme} chips={chips} iconMap={iconMap} />
+      <AIShowcaseSection
+        darkMode={darkMode}
+        toggleTheme={toggleTheme}
+        chips={chips}
+        iconMap={iconMap}
+      />
 
       {/* ── How it Works ── */}
-      <StepsSection darkMode = {darkMode} toggleTheme={toggleTheme} steps={steps} />
+      <StepsSection
+        darkMode={darkMode}
+        toggleTheme={toggleTheme}
+        steps={steps}
+      />
 
       {/* ── Features ── */}
-      <FeaturesSection darkMode = {darkMode} toggleTheme={toggleTheme} features={features} iconMap={iconMap} />
+      <FeaturesSection
+        darkMode={darkMode}
+        toggleTheme={toggleTheme}
+        features={featureCards}
+        iconMap={iconMap}
+      />
 
       {/* ── CTA Banner ── */}
       <CTABanner />

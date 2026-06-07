@@ -4,8 +4,8 @@
     gap: var(--space-xl, 1.5rem);
     max-width: 900px;
     width: 100%;
-    margin-top: calc(var(--navbar-height, 64px));
-    padding: var(--space-lg, 1.5rem);
+    margin: 0 auto;
+    padding: 120px var(--space-lg, 1.5rem) var(--space-lg, 1.5rem);
     box-sizing: border-box;
 }
 
@@ -13,18 +13,24 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    margin-top: 20px;
+    margin-top: 0;
     text-align: center;
 }
 
 .terms-page__content {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75));
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 255, 255, 0.75)
+    );
     border: 1px solid var(--color-border, rgba(255, 255, 255, 1));
     border-radius: 24px;
     padding: 3rem 4rem;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    box-shadow: 0 10px 40px -8px rgba(15, 23, 42, 0.06), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+    box-shadow:
+        0 10px 40px -8px rgba(15, 23, 42, 0.06),
+        inset 0 2px 4px rgba(255, 255, 255, 0.9);
 }
 
 .terms-text h2 {
@@ -68,33 +74,10 @@
 
 @media (max-width: 768px) {
     .terms-page {
-        padding: var(--space-md, 1.25rem 1rem);
+        padding: 90px 1rem 1.25rem;
     }
 
     .terms-page__content {
         padding: 2rem 1.5rem;
     }
-}
-
-/* dark mode implementation similar to other pages*/
-[data-theme="dark"] .terms-page__content {
-    background: linear-gradient(145deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 30, 0.85));
-    border-color: rgba(255, 255, 255, 0.08);
-}
-
-[data-theme="dark"] .terms-text h2 {
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] .section-title {
-    color: #e2e8f0;
-}
-
-[data-theme="dark"] .terms-text p,
-[data-theme="dark"] .terms-text ul {
-    color: #94a3b8;
-}
-
-[data-theme="dark"] .terms-date {
-    color: #64748b !important;
 }

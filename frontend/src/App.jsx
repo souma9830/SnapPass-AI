@@ -9,6 +9,16 @@ import './App.css';
 // documnet.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
 // in a way we are telling the browser that the html element has a data attribute of theme with value dark or light
 function App() {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        console.log("Keyboard shortcut triggered");
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');

@@ -195,13 +195,37 @@ function EditorPage({ darkMode, toggleTheme }) {
               <div
                 className="editor-page__error"
                 style={{
-                  color: '#ef4444',
+                  background: '#fef2f2',
+                  border: '1px solid #fca5a5',
+                  borderRadius: '12px',
+                  padding: '16px',
                   margin: '1rem 0',
-                  fontSize: '0.875rem',
                   textAlign: 'center',
                 }}
               >
-                {error}
+                <p style={{ color: '#ef4444', fontWeight: 600, marginBottom: '6px', fontSize: '0.875rem' }}>
+                  {error.message || error}
+                </p>
+                {error.user_hint && (
+                  <p style={{ color: '#6b7280', fontSize: '0.8rem', marginBottom: '12px' }}>
+                    💡 {error.user_hint}
+                  </p>
+                )}
+                <button
+                  onClick={() => navigate('/upload')}
+                  style={{
+                    background: '#ef4444',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '8px 20px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                  }}
+                >
+                  Try Again
+                </button>
               </div>
             )}
 

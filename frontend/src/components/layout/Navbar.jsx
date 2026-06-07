@@ -14,6 +14,7 @@ function Navbar({ darkMode, toggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [languageOpen, setLanguageOpen] = useState(false);
 
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
@@ -44,7 +45,7 @@ function Navbar({ darkMode, toggleTheme }) {
     { path: '/upload', label: t.upload },
     { path: '/editor', label: t.editor },
     { path: '/print-preview', label: t.print },
-    { path: '/history', label: 'History' },
+    { path: '/history', label: t.history },
     { path: '/admin', label: t.admin },
   ];
 
@@ -52,9 +53,8 @@ function Navbar({ darkMode, toggleTheme }) {
     <>
       {/* Scroll Progress Bar */}
       <motion.div
-        className={`navbar__progress-bar ${
-          darkMode ? 'navbar__progress-bar-dark' : 'navbar__progress-bar-light'
-        }`}
+        className={`navbar__progress-bar ${darkMode ? 'navbar__progress-bar-dark' : 'navbar__progress-bar-light'
+          }`}
         initial={{ width: 0 }}
         animate={{ width: `${scrollProgress}%` }}
         transition={{ ease: 'easeOut', duration: 0.2 }}
@@ -95,13 +95,12 @@ function Navbar({ darkMode, toggleTheme }) {
   ${path === '/editor' ? 'tour-nav-editor' : ''}
   ${path === '/print-preview' ? 'tour-nav-print' : ''}
   ${darkMode ? 'navbar__link-dark' : 'navbar__link-light'}
-  ${
-    isActive
-      ? darkMode
-        ? ' navbar__mobile-link--active-dark'
-        : ' navbar__mobile-link--active-light'
-      : ''
-  }`
+  ${isActive
+                    ? darkMode
+                      ? ' navbar__mobile-link--active-dark'
+                      : ' navbar__mobile-link--active-light'
+                    : ''
+                  }`
                 }
               >
                 {label}
@@ -111,19 +110,51 @@ function Navbar({ darkMode, toggleTheme }) {
 
           {/* CTA */}
           <div className="navbar__actions">
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className={`navbar__language-selector
-               ${
-                 darkMode
-                   ? 'navbar__language-selector-dark'
-                   : 'navbar__language-selector-light'
-               }`}
-            >
-              <option value="en">English</option>
-              <option value="hi">हिन्दी</option>
-            </select>
+            <div className="navbar__language-dropdown">
+              <button
+                className={`navbar__language-selector ${darkMode
+                  ? 'navbar__language-selector-dark'
+                  : 'navbar__language-selector-light'
+                  }`}
+                onClick={() => setLanguageOpen(!languageOpen)}
+              >
+                {language === 'en' ? 'English' : 'हिन्दी'}
+
+                <span
+                  className={`dropdown-arrow ${languageOpen ? 'open' : ''
+                    }`}
+                >
+                  ▼
+                </span>
+              </button>
+
+              {languageOpen && (
+                <div
+                  className={`navbar__language-menu ${darkMode
+                    ? 'navbar__language-menu-dark'
+                    : 'navbar__language-menu-light'
+                    }`}
+                >
+                  <button
+                    onClick={() => {
+                      setLanguage('en');
+                      setLanguageOpen(false);
+                    }}
+                  >
+                    English
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setLanguage('hi');
+                      setLanguageOpen(false);
+                    }}
+                  >
+                    हिन्दी
+                  </button>
+                </div>
+              )}
+            </div>
 
             <button
               onClick={toggleTheme}
@@ -154,28 +185,60 @@ function Navbar({ darkMode, toggleTheme }) {
         {/* Mobile Drawer */}
         <nav
           className={`navbar__mobile-menu ${menuOpen ? 'active' : ''} 
-            ${
-              darkMode
-                ? 'navbar__mobile-menu-dark'
-                : 'navbar__mobile-menu-light'
+            ${darkMode
+              ? 'navbar__mobile-menu-dark'
+              : 'navbar__mobile-menu-light'
             }
             `}
           aria-label="Mobile navigation"
         >
           <div className="navbar__mobile-language">
             <div className="navbar__desktop-language">
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className={`navbar__language-selector ${
-                  darkMode
-                    ? 'navbar__language-selector-dark'
-                    : 'navbar__language-selector-light'
-                }`}
-              >
-                <option value="en">English</option>
-                <option value="hi">हिन्दी</option>
-              </select>
+              <div className="navbar__language-dropdown">
+                <button
+                  className={`navbar__language-selector ${darkMode
+                      ? 'navbar__language-selector-dark'
+                      : 'navbar__language-selector-light'
+                    }`}
+                  onClick={() => setLanguageOpen(!languageOpen)}
+                >
+                  {language === 'en' ? 'English' : 'हिन्दी'}
+
+                  <span
+                    className={`dropdown-arrow ${languageOpen ? 'open' : ''
+                      }`}
+                  >
+                    ▼
+                  </span>
+                </button>
+
+                {languageOpen && (
+                  <div
+                    className={`navbar__language-menu ${darkMode
+                        ? 'navbar__language-menu-dark'
+                        : 'navbar__language-menu-light'
+                      }`}
+                  >
+                    <button
+                      onClick={() => {
+                        setLanguage('en');
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      English
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setLanguage('hi');
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      हिन्दी
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -185,16 +248,14 @@ function Navbar({ darkMode, toggleTheme }) {
               to={path}
               end={path === '/'}
               className={({ isActive }) =>
-                `navbar__mobile-link ${
-                  darkMode
-                    ? 'navbar__mobile-link-dark'
-                    : 'navbar__mobile-link-light'
-                } ${
-                  isActive
-                    ? darkMode
-                      ? ' navbar__mobile-link--active-dark'
-                      : ' navbar__mobile-link--active-light'
-                    : ''
+                `navbar__mobile-link ${darkMode
+                  ? 'navbar__mobile-link-dark'
+                  : 'navbar__mobile-link-light'
+                } ${isActive
+                  ? darkMode
+                    ? ' navbar__mobile-link--active-dark'
+                    : ' navbar__mobile-link--active-light'
+                  : ''
                 }`
               }
               onClick={() => setMenuOpen(false)}

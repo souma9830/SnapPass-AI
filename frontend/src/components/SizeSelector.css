@@ -44,6 +44,10 @@
 }
 
 .size-selector__select {
+  min-width: 0;     
+  overflow: hidden;  
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: var(--font-family);
   font-size: var(--font-size-md);
   color: var(--color-text);

@@ -8,7 +8,8 @@ export const translations = {
     admin: 'Admin',
     getStarted: 'Get Started',
     language: 'Language',
-
+    history: "History",
+    
     heroTitle: 'Open-source AI-powered passport photo studio',
     heroSubtitle:
       'Upload → Auto-process → Generate a print-ready sheet — in seconds.',
@@ -344,6 +345,7 @@ export const translations = {
     admin: 'एडमिन',
     getStarted: 'शुरू करें',
     language: 'भाषा',
+    history: 'इतिहास',
 
     heroTitle: 'ओपन-सोर्स AI आधारित पासपोर्ट फोटो स्टूडियो',
     heroSubtitle:

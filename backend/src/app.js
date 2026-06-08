@@ -8,6 +8,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import hpp from 'hpp';
 import { fileURLToPath } from 'url';
+import os from 'os';
 
 import uploadRoutes from './routes/upload.routes.js';
 import imageRoutes from './routes/image.routes.js';
@@ -84,7 +85,21 @@ app.get("/", (_req, res) => {
 });
 
 app.get("/health", (_req, res) => {
-  res.json({ status: "ok", service: "SnapPass AI Backend", timestamp: new Date() });
+  res.json({
+    status: "ok",
+    service: "SnapPass AI Backend",
+    timestamp: new Date(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    cpu: process.cpuUsage(),
+    system: {
+      platform: os.platform(),
+      arch: os.arch(),
+      freemem: os.freemem(),
+      totalmem: os.totalmem(),
+      loadavg: os.loadavg()
+    }
+  });
 });
 
 // API Version 1 Routes

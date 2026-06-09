@@ -5,6 +5,7 @@ Runs on http://localhost:8000
 """
 
 import logging
+from logging.handlers import RotatingFileHandler
 import os
 import pathlib
 import re
@@ -15,9 +16,27 @@ import config
 from app.routes.process_routes import process_bp
 from app.services.errors import ai_error_handler
 
+# Ensure log directory exists
+if config.LOG_FILE:
+    log_dir = os.path.dirname(config.LOG_FILE)
+    if log_dir:
+        os.makedirs(log_dir, exist_ok=True)
+
+# Configure handlers
+handlers = [logging.StreamHandler()]
+if config.LOG_FILE:
+    handlers.append(
+        RotatingFileHandler(
+            config.LOG_FILE,
+            maxBytes=5 * 1024 * 1024,  # 5MB
+            backupCount=3,
+        )
+    )
+
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, config.LOG_LEVEL, logging.INFO),
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    handlers=handlers
 )
 logger = logging.getLogger(__name__)
 

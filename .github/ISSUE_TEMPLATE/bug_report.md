@@ -1,32 +1,32 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: 🐛 Bug report
+about: Create a report to help us improve the application stability
 title: '[BUG] '
 labels: bug
 assignees: ''
 
 ---
 
-**Describe the bug**
+## Bug Description
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+## To Reproduce
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '...'
 3. Scroll down to '...'
 4. See error
 
-**Expected behavior**
+## Expected Behavior
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+## Environment Details
+- **OS**: [e.g. Windows 11, macOS Sequoia]
+- **Browser/Environment**: [e.g. Chrome 124, Node v18]
+- **Service Affected**: [e.g. Frontend React, Backend API, Python AI Service]
 
-**Desktop (please complete the following information):**
- - OS: [e.g. Windows, macOS]
- - Browser [e.g. chrome, safari]
-   - Version [e.g. 120]
+## Screenshots / Code Snippets
+If applicable, add screenshots or logs to help explain your problem.
 
-**Additional context**
+## Additional Context
 Add any other context about the problem here.

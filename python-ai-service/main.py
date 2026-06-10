@@ -69,7 +69,7 @@ CORS(app)
 
 os.makedirs(config.UPLOAD_DIR, exist_ok=True)
 
-# Blueprints 
+# Blueprints
 app.register_blueprint(process_bp)
 
 # Health Check
@@ -80,13 +80,13 @@ def health():
 @app.route("/face-quality-check", methods=["POST"])
 def face_quality_check():
     from app.services.face_quality_gate import assess_face_quality
-    
+
     data = request.get_json()
     file_path = data.get("file_path")
-    
+
     if not file_path:
         return jsonify({"error": "file_path is required"}), 400
-    
+
     try:
         report = assess_face_quality(file_path)
         return jsonify({
@@ -99,12 +99,14 @@ def face_quality_check():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
 # Sheet Generator
 @app.route("/generate-sheet", methods=["POST"])
 @ai_error_handler
 def generate_sheet():
     from app.services.sheet_generator import generate_a4_sheet
-    
+
     data = request.get_json()
     raw_photo_path = data.get("photo_path")
     # Sanitize preset_id to alphanumeric + dash/underscore only so it cannot
@@ -128,7 +130,7 @@ def generate_sheet():
     # preset_id do not race on the same file path.
     output_path = os.path.join(output_dir, f"sheet_{preset_id}_{uuid.uuid4().hex}.jpg")
 
-    from app.services.sheet_generator import generate_a4_sheet
+
     saved = generate_a4_sheet(
         photo_path=photo_path,
         preset_id=preset_id,

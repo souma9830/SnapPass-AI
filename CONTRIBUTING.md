@@ -256,9 +256,13 @@ Open a new terminal window:
 ```bash
 cd backend
 npm install
+
+# Ensure you duplicate .env.example into .env and fill in required fields (MONGO_URI, JWT_SECRET, RESEND_API_KEY, EMAIL_FROM)
+# The pre-flight validator will terminate the process on missing properties.
 npm run dev 
 # The server will start and listen on http://localhost:3000
 ```
+For endpoint mapping details, see the [API documentation](docs/API.md).
 
 ### Step 4 — Run the Python AI Service (Required for Python/AI Tasks)
 Open a new terminal window:
@@ -277,6 +281,7 @@ venv\Scripts\activate
 # Install all required Python packages
 pip install -r requirements.txt
 
+# Duplicated .env.example properties (PORT, MAX_FILE_MB) are validated automatically at start
 # Start the Flask server
 python main.py
 # The AI service will start and listen on http://localhost:8000

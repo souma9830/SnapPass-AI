@@ -74,3 +74,8 @@ This guide outlines common issues encountered during the installation, configura
 * **Reason**: Frontend origin is not whitelisted by the backend server.
 * **Resolution**:
   - Inspect backend's `.env` config file and ensure `CORS_ORIGIN` matches the protocol and port of the frontend client (e.g., `http://localhost:5173`). Avoid trailing slashes.
+
+
+## Frequently Asked Questions (FAQ)
+### Q: Why does background removal fail locally?
+A: Ensure python-ai-service has access to download pre-trained weights.

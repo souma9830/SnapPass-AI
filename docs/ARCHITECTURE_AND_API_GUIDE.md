@@ -124,3 +124,8 @@ graph TD
   }
   ```
 * **Response:** Streams raw A4 image file back. Cleans up the temporary generated file after request transmission completes.
+
+
+### System Data Flow
+1. Client uploads file -> Express Backend uploads directory -> Response with temp ID.
+2. Backend posts to Python AI service -> Quality Gate processes -> Response returned to backend.

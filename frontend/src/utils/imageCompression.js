@@ -40,3 +40,6 @@ export const compressImage = (file, options = {}) => {
     };
   });
 };
+
+// Fallback handling for canvas dimensions exceeding max limit
+export const handleCanvasExportFallback = (canvas) => canvas.toDataURL('image/jpeg');

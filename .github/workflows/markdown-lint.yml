@@ -1,0 +1,18 @@
+name: Markdown Linting
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Markdown Linting Action
+        uses: avto-dev/markdown-lint-action@v1
+        with:
+          args: '**/*.md'
+        continue-on-error: true

@@ -7,3 +7,7 @@
 ## Steps
 1. Configure production environment variables in `.env`.
 2. Run `docker-compose -f docker-compose.prod.yml up -d --build`.
+
+
+## Docker Swarm & K8s Deployments
+For container orchestration, deploy using helm charts in `charts/` directory.

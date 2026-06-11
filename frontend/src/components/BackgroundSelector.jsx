@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './BackgroundSelector.css';
 
 /**
@@ -18,16 +18,28 @@ const BACKGROUNDS = [
 ];
 
 function BackgroundSelector({ selected = 'white', onChange }) {
+  const [announcement, setAnnouncement] = useState('');
+
+  const handleSelect = (id, label) => {
+    if (onChange) {
+      onChange(id);
+      setAnnouncement(`Background color changed to ${label}`);
+    }
+  };
+
   return (
     <div className="bg-selector">
       <p className="bg-selector__heading">Background Colour</p>
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {announcement}
+      </div>
       <div className="bg-selector__list" role="radiogroup" aria-label="Background colour">
         {BACKGROUNDS.map(({ id, label, hex }) => (
           <button
             key={id}
             className={`bg-selector__item${selected === id ? ' bg-selector__item--active' : ''}`}
             style={{ '--swatch': hex }}
-            onClick={() => onChange && onChange(id)}
+            onClick={() => handleSelect(id, label)}
             role="radio"
             aria-checked={selected === id}
             aria-label={label}

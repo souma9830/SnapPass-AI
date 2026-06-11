@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner';
  * Props:
  *   delayMs (number) — milliseconds to wait before rendering the spinner (default 250)
  */
-function DelayedFallback({ delayMs = 250 }) {
+function DelayedFallback({ delayMs = 250, spinnerSize = 'lg' }) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {

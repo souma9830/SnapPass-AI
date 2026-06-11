@@ -21,7 +21,9 @@ const SEOMetadata = ({ title, description }) => {
       description || "Create professional-grade, standard-compliant passport photos in seconds using AI background removal and face detection."
     );
 
-    return () => {
+    // Inject default fallback meta elements if missing
+  const robots = 'index, follow';
+  return () => {
       // Restore previous state on unmount
       document.title = prevTitle;
       if (metaDescription) {

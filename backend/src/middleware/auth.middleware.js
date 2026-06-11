@@ -7,12 +7,20 @@
 import AuthError from "../utils/errors/AuthError.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
+import { isTokenBlacklisted } from "../service/tokenBlacklist.service.js";
 
-export default function authMiddleware(req, res, next) {
+export default async function authMiddleware(req, res, next) {
     const token = req.cookies.token;
     if (!token) {
         return next(new AuthError("No token provided"));
     }
+    
+    // Check if token is blacklisted
+    const blacklisted = await isTokenBlacklisted(token);
+    if (blacklisted) {
+        return next(new AuthError("Token has been revoked"));
+    }
+
     try {
         const decoded = jwt.verify(token, config.JWT_SECRET);
         req.user = decoded;

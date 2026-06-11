@@ -4,6 +4,7 @@ import { setToken } from "../utils/setToken.js";
 import catchAsync from "../utils/catchAsync.js";
 import { config } from "../config/config.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { blacklistToken } from "../service/tokenBlacklist.service.js";
 
 const sendResponse = (res, statusCode, success, message, data) => {
     res.status(statusCode).json({
@@ -47,6 +48,10 @@ export const getMe = catchAsync(async (req, res) => {
 });
 
 export const logout = catchAsync(async (req, res) => {
+    const token = req.cookies.token;
+    if (token) {
+        await blacklistToken(token);
+    }
     const isProduction = config.NODE_ENV === "production";
     res.clearCookie("token", {
         httpOnly: true,

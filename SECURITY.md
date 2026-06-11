@@ -26,3 +26,7 @@ We will endeavor to respond to your report within 48 hours and provide an estima
 
 ## Secure Usage
 SnapPass-AI handles sensitive AI and generation logic. We strongly recommend that users do not log generated passwords or sensitive AI tokens in plain text in production environments.
+
+
+## Reporting Security Issues
+Please report security vulnerabilities to security@snappass-ai.org directly instead of opening issues.

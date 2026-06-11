@@ -51,7 +51,10 @@ const errorMiddleware = (
     error.statusCode = 401;
   }
 
+  // Log request correlation trace ID
+  const correlationId = req.headers['x-correlation-id'] || 'N/A';
   res.status(error.statusCode).json({
+    correlationId,
     success: false,
     status: error.statusCode >= 500 ? "error" : "fail",
     message: error.message,

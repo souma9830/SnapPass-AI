@@ -553,3 +553,8 @@ We are firmly committed to providing a welcoming, safe, and inspiring community 
     <a href="https://github.com/souma9830/SnapPass-AI/issues">💡 Request a Feature</a>
   </p>
 </div>
+
+
+### Committing Code
+- Follow conventional commits guidelines strictly.
+- Always link related issue references.

@@ -9,3 +9,7 @@
 * `POST /api/v1/upload` - Upload raw image
 * `POST /api/v1/process/face-quality-check` - Face quality analysis
 * `POST /api/v1/print/generate-sheet` - Generate ready-to-print A4 sheet
+
+
+## Testimonials endpoints
+`GET /api/v1/testimonials` - Fetch all user reviews.

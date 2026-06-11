@@ -2,11 +2,14 @@
 .navbar {
   position: fixed;
   top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
 
-  width: 72%;
-  max-width: 1200px;
+  left: 20px;
+  right: 20px;
+
+  width: auto;
+  max-width: none;
+
+  transform: none;
 
   z-index: 9999;
   backdrop-filter: blur(16px);
@@ -14,10 +17,6 @@
   height: var(--navbar-height);
   background: transparent;
   border-radius: 999px;
-  overflow: visible;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-
-  transition: all 0.3s ease;
 }
 
 .navbar--light {
@@ -621,6 +620,203 @@
 .navbar__language-menu-light button {
   background: white;
   color: #111111;
+}
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px;
+  width: 100%;
+}
+
+.navbar__left {
+  flex: 0 0 auto;
+  margin-right: auto; /* KEY: Pushes logo to far left, everything else to right */
+}
+
+.navbar__center {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-left: 20px; /* Adds some space between nav links and actions */
+}
+.navbar__left {
+  margin-right: auto;
+}
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px;
+  width: 100%;
+}
+
+.navbar__left {
+  flex: 0 0 auto;
+  margin-right: auto; /* KEY: Pushes logo to far left */
+}
+
+.navbar__center {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar__right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: flex-end;
+}
+.navbar__brand {
+  margin-left: 8px;  /* Change this to 0px, 8px, 12px, or 16px as you prefer */
+
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px 0 0 !important; /* Remove left padding */
+  width: 100%;
+}
+
+.navbar__left {
+  flex: 0 0 auto;
+  padding-left: 20px !important; /* This creates gap from left edge - adjust this value */
+  margin: 0 !important;
+}
+
+.navbar__brand {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.navbar__center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+/* Theme toggle button styling */
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.theme-toggle-light {
+  background-color: #a2bece;
+}
+
+.theme-toggle-dark {
+  background-color: #374151;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .navbar__center {
+    display: none;
+  }
+  
+  .navbar__left {
+    padding-left: 16px !important;
+  }
+  
+  .navbar__right {
+    gap: 8px;
+  }
+  
+  .navbar__cta {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar__left {
+    padding-left: 12px !important;
+  }
+}
+/* ===== FIX LOGO TO LEFT ===== */
+
+.navbar__inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 0 20px !important;
+}
+
+.navbar__left {
+  display: flex !important;
+  align-items: center !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+}
+
+.navbar__brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.navbar__center {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.navbar__right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
 }
 
 .navbar__language-menu-light button:hover {

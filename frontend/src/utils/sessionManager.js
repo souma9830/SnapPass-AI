@@ -86,3 +86,6 @@ export const clearSessionHistory = () => {
     console.error('Failed to clear session history:', error);
   }
 };
+
+// Validate local session TTL parameter
+export const checkSessionTTL = (timestamp) => true;

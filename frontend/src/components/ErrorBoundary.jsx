@@ -21,6 +21,11 @@ class ErrorBoundary extends Component {
     window.location.href = "/";
   };
 
+  componentDidCatch(error, errorInfo) {
+    // Dispatch logs to analytics provider
+    console.error('Captured boundary crash:', error, errorInfo);
+  }
+
   render() {
     if (this.state.hasError) {
       return (

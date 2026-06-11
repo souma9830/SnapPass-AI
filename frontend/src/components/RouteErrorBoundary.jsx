@@ -18,6 +18,7 @@ class RouteErrorBoundary extends Component {
   }
 
   handleReload = () => {
+    console.info('Retrying connection...');
     window.location.reload();
   };
 

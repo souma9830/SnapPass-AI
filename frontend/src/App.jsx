@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import AppRoutes from './routes/AppRoutes';
 import SnapPassAssistant from './chatbot/SnapPassAssistant';
+import PremiumCursor from './components/PremiumCursor';
 import { ToastProvider } from './context/ToastContext';
 import './App.css';
 
@@ -36,6 +37,7 @@ function App() {
   return (
     <ToastProvider>
       <div className="app-shell">
+        <PremiumCursor />
         <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
         <main className="app-main">
           <AppRoutes darkMode={darkMode} toggleTheme={toggleTheme} />

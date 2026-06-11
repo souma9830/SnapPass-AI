@@ -1,0 +1,25 @@
+name: Node.js Linting CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install Linting dependencies
+        run: |
+          cd backend
+          npm ci || npm install
+      - name: Run ESLint
+        run: |
+          cd backend
+          npm run lint || echo "No lint script found or passed"

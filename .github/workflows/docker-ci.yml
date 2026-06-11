@@ -1,39 +1,31 @@
-name: Docker Build Validation CI
+name: Docker CI Build and Verify
 
 on:
+  push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  validate-docker:
+  build-and-verify:
+    name: Build & Verify Services
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-      - name: Build Frontend Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: false
-          tags: snappass-frontend:test
+    - name: Build Backend Docker Image
+      run: |
+        docker build -t snappass-backend:latest ./backend
 
-      - name: Build Backend Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          push: false
-          tags: snappass-backend:test
+    - name: Build AI Service Docker Image
+      run: |
+        docker build -t snappass-ai-service:latest ./python-ai-service
 
-      - name: Build Python AI Service Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./python-ai-service
-          file: ./python-ai-service/Dockerfile
-          push: false
-          tags: snappass-python-ai:test
+    - name: Build Frontend Docker Image
+      run: |
+        docker build -t snappass-frontend:latest ./frontend

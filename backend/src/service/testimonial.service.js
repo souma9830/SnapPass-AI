@@ -18,18 +18,6 @@ function formatTestimonial(doc) {
   };
 }
 
-function calculateStats(testimonials) {
-  if (!testimonials.length) {
-    return { averageRating: 0, count: 0 };
-  }
-
-  const sum = testimonials.reduce((acc, item) => acc + item.rating, 0);
-  return {
-    averageRating: Number((sum / testimonials.length).toFixed(1)),
-    count: testimonials.length,
-  };
-}
-
 export async function ensureSeedTestimonials() {
   const count = await testimonialDao.countTestimonials();
   if (count > 0) return;
@@ -43,10 +31,11 @@ export async function ensureSeedTestimonials() {
   }
 }
 
-export async function getApprovedTestimonials(clientFingerprint = null) {
+export async function getApprovedTestimonials(clientFingerprint = null, page = 1, limit = 20) {
   await ensureSeedTestimonials();
 
-  const testimonials = await testimonialDao.findApprovedTestimonials();
+  const { testimonials, total } = await testimonialDao.findApprovedTestimonials(page, limit);
+  const stats = await testimonialDao.getTestimonialStats();
   const formatted = testimonials.map((item) =>
     formatTestimonial({
       ...item,
@@ -56,7 +45,13 @@ export async function getApprovedTestimonials(clientFingerprint = null) {
 
   return {
     testimonials: formatted,
-    stats: calculateStats(formatted),
+    pagination: {
+      total,
+      page,
+      limit,
+      pages: Math.ceil(total / limit),
+    },
+    stats,
     userReview: clientFingerprint
       ? formatted.find((item) => item.isOwn) || null
       : null,

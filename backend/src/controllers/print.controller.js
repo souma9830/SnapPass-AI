@@ -10,6 +10,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "../config/config.js";
 import { PHOTO_SIZE_DETAILS } from "../utils/photoPresets.js";
+import Upload from "../models/upload.model.js";
 
 const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);
@@ -54,7 +55,32 @@ export const generateSheet = async (req, res, next) => {
       return res.status(403).json({ success: false, message: "Access denied: Path traversal detected." });
     }
 
-    // 5. Async existence, symlink protection & regular file enforcement (non-blocking TOCTOU prevention)
+    // 5. Ensure local file exists (retrieve from Cloudinary if missing)
+    let exists = false;
+    try {
+      await fs.promises.access(filePath);
+      exists = true;
+    } catch (err) {}
+
+    if (!exists) {
+      const uploadDoc = await Upload.findOne({ filename });
+      if (!uploadDoc) {
+        return res.status(404).json({ success: false, message: "File not found on server." });
+      }
+      try {
+        const response = await axios.get(uploadDoc.fileUrl, { responseType: "stream" });
+        const writer = fs.createWriteStream(filePath);
+        response.data.pipe(writer);
+        await new Promise((resolve, reject) => {
+          writer.on("finish", resolve);
+          writer.on("error", reject);
+        });
+      } catch (downloadErr) {
+        return res.status(500).json({ success: false, message: "Failed to retrieve file from storage." });
+      }
+    }
+
+    // 6. Async existence, symlink protection & regular file enforcement
     try {
       const stats = await fs.promises.lstat(filePath);
       if (stats.isSymbolicLink()) {
@@ -70,21 +96,21 @@ export const generateSheet = async (req, res, next) => {
       throw err;
     }
 
-    // 6. Quantity boundary check (1 to 50)
+    // 7. Quantity boundary check (1 to 50)
     const parsedQuantity = parseInt(quantity, 10);
     if (isNaN(parsedQuantity) || parsedQuantity < 1 || parsedQuantity > 50) {
       return res.status(400).json({ success: false, message: "Quantity must be an integer between 1 and 50." });
     }
 
-    // 7. Call python AI microservice with correct parameter mappings
+    // 8. Call python AI microservice with correct parameter mappings
     const aiResponse = await axios.post(
       `${config.aiServiceUrl}/generate-sheet`,
       { photo_path: filePath, quantity: parsedQuantity, preset_id: photoSizePreset },
       { responseType: "arraybuffer" }
     );
 
-    res.set("Content-Type", "image/png");
-    res.set("Content-Disposition", `attachment; filename="snappass_sheet_${Date.now()}.png"`);
+    res.set("Content-Type", "image/jpeg");
+    res.set("Content-Disposition", `attachment; filename="snappass_sheet_${Date.now()}.jpg"`);
     res.send(Buffer.from(aiResponse.data));
   } catch (error) {
     if (error.code === "ECONNREFUSED") {

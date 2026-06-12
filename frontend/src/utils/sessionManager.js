@@ -1,12 +1,24 @@
 const SESSION_KEY = 'passport_session';
 const HISTORY_KEY = 'passport_history';
 
+/**
+ * Strip fields that must not be persisted to localStorage.
+ * blob: URLs (localUrl) are only valid within the current page lifecycle and
+ * become dead strings after any reload. Centralising the exclusion list here
+ * means both saveSession and saveSessionToHistory stay in sync if new
+ * ephemeral fields are added in future.
+ *
+ * @param {Object} session - Raw session data to sanitise.
+ * @returns {Object} Session without ephemeral fields.
+ */
+const toPersistableSession = ({ localUrl, ...rest }) => rest;
+
 export const saveSession = (data) => {
   try {
     localStorage.setItem(
       SESSION_KEY,
       JSON.stringify({
-        ...data,
+        ...toPersistableSession(data),
         updatedAt: Date.now(),
       })
     );
@@ -40,7 +52,7 @@ export const saveSessionToHistory = (session) => {
   try {
     const history = getSessionHistory();
     const newSession = {
-      ...session,
+      ...toPersistableSession(session),
       id: Date.now().toString(),
       savedAt: Date.now(),
       status: session.status || 'draft',

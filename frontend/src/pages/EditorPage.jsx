@@ -24,10 +24,14 @@ function EditorPage({ darkMode, toggleTheme }) {
   const navigate = useNavigate();
   const savedSession = getSession();
 
+  // Only trust photo data from React Router navigation state (current page load).
+  // Restoring filename/fileSize from savedSession without a live localUrl creates
+  // a contradictory state where the editor shows metadata for an image it cannot
+  // display — the EmptyState handles the no-localUrl case correctly on its own.
   const [photoData, setPhotoData] = useState({
-    localUrl: state?.localUrl || savedSession?.localUrl,
-    filename: state?.filename || savedSession?.filename,
-    fileSize: state?.fileSize || savedSession?.fileSize,
+    localUrl: state?.localUrl || null,
+    filename: state?.filename || null,
+    fileSize: state?.fileSize || null,
   });
 
   const fileInputRef = useRef(null);
@@ -41,18 +45,18 @@ function EditorPage({ darkMode, toggleTheme }) {
   const { processImage, isProcessing, error } = useImageProcessor();
 
   useEffect(() => {
+    // Only persist session when there is a live image in this page's context.
+    // Guarding on localUrl prevents a reloaded/empty editor from continuously
+    // writing an unusable 'editor' step back to localStorage.
     if (!photoData?.localUrl) return;
 
-    const sessionData = {
+    saveSession({
       step: 'editor',
-      localUrl: photoData.localUrl,
       filename: photoData.filename,
       fileSize: photoData.fileSize,
       background,
       sizePreset,
-    };
-
-    saveSession(sessionData);
+    });
   }, [photoData, background, sizePreset]);
 
   const iconMap = {

@@ -65,6 +65,10 @@ function ChatbotWindow({ isOpen, onClose }) {
         }
     };
 
+    const MAX_CHARS = 200;
+    const isNearLimit = input.length >= MAX_CHARS * 0.8;
+    const isAtLimit = input.length >= MAX_CHARS;
+
     return (
         <div className={`chatbot-window ${isOpen ? "show-chat" : ""}`}>
 
@@ -112,18 +116,37 @@ function ChatbotWindow({ isOpen, onClose }) {
             </div>
 
             {/* Input */}
-            <div className="chatbot-input-area">
-                <input
-                    type="text"
-                    placeholder="Ask something..."
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
+            <div className="chatbot-input-container">
+                <div className="chatbot-input-area">
+                    <input
+                        type="text"
+                        placeholder="Ask something..."
+                        value={input}
+                        maxLength={MAX_CHARS}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        aria-invalid={isAtLimit ? "true" : "false"}
+                        aria-describedby="char-counter"
+                    />
 
-                <button onClick={() => handleSendMessage()}>
-                    <Send size={18} />
-                </button>
+                    <button onClick={() => handleSendMessage()} disabled={!input.trim()}>
+                        <Send size={18} />
+                    </button>
+                </div>
+                <div className="chatbot-input-footer">
+                    {isAtLimit ? (
+                        <span className="limit-message" role="alert">Character limit reached.</span>
+                    ) : (
+                        <span />
+                    )}
+                    <span 
+                        id="char-counter"
+                        className={`char-counter ${isAtLimit ? "error-text" : isNearLimit ? "warning-text" : ""}`}
+                        aria-live="polite"
+                    >
+                        {input.length}/{MAX_CHARS}
+                    </span>
+                </div>
             </div>
         </div>
     );

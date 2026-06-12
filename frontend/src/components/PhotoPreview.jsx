@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import './PhotoPreview.css';
+import { generateSmartTags } from '../utils/generateSmartTags';
 
 /**
  * PhotoPreview — displays original and processed passport photo side by side.
@@ -13,7 +14,9 @@ import './PhotoPreview.css';
 function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
   const [showGuidelines, setShowGuidelines] = useState(true);
 
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const smartTags = generateSmartTags(
+  originalUrl || processedUrl || ""
+);
 
   return (
     <div className="photo-preview">
@@ -78,41 +81,65 @@ function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
       )}
 
       {/* Processed */}
-      <div className="photo-preview__panel">
-        <span className="photo-preview__label">
-          Processed
-          {isProcessing && <span className="photo-preview__processing-badge">Processing…</span>}
-        </span>
-        <div className={`photo-preview__frame photo-preview__frame--processed${isProcessing ? ' photo-preview__frame--loading' : ''}`}>
-          {processedUrl && !isProcessing ? (
-            <>
-              {!imageLoaded && (
-                <div className="photo-preview__image-preloader">
-                  <LoadingSpinner size="md" />
-                </div>
-              )}
-              <img
-                src={processedUrl}
-                alt="AI-processed — background removed and centred"
-                className={`photo-preview__img photo-preview__img--processed ${imageLoaded ? 'photo-preview__img--loaded' : 'photo-preview__img--loading'}`}
-                onLoad={() => setImageLoaded(true)}
-              />
-            </>
-          ) : (
-            <div className="photo-preview__empty">
-              {isProcessing ? (
-                <LoadingSpinner size="md" />
-              ) : (
-                <p className="photo-preview__empty-text">
-                  Upload and process a photo to preview the AI-generated result
-                </p>
-              )}
-            </div>
-          )}
-        </div>
+<div className="photo-preview__panel">
+  <span className="photo-preview__label">
+    Processed
+    {isProcessing && (
+      <span className="photo-preview__processing-badge">
+        Processing…
+      </span>
+    )}
+  </span>
+
+  <div
+    className={`photo-preview__frame photo-preview__frame--processed${
+      isProcessing ? ' photo-preview__frame--loading' : ''
+    }`}
+  >
+    {processedUrl && !isProcessing ? (
+      <>
+        {!imageLoaded && (
+          <div className="photo-preview__image-preloader">
+            <LoadingSpinner size="md" />
+          </div>
+        )}
+
+        <img
+          src={processedUrl}
+          alt="AI-processed — background removed and centred"
+          className={`photo-preview__img photo-preview__img--processed ${
+            imageLoaded
+              ? 'photo-preview__img--loaded'
+              : 'photo-preview__img--loading'
+          }`}
+          onLoad={() => setImageLoaded(true)}
+        />
+      </>
+    ) : (
+      <div className="photo-preview__empty">
+        {isProcessing ? (
+          <LoadingSpinner size="md" />
+        ) : (
+          <p className="photo-preview__empty-text">
+            Upload and process a photo to preview the AI-generated result
+          </p>
+        )}
       </div>
+    )}
+  </div>
+
+  {smartTags.length > 0 && (
+    <div className="photo-preview__tags">
+      {smartTags.map((tag) => (
+        <span
+          key={tag}
+          className="photo-preview__tag"
+        >
+          #{tag}
+        </span>
+      ))}
     </div>
-  );
-}
+  )}
+</div>
 
 export default PhotoPreview;

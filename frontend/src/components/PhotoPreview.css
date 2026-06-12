@@ -281,3 +281,31 @@
 .photo-preview__img--loaded {
   opacity: 1;
 }
+.photo-preview__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.photo-preview__tag {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.photo-preview__tag:hover {
+  background: rgba(99, 102, 241, 0.18);
+}
+.photo-preview__tags {
+  justify-content: center;
+}
+
+.photo-preview__tag {
+  font-size: 11px;
+}

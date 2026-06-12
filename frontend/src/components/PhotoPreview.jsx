@@ -16,17 +16,22 @@ function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <div className="photo-preview">
+    <div
+  className="photo-preview"
+  role="region"
+  aria-label="Photo preview section"
+>
       {/* Original */}
       {originalUrl && (
         <div className="photo-preview__panel">
           <span className="photo-preview__label">Original</span>
           <div className="photo-preview__frame photo-preview__frame--original">
             <img
-              src={originalUrl}
-              alt="Original uploaded — before processing"
-              className="photo-preview__img"
-            />
+  src={originalUrl}
+  alt="Original uploaded — before processing"
+  className="photo-preview__img"
+  loading="lazy"
+/>
             
             {/* Floating Glassmorphic Guidelines Toggle */}
             <button
@@ -92,11 +97,12 @@ function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
                 </div>
               )}
               <img
-                src={processedUrl}
-                alt="AI-processed — background removed and centred"
-                className={`photo-preview__img photo-preview__img--processed ${imageLoaded ? 'photo-preview__img--loaded' : 'photo-preview__img--loading'}`}
-                onLoad={() => setImageLoaded(true)}
-              />
+  src={processedUrl}
+  alt="AI-processed — background removed and centred"
+  className={`photo-preview__img photo-preview__img--processed ${imageLoaded ? 'photo-preview__img--loaded' : 'photo-preview__img--loading'}`}
+  onLoad={() => setImageLoaded(true)}
+  loading="lazy"
+/>
             </>
           ) : (
             <div className="photo-preview__empty">

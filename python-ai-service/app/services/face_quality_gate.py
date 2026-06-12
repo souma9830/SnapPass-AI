@@ -2,6 +2,7 @@ import os
 import cv2
 from dataclasses import dataclass
 from typing import Tuple, Optional
+from PIL import Image
 
 BLUR_THRESHOLD = 80.0
 MIN_FACE_W = 300
@@ -59,6 +60,25 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
             rejection_code="UNREADABLE_IMAGE",
             rejection_reason=f"Failed to read image headers: {str(e)}",
             user_hint="The file couldn't be opened. Please verify it isn't corrupted.")
+
+    # 3. Image resolution check using PIL to prevent memory exhaust DoS
+    try:
+        with Image.open(image_path) as img_pil:
+            w, h = img_pil.size
+            if w > 8000 or h > 8000:
+                return FaceQualityReport(
+                    passed=False,
+                    rejection_code="IMAGE_TOO_LARGE",
+                    rejection_reason=f"Image dimensions ({w}x{h}px) exceed the maximum allowed limit of 8000x8000px.",
+                    user_hint="Please upload a lower resolution image."
+                )
+    except Exception as e:
+        return FaceQualityReport(
+            passed=False,
+            rejection_code="UNREADABLE_IMAGE",
+            rejection_reason=f"Failed to read image dimensions: {str(e)}",
+            user_hint="The image file appears to be corrupted."
+        )
 
     try:
         img = cv2.imread(image_path)

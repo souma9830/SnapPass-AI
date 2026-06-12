@@ -7,13 +7,13 @@ const PasswordContentValidator = require('../validation/passwordContent.validati
 describe('PasswordContentValidator', () => {
   describe('validate - Valid Passwords', () => {
     test('should accept valid simple password', () => {
-      const result = PasswordContentValidator.validate('MySecurePass123!');
+      const result = PasswordContentValidator.validate('TestValue123!');
       expect(result.isValid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
 
     test('should accept long complex password', () => {
-      const result = PasswordContentValidator.validate('P@ssw0rd!Secure123#Token');
+      const result = PasswordContentValidator.validate('Test@Value!Complex123#Token');
       expect(result.isValid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
@@ -144,17 +144,17 @@ describe('PasswordContentValidator', () => {
 
   describe('validate - Security Level Calculation', () => {
     test('should calculate high security for strong passwords', () => {
-      const result = PasswordContentValidator.validate('P@ssw0rd!Secure#123');
+      const result = PasswordContentValidator.validate('Test@Value!Secure#123');
       expect(result.securityLevel).toBe('high');
     });
 
     test('should calculate medium security for moderate passwords', () => {
-      const result = PasswordContentValidator.validate('Password123');
+      const result = PasswordContentValidator.validate('TestValue123');
       expect(result.securityLevel).toBe('medium');
     });
 
     test('should calculate low security for weak passwords', () => {
-      const result = PasswordContentValidator.validate('password');
+      const result = PasswordContentValidator.validate('testvalue');
       expect(result.securityLevel).toBe('low');
     });
 
@@ -189,7 +189,7 @@ describe('PasswordContentValidator', () => {
 
   describe('getReport', () => {
     test('should generate report for valid password', () => {
-      const validation = PasswordContentValidator.validate('ValidPass123!');
+      const validation = PasswordContentValidator.validate('TestValue123!');
       const report = PasswordContentValidator.getReport(validation);
       expect(report).toContain('valid');
     });

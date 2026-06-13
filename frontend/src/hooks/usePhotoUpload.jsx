@@ -16,44 +16,79 @@ function usePhotoUpload() {
   const localUrlRef = useRef(null);
 
   const uploadFile = useCallback(async (file) => {
-    setIsUploading(true);
-    setError(null);
 
-    try {
-      if (localUrlRef.current) {
-        URL.revokeObjectURL(localUrlRef.current);
-      }
+  if (!file) {
+    setIsUploading(false);
+    setError('No file selected.');
+    return;
+  }
 
-      const localUrl = URL.createObjectURL(file);
-      localUrlRef.current = localUrl;
+  setIsUploading(true);
+  setError(null);
 
-      // Delegate to photoService which uses the configured axios api instance.
-      // VITE_API_URL controls the backend URL — no hardcoded localhost here.
-      const data = await uploadPhoto(file);
-      const nextUploaded = { ...data, localUrl };
-      setUploadedFile(nextUploaded);
-      return nextUploaded;
-    } catch (err) {
-      const isNetworkError =
-        err.message?.toLowerCase().includes('network') ||
-        err.message?.toLowerCase().includes('failed to fetch') ||
-        err.message?.toLowerCase().includes('err_connection_refused');
+  try {
+
+    if (localUrlRef.current) {
+      URL.revokeObjectURL(localUrlRef.current);
+    }
+
+    const validTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp'
+    ];
+
+    if (!validTypes.includes(file.type)) {
 
       setError(
-        isNetworkError
-          ? 'Could not reach the server. Please check your connection or try again later.'
-          : err.message || 'Upload failed. Please try again.'
+        'Unsupported file format. Please upload JPG, PNG, or WEBP images.'
       );
-      if (localUrlRef.current) {
-        URL.revokeObjectURL(localUrlRef.current);
-        localUrlRef.current = null;
-      }
-      throw err;
-    } finally {
-      setIsUploading(false);
-    }
-  }, []);
 
+      return;
+    }
+
+    const localUrl = URL.createObjectURL(file);
+
+    localUrlRef.current = localUrl;
+
+    const data = await uploadPhoto(file);
+
+    const nextUploaded = {
+      ...data,
+      localUrl
+    };
+
+    setUploadedFile(nextUploaded);
+
+    return nextUploaded;
+
+  } catch (err) {
+
+    console.error(err);
+
+    const isNetworkError =
+      err.message?.toLowerCase().includes('network') ||
+      err.message?.toLowerCase().includes('failed to fetch') ||
+      err.message?.toLowerCase().includes('err_connection_refused');
+
+    setError(
+      isNetworkError
+        ? 'Could not reach the server. Please check your connection or try again later.'
+        : err.message || 'Upload failed. Please try again.'
+    );
+
+    if (localUrlRef.current) {
+      URL.revokeObjectURL(localUrlRef.current);
+      localUrlRef.current = null;
+    }
+
+  } finally {
+
+    setIsUploading(false);
+
+  }
+
+}, []);
 
   const reset = useCallback(() => {
     if (localUrlRef.current) {

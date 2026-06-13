@@ -3,7 +3,7 @@ import mongoSanitize from "express-mongo-sanitize";
 // Helper to recursively strip HTML tags from strings
 const cleanHtmlTags = (val) => {
   if (typeof val === "string") {
-    return val.replace(/<[^>]*>/g, "").trim();
+    return val.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").trim();
   }
   if (Array.isArray(val)) {
     return val.map(cleanHtmlTags);

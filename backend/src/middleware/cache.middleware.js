@@ -26,12 +26,14 @@ export const cacheMiddleware = (durationSeconds = 300) => {
     // Wrap res.json to intercept and cache the response data
     const originalJson = res.json;
     res.json = function (body) {
-      memoryCache.set(key, {
-        data: body,
-        expiredAt: Date.now() + durationSeconds * 1000,
-      });
-      return originalJson.call(this, body);
-    };
+  if (res.statusCode >= 200 && res.statusCode < 300) {
+    memoryCache.set(key, {
+      data: body,
+      expiredAt: Date.now() + durationSeconds * 1000,
+    });
+  }
+  return originalJson.call(this, body);
+};
 
     next();
   };

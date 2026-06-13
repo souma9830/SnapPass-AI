@@ -1,5 +1,6 @@
 import os
 import cv2
+from PIL import Image as PILImage 
 from dataclasses import dataclass
 from typing import Tuple, Optional
 
@@ -35,6 +36,16 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
             rejection_code="EMPTY_FILE",
             rejection_reason="The uploaded file is empty.",
             user_hint="The file appears to contain no data. Please upload a fresh photo.")
+
+with PILImage.open(image_path) as img:
+        w, h = img.size
+    if w > 8000 or h > 8000:
+        return FaceQualityReport(
+            passed=False,
+            rejection_code="IMAGE_TOO_LARGE",
+            rejection_reason=f"Image resolution {w}x{h} exceeds the 8000x8000 limit.",
+            user_hint="Please upload a smaller image."
+        )
 
     # 2. File header magic bytes validation (JPEG / PNG / WebP)
     try:

@@ -173,14 +173,14 @@ function Navbar({ darkMode, toggleTheme }) {
             >
               {darkMode ? <Sun className="text-amber-500" /> : <Moon />}
             </button>
-{!location.pathname.startsWith('/upload') && (
+            {!location.pathname.startsWith('/upload') && (
             <Link
               to="/upload"
               className={`navbar__cta hover:no-underline ${darkMode ? 'navbar__cta-dark' : 'navbar__cta-light'}`}
-            >
+             >
               {t.getStarted}
             </Link>
-          )}
+              )}
 
             {/* Mobile hamburger */}
             <button
@@ -196,13 +196,13 @@ function Navbar({ darkMode, toggleTheme }) {
 
         {/* Mobile Drawer */}
        <nav
-            className={[
-              'navbar__mobile-menu',
-              menuOpen ? 'active' : '',
-              darkMode ? 'navbar__mobile-menu-dark' : 'navbar__mobile-menu-light',
-            ].filter(Boolean).join(' ')}
-            aria-label="Mobile navigation"
-          >
+          className={[
+            'navbar__mobile-menu',
+            menuOpen ? 'active' : '',
+            darkMode ? 'navbar__mobile-menu-dark' : 'navbar__mobile-menu-light',
+          ].filter(Boolean).join(' ')}
+          aria-label="Mobile navigation"
+        >
           <div className="navbar__mobile-language">
             <div className="navbar__desktop-language">
               <div className="navbar__language-dropdown">

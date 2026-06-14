@@ -9,6 +9,7 @@ import { generateSheet } from '../services/photoService';
 import { calculatePasswordStrength } from '../utils/passwordStrength';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
+import ShareLinkPanel from '../components/ShareLinkPanel';
 import {
   saveSession,
   getSession,
@@ -289,6 +290,12 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               </span>
               {t.backToEditor}
             </Link>
+
+            <ShareLinkPanel
+              darkMode={darkMode}
+              processedUrl={state?.processedUrl || savedSession?.processedUrl}
+              filename={state?.filename || savedSession?.filename}
+            />
           </motion.aside>
         </div>
       </div>

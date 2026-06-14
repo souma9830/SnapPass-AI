@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UploadBox from '../components/UploadBox';
 import LoadingSpinner from '../components/LoadingSpinner';
+import UploadQueue from '../components/UploadQueue';
 import usePhotoUpload from '../hooks/usePhotoUpload';
 import './UploadPage.css';
 import { motion } from 'framer-motion';
@@ -21,6 +22,7 @@ function UploadPage({ darkMode, toggleTheme }) {
   const t = translations[language];
   const navigate = useNavigate();
   const { uploadFile, uploadedFile, isUploading, error } = usePhotoUpload();
+  const [queue, setQueue] = useState([]);
 
   const tips = [
     { type: 'ok', text: t.tipPlainBg },
@@ -28,6 +30,64 @@ function UploadPage({ darkMode, toggleTheme }) {
     { type: 'ok', text: t.tipNeutralExpression },
     { type: 'no', text: t.tipAvoidAccessories },
   ];
+  const handleMultipleFiles = async (files) => {
+  const mappedFiles = Array.from(files).map((file, index) => ({
+    id: Date.now() + index,
+    file,
+    progress: 0,
+    status: 'uploading',
+  }));
+
+  setQueue((prev) => [...prev, ...mappedFiles]);
+
+  for (const item of mappedFiles) {
+    try {
+      for (let progress = 0; progress <= 100; progress += 20) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 300)
+        );
+
+        setQueue((prev) =>
+          prev.map((q) =>
+            q.id === item.id
+              ? { ...q, progress }
+              : q
+          )
+        );
+      }
+
+      await uploadFile(item.file);
+
+      setQueue((prev) =>
+        prev.map((q) =>
+          q.id === item.id
+            ? { ...q, status: 'completed' }
+            : q
+        )
+      );
+    } catch {
+      setQueue((prev) =>
+        prev.map((q) =>
+          q.id === item.id
+            ? { ...q, status: 'failed' }
+            : q
+        )
+      );
+    }
+  }
+};
+const handleRetry = (id) => {
+  const retryItem = queue.find((item) => item.id === id);
+
+  if (!retryItem) return;
+
+  handleMultipleFiles([retryItem.file]);
+};
+const handleCancel = (id) => {
+  setQueue((prev) =>
+    prev.filter((item) => item.id !== id)
+  );
+};
 
   const iconMap = {
     ok: (
@@ -133,19 +193,27 @@ function UploadPage({ darkMode, toggleTheme }) {
 
         {/* Upload Box (Wrapped in a motion div to animate together) */}
         <motion.div
+        
           variants={fadeUpVariant}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           custom={0.5} // Loads after the tips
         >
+          
           {isUploading ? (
             <LoadingSpinner message={t.uploadPreparing} size="lg" />
           ) : (
-            <UploadBox onFileSelect={uploadFile} />
+            <UploadQueue queue={queue} onRetry={handleRetry} onCancel={handleCancel} />
           )}
         </motion.div>
-
+      {queue.length > 0 && (
+  <UploadQueue
+    queue={queue}
+    onRetry={handleRetry}
+    onCancel={handleCancel}
+  />
+)}
         <motion.p
           className={`upload-page__privacy ${darkMode ? 'upload-page__privacy-dark' : ''}`}
           variants={fadeUpVariant}

@@ -63,13 +63,14 @@ function UploadBox({ onFileSelect }) {
       onKeyDown={(e) => e.key === 'Enter' && inputRef.current.click()}
     >
       <input
-        ref={inputRef}
-        type="file"
-        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-        className="upload-box__input"
-        onChange={onChange}
-        aria-hidden="true"
-      />
+  ref={inputRef}
+  type="file"
+  multiple
+  accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+  className="upload-box__input"
+  onChange={(e) => onFileSelect(e.target.files)}
+  aria-hidden="true"
+/>
 
       <div className="upload-box__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import './Navbar.css';
@@ -15,7 +15,7 @@ function Navbar({ darkMode, toggleTheme }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [languageOpen, setLanguageOpen] = useState(false);
-
+  const langRef = useRef(null);
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
 
@@ -46,6 +46,16 @@ function Navbar({ darkMode, toggleTheme }) {
         setMenuOpen(false);
       }
     };
+    useEffect(() => {
+      const handleClickOutside = (e) => {
+        if (langRef.current && !langRef.current.contains(e.target)) {
+          setLanguageOpen(false);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
@@ -121,7 +131,7 @@ function Navbar({ darkMode, toggleTheme }) {
 
           {/* CTA */}
           <div className="navbar__actions">
-            <div className="navbar__language-dropdown">
+            <div className="navbar__language-dropdown" ref={langRef} >
               <button
                 className={`navbar__language-selector ${darkMode
                   ? 'navbar__language-selector-dark'
@@ -208,8 +218,8 @@ function Navbar({ darkMode, toggleTheme }) {
               <div className="navbar__language-dropdown">
                 <button
                   className={`navbar__language-selector ${darkMode
-                      ? 'navbar__language-selector-dark'
-                      : 'navbar__language-selector-light'
+                    ? 'navbar__language-selector-dark'
+                    : 'navbar__language-selector-light'
                     }`}
                   onClick={() => setLanguageOpen(!languageOpen)}
                 >
@@ -226,8 +236,8 @@ function Navbar({ darkMode, toggleTheme }) {
                 {languageOpen && (
                   <div
                     className={`navbar__language-menu ${darkMode
-                        ? 'navbar__language-menu-dark'
-                        : 'navbar__language-menu-light'
+                      ? 'navbar__language-menu-dark'
+                      : 'navbar__language-menu-light'
                       }`}
                   >
                     <button

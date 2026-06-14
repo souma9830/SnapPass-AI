@@ -17,7 +17,7 @@ function ChatbotWindow({ isOpen, onClose }) {
 
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
-
+    const chatRef = useRef(null);
     const messagesEndRef = useRef(null);
 
     // Auto scroll to latest message
@@ -26,6 +26,17 @@ function ChatbotWindow({ isOpen, onClose }) {
             behavior: "smooth"
         });
     }, [messages, isTyping]);
+    import React, { useState, useRef, useEffect } from 'react';
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (chatRef.current && !chatRef.current.contains(e.target)) {
+                setChatOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleSendMessage = (customMessage = null) => {
         const userMessage = customMessage || input;
@@ -66,7 +77,7 @@ function ChatbotWindow({ isOpen, onClose }) {
     };
 
     return (
-        <div className={`chatbot-window ${isOpen ? "show-chat" : ""}`}>
+        <div className={`chatbot-window ${isOpen ? "show-chat" : ""}`} ref={chatRef}>
 
             {/* Header */}
             <div className="chatbot-header">

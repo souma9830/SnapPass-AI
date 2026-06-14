@@ -4,6 +4,7 @@ import QuantityInput from '../components/QuantityInput';
 import PrintButton from '../components/PrintButton';
 import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
+import ProcessingHistoryTimeline from '../components/ProcessingHistoryTimeline';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
 import { calculatePasswordStrength } from '../utils/passwordStrength';
@@ -279,21 +280,24 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
             </button>
 
             <Link
-              to="/editor"
-              className={`btn btn-ghost print-page__back-btn ${darkMode ? 'print-page__back-btn-dark' : ''}`}
-            >
-              <span className="print-page__back-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                  <path d="M15 6l-6 6 6 6" />
-                </svg>
-              </span>
-              {t.backToEditor}
-            </Link>
-          </motion.aside>
-        </div>
-      </div>
-    </div>
-  );
+  to="/editor"
+  className={`btn btn-ghost print-page__back-btn ${darkMode ? 'print-page__back-btn-dark' : ''}`}
+>
+  <span className="print-page__back-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <path d="M15 6l-6 6 6 6" />
+    </svg>
+  </span>
+  {t.backToEditor}
+</Link>
+
+<ProcessingHistoryTimeline />
+
+</motion.aside>
+</div>
+</div>
+</div>
+);
 }
 
 export default PrintPreviewPage;

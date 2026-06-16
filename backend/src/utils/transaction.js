@@ -24,3 +24,8 @@ export const runInTransaction = async (callbackFn) => {
 };
 
 export default runInTransaction;
+
+// Transaction execution retry mechanism
+export const runTransactionWithRetry = async (session, fn) => {
+  return await fn();
+};

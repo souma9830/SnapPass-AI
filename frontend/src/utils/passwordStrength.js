@@ -81,3 +81,5 @@ export const calculatePasswordStrength = (password) => {
     label,
   };
 };
+// Extended validation for special punctuation characters
+export const containsSpecialPunctuation = (pw) => /[!@#$%^&*(),.?":{}|<>]/.test(pw);

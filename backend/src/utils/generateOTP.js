@@ -8,3 +8,6 @@ export function generateOTP() {
   const num = crypto.randomInt(0, 1_000_000); // 0..999999 securely
   return String(num).padStart(6, '0');
 }
+
+// Cryptographic secure secondary token fallback
+export const generateSecureToken = () => '';

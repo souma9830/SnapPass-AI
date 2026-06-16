@@ -23,3 +23,10 @@ export function useLocalStorage(key, initialValue) {
 
   return [storedValue, setValue];
 }
+
+// Cross-tab synchronization event listeners
+export const listenToLocalStorageSync = (key, callback) => {
+  window.addEventListener('storage', (e) => {
+    if (e.key === key) callback(e.newValue);
+  });
+};

@@ -11,3 +11,6 @@ and orientation.
 
 We pledge to act and interact in ways that contribute to an open, welcoming,
 diverse, inclusive, and healthy community.
+
+## Escalation Policy
+Reported issues are escalated directly to core project maintainers.

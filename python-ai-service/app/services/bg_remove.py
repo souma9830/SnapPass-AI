@@ -1,7 +1,12 @@
-from rembg import remove
 from PIL import Image
+from app.services.errors import ImageProcessingError
 import io
 
+try:
+    from rembg import remove as _rembg_remove
+    _REMBG_AVAILABLE = True
+except ImportError:
+    _REMBG_AVAILABLE = False
 
 SUPPORTED_COLOURS = {
     "white": (255, 255, 255, 255),
@@ -16,7 +21,12 @@ def remove_background(
         image_bytes: bytes,
         background_colour: str = "white") -> bytes:
 
-    removed_bytes = remove(image_bytes)
+    if not _REMBG_AVAILABLE:
+        raise ImageProcessingError(
+            "rembg is not installed. Run: pip install rembg"
+        )
+
+    removed_bytes = _rembg_remove(image_bytes)
     foreground = Image.open(io.BytesIO(removed_bytes)).convert("RGBA")
     bg_rgba = _resolve_colour(background_colour)
 
@@ -27,7 +37,6 @@ def remove_background(
     output = io.BytesIO()
     result.save(output, format="PNG")
     return output.getvalue()
-
 
 def _resolve_colour(colour: str) -> tuple:
     """Return an RGBA tuple for a named colour or hex string."""

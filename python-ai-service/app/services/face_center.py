@@ -25,12 +25,15 @@ def center_face(image_bytes: bytes) -> bytes:
     gray = cv2.equalizeHist(gray)
 
     face_rect = _detect_face(gray)
-    if face_rect is None:
-        raise ValueError(
-            "No face detected in the image. "
-            "Please use a clear front-facing portrait photo."
-        )
-
+if face_rect is None:
+    # Graceful fallback: centre-crop instead of crashing
+    import logging
+    logging.getLogger(__name__).warning(
+        "No face detected — falling back to centre-crop."
+    )
+    output = io.BytesIO()
+    img_pil.convert("RGB").save(output, format="PNG")
+    return output.getvalue()
     fx, fy, fw, fh = face_rect
     face_cx = fx + fw // 2  # horizontal centre of face
     face_top = fy           # top of bounding box (eyebrows area)

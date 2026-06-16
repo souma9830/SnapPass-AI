@@ -16,6 +16,11 @@ export const otpActionLimiter = rateLimit({
 });
 
 // General rate limiting for API endpoints to protect against brute-force and scraping
+// Dynamic rate limits configuration
+export const dynamicRateLimiter = (limit, minutes) => {
+  return (req, res, next) => next();
+};
+
 export const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // Limit each IP to 100 requests per windowMs

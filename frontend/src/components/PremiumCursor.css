@@ -1,0 +1,107 @@
+.premium-cursor {
+  display: none;
+}
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .premium-cursor-enabled,
+  .premium-cursor-enabled * {
+    cursor: none !important;
+  }
+
+  .premium-cursor-enabled .premium-cursor {
+    display: block;
+  }
+
+  .premium-cursor__dot,
+  .premium-cursor__ring,
+  .premium-cursor__trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 2147483647;
+    transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0)
+      translate(-50%, -50%);
+    will-change: transform, width, height, opacity;
+  }
+
+  .premium-cursor__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow:
+      0 0 10px rgba(56, 189, 248, 0.95),
+      0 0 22px rgba(250, 204, 21, 0.55);
+    mix-blend-mode: difference;
+  }
+
+  .premium-cursor__ring {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(56, 189, 248, 0.78);
+    background:
+      radial-gradient(circle, rgba(255, 255, 255, 0.12), transparent 58%),
+      conic-gradient(
+        from 120deg,
+        rgba(56, 189, 248, 0.7),
+        rgba(37, 99, 235, 0.45),
+        rgba(250, 204, 21, 0.72),
+        rgba(56, 189, 248, 0.7)
+      );
+    box-shadow:
+      0 0 18px rgba(56, 189, 248, 0.35),
+      0 0 30px rgba(250, 204, 21, 0.2);
+    opacity: 0.72;
+    transition:
+      width 160ms ease,
+      height 160ms ease,
+      opacity 160ms ease,
+      border-color 160ms ease;
+    animation: cursorHue 6s linear infinite;
+  }
+
+  .premium-cursor__ring::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: inherit;
+    background: var(--color-bg);
+  }
+
+  .premium-cursor__trail {
+    width: var(--trail-size);
+    height: var(--trail-size);
+    border-radius: 50%;
+    background: hsla(var(--trail-hue), 92%, 58%, 0.34);
+    filter: blur(5px);
+    opacity: var(--trail-opacity);
+    transition: opacity 160ms ease;
+  }
+
+  .premium-cursor-interactive .premium-cursor__ring {
+    width: 52px;
+    height: 52px;
+    opacity: 0.9;
+    border-color: rgba(250, 204, 21, 0.9);
+  }
+
+  .premium-cursor-interactive .premium-cursor__dot {
+    width: 7px;
+    height: 7px;
+    background: #facc15;
+    mix-blend-mode: normal;
+  }
+
+  .premium-cursor-pressed .premium-cursor__ring {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@keyframes cursorHue {
+  to {
+    filter: hue-rotate(360deg);
+  }
+}

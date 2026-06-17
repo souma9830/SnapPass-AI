@@ -140,12 +140,7 @@
   padding-bottom: 2.5rem;
   margin-bottom: 2.5rem;
 
-  border-bottom:
-    1px solid color-mix(
-      in srgb,
-      var(--color-border) 55%,
-      transparent
-    );
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28);
 }
 
 .footer__trust-item {

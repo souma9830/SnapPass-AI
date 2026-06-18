@@ -12,8 +12,10 @@ const sendSuccess = (res, statusCode, message, data) => {
 export const getTestimonials = catchAsync(async (req, res) => {
   const clientFingerprint =
     req.query.fingerprint || req.headers["x-client-fingerprint"] || null;
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 20;
 
-  const data = await testimonialService.getApprovedTestimonials(clientFingerprint);
+  const data = await testimonialService.getApprovedTestimonials(clientFingerprint, page, limit);
 
   sendSuccess(res, 200, "Testimonials fetched successfully", data);
 });

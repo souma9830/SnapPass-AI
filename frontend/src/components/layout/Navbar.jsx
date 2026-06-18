@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import './Navbar.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
-
 /**
  * Navbar — fixed top navigation bar.
  * Shows logo, main nav links, and a mobile hamburger toggle.
@@ -18,6 +17,7 @@ function Navbar({ darkMode, toggleTheme }) {
 
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -173,13 +173,14 @@ function Navbar({ darkMode, toggleTheme }) {
             >
               {darkMode ? <Sun className="text-amber-500" /> : <Moon />}
             </button>
-
+            {!location.pathname.startsWith('/upload') && (
             <Link
               to="/upload"
               className={`navbar__cta hover:no-underline ${darkMode ? 'navbar__cta-dark' : 'navbar__cta-light'}`}
-            >
+             >
               {t.getStarted}
             </Link>
+              )}
 
             {/* Mobile hamburger */}
             <button
@@ -194,13 +195,12 @@ function Navbar({ darkMode, toggleTheme }) {
         </div>
 
         {/* Mobile Drawer */}
-        <nav
-          className={`navbar__mobile-menu ${menuOpen ? 'active' : ''} 
-            ${darkMode
-              ? 'navbar__mobile-menu-dark'
-              : 'navbar__mobile-menu-light'
-            }
-            `}
+       <nav
+          className={[
+            'navbar__mobile-menu',
+            menuOpen ? 'active' : '',
+            darkMode ? 'navbar__mobile-menu-dark' : 'navbar__mobile-menu-light',
+          ].filter(Boolean).join(' ')}
           aria-label="Mobile navigation"
         >
           <div className="navbar__mobile-language">

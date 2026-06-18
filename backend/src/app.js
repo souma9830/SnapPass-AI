@@ -21,6 +21,7 @@ import errorMiddleware from './middleware/error.middleware.js';
 import { apiLimiter } from './middleware/rateLimit.middleware.js';
 import logger from './utils/logger.js';
 import { sanitizeInput } from './middleware/sanitize.middleware.js';
+import { requestTimeout } from './middleware/timeout.middleware.js';
 
 const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);
@@ -29,6 +30,9 @@ const app = express();
 
 // Enable trust proxy for rate limiting behind reverse proxies
 app.set('trust proxy', 1);
+
+// Apply request timeout (e.g. 15 seconds) to prevent hanging requests
+app.use(requestTimeout(15000));
 
 // Apply rate limiter to all API routes
 app.use(requestId);

@@ -118,7 +118,8 @@ function Footer({ darkMode }) {
         <div className="footer__top">
           {/* BRAND */}
           <div className="footer__brand">
-            <span
+            <Link
+              to="/"
               className={`footer__logo ${darkMode ? 'footer__logo-dark' : ''}`}
             >
               <span
@@ -129,7 +130,7 @@ function Footer({ darkMode }) {
                 📷
               </span>
               SnapPass AI
-            </span>
+            </Link>
 
             <p
               className={`footer__tagline ${darkMode ? 'footer__tagline-dark' : ''

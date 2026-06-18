@@ -12,6 +12,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { config } from "../config/config.js";
+import Upload from "../models/upload.model.js";
 
 const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);
@@ -56,7 +57,32 @@ export const processImage = async (req, res, next) => {
       return res.status(403).json({ success: false, message: "Access denied: Path traversal detected." });
     }
 
-    // 5. Async existence, symlink protection & regular file enforcement (non-blocking TOCTOU prevention)
+    // 5. Ensure local file exists (retrieve from Cloudinary if missing)
+    let exists = false;
+    try {
+      await fs.promises.access(filePath);
+      exists = true;
+    } catch (err) {}
+
+    if (!exists) {
+      const uploadDoc = await Upload.findOne({ filename });
+      if (!uploadDoc) {
+        return res.status(404).json({ success: false, message: "File not found on server." });
+      }
+      try {
+        const response = await axios.get(uploadDoc.fileUrl, { responseType: "stream" });
+        const writer = fs.createWriteStream(filePath);
+        response.data.pipe(writer);
+        await new Promise((resolve, reject) => {
+          writer.on("finish", resolve);
+          writer.on("error", reject);
+        });
+      } catch (downloadErr) {
+        return res.status(500).json({ success: false, message: "Failed to retrieve file from storage." });
+      }
+    }
+
+    // 6. Async existence, symlink protection & regular file enforcement
     try {
       const stats = await fs.promises.lstat(filePath);
       if (stats.isSymbolicLink()) {
@@ -72,7 +98,7 @@ export const processImage = async (req, res, next) => {
       throw err;
     }
 
-    // 6. Authorization checks placeholder
+    // 7. Authorization checks placeholder
     if (req.user && req.user.id) {
       // Future scope: ensure req.user.id has ownership of this uploaded file resource
     }
@@ -127,12 +153,9 @@ export const processImage = async (req, res, next) => {
       responseType: "arraybuffer",
     });
 
-    // TODO: Save processed image to disk and return URL
-    // For now, stream the AI response back directly
     res.set("Content-Type", "image/png");
     res.send(Buffer.from(aiResponse.data));
   } catch (error) {
-    // Graceful fallback if AI service is unavailable
     if (error.code === "ECONNREFUSED") {
       return res.status(503).json({
         success: false,
@@ -150,7 +173,6 @@ export const processImage = async (req, res, next) => {
 export const getPreview = async (req, res, next) => {
   try {
     const { filename } = req.params;
-    // TODO: Implement preview retrieval from processed images directory
     res.json({
       success: true,
       data: { filename, previewUrl: `/uploads/processed/${filename}` },

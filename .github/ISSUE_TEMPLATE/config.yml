@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Community Discussions
+    url: https://github.com/souma9830/SnapPass-AI/discussions
+    about: Ask questions, share ideas, and connect with the community.
+  - name: 🛡️ Security Vulnerability Report
+    url: https://github.com/souma9830/SnapPass-AI/security/policy
+    about: Please report security vulnerabilities privately according to our security policy.

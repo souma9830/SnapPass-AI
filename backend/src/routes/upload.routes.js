@@ -8,10 +8,12 @@ import express from "express";
 import { uploadPhoto, getUploadedPhoto } from "../controllers/upload.controller.js";
 import { uploadMiddleware } from "../middleware/upload.middleware.js";
 import authMiddleware from "../middleware/auth.middleware.js";
+import validate from "../middleware/validate.middleware.js";
+import { getUploadedPhotoValidation } from "../validation/upload.validation.js";
 
 const router = express.Router();
 
 router.post("/", uploadMiddleware.single("photo"), uploadPhoto);
-router.get("/:fileId", authMiddleware, getUploadedPhoto);
+router.get("/:fileId", authMiddleware, getUploadedPhotoValidation, validate, getUploadedPhoto);
 
 export default router;

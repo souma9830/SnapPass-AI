@@ -9,7 +9,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.15.0",
+    "axios": "^1.18.0",
     "driver.js": "^1.4.0",
     "framer-motion": "^12.39.0",
     "fuse.js": "^7.3.0",

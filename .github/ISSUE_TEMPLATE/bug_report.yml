@@ -1,0 +1,63 @@
+name: "🐛 Bug Report"
+description: "Report a bug to help improve SnapPass AI"
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description of the Bug"
+      description: "A clear and concise description of what the bug is."
+      placeholder: "e.g., Uploading WebP files causes a runtime crash in the frontend editor."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Steps to reproduce the behavior. Please provide code, URLs, or command lines if relevant."
+      placeholder: |
+        1. Go to the Upload page.
+        2. Drag and drop a WebP format file.
+        3. Observe the editor fail to load or error in console.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behavior"
+      description: "A clear and concise description of what you expected to happen."
+      placeholder: "e.g., The system should either accept the WebP or show a clear validation error toast."
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: "Environment Information"
+      description: "Where did this bug happen?"
+      options:
+        - "Local Dev Environment (npm start / npm run dev)"
+        - "Docker Compose Setup"
+        - "Production (Vercel / Cloud deployment)"
+        - "Other"
+    validations:
+      required: true
+  - type: textarea
+    id: browser
+    attributes:
+      label: "Browser & OS Info"
+      description: "Please specify the browser (Chrome, Firefox, Safari) and OS version."
+      placeholder: "Chrome 120 on Windows 11"
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "Screenshots/Logs"
+      description: "Drag and drop images or paste console error logs here."
+    validations:
+      required: false

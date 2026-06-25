@@ -17,9 +17,9 @@ const BACKGROUNDS = [
   { id: 'light-red',  label: 'Light Red',  hex: '#fecaca' },
 ];
 
-function BackgroundSelector({ selected = 'white', onChange }) {
+function BackgroundSelector({ selected = 'white', onChange, darkMode }) {
   return (
-    <div className="bg-selector">
+    <div className={`bg-selector ${darkMode ? 'bg-selector-dark' : ''}`}>
       <p className="bg-selector__heading">Background Colour</p>
       <div className="bg-selector__list" role="radiogroup" aria-label="Background colour">
         {BACKGROUNDS.map(({ id, label, hex }) => (

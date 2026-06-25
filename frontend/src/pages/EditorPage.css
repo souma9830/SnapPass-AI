@@ -117,10 +117,10 @@
 }
 
 .editor-page__process-btn-dark {
-  background: linear-gradient(135deg, #939e00, #595f00);
+  background: linear-gradient(135deg, #e8c500da, #FFC107);
   color: #ffffff;
   border: none;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2), inset 0 1px 1px rgba(247, 246, 246, 0.25);
 }
 
 .editor-page__process-btn:hover {
@@ -132,7 +132,7 @@
 .editor-page__process-btn-dark:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, #4c5500, #272c00);
+  background: linear-gradient(135deg, #FFC107, #272c00);
 }
 
 /* bug-> changes the width ratio for the button */
@@ -179,7 +179,63 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/*Dark Mode Styles */
+.editor-toggle-dark .editor-page__preview {
+  background: linear-gradient(145deg, rgba(15, 15, 15, 0.95), rgba(20, 20, 20, 0.90)) !important;
+  border-color: #2d2d2d !important;
+  box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.05) !important;
+}
 
+.editor-toggle-dark .editor-page__controls {
+  background: linear-gradient(145deg, rgba(15, 15, 15, 0.95), rgba(20, 20, 20, 0.90)) !important;
+  border-color: #2d2d2d !important;
+  box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.05) !important;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.editor-toggle-dark .editor-page__controls-dark .editor-info-row {
+  color: var(--color-text-light);
+  background-color: transparent !important;
+}
+
+.editor-toggle-dark .editor-page__controls-dark .editor-info-label {
+  color: var(--color-text-muted);
+  background-color: transparent !important;
+}
+
+.editor-toggle-dark .editor-page__controls-dark .editor-info-value {
+  color: var(--color-text-light);
+  background-color: transparent !important;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-dark, #2d2d2d);
+}
+
+.editor-toggle-dark .editor-page__controls-dark .divider {
+  border-top-color: var(--color-border-dark, #2d2d2d);
+}
+
+.editor-toggle-dark .editor-page__controls-dark .btn {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-border-dark, #2d2d2d);
+}
+
+.editor-toggle-dark .editor-page__controls-dark .btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-border-dark, #2d2d2d);
+}
+
+.editor-toggle-dark .editor-page__controls-dark input,
+.editor-toggle-dark .editor-page__controls-dark select {
+  background-color: rgba(30, 30, 30, 0.9) !important;
+  color: var(--color-text-light) !important;
+  border-color: var(--color-border-dark, #2d2d2d) !important;
+}
+
+.editor-toggle-dark .editor-page__controls-dark input::placeholder {
+  color: var(--color-text-muted);
+}
 @media (max-width: 992px) {
   .editor-page__layout {
     grid-template-columns: 1fr 300px;

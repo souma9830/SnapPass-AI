@@ -47,3 +47,21 @@
   border: 1px solid var(--color-border);
   flex-shrink: 0;
 }
+/*Dark Mode Styles*/
+.bg-selector-dark .bg-selector__heading {
+  color: var(--color-text-light);
+}
+
+.bg-selector-dark .bg-selector__item {
+  border-color: var(--color-border-dark, #2d2d2d);
+  background-color: rgba(30, 30, 30, 0.5);
+}
+
+.bg-selector-dark .bg-selector__item--active {
+  border-color: #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.bg-selector-dark .bg-selector__label {
+  color: var(--color-text-light);
+}

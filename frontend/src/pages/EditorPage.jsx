@@ -155,7 +155,7 @@ function EditorPage({ darkMode, toggleTheme }) {
           {/* Preview panel */}
 
           <motion.section
-            className="editor-page__preview"
+            className={`editor-page__preview ${darkMode ? 'editor-page__preview-dark' : ''}`}
             aria-label="Photo preview"
             variants={fadeUpVariant}
             initial="hidden"
@@ -167,12 +167,13 @@ function EditorPage({ darkMode, toggleTheme }) {
               originalUrl={photoData.localUrl}
               processedUrl={null}
               isProcessing={isProcessing}
+              darkMode={darkMode}
             />
           </motion.section>
 
           {/* Controls panel */}
           <motion.aside
-            className="editor-page__controls card"
+            className={`editor-page__controls card ${darkMode ? 'editor-page__controls-dark' : ''}`}
             aria-label="Photo settings"
             variants={fadeUpVariant}
             initial="hidden"
@@ -183,6 +184,7 @@ function EditorPage({ darkMode, toggleTheme }) {
             <BackgroundSelector
               selected={background}
               onChange={setBackground}
+              darkMode={darkMode}
             />
 
             <hr className="divider" />

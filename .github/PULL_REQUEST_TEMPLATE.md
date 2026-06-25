@@ -1,28 +1,28 @@
-## Description
+## 📷 Pull Request Description
 
-Please include a summary of the changes and the related issue.
+### Related Issue
+Closes #
 
-Closes # (issue number)
+### Summary
+Provide a brief summary of the changes proposed in this Pull Request, including the problem and implementation strategy.
 
-## Type of Change
+### Changes Made
+-
+-
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update (non-breaking chore/doc change)
+### 🛠️ Verification & Testing
+Describe how these changes were tested:
+- **Local Testing:** Done / Not Done (Detail any specific manual tests run)
+- **Responsive Layout Verification:** Checked on Mobile / Desktop / Tablet
+- **Accessibility Verification:** Proper HTML semantics & Keyboard indicators verified
+- **Build / Lint Verification:** Verified build passes locally without warnings or errors
 
-## How Has This Been Tested?
+### 📸 Visual Evidence (if applicable)
+Please attach screenshots or screen recordings showing UI/UX changes before and after.
 
-Please describe the tests that you ran to verify your changes.
-
-- [ ] Manually tested local server
-- [ ] Frontend build verification
-- [ ] Unit/Integration tests added or updated
-
-## Checklist
-
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
+### 📝 Checklist
+- [ ] My code follows the code style guidelines of this project.
+- [ ] I have performed a self-review of my own changes.
+- [ ] My changes generate no new warnings or console errors.
+- [ ] I have verified responsiveness and accessibility criteria.
+- [ ] No unrelated modifications are included in this PR.

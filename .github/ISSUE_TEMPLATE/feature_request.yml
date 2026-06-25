@@ -1,0 +1,40 @@
+name: "💡 Feature Request"
+description: "Suggest an idea or improvement for SnapPass AI"
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We are excited to hear your ideas for improving SnapPass AI!
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Is your feature request related to a problem?"
+      description: "A clear and concise description of what the problem is. E.g., 'I am always frustrated when I cannot download photos in bulk...'"
+      placeholder: "Describe the frustration or use case here."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Describe the solution you'd like"
+      description: "A clear and concise description of what you want to happen."
+      placeholder: "E.g., Add a download zip button that packages all generated passport sheets."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Describe alternatives you've considered"
+      description: "A clear and concise description of any alternative solutions or features you've considered."
+      placeholder: "E.g., Manually saving each image or using a PDF printer."
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: "Additional Context"
+      description: "Any other context, sketches, mockups, or screenshots."
+    validations:
+      required: false

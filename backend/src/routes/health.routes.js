@@ -6,9 +6,22 @@ import { config } from '../config/config.js';
 const router = express.Router();
 
 router.get('/diagnostics', async (req, res) => {
+  // Compute event loop lag
+  const start = Date.now();
+  await new Promise((resolve) => setImmediate(resolve));
+  const eventLoopLag = Date.now() - start;
+
   const diagnostics = {
     timestamp: new Date(),
     uptime: process.uptime(),
+    process: {
+      pid: process.pid,
+      memoryUsage: process.memoryUsage(),
+      cpuUsage: process.cpuUsage(),
+      activeHandles: process._getActiveHandles ? process._getActiveHandles().length : 0,
+      activeRequests: process._getActiveRequests ? process._getActiveRequests().length : 0,
+      eventLoopLagMs: eventLoopLag
+    },
     services: {
       mongodb: 'unknown',
       pythonService: 'unknown'

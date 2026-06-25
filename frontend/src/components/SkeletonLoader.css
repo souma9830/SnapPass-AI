@@ -83,3 +83,28 @@
 .skeleton-text.short {
   width: 40%;
 }
+
+/* Editor Skeleton style */
+.skeleton-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  gap: 1rem;
+}
+
+.skeleton-editor-inner {
+  width: 180px;
+  height: 220px;
+  border-radius: 8px;
+}
+
+.skeleton-editor-subtext {
+  width: 120px;
+  height: 14px;
+  border-radius: 4px;
+}
+

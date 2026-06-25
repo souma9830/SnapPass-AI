@@ -4,6 +4,13 @@ import "./SkeletonLoader.css";
 const SkeletonLoader = ({ type = "text", count = 1 }) => {
   const renderSkeleton = () => {
     switch (type) {
+      case "editor":
+        return (
+          <div className="skeleton-editor" key={Math.random()}>
+            <div className="skeleton-editor-inner loading-shimmer" />
+            <div className="skeleton-editor-subtext loading-shimmer" />
+          </div>
+        );
       case "card":
         return (
           <div className="skeleton-card" key={Math.random()}>

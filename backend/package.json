@@ -40,8 +40,8 @@
   },
   "type": "module",
   "jest": {
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(file-type|token-types|strtok3|peek-readable)/)"
-    ]
+    "moduleNameMapper": {
+      "^file-type$": "<rootDir>/__mocks__/file-type.cjs"
+    }
   }
 }

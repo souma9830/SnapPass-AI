@@ -10,13 +10,21 @@
   box-sizing: border-box;
 }
 
-
 .editor-toggle-dark {
   width: 100%;
-  height: 100vh;
+  /* Allow wrapper to grow with content to prevent footer overlap */
+  min-height: 100vh;
   background:
-    radial-gradient(1400px 700px at 10% 10%, rgba(255, 233, 77, 0.32), transparent 35%),
-    radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
+    radial-gradient(
+      1400px 700px at 10% 10%,
+      rgba(255, 233, 77, 0.32),
+      transparent 35%
+    ),
+    radial-gradient(
+      1000px 600px at 90% 10%,
+      rgba(255, 191, 0, 0.22),
+      transparent 40%
+    ),
     linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
 }
 
@@ -31,35 +39,56 @@
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: var(--space-xl, 2rem);
-  align-items: start;
+  /* Let grid items stretch so controls panel matches preview height */
+  align-items: stretch;
 }
 
 .editor-page__preview {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+  /* Allow preview to participate in grid stretching */
+  height: 100%;
+  min-height: 0;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.6)
+  );
+
   border: 1px solid var(--color-border, rgba(255, 255, 255, 1));
   border-radius: 24px;
   padding: var(--space-lg, 1.25rem);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 10px 40px -8px rgba(15, 23, 42, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 10px 40px -8px rgba(15, 23, 42, 0.05),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
 }
-
 
 .editor-page__controls {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm, 0.5rem);
+  /* Allow controls to match preview height in grid */
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
   position: sticky;
+
   top: calc(var(--navbar-height, 60px) + var(--space-lg, 1.5rem));
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75));
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.75)
+  );
   border: 1px solid var(--color-border, rgba(255, 255, 255, 1));
   border-radius: 24px;
   padding: var(--space-lg, 1rem);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 10px 40px -8px rgba(15, 23, 42, 0.06), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 10px 40px -8px rgba(15, 23, 42, 0.06),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9);
 }
 
 .editor-page__controls hr {
@@ -111,7 +140,9 @@
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: #ffffff;
   border: none;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 4px 14px rgba(37, 99, 235, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25);
   cursor: pointer;
   margin-top: 0.25rem;
 }
@@ -120,18 +151,24 @@
   background: linear-gradient(135deg, #939e00, #595f00);
   color: #ffffff;
   border: none;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 4px 14px rgba(37, 99, 235, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
 .editor-page__process-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 6px 20px rgba(37, 99, 235, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #3b82f6, #1e40af);
 }
 
 .editor-page__process-btn-dark:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 6px 20px rgba(37, 99, 235, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #4c5500, #272c00);
 }
 
@@ -168,7 +205,6 @@
   justify-content: center;
   margin-right: 6px;
 }
-
 
 .editor-page__btn-icon svg {
   width: 14px;

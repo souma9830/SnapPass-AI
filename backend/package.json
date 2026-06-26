@@ -41,7 +41,8 @@
   "type": "module",
   "jest": {
     "moduleNameMapper": {
-      "^file-type$": "<rootDir>/__mocks__/file-type.cjs"
+      "^file-type$": "<rootDir>/__mocks__/file-type.cjs",
+      "^resend$": "<rootDir>/__mocks__/resend.cjs"
     }
   }
 }

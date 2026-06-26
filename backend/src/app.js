@@ -19,7 +19,6 @@ import testimonialRoutes from './routes/testimonial.routes.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
 import { apiLimiter } from './middleware/rateLimit.middleware.js';
-import logger from './utils/logger.js';
 import { sanitizeInput } from './middleware/sanitize.middleware.js';
 
 const localFilename = fileURLToPath(import.meta.url);

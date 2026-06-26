@@ -38,5 +38,10 @@
     "nodemon": "^3.0.1",
     "supertest": "^6.3.4"
   },
-  "type": "module"
+  "type": "module",
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(file-type|token-types|strtok3|peek-readable)/)"
+    ]
+  }
 }

@@ -13,7 +13,7 @@ import { processPhoto } from '../services/photoService';
 function useImageProcessor() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processedUrl, setProcessedUrl] = useState(null);
-  const [error, setError]               = useState(null);
+  const [error, setError] = useState(null);
   const processedUrlRef = useRef(null);
 
   const processImage = useCallback(async ({ filename, backgroundColour, photoSizePreset, attire }) => {
@@ -26,6 +26,24 @@ function useImageProcessor() {
       }
 
       const blob = await processPhoto({ filename, backgroundColour, photoSizePreset, attire });
+
+      // `processPhoto` uses axios { responseType: 'blob' }.
+      // If the backend returns JSON errors, it may still arrive as a Blob.
+      // Detect that case and surface a meaningful message.
+      const contentType = blob?.type || '';
+      const looksLikeJson = contentType.includes('application/json');
+
+      if (looksLikeJson) {
+        const text = await blob.text();
+        try {
+          const parsed = JSON.parse(text);
+          const message = parsed?.message || parsed?.error?.message || 'Processing failed.';
+          throw new Error(message);
+        } catch {
+          throw new Error(text || 'Processing failed.');
+        }
+      }
+
       const url = URL.createObjectURL(blob);
       processedUrlRef.current = url;
       setProcessedUrl(url);
@@ -41,6 +59,7 @@ function useImageProcessor() {
       setIsProcessing(false);
     }
   }, []);
+
 
   const reset = useCallback(() => {
     if (processedUrlRef.current) {

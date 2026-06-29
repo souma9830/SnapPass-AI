@@ -27,10 +27,10 @@ export const uploadPhoto = async (file) => {
  * @param {{ filename: string, backgroundColour: string, photoSizePreset: string }}
  * @returns {Promise<Blob>}
  */
-export const processPhoto = async ({ filename, backgroundColour, photoSizePreset }) => {
+export const processPhoto = async ({ filename, backgroundColour, photoSizePreset, attire }) => {
   const { data } = await api.post(
     '/process',
-    { filename, backgroundColour, photoSizePreset },
+    { filename, backgroundColour, photoSizePreset, attire },
     { responseType: 'blob' }
   );
   return data;

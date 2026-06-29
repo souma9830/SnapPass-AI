@@ -16,7 +16,7 @@ function useImageProcessor() {
   const [error, setError]               = useState(null);
   const processedUrlRef = useRef(null);
 
-  const processImage = useCallback(async ({ filename, backgroundColour, photoSizePreset }) => {
+  const processImage = useCallback(async ({ filename, backgroundColour, photoSizePreset, attire }) => {
     setIsProcessing(true);
     setError(null);
 
@@ -25,7 +25,7 @@ function useImageProcessor() {
         URL.revokeObjectURL(processedUrlRef.current);
       }
 
-      const blob = await processPhoto({ filename, backgroundColour, photoSizePreset });
+      const blob = await processPhoto({ filename, backgroundColour, photoSizePreset, attire });
       const url = URL.createObjectURL(blob);
       processedUrlRef.current = url;
       setProcessedUrl(url);

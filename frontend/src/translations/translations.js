@@ -371,6 +371,12 @@ export const translations = {
     reviewCommentMin: 'Comment must be at least 10 characters',
     reviewCommentMax: 'Comment must be less than 500 characters',
     cancel: 'Cancel',
+    formalAttire: 'Formal Attire (AI Swap)',
+    formalAttireSubtitle: 'Swap your outfit into a professional formal suit instantly.',
+    attireNone: 'None (Original)',
+    attireMaleSuit: "Men's Black Suit",
+    attireFemaleBlazer: "Women's Navy Blazer",
+    attireMaleBowtie: 'Black Suit & Bowtie',
   },
 
   hi: {
@@ -746,5 +752,11 @@ export const translations = {
     reviewCommentMin: 'टिप्पणी कम से कम 10 अक्षरों की होनी चाहिए',
     reviewCommentMax: 'टिप्पणी 500 अक्षरों से कम होनी चाहिए',
     cancel: 'रद्द करें',
+    formalAttire: 'औपचारिक पोशाक (AI स्वैप)',
+    formalAttireSubtitle: 'अपने पहनावे को तुरंत एक पेशेवर औपचारिक सूट में बदलें।',
+    attireNone: 'कोई नहीं (मूल)',
+    attireMaleSuit: 'पुरुषों का काला सूट',
+    attireFemaleBlazer: 'महिलाओं का नेवी ब्लेज़र',
+    attireMaleBowtie: 'काला सूट और बो टाई',
   },
 };

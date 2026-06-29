@@ -1,6 +1,7 @@
 from rembg import remove
 from PIL import Image
 import io
+from app.services.attire_swap import apply_attire_swap
 
 
 SUPPORTED_COLOURS = {
@@ -14,10 +15,15 @@ SUPPORTED_COLOURS = {
 
 def remove_background(
         image_bytes: bytes,
-        background_colour: str = "white") -> bytes:
+        background_colour: str = "white",
+        attire: str = "none") -> bytes:
 
     removed_bytes = remove(image_bytes)
     foreground = Image.open(io.BytesIO(removed_bytes)).convert("RGBA")
+    
+    if attire != "none":
+        foreground = apply_attire_swap(foreground, attire)
+        
     bg_rgba = _resolve_colour(background_colour)
 
     background = Image.new("RGBA", foreground.size, bg_rgba)

@@ -23,10 +23,15 @@ const localDirname = path.dirname(localFilename);
  */
 export const processImage = async (req, res, next) => {
   try {
-    const { filename, backgroundColour = "white", photoSizePreset = "35x45" } = req.body;
+    const { filename, backgroundColour = "white", photoSizePreset = "35x45", attire = "none" } = req.body;
 
     if (!filename) {
       return res.status(400).json({ success: false, message: "filename is required." });
+    }
+
+    const allowedAttires = ["none", "male_suit", "female_blazer", "male_bowtie"];
+    if (!allowedAttires.includes(attire)) {
+      return res.status(400).json({ success: false, message: "Invalid attire selection." });
     }
 
     // 1. Filename validation (alphanumeric, dots, hyphens, and underscores only)
@@ -105,6 +110,7 @@ export const processImage = async (req, res, next) => {
     form.append("image", fs.createReadStream(filePath));
     form.append("background_colour", backgroundColour);
     form.append("photo_size_preset", photoSizePreset);
+    form.append("attire", attire);
 
     const shouldCleanupLocal = Boolean(
       config.cloudinary?.cloudName &&

@@ -26,13 +26,14 @@ def remove_bg():
         return jsonify({"success": False, "message": "Empty filename."}), 400
 
     bg_colour = request.form.get("background_colour", "white")
+    attire = request.form.get("attire", "none")
 
     preset = request.form.get("preset") or request.form.get(
         "photo_size_preset") or "35x45"
 
     try:
         image_bytes = file.read()
-        result_bytes = remove_background(image_bytes, bg_colour)
+        result_bytes = remove_background(image_bytes, bg_colour, attire)
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)
 

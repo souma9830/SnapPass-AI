@@ -1,0 +1,171 @@
+.attire-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.attire-selector__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.attire-selector__title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.editor-toggle-dark .attire-selector__title {
+  color: #f1f5f9;
+}
+
+.attire-selector__subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.editor-toggle-dark .attire-selector__subtitle {
+  color: #94a3b8;
+}
+
+.attire-selector__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Attire Card Design */
+.attire-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  transition: all var(--transition-normal);
+  outline: none;
+}
+
+.editor-toggle-dark .attire-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* Hover Effect */
+.attire-card:hover {
+  border-color: var(--color-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-primary-light);
+}
+
+.editor-toggle-dark .attire-card:hover {
+  background: #1e293b;
+  border-color: #475569;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Active State */
+.attire-card--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-md);
+  transform: scale(1.02);
+}
+
+.editor-toggle-dark .attire-card--active {
+  border-color: #60a5fa;
+  background: rgba(96, 165, 250, 0.08);
+  box-shadow: 0 0 0 1px #60a5fa, 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Icon / Emoji Badge */
+.attire-card__icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 8px;
+  transition: transform var(--transition-fast);
+}
+
+.editor-toggle-dark .attire-card__icon {
+  background: rgba(241, 245, 249, 0.04);
+}
+
+.attire-card:hover .attire-card__icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Content Layout */
+.attire-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+}
+
+.attire-card__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  transition: color var(--transition-fast);
+}
+
+.editor-toggle-dark .attire-card__label {
+  color: #f1f5f9;
+}
+
+.attire-card--active .attire-card__label {
+  color: var(--color-primary-hover);
+}
+
+.editor-toggle-dark .attire-card--active .attire-card__label {
+  color: #60a5fa;
+}
+
+.attire-card__desc {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.editor-toggle-dark .attire-card__desc {
+  color: #94a3b8;
+}
+
+/* Selected Checkmark Badge */
+.attire-card__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  color: #fff;
+  padding: 4px;
+}
+
+.editor-toggle-dark .attire-card__badge {
+  background: #60a5fa;
+  color: #0f172a;
+}
+
+.attire-card__badge svg {
+  width: 12px;
+  height: 12px;
+}

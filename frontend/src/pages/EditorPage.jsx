@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PhotoPreview from '../components/PhotoPreview';
 import BackgroundSelector from '../components/BackgroundSelector';
 import SizeSelector from '../components/SizeSelector';
+import AttireSelector from '../components/AttireSelector';
 import { ButtonSpinner } from '../components/LoadingSpinner';
 import './EditorPage.css';
 import EmptyState from '../components/EmptyState';
@@ -42,6 +43,9 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [sizePreset, setSizePreset] = useState(
     savedSession?.sizePreset || '35x45'
   );
+  const [attire, setAttire] = useState(
+    savedSession?.attire || 'none'
+  );
   const { processImage, isProcessing, error } = useImageProcessor();
 
   useEffect(() => {
@@ -56,8 +60,9 @@ function EditorPage({ darkMode, toggleTheme }) {
       fileSize: photoData.fileSize,
       background,
       sizePreset,
+      attire,
     });
-  }, [photoData, background, sizePreset]);
+  }, [photoData, background, sizePreset, attire]);
 
   const iconMap = {
     refresh: (
@@ -95,6 +100,7 @@ function EditorPage({ darkMode, toggleTheme }) {
         filename: photoData.filename,
         backgroundColour: background,
         photoSizePreset: sizePreset,
+        attire,
       });
 
       navigate('/print-preview', {
@@ -103,6 +109,7 @@ function EditorPage({ darkMode, toggleTheme }) {
           filename: photoData.filename,
           background,
           sizePreset,
+          attire,
         },
       });
     } catch (err) {
@@ -188,6 +195,10 @@ function EditorPage({ darkMode, toggleTheme }) {
               selected={background}
               onChange={setBackground}
             />
+
+            <hr className="divider" />
+
+            <AttireSelector selected={attire} onChange={setAttire} />
 
             <hr className="divider" />
 

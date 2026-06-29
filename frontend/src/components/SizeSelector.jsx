@@ -11,7 +11,7 @@ import './SizeSelector.css';
  *                               defaults to built-in list
  */
 
-const DEFAULT_PRESETS = [
+export const DEFAULT_PRESETS = [
   { id: '35x45', label: 'Passport Size Photo — India / UK', width: 35, height: 45 },
   { id: '51x51', label: 'Passport Size Photo — USA Visa', width: 51, height: 51 },
   { id: '33x48', label: 'Passport Size Photo — Schengen Visa', width: 33, height: 48 },

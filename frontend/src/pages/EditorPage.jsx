@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PhotoPreview from '../components/PhotoPreview';
 import BackgroundSelector from '../components/BackgroundSelector';
-import SizeSelector from '../components/SizeSelector';
+import SizeSelector, { DEFAULT_PRESETS } from '../components/SizeSelector';
+import RecentlyUsedPresets from '../components/RecentlyUsedPresets';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import AttireSelector from '../components/AttireSelector';
 import { ButtonSpinner } from '../components/LoadingSpinner';
 import './EditorPage.css';
@@ -43,6 +45,11 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [background, setBackground] = useState(
     savedSession?.background || 'white'
   );
+  const [recentSizePresets, setRecentSizePresets] = useLocalStorage(
+    'snappass.recentSizePresets',
+    []
+  );
+
   const [sizePreset, setSizePreset] = useState(
     savedSession?.sizePreset || '35x45'
   );
@@ -100,6 +107,21 @@ function EditorPage({ darkMode, toggleTheme }) {
       attire,
     });
   }, [photoData, background, sizePreset, attire]);
+
+  const updateRecentSizePresets = (presetId) => {
+    setRecentSizePresets((prev) => {
+      const limit = 5;
+      const prevArr = Array.isArray(prev) ? prev : [];
+
+      const next = [presetId, ...prevArr.filter((id) => id !== presetId)];
+      return next.slice(0, limit);
+    });
+  };
+
+  const handleSelectPreset = (presetId) => {
+    setSizePreset(presetId);
+    updateRecentSizePresets(presetId);
+  };
 
   const iconMap = {
     refresh: (
@@ -260,7 +282,15 @@ function EditorPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <SizeSelector selected={sizePreset} onChange={setSizePreset} />
+            <SizeSelector selected={sizePreset} onChange={handleSelectPreset} />
+
+            <RecentlyUsedPresets
+              recentIds={recentSizePresets}
+              presets={DEFAULT_PRESETS}
+              onSelectPreset={handleSelectPreset}
+              limit={5}
+              title={t.recentlyUsedPresets || 'Recently used'}
+            />
 
             <hr className="divider" />
 

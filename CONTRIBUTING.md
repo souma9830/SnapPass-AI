@@ -464,6 +464,25 @@ def remove_background(image_path: str) -> Image:
 
 Looking for something specific to do? These are the most impactful areas where we need your help right now:
 
+### Frontend Testing
+
+The frontend uses **Vitest** with **React Testing Library** for unit and component tests:
+
+```bash
+cd frontend
+npm test            # Run tests in watch mode
+npm run test:run    # Run tests once (CI mode)
+npm run test:coverage  # Run tests with coverage report
+```
+
+All tests live in `frontend/src/test/__tests__/`. When contributing frontend code:
+
+1. Add tests for new utility functions in the matching file under `__tests__/`.
+2. For component tests, verify rendering, accessibility (role, aria attributes), and edge cases.
+3. Run `npm run test:run` before pushing to ensure no regressions.
+
+---
+
 ### 🔴 High Priority (Python AI Service - Stage 5)
 | Task | File | Description |
 |------|------|-------------|

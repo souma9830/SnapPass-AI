@@ -1,0 +1,36 @@
+name: Publish Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      discussions: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Log release event
+        run: |
+          echo "Release ${{ github.event.release.tag_name }} published"
+          echo "Release name: ${{ github.event.release.name }}"
+
+      - name: Generate release assets checksums
+        run: |
+          echo "## Release Assets" >> $GITHUB_STEP_SUMMARY
+          echo "Release ${{ github.event.release.tag_name }} has been published successfully." >> $GITHUB_STEP_SUMMARY
+          echo "### What's Next" >> $GITHUB_STEP_SUMMARY
+          echo "- Docker images can be built from this tag" >> $GITHUB_STEP_SUMMARY
+          echo "- Deployment pipelines can reference \`${{ github.event.release.tag_name }}\`" >> $GITHUB_STEP_SUMMARY

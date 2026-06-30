@@ -11,6 +11,7 @@ We take security seriously. If you discover a security vulnerability in **SnapPa
 
 ### Preferred Contact Method
 - Email: **security@snapass.ai** (replace with actual address)
+- Open a **draft security advisory**: https://github.com/souma9830/SnapPass-AI/security/advisories/new
 - PGP key (optional for encrypted communication):
 ```
 -----BEGIN PGP PUBLIC KEY BLOCK-----

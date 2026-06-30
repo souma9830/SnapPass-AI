@@ -42,24 +42,44 @@ app.use('/api', apiLimiter);
 app.disable("x-powered-by");
 
 app.use(helmet({
-    hsts: {
-        maxAge: 31536000,
-        includeSubDomains: true,
-        preload: true
-    },
     contentSecurityPolicy: {
+        useDefaults: true,
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com"],
-            connectSrc: ["'self'", config.aiServiceUrl]
-        }
+            connectSrc: ["'self'", config.aiServiceUrl],
+            frameAncestors: ["'none'"],
+            formAction: ["'self'"],
+            upgradeInsecureRequests: [],
+        },
     },
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    dnsPrefetchControl: { allow: false },
+    frameguard: { action: 'deny' },
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+    },
+    permittedCrossDomainPolicies: { permittedPolicies: 'none' },
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     xContentTypeOptions: true,
-    referrerPolicy: { policy: "strict-origin-when-cross-origin" }
+    xDnsPrefetchControl: { allow: false },
+    xDownloadOptions: { enabled: true },
+    xPermittedCrossDomainPolicies: { permittedPolicies: 'none' },
 }));
+
+// Custom security headers not covered by helmet
+app.use((_req, res, next) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+    next();
+});
 const allowedOrigins = config.CORS_ORIGIN ? config.CORS_ORIGIN.split(',').map(o => o.trim()) : [];
 
 app.use(
@@ -91,6 +111,31 @@ app.use("/uploads", express.static(path.join(localDirname, "..", "uploads")));
 
 app.get("/", (_req, res) => {
   res.json({ status: "ok", service: "SnapPass AI Backend API", message: "Welcome to the API" });
+});
+
+// Serve security.txt for vulnerability disclosure
+app.get("/.well-known/security.txt", (_req, res) => {
+  res.type("text/plain").send(`# Security Contact
+# SnapPass AI takes security seriously.
+# Please report vulnerabilities responsibly.
+
+Contact: mailto:security@snappass.ai
+Contact: https://github.com/souma9830/SnapPass-AI/security/advisories/new
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://github.com/souma9830/SnapPass-AI/.well-known/security.txt
+Policy: https://github.com/souma9830/SnapPass-AI/blob/master/SECURITY.md
+`);
+});
+
+// Serve robots.txt
+app.get("/robots.txt", (_req, res) => {
+  res.type("text/plain").send(`User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Crawl-delay: 10
+`);
 });
 
 app.get("/health", (_req, res) => {

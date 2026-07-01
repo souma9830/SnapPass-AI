@@ -256,14 +256,16 @@ export const createProcessJob = async (req, res, next) => {
           }
         }
 
-        const form = new FormData();
-        form.append('image', fs.createReadStream(filePath));
-        form.append('background_colour', backgroundColour);
-        form.append('photo_size_preset', photoSizePreset);
-        form.append('attire', attire);
+        const uploadForm = new FormData();
+        uploadForm.append('image', fs.createReadStream(filePath));
+        uploadForm.append('background_colour', backgroundColour);
+        uploadForm.append('photo_size_preset', photoSizePreset);
+        uploadForm.append('attire', attire);
 
-        const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, form, {
-          headers: form.getHeaders(),
+
+        const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
+          headers: uploadForm.getHeaders(),
+
           responseType: 'arraybuffer',
         });
 

@@ -8,7 +8,9 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "format": "prettier --write \"**/*.{js,jsx,json,css,md}\""
+    "format": "prettier --write \"**/*.{js,jsx,json,css,md}\"",
+    "quality-gate": "npm run lint && npm run test",
+    "security-audit": "npm audit"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
@@ -24,6 +26,64 @@
     "*.{json,css,md}": [
       "prettier --write"
     ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "perf",
+          "test",
+          "chore",
+          "ci",
+          "build",
+          "revert",
+          "security",
+          "a11y",
+          "i18n"
+        ]
+      ],
+      "scope-enum": [
+        2,
+        "always",
+        [
+          "frontend",
+          "backend",
+          "python-ai",
+          "docker",
+          "ci",
+          "docs",
+          "deps",
+          "config",
+          "ui",
+          "api",
+          "auth",
+          "upload",
+          "editor",
+          "print",
+          "admin",
+          "i18n",
+          "a11y",
+          "security",
+          "release"
+        ]
+      ],
+      "scope-case": [2, "always", "lower-case"],
+      "subject-case": [2, "always", "lower-case"],
+      "subject-empty": [2, "never"],
+      "subject-full-stop": [2, "never", "."],
+      "header-max-length": [2, "always", 100],
+      "body-max-line-length": [2, "always", 100]
+    }
   },
   "engines": {
     "node": ">=18.0.0"

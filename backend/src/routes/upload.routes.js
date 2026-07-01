@@ -9,12 +9,20 @@ import {
   uploadPhoto,
   getUploadedPhoto,
 } from '../controllers/upload.controller.js';
-import { uploadMiddleware } from '../middleware/upload.middleware.js';
+import { uploadMiddleware, validateImageBuffer } from '../middleware/upload.middleware.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.post('/', authMiddleware, uploadMiddleware.single('photo'), uploadPhoto);
+// Enforce allowed formats on server as well (client can be bypassed).
+router.post(
+  '/',
+  authMiddleware,
+  uploadMiddleware.single('photo'),
+  validateImageBuffer,
+  uploadPhoto
+);
 router.get('/:fileId', authMiddleware, getUploadedPhoto);
+
 
 export default router;

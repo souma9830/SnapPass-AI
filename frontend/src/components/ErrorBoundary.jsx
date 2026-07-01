@@ -60,6 +60,19 @@ class ErrorBoundary extends Component {
                 Try Again
               </button>
             </div>
+            <div style={{ marginTop: '16px' }}>
+              <a
+                href="/diagnostics"
+                style={{
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  color: '#2563eb',
+                  textDecoration: 'none',
+                }}
+              >
+                🔍 Run System Diagnostics Report
+              </a>
+            </div>
             {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="error-details">
                 <summary>Technical Details</summary>

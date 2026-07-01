@@ -5,16 +5,18 @@
  * @throws {AuthError} - Throws an error if no token is provided or if the token is invalid.
  */
 import AuthError from "../utils/errors/AuthError.js";
-import jwt from "jsonwebtoken";
-import { config } from "../config/config.js";
+import { validateSession } from "../services/session.service.js";
 
-export default function authMiddleware(req, res, next) {
-    const token = req.cookies.token;
+export default async function authMiddleware(req, res, next) {
+    const token = req.cookies?.token;
     if (!token) {
         return next(new AuthError("No token provided"));
     }
     try {
-        const decoded = jwt.verify(token, config.JWT_SECRET);
+        const decoded = await validateSession(token);
+        if (!decoded) {
+            return next(new AuthError("Session has expired or has been revoked"));
+        }
         req.user = decoded;
         next();
     } catch (error) {

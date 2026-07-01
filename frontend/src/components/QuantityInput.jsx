@@ -1,5 +1,4 @@
 import React from 'react';
-import './QuantityInput.css';
 
 /**
  * QuantityInput — stepper component to choose number of photos on a sheet.

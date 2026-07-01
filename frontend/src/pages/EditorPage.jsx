@@ -6,6 +6,7 @@ import SizeSelector, { DEFAULT_PRESETS } from '../components/SizeSelector';
 import RecentlyUsedPresets from '../components/RecentlyUsedPresets';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import AttireSelector from '../components/AttireSelector';
+import GuidelinesCustomizer from '../components/GuidelinesCustomizer';
 import { ButtonSpinner } from '../components/LoadingSpinner';
 import './EditorPage.css';
 import EmptyState from '../components/EmptyState';
@@ -56,6 +57,9 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [attire, setAttire] = useState(
     savedSession?.attire || 'none'
   );
+  const [guideColor, setGuideColor] = useState('#ef4444');
+  const [guideOpacity, setGuideOpacity] = useState(0.6);
+  const [gridType, setGridType] = useState('none');
   const { processImage, processedUrl, isProcessing, error } = useImageProcessor();
 
   const [compliance, setCompliance] = useState(null);
@@ -244,6 +248,9 @@ function EditorPage({ darkMode, toggleTheme }) {
               originalUrl={photoData.localUrl}
               processedUrl={processedUrl}
               isProcessing={isProcessing}
+              guideColor={guideColor}
+              guideOpacity={guideOpacity}
+              gridType={gridType}
             />
 
           {/* Sliding side-panel (realtime compliance checklist) */}
@@ -279,6 +286,18 @@ function EditorPage({ darkMode, toggleTheme }) {
             <hr className="divider" />
 
             <AttireSelector selected={attire} onChange={setAttire} />
+
+            <hr className="divider" />
+
+            <GuidelinesCustomizer
+              guideColor={guideColor}
+              onColorChange={setGuideColor}
+              guideOpacity={guideOpacity}
+              onOpacityChange={setGuideOpacity}
+              gridType={gridType}
+              onGridTypeChange={setGridType}
+              darkMode={darkMode}
+            />
 
             <hr className="divider" />
 

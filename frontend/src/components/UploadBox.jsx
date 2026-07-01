@@ -18,6 +18,9 @@ function UploadBox({ onFileSelect }) {
   const [error, setError] = useState('');
 
   const handleFile = async (file) => {
+    // Clear previous error immediately so retry UX feels instant.
+    setError('');
+
     if (!file) {
       setError('Please select an image file.');
       return;
@@ -36,7 +39,6 @@ function UploadBox({ onFileSelect }) {
       return;
     }
 
-    setError('');
     if (onFileSelect) {
       onFileSelect(file);
     }

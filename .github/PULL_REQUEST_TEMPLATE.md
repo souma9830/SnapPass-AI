@@ -45,4 +45,3 @@ Closes #<issue-number>
 - [ ] My changes do not introduce new warnings or console errors.
 - [ ] I verified responsiveness and accessibility requirements.
 - [ ] I included no unrelated modifications.
-- [ ] I added a `release-note` block describing user-facing changes.

@@ -36,3 +36,7 @@ coverage/
 # Temp files
 tmp/
 temp/
+
+# Security and audit reports
+audit-report.json
+security-scan/

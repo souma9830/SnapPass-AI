@@ -1,6 +1,6 @@
+import * as sessionService from '../services/session.service.js';
 import * as authService from '../service/auth.service.js';
 import * as passwordResetOtpService from '../service/passwordResetOtp.service.js';
-import { setToken } from '../utils/setToken.js';
 import catchAsync from '../utils/catchAsync.js';
 import { config } from '../config/config.js';
 import { sendEmail } from '../utils/sendEmail.js';
@@ -15,7 +15,7 @@ const sendResponse = (res, statusCode, success, message, data) => {
 
 export const register = catchAsync(async (req, res) => {
   const user = await authService.registerUser(req.body);
-  setToken(res, user);
+  await sessionService.createSession(res, user, req.ip, req.headers['user-agent']);
   sendResponse(res, 201, true, 'User registered successfully', {
     id: user._id,
     fullName: user.fullName,
@@ -27,7 +27,7 @@ export const register = catchAsync(async (req, res) => {
 export const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUser(email, password);
-  setToken(res, user);
+  await sessionService.createSession(res, user, req.ip, req.headers['user-agent']);
   sendResponse(res, 200, true, 'User logged in successfully', {
     id: user._id,
     fullName: user.fullName,
@@ -47,14 +47,30 @@ export const getMe = catchAsync(async (req, res) => {
 });
 
 export const logout = catchAsync(async (req, res) => {
+  const token = req.cookies?.token;
+  if (token) {
+    await sessionService.invalidateSession(token);
+  }
   const isProduction = config.NODE_ENV === 'production';
   res.clearCookie('token', {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? 'none' : 'lax',
     maxAge: 0,
+    path: "/",
   });
   sendResponse(res, 200, true, 'User logged out successfully', null);
+});
+
+export const getActiveSessions = catchAsync(async (req, res) => {
+  const sessions = await sessionService.getActiveSessionsForUser(req.user.id);
+  sendResponse(res, 200, true, 'Active sessions retrieved successfully', sessions);
+});
+
+export const revokeSession = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  await sessionService.invalidateSessionById(id, req.user.id);
+  sendResponse(res, 200, true, 'Session revoked successfully', null);
 });
 
 export const requestPasswordReset = catchAsync(async (req, res) => {

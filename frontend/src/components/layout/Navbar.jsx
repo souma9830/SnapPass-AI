@@ -57,6 +57,7 @@ function Navbar({ darkMode, toggleTheme }) {
     { path: '/editor', label: t.editor },
     { path: '/print-preview', label: t.print },
     { path: '/history', label: t.history },
+    { path: '/settings', label: 'Settings' },
     { path: '/admin', label: t.admin },
   ];
 

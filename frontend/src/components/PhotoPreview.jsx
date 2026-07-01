@@ -11,7 +11,14 @@ import './PhotoPreview.css';
  *   processedUrl (string) — URL of the AI-processed photo (optional)
  *   isProcessing (bool)   — shows loading state over the processed panel
  */
-function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
+function PhotoPreview({
+  originalUrl,
+  processedUrl,
+  isProcessing,
+  guideColor = '#ef4444',
+  guideOpacity = 0.6,
+  gridType = 'none',
+}) {
   const [showGuidelines, setShowGuidelines] = useState(true);
 
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -48,30 +55,45 @@ function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
 
             {/* Smart Compliance Guidelines Grid */}
             {showGuidelines && (
-              <div className="photo-preview__overlay-grid">
-                {/* L-Shaped Outer Crop Corners */}
-                <div className="photo-preview__corner photo-preview__corner--tl" />
-                <div className="photo-preview__corner photo-preview__corner--tr" />
-                <div className="photo-preview__corner photo-preview__corner--bl" />
-                <div className="photo-preview__corner photo-preview__corner--br" />
+              <div
+                className="photo-preview__overlay-grid"
+                style={{ '--guide-color': guideColor, opacity: guideOpacity }}
+              >
+                {gridType === 'none' ? (
+                  <>
+                    {/* L-Shaped Outer Crop Corners */}
+                    <div className="photo-preview__corner photo-preview__corner--tl" />
+                    <div className="photo-preview__corner photo-preview__corner--tr" />
+                    <div className="photo-preview__corner photo-preview__corner--bl" />
+                    <div className="photo-preview__corner photo-preview__corner--br" />
 
-                {/* Vertical Symmetry Axis */}
-                <div className="photo-preview__guide photo-preview__guide--center-line" />
+                    {/* Vertical Symmetry Axis */}
+                    <div className="photo-preview__guide photo-preview__guide--center-line" />
 
-                {/* Head Crown Target Region (Silhouette Oval) */}
-                <div className="photo-preview__guide photo-preview__guide--head-oval">
-                  <span className="photo-preview__guide-tag photo-preview__guide-tag--oval">CROWN LEVEL</span>
-                </div>
+                    {/* Head Crown Target Region (Silhouette Oval) */}
+                    <div className="photo-preview__guide photo-preview__guide--head-oval">
+                      <span className="photo-preview__guide-tag photo-preview__guide-tag--oval">CROWN LEVEL</span>
+                    </div>
 
-                {/* Ideal Eye Alignment Level */}
-                <div className="photo-preview__guide photo-preview__guide--eye-line">
-                  <span className="photo-preview__guide-tag photo-preview__guide-tag--eye">EYES LEVEL</span>
-                </div>
+                    {/* Ideal Eye Alignment Level */}
+                    <div className="photo-preview__guide photo-preview__guide--eye-line">
+                      <span className="photo-preview__guide-tag photo-preview__guide-tag--eye">EYES LEVEL</span>
+                    </div>
 
-                {/* Ideal Chin Alignment Level */}
-                <div className="photo-preview__guide photo-preview__guide--chin-line">
-                  <span className="photo-preview__guide-tag photo-preview__guide-tag--chin">CHIN LEVEL</span>
-                </div>
+                    {/* Ideal Chin Alignment Level */}
+                    <div className="photo-preview__guide photo-preview__guide--chin-line">
+                      <span className="photo-preview__guide-tag photo-preview__guide-tag--chin">CHIN LEVEL</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Rule of Thirds Grid Lines */}
+                    <div style={{ position: 'absolute', left: '33.33%', top: 0, width: '1px', height: '100%', borderLeft: '1px dashed var(--guide-color)' }} />
+                    <div style={{ position: 'absolute', left: '66.66%', top: 0, width: '1px', height: '100%', borderLeft: '1px dashed var(--guide-color)' }} />
+                    <div style={{ position: 'absolute', top: '33.33%', left: 0, height: '1px', width: '100%', borderTop: '1px dashed var(--guide-color)' }} />
+                    <div style={{ position: 'absolute', top: '66.66%', left: 0, height: '1px', width: '100%', borderTop: '1px dashed var(--guide-color)' }} />
+                  </>
+                )}
               </div>
             )}
           </div>

@@ -147,15 +147,15 @@ function Footer({ darkMode }) {
 
             {/* SOCIALS */}
             <div className="footer__socials">
-              <a href="https://www.linkedin.com/in/soumadeep-s/" className="footer__social-link">
+              <a href="/" className="footer__social-link">
                 <Globe size={18} />
               </a>
 
-              <a href="https://www.facebook.com/soumadeep9830" className="footer__social-link">
+              <a href="/" className="footer__social-link">
                 <Share2 size={18} />
               </a>
 
-              <a href="https://github.com/souma9830" className="footer__social-link">
+              <a href="/" className="footer__social-link">
                 <User size={18} />
               </a>
             </div>
@@ -234,9 +234,7 @@ function Footer({ darkMode }) {
 
               <div className="footer__contact">
                 <Mail size={16} />
-                <a href="mailto:support@snappassai.com">
-    support@snappassai.com
-  </a>
+                <span>support@snappassai.com</span>
               </div>
             </div>
           </div>

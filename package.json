@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "SnapPass AI — Monorepo root for passport photo generation platform",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "prepare": "husky",
     "lint": "npm run lint --workspaces --if-present",

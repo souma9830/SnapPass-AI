@@ -3,10 +3,11 @@ import mongoose from "mongoose";
 const uploadSchema = new mongoose.Schema(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  required: false,
+  default: null,
+},
     fileId: {
       type: String,
       required: true,

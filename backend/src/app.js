@@ -107,7 +107,7 @@ app.use(sanitizeInput);
 app.use(hpp());
 app.use(cookieParser());
 
-app.use("/uploads", express.static(path.join(localDirname, "..", "uploads")));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.get("/", (_req, res) => {
   res.json({ status: "ok", service: "SnapPass AI Backend API", message: "Welcome to the API" });

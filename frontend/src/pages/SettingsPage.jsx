@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './SettingsPage.css';
 import { motion } from 'framer-motion';
+import api from '../services/api.jsx';
 
 function SettingsPage({ darkMode, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('preferences');
@@ -19,19 +20,16 @@ function SettingsPage({ darkMode, toggleTheme }) {
     setLoadingSessions(true);
     setSessionError('');
     try {
-      const res = await fetch('/api/auth/sessions');
-      if (res.ok) {
-        const body = await res.json();
-        if (body.success) {
-          setSessions(body.data || []);
-        } else {
-          setSessionError(body.message || 'Failed to load sessions');
-        }
+      const res = await api.get('/auth/sessions', { withCredentials: true });
+      const body = res.data;
+
+      if (body.success) {
+        setSessions(body.data || []);
       } else {
-        setSessionError('Log in to manage active audited sessions.');
+        setSessionError(body.message || 'Failed to load sessions');
       }
     } catch (err) {
-      setSessionError('Network error while retrieving active sessions.');
+      setSessionError(err.message || 'Network error while retrieving active sessions.');
     } finally {
       setLoadingSessions(false);
     }
@@ -45,16 +43,10 @@ function SettingsPage({ darkMode, toggleTheme }) {
 
   const handleRevokeSession = async (sessionId) => {
     try {
-      const res = await fetch(`/api/auth/sessions/${sessionId}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        setSessions(sessions.filter((s) => s._id !== sessionId));
-      } else {
-        alert('Could not revoke session. Please try again.');
-      }
+      await api.delete(`/auth/sessions/${sessionId}`, { withCredentials: true });
+      setSessions(sessions.filter((s) => s._id !== sessionId));
     } catch (err) {
-      alert('Network error. Unable to revoke session.');
+      alert(err.message || 'Network error. Unable to revoke session.');
     }
   };
 

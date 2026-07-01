@@ -247,10 +247,11 @@ npm install
 npm run dev
 ```
 
-Backend runs at [http://localhost:3000](http://localhost:3000).
+<!-- Fixed backend port to match documented backend configuration -->
 
-Health check: `GET http://localhost:3000/health`
+Backend runs at [http://localhost:5000](http://localhost:5000).
 
+Health check: `GET http://localhost:5000/health`
 ---
 
 ### 4. Run the Python AI Service *(optional — not fully implemented yet)*

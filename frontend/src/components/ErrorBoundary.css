@@ -50,20 +50,44 @@
   line-height: 1.5;
 }
 
-.error-reset-btn {
-  background-color: #3b82f6;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
+.error-boundary-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-reset-btn,
+.error-retry-btn {
   padding: 0.75rem 1.5rem;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+
+.error-reset-btn {
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
 }
 
 .error-reset-btn:hover {
   background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.error-retry-btn {
+  background-color: transparent;
+  color: #94a3b8;
+  border: 1px solid #334155;
+}
+
+.error-retry-btn:hover {
+  background-color: #1e293b;
+  color: #f8fafc;
+  border-color: #475569;
 }
 
 .error-details {

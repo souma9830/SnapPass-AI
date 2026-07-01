@@ -21,10 +21,15 @@ class ErrorBoundary extends Component {
     window.location.href = "/";
   };
 
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
+    window.location.reload();
+  };
+
   render() {
     if (this.state.hasError) {
       return (
-        <div className="error-boundary-container">
+        <div className="error-boundary-container" role="alert" aria-live="assertive">
           <div className="error-boundary-card">
             <div className="error-icon-wrapper">
               <svg
@@ -33,6 +38,7 @@ class ErrorBoundary extends Component {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                aria-hidden="true"
               >
                 <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                 <line x1="12" y1="9" x2="12" y2="13" />
@@ -41,11 +47,19 @@ class ErrorBoundary extends Component {
             </div>
             <h1 className="error-title">Oops! Something went wrong</h1>
             <p className="error-message">
-              SnapPass AI encountered an unexpected rendering error. Please try resetting the app.
+              SnapPass AI encountered an unexpected rendering error. Please try one of the options below.
             </p>
-            <button className="error-reset-btn" onClick={this.handleReset}>
-              Return to Home
-            </button>
+            <div className="error-boundary-actions">
+              <button className="error-reset-btn" onClick={this.handleReset}>
+                Go to Home
+              </button>
+              <button
+                className="error-retry-btn"
+                onClick={this.handleRetry}
+              >
+                Try Again
+              </button>
+            </div>
             {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="error-details">
                 <summary>Technical Details</summary>

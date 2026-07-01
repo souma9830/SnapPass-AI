@@ -2,19 +2,17 @@ import cv2
 from pathlib import Path
 
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.webp'}
-ALLOWED_MAGIC_BYTES = {
-    b'\xff\xd8\xff': 'jpeg',   # JPEG
-    b'\x89PNG': 'png',          # PNG
-    b'RIFF': 'webp',            # WebP
-}
 
 
 def detect_image_type(file_path: str) -> str | None:
     with open(file_path, 'rb') as f:
         header = f.read(12)
-    for magic, img_type in ALLOWED_MAGIC_BYTES.items():
-        if header.startswith(magic):
-            return img_type
+    if header.startswith(b"\xff\xd8\xff"):
+        return "jpeg"
+    if header.startswith(b"\x89PNG\r\n\x1a\n") or header.startswith(b"\x89PNG"):
+        return "png"
+    if header.startswith(b"RIFF") and len(header) >= 12 and header[8:12] == b"WEBP":
+        return "webp"
     return None
 
 

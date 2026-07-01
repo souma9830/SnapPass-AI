@@ -22,8 +22,7 @@ export const calculatePasswordStrength = (password) => {
   ) {
     return {
       score: 0,
-      label:
-        'Highly vulnerable. Add distinct characters.',
+      label: 'Highly vulnerable. Add distinct characters.',
     };
   }
 
@@ -53,23 +52,19 @@ export const calculatePasswordStrength = (password) => {
   switch (score) {
     case 0:
     case 1:
-      label =
-        'Highly vulnerable. Add distinct characters.';
+      label = 'Highly vulnerable. Add distinct characters.';
       break;
 
     case 2:
-      label =
-        'Medium strength. Try adding symbols.';
+      label = 'Medium strength. Try adding symbols.';
       break;
 
     case 3:
-      label =
-        'Strong password. Meets baseline safety.';
+      label = 'Strong password. Meets baseline safety.';
       break;
 
     case 4:
-      label =
-        'Excellent! Cryptographically robust.';
+      label = 'Excellent! Cryptographically robust.';
       break;
 
     default:
@@ -80,4 +75,13 @@ export const calculatePasswordStrength = (password) => {
     score,
     label,
   };
+};
+
+export const validateEmail = (email) => {
+  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return re.test(String(email).toLowerCase());
+};
+
+export const sanitizeFileNameInput = (input) => {
+  return input.replace(/[^a-zA-Z0-9_\-\.]/g, '');
 };

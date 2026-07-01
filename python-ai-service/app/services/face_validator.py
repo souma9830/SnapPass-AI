@@ -5,7 +5,8 @@ ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.webp'}
 ALLOWED_MAGIC_BYTES = {
     b'\xff\xd8\xff': 'jpeg',   # JPEG
     b'\x89PNG': 'png',          # PNG
-    b'RIFF': 'webp',            # WebP
+   if header[:4] == b'RIFF' and header[8:12] == b'WEBP':
+    return 'webp'          # WebP
 }
 
 

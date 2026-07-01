@@ -26,8 +26,8 @@
 }
 
 .navbar--dark {
-  background: rgba(0, 0, 0, 0.45);
-  border-bottom: 1px solid var(--color-border-dark);
+  background: rgba(17, 24, 39, 0.85); /* Increased dark mode background opacity */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .navbar__inner {
@@ -114,11 +114,11 @@
 }
 
 .navbar__link-dark {
-  color: var(--color-text-muted);
+  color: #9ca3af; /* Brightened text for better contrast in dark theme */
 }
 
 .navbar__link-dark:hover {
-  color: var(--color-text-dark);
+  color: #ffffff; /* Bright white hover text */
   background: #1f2937;
 }
 
@@ -249,7 +249,8 @@
 }
 
 .navbar__mobile-menu-dark {
-  background: var(--color-surface-dark);
+  background: rgba(17, 24, 39, 0.95); /* Increased drawer background opacity */
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .navbar__mobile-menu-light {
@@ -271,7 +272,7 @@
 }
 
 .navbar__mobile-link-dark {
-  color: #d1d5db;
+  color: #9ca3af; /* Brightened link text */
 }
 
 .navbar__mobile-link-light:hover {
@@ -282,7 +283,7 @@
 
 .navbar__mobile-link-dark:hover {
   transform: translateX(5px);
-  color: var(--color-text-dark);
+  color: #ffffff; /* Brightened hover text */
   background: #1f2937;
 }
 
@@ -293,8 +294,8 @@
 
 /* Active mobile links */
 .navbar__mobile-link--active-dark {
-  background: #374151;
-  color: #facc15;
+  background: #1f2937;
+  color: #3b82f6; /* High contrast active state highlighting */
   font-weight: 600;
 }
 

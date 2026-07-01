@@ -63,14 +63,21 @@ export const validateImageFile = (file) => {
     };
   }
 
-  if (file.size > MAX_FILE_SIZE_BYTES) {
+  if (file.size === 0) {
     return {
       valid: false,
-      error: `File is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Max is ${MAX_FILE_SIZE_MB} MB.`,
+      error: 'File is empty. Please upload a valid image.',
     };
   }
 
-  return { valid: true, error: null };
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    return {
+      valid: false,
+      error: `File size is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Max is ${MAX_FILE_SIZE_MB}MB.`,
+    };
+  }
+
+  return { valid: true, error: '' };
 };
 
 /**
@@ -110,4 +117,3 @@ export const validateImageDimensions = (file, minWidth = 600, minHeight = 600) =
     reader.readAsDataURL(file);
   });
 };
-

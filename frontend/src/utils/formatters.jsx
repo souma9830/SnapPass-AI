@@ -8,9 +8,15 @@
  * @returns {string}
  */
 export const formatFileSize = (bytes) => {
-  if (bytes < 1024)       return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  const size = Number(bytes);
+
+  if (!Number.isFinite(size) || size <= 0) return '0 B';
+  if (size < 1024) return `${size} B`;
+  if (size < 1024 * 1024) return `${Number((size / 1024).toFixed(1))} KB`;
+  if (size < 1024 * 1024 * 1024) {
+    return `${Number((size / 1024 / 1024).toFixed(1))} MB`;
+  }
+  return `${Number((size / 1024 / 1024 / 1024).toFixed(1))} GB`;
 };
 
 /**
@@ -19,7 +25,13 @@ export const formatFileSize = (bytes) => {
  * @returns {string}
  */
 export const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-IN', {
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'Invalid date';
+  }
+
+  return parsedDate.toLocaleDateString('en-IN', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',

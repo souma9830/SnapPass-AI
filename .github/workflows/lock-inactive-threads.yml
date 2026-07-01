@@ -1,0 +1,26 @@
+name: Lock Inactive Issue Threads
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'  # Every Monday at 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lock resolved and closed threads
+        uses: dessant/lock-threads@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          process-only: issues
+          issue-inactive-days: '90'
+          issue-lock-reason: 'resolved'
+          issue-comment: >
+            This issue has been automatically locked because it has been closed for
+            more than 90 days. If you are still experiencing a similar problem, please
+            open a new issue and reference this one.

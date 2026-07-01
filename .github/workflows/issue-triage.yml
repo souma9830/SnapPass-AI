@@ -1,0 +1,59 @@
+name: Issue Triage
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add triage label to new issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { issue } = context.payload;
+
+            // Add status:triage label
+            await github.rest.issues.addLabels({
+              issue_number: issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['status:triage']
+            });
+
+            // Auto-assign based on issue content
+            const body = (issue.body || '').toLowerCase();
+            const title = (issue.title || '').toLowerCase();
+
+            const labelsToAdd = [];
+
+            if (body.includes('bug') || body.includes('error') || body.includes('crash') || body.includes('broken')) {
+              labelsToAdd.push('bug');
+            }
+
+            if (body.includes('feature') || body.includes('request') || body.includes('suggestion') || body.includes('idea')) {
+              labelsToAdd.push('enhancement');
+            }
+
+            if (body.includes('security') || body.includes('vulnerability') || body.includes('xss') || body.includes('injection')) {
+              labelsToAdd.push('type:security');
+            }
+
+            if (title.includes('docs') || title.includes('documentation') || body.includes('readme') || body.includes('typo')) {
+              labelsToAdd.push('type:docs');
+            }
+
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({
+                issue_number: issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labelsToAdd
+              });
+            }

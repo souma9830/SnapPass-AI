@@ -1,15 +1,19 @@
 # GitHub Labels Reference
 
 ## Status Labels
+
 | Label | Description |
 |-------|-------------|
 | `status:triage` | New issue awaiting maintainer review |
-| `status:needs-description` | PR missing required description sections |
+| `status:confirmed` | Bug confirmed by maintainer |
 | `status:stale` | Issue/PR inactive; will be closed soon |
 | `status:auto-closed` | Automatically closed due to inactivity |
 | `status:priority` | High-priority item requiring immediate attention |
+| `status:blocked` | Blocked by another issue or external dependency |
+| `status:duplicate` | Duplicate of another existing issue |
 
 ## Type Labels
+
 | Label | Description |
 |-------|-------------|
 | `type:feature` | New feature request or implementation |
@@ -22,36 +26,34 @@
 | `type:performance` | Performance optimization |
 | `type:devops` | CI/CD, Docker, deployment changes |
 | `type:accessibility` | Accessibility improvements |
-| `type:api` | API endpoint or middleware changes |
 
-## Size Labels
+## Difficulty Labels
+
 | Label | Description |
 |-------|-------------|
-| `size:xs` | 0-9 lines changed (tiny change) |
-| `size:s` | 10-99 lines changed (small change) |
-| `size:m` | 100-499 lines changed (medium change) |
-| `size:l` | 500-999 lines changed (large change) |
-| `size:xl` | 1000+ lines changed (extra large change) |
+| `level:beginner` | Easy fix, good for newcomers |
+| `level:intermediate` | Moderate complexity |
+| `level:advanced` | Complex feature requiring deep understanding |
+| `level:critical` | Major system or security changes |
 
-## Domain Labels
+## Quality Labels
+
 | Label | Description |
 |-------|-------------|
-| `frontend` | Changes to the React frontend |
-| `backend` | Changes to the Express backend |
-| `python` | Changes to the Python AI service |
-| `docker` | Docker-related changes |
-| `ci` | CI/CD workflow changes |
-| `i18n` | Internationalization / translation changes |
-| `dependencies` | Dependency updates |
+| `quality:clean` | Well-structured, maintainable code |
+| `quality:exceptional` | Outstanding contribution above expectations |
 
 ## Program Labels
+
 | Label | Description |
 |-------|-------------|
 | `gssoc:approved` | Valid GSSoC contribution (points eligible) |
 | `gssoc:invalid` | Invalid contribution (zero points) |
 | `gssoc:spam` | Spam contribution (zero points, flagged) |
+| `gssoc:ai slop` | AI-generated low-quality contribution |
 
 ## Version Labels
+
 | Label | Description |
 |-------|-------------|
 | `version:major` | Breaking changes (major version bump) |

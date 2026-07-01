@@ -36,6 +36,20 @@ router.post("/logout", authMiddleware, authController.logout);
 router.get("/me", authMiddleware, authController.getMe);
 
 /**
+ * @route GET /api/auth/sessions
+ * @description List all active audited sessions for the current user
+ * @access Private
+ */
+router.get("/sessions", authMiddleware, authController.getActiveSessions);
+
+/**
+ * @route DELETE /api/auth/sessions/:id
+ * @description Revoke a specific user session by database ID
+ * @access Private
+ */
+router.delete("/sessions/:id", authMiddleware, authController.revokeSession);
+
+/**
  * @route POST /api/auth/password-reset-request
  * @description Request an OTP for password reset
  * @access Public

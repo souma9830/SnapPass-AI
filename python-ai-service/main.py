@@ -71,6 +71,9 @@ def _safe_photo_path(raw: str) -> str:
 app = Flask(__name__)
 CORS(app)
 
+# Prevent Memory Exhaustion (DoS) by limiting payloads to 16MB
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
 os.makedirs(config.UPLOAD_DIR, exist_ok=True)
 
 # Blueprints

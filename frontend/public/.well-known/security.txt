@@ -1,0 +1,10 @@
+# Security Contact
+# SnapPass AI takes security seriously.
+# Please report vulnerabilities responsibly.
+
+Contact: mailto:security@snappass.ai
+Contact: https://github.com/souma9830/SnapPass-AI/security/advisories/new
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://github.com/souma9830/SnapPass-AI/.well-known/security.txt
+Policy: https://github.com/souma9830/SnapPass-AI/blob/master/SECURITY.md

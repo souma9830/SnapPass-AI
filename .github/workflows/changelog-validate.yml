@@ -1,0 +1,38 @@
+name: Changelog Validation
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'CHANGELOG.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate CHANGELOG.md format
+        run: |
+          # Check that CHANGELOG.md exists
+          if [ ! -f CHANGELOG.md ]; then
+            echo "Error: CHANGELOG.md is missing!"
+            exit 1
+          fi
+
+          # Check for required headers
+          if ! grep -q "^# Changelog" CHANGELOG.md; then
+            echo "Error: CHANGELOG.md must start with '# Changelog'"
+            exit 1
+          fi
+
+          if ! grep -q "^## " CHANGELOG.md; then
+            echo "Error: CHANGELOG.md must contain at least one version entry"
+            exit 1
+          fi
+
+          echo "CHANGELOG.md format validation passed."

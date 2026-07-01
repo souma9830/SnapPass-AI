@@ -1,0 +1,39 @@
+name: Version Consistency Check
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'package.json'
+      - 'frontend/package.json'
+      - 'backend/package.json'
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check version bump
+        run: |
+          # Extract versions from package.json files
+          ROOT_VERSION=$(node -p "require('./package.json').version")
+          FRONTEND_VERSION=$(node -p "require('./frontend/package.json').version")
+          BACKEND_VERSION=$(node -p "require('./backend/package.json').version")
+
+          echo "Root version: $ROOT_VERSION"
+          echo "Frontend version: $FRONTEND_VERSION"
+          echo "Backend version: $BACKEND_VERSION"
+
+          # Verify versions are consistent
+          if [ "$FRONTEND_VERSION" != "$ROOT_VERSION" ] || [ "$BACKEND_VERSION" != "$ROOT_VERSION" ]; then
+            echo "Error: Version mismatch detected!"
+            echo "Root: $ROOT_VERSION, Frontend: $FRONTEND_VERSION, Backend: $BACKEND_VERSION"
+            exit 1
+          fi
+
+          echo "All versions are consistent."

@@ -1,0 +1,63 @@
+name: PR Quality Checks
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  check-description:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR description
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            const requiredSections = [
+              '## Summary',
+              '### What does this PR do?',
+              '## Testing & Verification',
+              '## Checklist',
+            ];
+
+            const missing = requiredSections.filter(
+              section => !body.includes(section)
+            );
+
+            if (missing.length > 0) {
+              const message = `## ⚠️ PR Description Incomplete\n\nYour PR is missing the following required sections:\n\n${missing.map(s => `- \`${s}\``).join('\n')}\n\nPlease update the PR description using the [PR template](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/master/.github/PULL_REQUEST_TEMPLATE.md).`;
+
+              await github.rest.issues.createComment({
+                issue_number: pr.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: message,
+              });
+
+              await github.rest.issues.addLabels({
+                issue_number: pr.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: ['status:needs-description'],
+              });
+            } else {
+              // Remove status label if present
+              try {
+                await github.rest.issues.removeLabel({
+                  issue_number: pr.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: 'status:needs-description',
+                });
+              } catch (_) {
+                // Label may not exist, ignore
+              }
+            }

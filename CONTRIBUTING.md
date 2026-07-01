@@ -242,6 +242,19 @@ cd SnapPass-AI
 git remote add upstream https://github.com/souma9830/SnapPass-AI.git
 ```
 
+### Step 1.5 — Install Root Dependencies (Required Once)
+After cloning, install the root-level development dependencies (husky, commitlint, lint-staged):
+
+```bash
+npm install
+```
+
+This automatically triggers the `husky` postinstall hook, which sets up Git hooks for:
+- **commit-msg** — validates every commit message follows the conventional commit format
+- **pre-commit** — runs `lint-staged` to format staged files with Prettier
+
+> If husky hooks do not activate automatically, run `npx husky` manually.
+
 ### Step 2 — Run the Frontend (Required for UI Tasks)
 ```bash
 cd frontend
@@ -336,6 +349,28 @@ Format: `type(scope): short description`
 | `style` | Formatting, CSS | `style(navbar): fix mobile menu overflow on small screens` |
 | `refactor` | Code restructuring | `refactor(backend): move upload logic to service layer` |
 
+### Automatic Validation with Commitlint
+This project uses **commitlint** with the conventional config preset to enforce commit message standards:
+
+```bash
+# ✅ Accepted feat(scope): add crop mark toggle to print preview
+# ✅ Accepted fix(api): handle empty filename edge case
+# ✅ Accepted docs(readme): update deployment instructions
+# ✅ Accepted refactor(editor): extract size calculator hook
+# ✅ Accepted ci(docker): add health check to compose file
+
+# ❌ Rejected: "fix" (missing scope and description)
+# ❌ Rejected: "changes" (not a conventional commit)
+# ❌ Rejected: "updated stuff" (not descriptive)
+# ❌ Rejected: "WIP" (not a valid type)
+```
+
+If your commit is rejected, look at the error message from commitlint:
+- `subject-case` — subject must be lowercase
+- `type-enum` — type must be one of: feat, fix, docs, style, refactor, perf, test, chore, ci, security, a11y, i18n
+- `scope-enum` — scope must be one of the recognised project scopes
+- `header-max-length` — first line must be 100 characters or less
+
 **Bad Examples ❌ (Do not do this):**
 - `git commit -m "fix"`
 - `git commit -m "changes"`
@@ -352,6 +387,19 @@ Format: `type(scope): short description`
 - [ ] You have removed all unnecessary `console.log` or `print()` statements.
 - [ ] If making CSS changes, they are responsive (you checked on mobile view).
 - [ ] You have added JSDoc/Python docstrings for complex logic.
+- [ ] Your PR includes a `release-note` block describing user-facing changes.
+
+### Issue & PR Lifecycle Automation
+
+SnapPass AI uses GitHub Actions to automate common maintenance tasks:
+
+- **Auto-Triage**: New issues are automatically labeled `status:triage` and assigned relevant type labels based on content.
+- **Stale Detection**: Issues and PRs with no activity for 60 days are marked `status:stale` and closed after 14 additional days of inactivity. Priority, security, and `help wanted` issues are exempt.
+- **Thread Locking**: Resolved issues are automatically locked after 90 days to keep discussions focused.
+- **First-Time Welcome**: First-time contributors receive an automated welcome message with helpful resources.
+- **Release Drafter**: Merged PRs with release notes are automatically compiled into draft releases on every push to `master`.
+
+> These automations are defined in `.github/workflows/`. See `.github/LABEL_DESCRIPTIONS.md` for the full label reference guide.
 
 ### PR Description Template
 When you open a PR, please copy, paste, and fill in this exact template:
@@ -463,6 +511,25 @@ def remove_background(image_path: str) -> Image:
 ## 🎯 Priority Tasks for Contributors
 
 Looking for something specific to do? These are the most impactful areas where we need your help right now:
+
+### Frontend Testing
+
+The frontend uses **Vitest** with **React Testing Library** for unit and component tests:
+
+```bash
+cd frontend
+npm test            # Run tests in watch mode
+npm run test:run    # Run tests once (CI mode)
+npm run test:coverage  # Run tests with coverage report
+```
+
+All tests live in `frontend/src/test/__tests__/`. When contributing frontend code:
+
+1. Add tests for new utility functions in the matching file under `__tests__/`.
+2. For component tests, verify rendering, accessibility (role, aria attributes), and edge cases.
+3. Run `npm run test:run` before pushing to ensure no regressions.
+
+---
 
 ### 🔴 High Priority (Python AI Service - Stage 5)
 | Task | File | Description |

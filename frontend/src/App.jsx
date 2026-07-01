@@ -5,6 +5,7 @@ import AppRoutes from './routes/AppRoutes';
 import SnapPassAssistant from './chatbot/SnapPassAssistant';
 import { ToastProvider } from './context/ToastContext';
 import './App.css';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 // bug-> when toggle is clicked , to change html over browser we need to alter dom
 // documnet.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
@@ -42,6 +43,7 @@ function App() {
         </main>
         <Footer darkMode={darkMode} toggleTheme={toggleTheme} />
         <SnapPassAssistant />
+        <ScrollToTopButton />
       </div>
     </ToastProvider>
   );

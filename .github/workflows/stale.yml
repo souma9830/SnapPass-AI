@@ -1,0 +1,71 @@
+name: Mark Stale Issues and PRs
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      daysBeforeStale:
+        description: 'Days before marking as stale'
+        required: true
+        default: '60'
+      daysBeforeClose:
+        description: 'Days after stale before closing'
+        required: true
+        default: '14'
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark and close stale issues and PRs
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Issue settings
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not had
+            recent activity. If this is still relevant, please leave a comment to keep
+            it open. Otherwise, it will be closed in 14 days. Thank you for your
+            contributions!
+
+          close-issue-message: >
+            This issue has been automatically closed due to inactivity. Feel free to
+            reopen if the issue persists or is still relevant.
+
+          stale-issue-label: 'status:stale'
+          close-issue-label: 'status:auto-closed'
+
+          # PR settings
+          stale-pr-message: >
+            This pull request has been automatically marked as stale because it has
+            not had recent activity. If you are still working on this, please leave a
+            comment to keep it open. Otherwise, it will be closed in 14 days.
+
+          close-pr-message: >
+            This pull request has been automatically closed due to inactivity.
+            Feel free to reopen when you are ready to continue.
+
+          stale-pr-label: 'status:stale'
+          close-pr-label: 'status:auto-closed'
+
+          # Timing
+          days-before-stale: ${{ github.event.inputs.daysBeforeStale || 60 }}
+          days-before-close: ${{ github.event.inputs.daysBeforeClose || 14 }}
+          days-before-pr-stale: ${{ github.event.inputs.daysBeforeStale || 30 }}
+          days-before-pr-close: ${{ github.event.inputs.daysBeforeClose || 7 }}
+
+          # Exemptions (never mark these as stale)
+          exempt-issue-labels: 'status:priority,status:confirmed,bug,type:security,enhancement,help wanted'
+          exempt-pr-labels: 'status:priority,dependencies'
+          exempt-all-milestones: true
+          exempt-all-assignees: false
+
+          # Operations limit
+          operations-per-run: 100
+          remove-stale-when-updated: true

@@ -1,0 +1,105 @@
+# PR labeler configuration
+# Automatically assigns labels to PRs based on changed file paths.
+# https://github.com/actions/labeler
+
+# Frontend
+'frontend':
+  - changed-files:
+      - any-glob-to-any-file: 'frontend/**'
+
+'type:design':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'frontend/src/**/*.css'
+          - 'frontend/public/**'
+
+'type:accessibility':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'frontend/src/**/*.jsx'
+          - 'frontend/src/**/*.js'
+      - any-glob-to-any-file:
+          - '**/*.test.{js,jsx}'
+
+# Backend
+'backend':
+  - changed-files:
+      - any-glob-to-any-file: 'backend/**'
+
+'type:api':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'backend/src/routes/**'
+          - 'backend/src/controllers/**'
+          - 'backend/src/middleware/**'
+
+'type:security':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'backend/src/middleware/**'
+          - 'backend/src/utils/errors/**'
+          - 'backend/src/validation/**'
+          - 'SECURITY.md'
+          - 'docs/SECURITY_THREAT_MODEL.md'
+
+# Python AI Service
+'python':
+  - changed-files:
+      - any-glob-to-any-file: 'python-ai-service/**'
+
+# Infrastructure
+'docker':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/Dockerfile'
+          - '**/docker-compose*'
+          - '**/.dockerignore'
+          - '**/Dockerfile.*'
+
+'ci':
+  - changed-files:
+      - any-glob-to-any-file: '.github/workflows/**'
+
+'type:devops':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+          - 'scripts/**'
+
+# Documentation
+'type:docs':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - '**/*.md'
+          - '**/README.md'
+          - '**/CONTRIBUTING.md'
+          - '**/CODE_OF_CONDUCT.md'
+
+# Dependencies
+'dependencies':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/package.json'
+          - '**/package-lock.json'
+          - '**/requirements.txt'
+          - '**/Dockerfile'
+          - '.github/dependabot.yml'
+
+# Testing
+'type:testing':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/__tests__/**'
+          - '**/test/**'
+          - '**/*.test.{js,jsx}'
+          - '**/*.spec.{js,jsx}'
+          - '**/vitest.config.*'
+          - '**/jest.config.*'
+
+# i18n
+'i18n':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'frontend/src/translations/**'
+          - 'frontend/src/context/LanguageContext*'

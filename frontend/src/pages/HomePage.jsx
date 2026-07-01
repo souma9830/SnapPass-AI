@@ -8,7 +8,6 @@ import AIShowcaseSection from '../components/HomePage/AIShowcaseSection';
 import StepsSection from '../components/HomePage/StepsSection';
 import FeaturesSection from '../components/HomePage/FeaturesSection';
 import CTABanner from '../components/HomePage/CTABanner';
-import BackToTop from '../components/HomePage/BackToTop';
 import TestimonialsSection from '../components/testimonials/TestimonialsSection';
 
 import { useLanguage } from '../context/LanguageContext';
@@ -184,7 +183,6 @@ function HomePage({ darkMode, toggleTheme }) {
       {/* ── CTA Banner ── */}
       <CTABanner />
       <TestimonialsSection darkMode={darkMode} />
-      <BackToTop />
     </div>
   );
 }

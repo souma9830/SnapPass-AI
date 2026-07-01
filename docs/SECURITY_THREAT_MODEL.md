@@ -43,3 +43,26 @@ This guide outlines the threat model, architecture security boundaries, and impl
 * **Mitigation**:
   - CORS configuration explicitly white-lists specific origins and credentials mode.
   - HSTS headers are enabled to enforce secure HTTPS channels.
+  - `X-Frame-Options: DENY` prevents clickjacking.
+  - `Permissions-Policy` blocks camera, microphone, geolocation, and payment API access from the backend.
+
+### 5. Sensitive Information Disclosure via Server Headers
+* **Threat**: Attackers fingerprinting the server stack through verbose HTTP headers (X-Powered-By, Server).
+* **Mitigation**:
+  - `X-Powered-By` header is disabled.
+  - Helmet's `hidePoweredBy` removes Express fingerprinting.
+  - Custom `X-Robots-Tag: noindex, nofollow` prevents search engine indexing of API responses.
+
+### 6. Missing Security Contact Information
+* **Threat**: Security researchers unable to find a responsible disclosure channel.
+* **Mitigation**:
+  - `security.txt` served at `/.well-known/security.txt` per RFC 9116.
+  - `SECURITY.md` includes multiple contact methods and in-scope vulnerability types.
+  - GitHub Security Advisory integration enabled for private disclosures.
+
+### 7. Crawler Abuse and Resource Exhaustion
+* **Threat**: Web crawlers consuming API bandwidth or indexing non-public endpoints.
+* **Mitigation**:
+  - `robots.txt` explicitly disallows `/api/` and `/admin/` paths.
+  - `Crawl-Delay: 10` directive limits aggressive crawlers.
+  - API rate limiting provides an additional layer of protection.

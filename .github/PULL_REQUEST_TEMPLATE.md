@@ -31,9 +31,16 @@ Closes #<issue-number>
 - Before:
 - After:
 
+## Release Notes
+
+<!-- Describe in one sentence what this PR changes for end users. This will be used in the automated release drafter. -->
+```release-note
+
+```
+
 ## Checklist
 
-- [ ] I followed the project’s code style guidelines.
+- [ ] I followed the project's code style guidelines.
 - [ ] I performed a self-review of my own changes.
 - [ ] My changes do not introduce new warnings or console errors.
 - [ ] I verified responsiveness and accessibility requirements.

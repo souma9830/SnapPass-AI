@@ -72,9 +72,7 @@ app.use(helmet({
     permittedCrossDomainPolicies: { permittedPolicies: 'none' },
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     xContentTypeOptions: true,
-    xDnsPrefetchControl: { allow: false },
-    xDownloadOptions: { enabled: true },
-    xPermittedCrossDomainPolicies: { permittedPolicies: 'none' },
+    xDownloadOptions: true,
 }));
 
 // Custom security headers not covered by helmet

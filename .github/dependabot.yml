@@ -1,17 +1,145 @@
+# SnapPass AI Dependabot Configuration
+# https://docs.github.com/en/code-security/dependabot
+
 version: 2
 updates:
+  # ── Frontend (npm) ──────────────────────────────────────────────────────
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 15
+    assignees:
+      - "souma9830"
+    labels:
+      - "dependencies"
+      - "frontend"
+    reviewers:
+      - "souma9830"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "react-router-dom"
+        update-types:
+          - "minor"
+          - "patch"
+      testing:
+        patterns:
+          - "@testing-library/*"
+          - "vitest"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "react"
+        versions: [">=20.0.0"]
+      - dependency-name: "react-dom"
+        versions: [">=20.0.0"]
+
+  # ── Backend (npm) ───────────────────────────────────────────────────────
   - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 15
+    assignees:
+      - "souma9830"
+    labels:
+      - "dependencies"
+      - "backend"
+    reviewers:
+      - "souma9830"
+    versioning-strategy: increase
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
+    groups:
+      express:
+        patterns:
+          - "express"
+          - "express-*"
+        update-types:
+          - "minor"
+          - "patch"
+      mongoose:
+        patterns:
+          - "mongoose"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ── Python AI Service (pip) ─────────────────────────────────────────────
   - package-ecosystem: "pip"
     directory: "/python-ai-service"
     schedule:
       interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 10
+    assignees:
+      - "souma9830"
+    labels:
+      - "dependencies"
+      - "python"
+    allow:
+      - dependency-type: "direct"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+
+  # ── Docker (all Dockerfiles) ────────────────────────────────────────────
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    labels:
+      - "dependencies"
+      - "docker"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    labels:
+      - "dependencies"
+      - "docker"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directory: "/python-ai-service"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    labels:
+      - "dependencies"
+      - "docker"
+    open-pull-requests-limit: 5
+
+  # ── GitHub Actions ─────────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+    labels:
+      - "dependencies"
+      - "ci"
     open-pull-requests-limit: 10

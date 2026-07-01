@@ -373,6 +373,29 @@ MONGO_URI=mongodb://localhost:27017/snappass
 
 ---
 
+## 🔒 Security & Dependencies
+
+SnapPass AI uses **Dependabot** for automated dependency updates across all ecosystems:
+
+| Ecosystem | Location | Schedule |
+|-----------|----------|----------|
+| npm | `/frontend`, `/backend` | Every Monday |
+| pip | `/python-ai-service` | Every Tuesday |
+| Docker | All Dockerfiles | Every Wednesday |
+| GitHub Actions | `.github/workflows` | Every Thursday |
+
+All dependency PRs are automatically labeled `dependencies` and assigned to maintainers. We also run:
+
+- **npm audit** weekly to detect high/critical vulnerabilities
+- **Trivy** filesystem scan for container and infrastructure issues
+- **Semgrep** SAST analysis on every PR for JavaScript and Python
+- **OpenSSF Scorecard** to track overall security posture
+- **CodeQL** deep code analysis on every push to master
+
+For reporting security vulnerabilities, see our [SECURITY.md](SECURITY.md) policy.
+
+---
+
 ## 🤝 Contributing
 
 We ❤️ contributions! Whether you're fixing bugs, building features, improving docs, or designing UI elements — every contribution matters.

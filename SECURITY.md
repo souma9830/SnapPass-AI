@@ -33,4 +33,21 @@ We take security seriously. If you discover a security vulnerability in **SnapPa
 
 ---
 
-*This security policy is part of the SnapPass AI open‑source project. Contributions and feedback are welcome to improve our security posture.*
+## Automated Security Scanning
+
+SnapPass AI uses several automated security tools to proactively identify vulnerabilities:
+
+| Tool | Schedule | Scope |
+|------|----------|-------|
+| Dependabot | Weekly (Mon–Thu) | npm, pip, Docker, GitHub Actions |
+| npm audit | Weekly (Monday) | Frontend & backend direct dependencies |
+| OpenSSF Scorecard | Weekly (Sunday) | Overall project security posture |
+| Trivy | Weekly (Sunday) | Filesystem vulnerability scanning |
+| Semgrep | Per PR + Weekly | SAST for JavaScript and Python |
+| CodeQL | Per PR + Weekly | Deep code analysis |
+
+Results are automatically uploaded as workflow artifacts and SARIF reports are integrated with GitHub Security tab.
+
+---
+
+*This security policy is part of the SnapPass AI open-source project. Contributions and feedback are welcome to improve our security posture.*

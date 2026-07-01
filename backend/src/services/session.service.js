@@ -84,5 +84,5 @@ export async function invalidateSessionById(id, userId) {
  * Retrieves all active sessions for a user.
  */
 export async function getActiveSessionsForUser(userId) {
-  return Session.find({ userId, isValid: true }).select("-token").sort({ updatedAt: -1 });
+  return Session.find({ userId, isValid: true, expiresAt: { $gt: new Date() } }).select("-token").sort({ updatedAt: -1 });
 }

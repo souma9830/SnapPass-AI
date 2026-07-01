@@ -25,10 +25,12 @@ import complianceRoutes from './routes/compliance.routes.js';
 import errorMiddleware from './middleware/error.middleware.js';
 import { apiLimiter } from './middleware/rateLimit.middleware.js';
 import logger from './utils/logger.js';
-import { sanitizeInput } from './middleware/sanitize.middleware.js';
+import mongoSanitize from "express-mongo-sanitize";
+
 
 const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);
+
 
 const app = express();
 
@@ -105,8 +107,17 @@ app.use(
 app.use(morgan("dev"));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(sanitizeInput);
+
+// Prevent NoSQL injection attacks by removing MongoDB query operators and dot notation
+app.use((req, _res, next) => {
+  if (req.body) mongoSanitize.sanitize(req.body);
+  if (req.query) mongoSanitize.sanitize(req.query);
+  if (req.params) mongoSanitize.sanitize(req.params);
+  next();
+});
+
 app.use(hpp());
+
 app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));

@@ -34,16 +34,30 @@ function usePhotoUpload() {
       setUploadedFile(nextUploaded);
       return nextUploaded;
     } catch (err) {
+      const status = err?.response?.status;
+      const backendMessage = err?.response?.data?.message;
+      const backendError = err?.response?.data?.error;
+
+      const isUnsupportedFormat =
+        status === 400 &&
+        (backendMessage?.toLowerCase().includes('unsupported file format') ||
+          backendError?.toLowerCase().includes('file rejected') ||
+          backendMessage?.toLowerCase().includes('only jpeg') ||
+          backendError?.toLowerCase().includes('magic bytes'));
+
       const isNetworkError =
         err.message?.toLowerCase().includes('network') ||
         err.message?.toLowerCase().includes('failed to fetch') ||
         err.message?.toLowerCase().includes('err_connection_refused');
 
       setError(
-        isNetworkError
-          ? 'Could not reach the server. Please check your connection or try again later.'
-          : err.message || 'Upload failed. Please try again.'
+        isUnsupportedFormat
+          ? 'Unsupported file format. Please upload a JPG, PNG, or WEBP image.'
+          : isNetworkError
+            ? 'Could not reach the server. Please check your connection or try again later.'
+            : backendMessage || backendError || err.message || 'Upload failed. Please try again.'
       );
+
       if (localUrlRef.current) {
         URL.revokeObjectURL(localUrlRef.current);
         localUrlRef.current = null;
@@ -53,6 +67,7 @@ function usePhotoUpload() {
       setIsUploading(false);
     }
   }, []);
+
 
 
   const reset = useCallback(() => {

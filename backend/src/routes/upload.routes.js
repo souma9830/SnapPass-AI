@@ -1,7 +1,7 @@
 /**
  * Upload Routes
- * POST /api/upload  — Upload a photo
- * GET  /api/upload/:fileId — Get upload metadata
+ * POST /api/upload           — Upload a photo (Private — requires authentication)
+ * GET  /api/upload/:fileId   — Get upload metadata (Private — requires authentication)
  */
 
 import express from 'express';

@@ -38,5 +38,11 @@
     "nodemon": "^3.0.1",
     "supertest": "^6.3.4"
   },
-  "type": "module"
+  "type": "module",
+  "jest": {
+    "moduleNameMapper": {
+      "^file-type$": "<rootDir>/__mocks__/file-type.cjs",
+      "^resend$": "<rootDir>/__mocks__/resend.cjs"
+    }
+  }
 }

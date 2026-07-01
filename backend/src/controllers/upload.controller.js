@@ -43,16 +43,15 @@ export const uploadPhoto = async (req, res, next) => {
       fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
     }
 
-    if (req.user?.id) {
-      await Upload.create({
-        user: req.user.id,
-        fileId,
-        originalName: req.file.originalname,
-        fileUrl,
-        mimeType: req.file.mimetype,
-        sizeBytes: req.file.size,
-      });
-    }
+    await Upload.create({
+      user: req.user?.id || null,
+      fileId,
+      filename: req.file.filename,
+      originalName: req.file.originalname,
+      fileUrl,
+      mimeType: req.file.mimetype,
+      sizeBytes: req.file.size,
+    });
 
     res.status(201).json({
       success: true,

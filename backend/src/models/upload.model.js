@@ -5,13 +5,18 @@ const uploadSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false, // Optional for anonymous uploads
     },
     fileId: {
       type: String,
       required: true,
       unique: true,
       index: true,
+    },
+    filename: {
+      type: String,
+      required: true,
+      trim: true,
     },
     originalName: {
       type: String,

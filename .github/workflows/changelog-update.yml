@@ -1,0 +1,64 @@
+name: Update Changelog
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      from:
+        description: 'Starting tag/commit for changelog generation'
+        required: false
+        default: ''
+      to:
+        description: 'Ending commit (default: HEAD)'
+        required: false
+        default: 'HEAD'
+
+permissions:
+  contents: write
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate changelog
+        run: |
+          FROM_FLAG=""
+          TO_FLAG=""
+
+          if [ "${{ github.event_name }}" = "release" ]; then
+            PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+            if [ -n "$PREV_TAG" ]; then
+              FROM_FLAG="--from $PREV_TAG"
+            fi
+            TO_FLAG="--to ${{ github.event.release.tag_name }}"
+          else
+            if [ -n "${{ github.event.inputs.from }}" ]; then
+              FROM_FLAG="--from ${{ github.event.inputs.from }}"
+            fi
+            if [ -n "${{ github.event.inputs.to }}" ]; then
+              TO_FLAG="--to ${{ github.event.inputs.to }}"
+            fi
+          fi
+
+          RELEASE_VERSION="${{ github.event.release.tag_name || 'Unreleased' }}" \
+            node scripts/generate-changelog.js $FROM_FLAG $TO_FLAG
+
+      - name: Commit updated changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "docs: update CHANGELOG.md for release" || echo "No changes to commit"
+          git push

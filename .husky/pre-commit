@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/h"
+
+# Run lint-staged on all staged files
+npx lint-staged --allow-empty

@@ -32,6 +32,11 @@ jobs:
           cd frontend
           npm ci
 
+      - name: Run frontend tests
+        run: |
+          cd frontend
+          npm run test:run
+
       - name: Build frontend
         run: |
           cd frontend

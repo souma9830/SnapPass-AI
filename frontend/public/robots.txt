@@ -1,3 +1,18 @@
-# https://www.robotstxt.org/robotstxt.html
+# SnapPass AI robots.txt
+# https://www.robotstxt.org/
+
+# Allow all crawlers full access (this is an application, not a content site)
 User-agent: *
-Disallow:
+Allow: /
+
+# Disable crawling of internal API routes and admin pages
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_nuxt/
+Disallow: /assets/
+
+# Crawl delay for rate-limited crawlers
+Crawl-delay: 10
+
+# Sitemap
+Sitemap: https://snappass.ai/sitemap.xml

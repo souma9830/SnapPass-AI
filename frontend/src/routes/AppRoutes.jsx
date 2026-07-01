@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import DelayedFallback from '../components/DelayedFallback';
 import RouteErrorBoundary from '../components/RouteErrorBoundary';
 import ScrollToTop from './ScrollToTop';
@@ -16,6 +16,7 @@ const HistoryPage = lazy(() => import('../pages/HistoryPage'));
 const PassportComparatorPage = lazy(
   () => import('../pages/PassportComparatorPage')
 );
+const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 
 /**
  * AppRoutes — central route configuration for SnapPass AI.
@@ -75,8 +76,11 @@ function AppRoutes({ darkMode, toggleTheme }) {
               />
             }
           />
-          {/* Fallback — redirect unknown paths to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Fallback — 404 page for unknown routes */}
+          <Route
+            path="*"
+            element={<NotFoundPage darkMode={darkMode} />}
+          />
         </Routes>
       </Suspense>
     </RouteErrorBoundary>

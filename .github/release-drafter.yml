@@ -1,0 +1,88 @@
+# Release drafter configuration
+# Automatically drafts release notes based on merged PR labels and commits.
+# https://github.com/release-drafter/release-drafter
+
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'type:feature'
+      - 'enhancement'
+      - 'feat'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'type:bug'
+      - 'fix'
+      - 'bug'
+  - title: '🛡️ Security'
+    labels:
+      - 'type:security'
+      - 'security'
+  - title: '♿ Accessibility'
+    labels:
+      - 'type:accessibility'
+      - 'a11y'
+  - title: '🎨 UI/UX'
+    labels:
+      - 'type:design'
+      - 'style'
+      - 'ui'
+  - title: '⚡ Performance'
+    labels:
+      - 'type:performance'
+      - 'perf'
+  - title: '📝 Documentation'
+    labels:
+      - 'type:docs'
+      - 'documentation'
+  - title: '🔧 Refactoring'
+    labels:
+      - 'type:refactor'
+      - 'refactor'
+  - title: '🧪 Testing'
+    labels:
+      - 'type:testing'
+      - 'test'
+  - title: '🔩 DevOps & CI'
+    labels:
+      - 'type:devops'
+      - 'ci'
+      - 'ops'
+
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels:
+      - 'version:major'
+  minor:
+    labels:
+      - 'version:minor'
+      - 'type:feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'version:patch'
+      - 'type:bug'
+      - 'fix'
+      - 'security'
+      - 'type:security'
+      - 'type:docs'
+      - 'type:refactor'
+      - 'type:testing'
+      - 'type:devops'
+  default: patch
+
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  ## Contributors
+
+  $CONTRIBUTORS
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION

@@ -1,0 +1,11 @@
+name: Security Audit
+
+on: [push, pull_request]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run NPM Audit
+        run: npm audit --audit-level=high

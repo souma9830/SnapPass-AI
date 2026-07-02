@@ -235,7 +235,7 @@ npm install
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
@@ -338,7 +338,7 @@ NODE_ENV=development
 AI_SERVICE_URL=http://localhost:8000
 UPLOAD_DIR=uploads
 MAX_FILE_SIZE=10485760
-CORS_ORIGIN=http://localhost:3000
+CORS_ORIGIN=http://localhost:5173
 MONGO_URI=mongodb://localhost:27017/snappass
 ```
 

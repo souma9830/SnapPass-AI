@@ -22,7 +22,7 @@ const HeroSection = ({ darkMode, toggleTheme }) => {
         >
           <span className={`badge ${darkMode ? "badge-blue-dark" : "badge-blue"}`}>{t.openSourceFree}</span>
           <h1 id="hero-title" className={`hero__title ${darkMode ? 'hero__title-dark' : 'hero__title-light'}`}>
-            {t.heroMainTitle},<br />
+            {t.heroMainTitle}<br />
             <span className={`hero__title-highlight ${darkMode ? 'hero__title-highlight-dark' : 'hero__title-highlight-light'}`}> {t.heroHighlight}</span>
           </h1>
           <p className={`hero__subtitle ${darkMode ? 'hero__subtitle-dark' : 'hero__subtitle-light'}`} >

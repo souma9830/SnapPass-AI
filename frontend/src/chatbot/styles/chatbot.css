@@ -263,16 +263,18 @@
 
 /* ── INPUT AREA ───────────────────────── */
 
+.chatbot-input-container {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(226, 232, 240, 0.9);
+    background: rgba(255, 255, 255, 0.7);
+    padding: 12px 16px;
+}
+
 .chatbot-input-area {
     display: flex;
     align-items: center;
     gap: 10px;
-
-    padding: 16px;
-
-    border-top: 1px solid rgba(226, 232, 240, 0.9);
-
-    background: rgba(255, 255, 255, 0.7);
 }
 
 .chatbot-input-area input {
@@ -293,6 +295,10 @@
 
 .chatbot-input-area input:focus {
     border-color: var(--color-primary);
+}
+
+.chatbot-input-area input[aria-invalid="true"] {
+    border-color: #ef4444;
 }
 
 .chatbot-input-area button {
@@ -318,8 +324,41 @@
         opacity 0.2s ease;
 }
 
-.chatbot-input-area button:hover {
+.chatbot-input-area button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.chatbot-input-area button:not(:disabled):hover {
     transform: scale(1.05);
+}
+
+.chatbot-input-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    padding: 0 4px;
+}
+
+.char-counter {
+    color: #64748b;
+    margin-left: auto;
+    transition: color 0.2s ease;
+}
+
+.char-counter.warning-text {
+    color: #f59e0b;
+}
+
+.char-counter.error-text {
+    color: #ef4444;
+}
+
+.limit-message {
+    color: #ef4444;
 }
 
 /* ── TYPING INDICATOR ───────────────────────── */
@@ -445,9 +484,29 @@
 }
 
 
-[data-theme='dark'] .chatbot-input-area {
+[data-theme='dark'] .chatbot-input-container {
     background: rgba(12, 10, 0, 0.9);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .char-counter {
+    color: #94a3b8;
+}
+
+[data-theme='dark'] .char-counter.warning-text {
+    color: #fbbf24;
+}
+
+[data-theme='dark'] .char-counter.error-text {
+    color: #f87171;
+}
+
+[data-theme='dark'] .limit-message {
+    color: #f87171;
+}
+
+[data-theme='dark'] .chatbot-input-area input[aria-invalid="true"] {
+    border-color: #f87171;
 }
 
 [data-theme='dark'] .chatbot-input-area input {

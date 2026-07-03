@@ -1,36 +1,43 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-const SEOMetadata = ({ title, description }) => {
+const DEFAULT_TITLE = 'SnapPass AI - Professional Passport Photos';
+const DEFAULT_DESC = 'Create professional-grade, standard-compliant passport photos in seconds using AI background removal and face detection.';
+
+function SEOMetadata({ title, description, lang = 'en' }) {
   useEffect(() => {
-    // Update Document Title
     const prevTitle = document.title;
-    document.title = title ? `${title} | SnapPass AI` : "SnapPass AI - Professional Passport Photos";
+    document.title = title ? `${title} | SnapPass AI` : DEFAULT_TITLE;
 
-    // Update Meta Description
-    let metaDescription = document.querySelector("meta[name='description']");
-    const prevDescription = metaDescription ? metaDescription.getAttribute("content") : "";
+    const setMeta = (name, content, isProperty = false) => {
+      const attr = isProperty ? 'property' : 'name';
+      let el = document.querySelector(`meta[${attr}="${name}"]`);
+      const prev = el ? el.getAttribute('content') : '';
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+      return prev;
+    };
 
-    if (!metaDescription) {
-      metaDescription = document.createElement("meta");
-      metaDescription.setAttribute("name", "description");
-      document.head.appendChild(metaDescription);
-    }
-    
-    metaDescription.setAttribute(
-      "content",
-      description || "Create professional-grade, standard-compliant passport photos in seconds using AI background removal and face detection."
-    );
+    const prevDesc = setMeta('description', description || DEFAULT_DESC);
+    const prevOgTitle = setMeta('og:title', title || DEFAULT_TITLE, true);
+    const prevOgDesc = setMeta('og:description', description || DEFAULT_DESC, true);
+    const prevOgUrl = setMeta('og:url', window.location.href, true);
+
+    document.documentElement.setAttribute('lang', lang);
 
     return () => {
-      // Restore previous state on unmount
       document.title = prevTitle;
-      if (metaDescription) {
-        metaDescription.setAttribute("content", prevDescription);
-      }
+      setMeta('description', prevDesc);
+      setMeta('og:title', prevOgTitle, true);
+      setMeta('og:description', prevOgDesc, true);
+      setMeta('og:url', prevOgUrl, true);
     };
-  }, [title, description]);
+  }, [title, description, lang]);
 
   return null;
-};
+}
 
 export default SEOMetadata;

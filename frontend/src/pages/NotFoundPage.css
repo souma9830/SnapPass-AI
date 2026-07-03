@@ -180,6 +180,27 @@
   align-items: center;
 }
 
+.not-found-page__report {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.not-found-page__report-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.not-found-page__report-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 @media (max-width: 480px) {
   .not-found-page__actions {
     flex-direction: column;

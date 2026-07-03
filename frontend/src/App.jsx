@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import AppRoutes from './routes/AppRoutes';
+import SkipToContent from './components/SkipToContent';
 import SnapPassAssistant from './chatbot/SnapPassAssistant';
 import { ToastProvider } from './context/ToastContext';
 import './App.css';
@@ -38,7 +39,8 @@ function App() {
     <ToastProvider>
       <div className="app-shell">
         <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
-        <main className="app-main">
+        <SkipToContent />
+        <main className="app-main" id="main-content" tabIndex={-1}>
           <AppRoutes darkMode={darkMode} toggleTheme={toggleTheme} />
         </main>
         <Footer darkMode={darkMode} toggleTheme={toggleTheme} />

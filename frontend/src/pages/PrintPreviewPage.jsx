@@ -3,6 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import QuantityInput from '../components/QuantityInput';
 import PrintButton from '../components/PrintButton';
 import PrintLayoutSelector from '../components/PrintLayoutSelector';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
 import { motion } from 'framer-motion';
@@ -26,6 +27,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   const t = translations[locale] || translations.en;
   const { state } = useLocation();
   const savedSession = getSession();
+  useDocumentMeta({ title: 'Print Preview', description: 'Preview and print your passport photos on A4 paper.' });
 
   const [quantity, setQuantity] = useState(savedSession?.quantity || 6);
   const [layout, setLayout] = useState('a4');

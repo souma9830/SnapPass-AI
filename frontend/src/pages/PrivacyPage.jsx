@@ -1,11 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import './PrivacyPage.css';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
 const PrivacyPage = () => {
     const { language } = useLanguage();
+    useDocumentMeta({ title: 'Privacy Policy', description: 'SnapPass AI privacy policy - how we handle your photos and data.' });
     const t = translations[language];
     const fadeUpVariant = {
         hidden: { opacity: 0, y: 30 },

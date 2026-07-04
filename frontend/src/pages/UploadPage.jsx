@@ -20,7 +20,7 @@ function UploadPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
   const navigate = useNavigate();
-  const { uploadFile, uploadedFile, isUploading, error, uploadProgress } = usePhotoUpload();
+  const { uploadFile, uploadedFile, isUploading, error } = usePhotoUpload();
 
   const tips = [
     { type: 'ok', text: t.tipPlainBg },
@@ -140,9 +140,7 @@ function UploadPage({ darkMode, toggleTheme }) {
           custom={0.5} // Loads after the tips
         >
           {isUploading ? (
-            <div className="upload-progress">
-              <div className="upload-progress-bar" style={{ width: `${uploadProgress}%` }}></div>
-            </div>
+            <LoadingSpinner message={t.uploadPreparing} size="lg" />
           ) : (
             <UploadBox onFileSelect={uploadFile} />
           )}

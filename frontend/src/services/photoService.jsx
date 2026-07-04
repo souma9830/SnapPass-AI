@@ -10,15 +10,13 @@ import api from './api';
 /**
  * Upload a photo file to the backend.
  * @param {File} file
- * @param {Function} [onUploadProgress]
  * @returns {Promise<{ fileId, filename, fileUrl }>}
  */
-export const uploadPhoto = async (file, onUploadProgress) => {
+export const uploadPhoto = async (file) => {
   const formData = new FormData();
   formData.append('photo', file);
   const { data } = await api.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
-    onUploadProgress,
   });
   return data.data;
 };

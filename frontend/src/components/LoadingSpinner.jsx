@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoadingSpinner.css';
 
 /**
@@ -20,8 +20,19 @@ import './LoadingSpinner.css';
  *   message  (string)  — optional status message shown below the spinner
  *   size     (string)  — 'sm' | 'md' | 'lg' (default 'md')
  *   light    (bool)    — use white ring for dark/primary-colour backgrounds (default false)
+ *   delayMs  (number)  — milliseconds to wait before showing the spinner (default 0)
  */
-function LoadingSpinner({ fullPage = false, message = '', size = 'md', light = false }) {
+function LoadingSpinner({ fullPage = false, message = '', size = 'md', light = false, delayMs = 0 }) {
+  const [show, setShow] = useState(delayMs <= 0);
+
+  useEffect(() => {
+    if (delayMs <= 0) return;
+    const timer = setTimeout(() => setShow(true), delayMs);
+    return () => clearTimeout(timer);
+  }, [delayMs]);
+
+  if (!show) return null;
+
   return (
     <div
       className={[

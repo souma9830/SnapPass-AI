@@ -1,5 +1,4 @@
 import React from 'react';
-import './QuantityInput.css';
 
 /**
  * QuantityInput — stepper component to choose number of photos on a sheet.
@@ -54,7 +53,11 @@ function QuantityInput({ darkMode, toggleTheme, value = 6, onChange, min = 1, ma
           min={min}
           max={max}
           onChange={handleChange}
-          aria-label="Number of photos"
+          aria-label="Number of photos per sheet"
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={value}
+          role="spinbutton"
         />
         <button
           className="qty-input__btn"

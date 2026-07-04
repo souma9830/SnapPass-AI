@@ -3,6 +3,7 @@ import './UploadBox.css';
 import { validateImageFile, validateImageMagicBytes } from '../utils/fileValidation';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
+import { useToast } from '../context/ToastContext';
 
 /**
  * UploadBox — drag-and-drop + click-to-browse photo uploader.
@@ -14,29 +15,36 @@ function UploadBox({ onFileSelect }) {
   const { language } = useLanguage();
   const t = translations[language];
   const inputRef = useRef(null);
+  const { showToast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
+  // error state kept for potential UI fallback
   const [error, setError] = useState('');
 
   const handleFile = async (file) => {
+    // Clear any previous error UI state
+    setError('');
+
     if (!file) {
-      setError('Please select an image file.');
+      // Show toast for missing file
+      showToast('Please select an image file.', 'error');
       return;
     }
 
     const result = validateImageFile(file);
     if (!result.valid) {
-      setError(result.error);
+      // Show toast with validation error
+      showToast(result.error, 'error');
       return;
     }
 
     // Validate magic bytes to verify actual image signature
     const isValidMagic = await validateImageMagicBytes(file);
     if (!isValidMagic) {
-      setError('Invalid file structure. The file signature does not match a valid JPG, PNG, or WEBP image.');
+      // Show toast for invalid file structure
+      showToast('Invalid file structure. The file signature does not match a valid JPG, PNG, or WEBP image.', 'error');
       return;
     }
 
-    setError('');
     if (onFileSelect) {
       onFileSelect(file);
     }

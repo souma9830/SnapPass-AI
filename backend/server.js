@@ -3,14 +3,13 @@ import { config } from './src/config/config.js';
 import connectDatabase from './src/config/db.js';
 import { verifyEnvironment } from './src/utils/envCheck.js';
 
-// Verify required configurations
 verifyEnvironment();
-
 const PORT = config.port;
 
 connectDatabase();
 
 app.listen(PORT, () => {
-  console.log(`✅  SnapPass AI backend running on http://localhost:${PORT}`);
-  console.log(`🤖  AI Service URL: ${config.aiServiceUrl}`);
+  console.log(`SnapPass AI backend running on http://localhost:${PORT}`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`API base: http://localhost:${PORT}/api`);
 });

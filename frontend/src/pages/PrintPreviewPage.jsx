@@ -6,7 +6,7 @@ import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
-import { calculatePasswordStrength } from '../utils/passwordStrength';
+import { calculatePasswordStrength } from '../utils/validators';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import {
@@ -21,12 +21,14 @@ import {
  * User picks quantity, then downloads or prints the sheet.
  */
 function PrintPreviewPage({ darkMode, toggleTheme }) {
-  const { language } = useLanguage();
-  const t = translations[language];
+  const { locale } = useLanguage();
+  const t = translations[locale] || translations.en;
   const { state } = useLocation();
   const savedSession = getSession();
+  useDocumentMeta({ title: 'Print Preview', description: 'Preview and print your passport photos on A4 paper.' });
 
   const [quantity, setQuantity] = useState(savedSession?.quantity || 6);
+  const [layout, setLayout] = useState('a4');
   const [isGenerating, setIsGenerating] = useState(false);
   const [password, setPassword] = useState('');
   const [strength, setStrength] = useState(0);
@@ -63,6 +65,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
         filename: state?.filename || savedSession?.filename,
         quantity,
         photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
+        layout,
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -206,6 +209,14 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               toggleTheme={toggleTheme}
               value={quantity}
               onChange={setQuantity}
+            />
+
+            <hr className="divider" />
+
+            <PrintLayoutSelector
+              selectedLayout={layout}
+              onChange={setLayout}
+              darkMode={darkMode}
             />
 
             <hr className="divider" />

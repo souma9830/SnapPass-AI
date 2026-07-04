@@ -1,0 +1,239 @@
+.settings-layout {
+  min-height: calc(100vh - 80px);
+  padding: 40px 20px;
+  background: var(--bg-fallback, #f9fafb);
+  color: var(--text-color, #1f2937);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.settings-layout--dark {
+  background: #111827;
+  color: #f3f4f6;
+  --bg-card: #1f2937;
+  --border-color: #374151;
+}
+
+.settings-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.settings-header {
+  margin-bottom: 30px;
+}
+
+.settings-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.settings-subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.settings-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: var(--bg-card, #ffffff);
+}
+
+.sidebar-nav-btn {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav-btn:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.sidebar-nav-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.settings-main {
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: var(--bg-card, #ffffff);
+}
+
+.form-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-input,
+.form-select-elem {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #d1d5db);
+  background: transparent;
+  color: inherit;
+  font-size: 0.95rem;
+}
+
+.form-input:focus,
+.form-select-elem:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.form-group-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.form-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.theme-toggle-container {
+  display: flex;
+  gap: 12px;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #d1d5db);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-btn--active {
+  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+.section-description {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  margin-bottom: 24px;
+}
+
+.sessions-loading,
+.sessions-empty,
+.sessions-error-box {
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  background: rgba(156, 163, 175, 0.08);
+  font-weight: 500;
+}
+
+.sessions-error-box {
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: rgba(156, 163, 175, 0.04);
+}
+
+.session-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.session-device {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.session-details {
+  font-size: 0.82rem;
+  opacity: 0.7;
+}
+
+.revoke-btn {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.revoke-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}

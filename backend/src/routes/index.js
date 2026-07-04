@@ -1,0 +1,24 @@
+import { Router } from 'express';
+import authRoutes from './auth.routes.js';
+import uploadRoutes from './upload.routes.js';
+import imageRoutes from './image.routes.js';
+import processRoutes from './process.routes.js';
+import printRoutes from './print.routes.js';
+import healthRoutes from './health.routes.js';
+import complianceRoutes from './compliance.routes.js';
+import testimonialRoutes from './testimonial.routes.js';
+import uploadHistoryRoutes from './uploadHistory.routes.js';
+
+const router = Router();
+
+router.use('/auth', authRoutes);
+router.use('/upload', uploadRoutes);
+router.use('/process', imageRoutes);
+router.use('/process', processRoutes);
+router.use('/print', printRoutes);
+router.use('/compliance', complianceRoutes);
+router.use('/testimonials', testimonialRoutes);
+router.use('/upload-history', uploadHistoryRoutes);
+
+export { healthRoutes };
+export default router;

@@ -53,7 +53,7 @@ export const processImage = async (req, res, next) => {
     }
 
     // 4. Strict directory containment (prevent path traversal completely)
-    const uploadsDir = path.resolve(localDirname, "..", "..", "uploads");
+    const uploadsDir = path.resolve(process.cwd(), "uploads");
     const filePath = path.resolve(uploadsDir, filename);
 
     const relative = path.relative(uploadsDir, filePath);
@@ -133,10 +133,15 @@ export const processImage = async (req, res, next) => {
       responseType: "arraybuffer",
     });
 
-    // TODO: Save processed image to disk and return URL
-    // For now, stream the AI response back directly
-    res.set("Content-Type", "image/png");
-    res.send(Buffer.from(aiResponse.data));
+    // Save processed image to disk and return URL
+    const processedDir = path.resolve(uploadsDir, 'processed');
+    await fs.promises.mkdir(processedDir, { recursive: true });
+    const outExt = path.extname(filename).slice(1) || 'png';
+    const outFilename = `${path.parse(filename).name}_processed.${outExt}`;
+    const outPath = path.join(processedDir, outFilename);
+    await fs.promises.writeFile(outPath, Buffer.from(aiResponse.data));
+    const processedUrl = `/uploads/processed/${outFilename}`;
+    res.json({ success: true, data: { processedUrl } });
   } catch (error) {
     // Graceful fallback if AI service is unavailable
     if (error.code === "ECONNREFUSED") {
@@ -225,7 +230,7 @@ export const createProcessJob = async (req, res, next) => {
 
         // Reuse existing sync pipeline by calling the same AI endpoint logic.
         // We forward a multipart request to the Python AI service like processImage does.
-        const uploadsDir = path.resolve(localDirname, '..', '..', 'uploads');
+        const uploadsDir = path.resolve(process.cwd(), "uploads");
         const filePath = path.resolve(uploadsDir, filename);
 
         const relative = path.relative(uploadsDir, filePath);
@@ -251,14 +256,16 @@ export const createProcessJob = async (req, res, next) => {
           }
         }
 
-        const form = new FormData();
-        form.append('image', fs.createReadStream(filePath));
-        form.append('background_colour', backgroundColour);
-        form.append('photo_size_preset', photoSizePreset);
-        form.append('attire', attire);
+        const uploadForm = new FormData();
+        uploadForm.append('image', fs.createReadStream(filePath));
+        uploadForm.append('background_colour', backgroundColour);
+        uploadForm.append('photo_size_preset', photoSizePreset);
+        uploadForm.append('attire', attire);
 
-        const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, form, {
-          headers: form.getHeaders(),
+
+        const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
+          headers: uploadForm.getHeaders(),
+
           responseType: 'arraybuffer',
         });
 

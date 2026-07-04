@@ -21,7 +21,7 @@ const localDirname = path.dirname(localFilename);
  */
 export const generateSheet = async (req, res, next) => {
   try {
-    const { filename, quantity = 6, photoSizePreset = "35x45" } = req.body;
+    const { filename, quantity = 6, photoSizePreset = "35x45", layout = "a4" } = req.body;
 
     if (!filename) {
       return res.status(400).json({ success: false, message: "filename is required." });
@@ -76,10 +76,16 @@ export const generateSheet = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Quantity must be an integer between 1 and 50." });
     }
 
+    // Layout configuration check
+    const allowedLayouts = ["a4", "letter", "4x6"];
+    if (!allowedLayouts.includes(layout)) {
+      return res.status(400).json({ success: false, message: "Invalid layout selection." });
+    }
+
     // 7. Call python AI microservice with correct parameter mappings
     const aiResponse = await axios.post(
       `${config.aiServiceUrl}/generate-sheet`,
-      { photo_path: filePath, quantity: parsedQuantity, preset_id: photoSizePreset },
+      { photo_path: filePath, quantity: parsedQuantity, preset_id: photoSizePreset, layout },
       { responseType: "arraybuffer" }
     );
 

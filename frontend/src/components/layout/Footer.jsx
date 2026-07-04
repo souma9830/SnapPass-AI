@@ -195,6 +195,14 @@ function Footer({ darkMode }) {
               >
                 {t.printPreview}
               </Link>
+
+              <Link
+                to="/diagnostics"
+                className={`footer__item ${darkMode ? 'footer__item-dark' : ''
+                  }`}
+              >
+                Diagnostics
+              </Link>
             </div>
 
             {/* COMPANY */}

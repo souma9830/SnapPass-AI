@@ -387,6 +387,19 @@ If your commit is rejected, look at the error message from commitlint:
 - [ ] You have removed all unnecessary `console.log` or `print()` statements.
 - [ ] If making CSS changes, they are responsive (you checked on mobile view).
 - [ ] You have added JSDoc/Python docstrings for complex logic.
+- [ ] Your PR includes a `release-note` block describing user-facing changes.
+
+### Issue & PR Lifecycle Automation
+
+SnapPass AI uses GitHub Actions to automate common maintenance tasks:
+
+- **Auto-Triage**: New issues are automatically labeled `status:triage` and assigned relevant type labels based on content.
+- **Stale Detection**: Issues and PRs with no activity for 60 days are marked `status:stale` and closed after 14 additional days of inactivity. Priority, security, and `help wanted` issues are exempt.
+- **Thread Locking**: Resolved issues are automatically locked after 90 days to keep discussions focused.
+- **First-Time Welcome**: First-time contributors receive an automated welcome message with helpful resources.
+- **Release Drafter**: Merged PRs with release notes are automatically compiled into draft releases on every push to `master`.
+
+> These automations are defined in `.github/workflows/`. See `.github/LABEL_DESCRIPTIONS.md` for the full label reference guide.
 
 ### PR Description Template
 When you open a PR, please copy, paste, and fill in this exact template:

@@ -33,7 +33,7 @@
 }
 
 .text-highlight {
-    color: #2563eb;
+    color: var(--color-primary);
 }
 
 .studio-workspace {
@@ -64,7 +64,7 @@
 .file-name-display {
     font-size: 0.85rem;
     font-weight: 500;
-    color: #64748b;
+    color: var(--color-text-light);
     background: rgba(255, 255, 255, 0.6);
     padding: 6px 12px;
     border-radius: 99px;
@@ -96,7 +96,7 @@
 .top-action-btn.outline {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid #e2e8f0;
-    color: #475569;
+    color: var(--color-text-muted);
 }
 
 .top-action-btn.outline:hover {
@@ -106,9 +106,9 @@
 }
 
 .top-action-btn.primary {
-    background: #fff;
+    background: var(--color-surface);
     border: 1px solid #bfdbfe;
-    color: #2563eb;
+    color: var(--color-primary);
     box-shadow: 0 4px 6px rgba(37, 99, 235, 0.05);
 }
 

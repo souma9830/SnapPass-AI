@@ -159,8 +159,8 @@
 }
 
 .navbar__cta-light {
-  background-color: #3b82f6;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-surface);
   font-weight: bold;
 }
 

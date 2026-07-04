@@ -5,6 +5,10 @@ import { config } from '../config/config.js';
 
 const router = express.Router();
 
+router.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'snappass-backend' });
+});
+
 router.get('/diagnostics', async (req, res) => {
   // Compute event loop lag
   const start = Date.now();

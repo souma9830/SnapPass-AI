@@ -5,7 +5,7 @@ function ChatbotButton({ onClick, isOpen }) {
         <button
             className={`chatbot-floating-button ${isOpen ? "open" : ""}`}
             onClick={onClick}
-            aria-label="Open SnapPass Assistant"
+            aria-label={isOpen ? "Close SnapPass Assistant" : "Open SnapPass Assistant"}
         >
             <MessageCircle size={28} />
         </button>

@@ -36,6 +36,7 @@ function EmptyState({
       <p className="empty-state__description">{description}</p>
 
       <button
+        type="button"
         className={`btn btn-primary empty-state__button ${darkMode ? 'empty-state__button-dark' : ''}`}
         onClick={handleAction}
       >

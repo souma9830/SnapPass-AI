@@ -81,6 +81,13 @@ export async function invalidateSessionById(id, userId) {
 }
 
 /**
+ * Invalidates multiple sessions by their MongoDB IDs.
+ */
+export async function invalidateSessionsByIds(ids, userId) {
+  await Session.updateMany({ _id: { $in: ids }, userId }, { isValid: false });
+}
+
+/**
  * Retrieves all active sessions for a user.
  */
 export async function getActiveSessionsForUser(userId) {

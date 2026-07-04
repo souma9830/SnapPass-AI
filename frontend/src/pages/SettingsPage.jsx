@@ -43,6 +43,9 @@ function SettingsPage({ darkMode, toggleTheme }) {
     }
   }, [activeTab]);
 
+  const [selectedSessions, setSelectedSessions] = useState(new Set());
+  const [revoking, setRevoking] = useState(false);
+
   const handleRevokeSession = async (sessionId) => {
     try {
       const res = await fetch(`/api/auth/sessions/${sessionId}`, {
@@ -50,12 +53,43 @@ function SettingsPage({ darkMode, toggleTheme }) {
       });
       if (res.ok) {
         setSessions(sessions.filter((s) => s._id !== sessionId));
+        setSelectedSessions(prev => { const next = new Set(prev); next.delete(sessionId); return next; });
       } else {
         alert('Could not revoke session. Please try again.');
       }
     } catch (err) {
       alert('Network error. Unable to revoke session.');
     }
+  };
+
+  const toggleSessionSelection = (sessionId) => {
+    setSelectedSessions(prev => {
+      const next = new Set(prev);
+      if (next.has(sessionId)) next.delete(sessionId);
+      else next.add(sessionId);
+      return next;
+    });
+  };
+
+  const handleBulkRevoke = async () => {
+    if (selectedSessions.size === 0) return;
+    setRevoking(true);
+    try {
+      const res = await fetch('/api/auth/sessions/bulk-revoke', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionIds: Array.from(selectedSessions) }),
+      });
+      if (res.ok) {
+        setSessions(sessions.filter((s) => !selectedSessions.has(s._id)));
+        setSelectedSessions(new Set());
+      } else {
+        alert('Could not revoke selected sessions.');
+      }
+    } catch (err) {
+      alert('Network error during bulk revoke.');
+    }
+    setRevoking(false);
   };
 
   const handleSavePreferences = (e) => {
@@ -211,26 +245,44 @@ function SettingsPage({ darkMode, toggleTheme }) {
                 )}
 
                 {!loadingSessions && sessions.length > 0 && (
-                  <div className="sessions-list">
-                    {sessions.map((sess) => (
-                      <div key={sess._id} className="session-item">
-                        <div className="session-info">
-                          <div className="session-device">
-                            🖥️ {sess.userAgent.length > 40 ? sess.userAgent.substring(0, 40) + '...' : sess.userAgent}
+                  <div>
+                    {selectedSessions.size > 0 && (
+                      <button
+                        onClick={handleBulkRevoke}
+                        disabled={revoking}
+                        className="revoke-btn revoke-btn--bulk"
+                      >
+                        {revoking ? 'Revoking...' : `Revoke Selected (${selectedSessions.size})`}
+                      </button>
+                    )}
+                    <div className="sessions-list">
+                      {sessions.map((sess) => (
+                        <div key={sess._id} className="session-item">
+                          <input
+                            type="checkbox"
+                            checked={selectedSessions.has(sess._id)}
+                            onChange={() => toggleSessionSelection(sess._id)}
+                            className="session-checkbox"
+                            aria-label={`Select session from ${sess.ipAddress}`}
+                          />
+                          <div className="session-info">
+                            <div className="session-device">
+                              🖥️ {sess.userAgent.length > 40 ? sess.userAgent.substring(0, 40) + '...' : sess.userAgent}
+                            </div>
+                            <div className="session-details">
+                              <span><strong>IP:</strong> {sess.ipAddress}</span> • <span><strong>Created:</strong> {new Date(sess.createdAt).toLocaleDateString()}</span>
+                            </div>
                           </div>
-                          <div className="session-details">
-                            <span><strong>IP:</strong> {sess.ipAddress}</span> • <span><strong>Created:</strong> {new Date(sess.createdAt).toLocaleDateString()}</span>
-                          </div>
+                          <button
+                            onClick={() => handleRevokeSession(sess._id)}
+                            className="revoke-btn"
+                            title="Terminate session immediately"
+                          >
+                            Revoke
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handleRevokeSession(sess._id)}
-                          className="revoke-btn"
-                          title="Terminate session immediately"
-                        >
-                          Revoke
-                        </button>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

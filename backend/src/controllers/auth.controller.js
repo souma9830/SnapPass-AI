@@ -73,6 +73,15 @@ export const revokeSession = catchAsync(async (req, res) => {
   sendResponse(res, 200, true, 'Session revoked successfully', null);
 });
 
+export const bulkRevokeSessions = catchAsync(async (req, res) => {
+  const { sessionIds } = req.body;
+  if (!Array.isArray(sessionIds) || sessionIds.length === 0) {
+    return sendResponse(res, 400, false, 'sessionIds must be a non-empty array', null);
+  }
+  await sessionService.invalidateSessionsByIds(sessionIds, req.user.id);
+  sendResponse(res, 200, true, `${sessionIds.length} session(s) revoked successfully`, null);
+});
+
 export const requestPasswordReset = catchAsync(async (req, res) => {
   const { email } = req.body;
 

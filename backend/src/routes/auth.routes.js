@@ -47,6 +47,7 @@ router.get("/sessions", authMiddleware, authController.getActiveSessions);
  * @description Revoke a specific user session by database ID
  * @access Private
  */
+router.post("/sessions/bulk-revoke", authMiddleware, authController.bulkRevokeSessions);
 router.delete("/sessions/:id", authMiddleware, authController.revokeSession);
 
 /**

@@ -71,6 +71,7 @@ def _safe_photo_path(raw: str) -> str:
 
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = config.MAX_FILE_MB * 1024 * 1024
 CORS(app)
 
 limiter = Limiter(

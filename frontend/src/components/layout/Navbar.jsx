@@ -13,11 +13,11 @@ const navItems = [
 
 const languages = [
   { value: 'en', label: 'English' },
-  { value: 'es', label: 'Español' },
+  { value: 'hi', label: 'हिन्दी' },
 ];
 
 export const Navbar = ({ darkMode = false, toggleTheme }) => {
-  const { locale, setLocale } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const themeClass = darkMode ? 'dark' : 'light';
 
@@ -71,13 +71,13 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
         <div className="navbar__actions">
           <select
             className={`navbar__language-selector navbar__language-selector-${themeClass} navbar__desktop-language`}
-            value={locale}
-            onChange={(event) => setLocale(event.target.value)}
+            value={language}
+            onChange={(event) => setLanguage(event.target.value)}
             aria-label="Select language"
           >
-            {languages.map((language) => (
-              <option key={language.value} value={language.value}>
-                {language.label}
+            {languages.map((lang) => (
+              <option key={lang.value} value={lang.value}>
+                {lang.label}
               </option>
             ))}
           </select>
@@ -134,8 +134,8 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
 
         <select
           className={`navbar__language-selector navbar__language-selector-${themeClass}`}
-          value={locale}
-          onChange={(event) => setLocale(event.target.value)}
+          value={language}
+          onChange={(event) => setLanguage(event.target.value)}
           aria-label="Select language"
         >
           {languages.map((language) => (

@@ -24,16 +24,18 @@ function Footer({ darkMode }) {
       className={`footer ${darkMode ? 'footer-dark' : ''}`}
       role="contentinfo"
     >
-      {/* Decorative top wave */}
       <div
         className={`footer__wave-container ${darkMode ? 'footer__wave-container-dark' : ''
           }`}
+        aria-hidden="true"
       >
         <svg
           className="footer__wave"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 24 150 28"
           preserveAspectRatio="none"
+          aria-hidden="true"
+          focusable="false"
         >
           <defs>
             <path
@@ -147,16 +149,16 @@ function Footer({ darkMode }) {
 
             {/* SOCIALS */}
             <div className="footer__socials">
-              <a href="https://www.linkedin.com/in/soumadeep-s/" className="footer__social-link">
-                <Globe size={18} />
+              <a href="https://www.linkedin.com/in/soumadeep-s/" className="footer__social-link" aria-label="LinkedIn">
+                <Globe size={18} aria-hidden="true" />
               </a>
 
-              <a href="https://www.facebook.com/soumadeep9830" className="footer__social-link">
-                <Share2 size={18} />
+              <a href="https://www.facebook.com/soumadeep9830" className="footer__social-link" aria-label="Facebook">
+                <Share2 size={18} aria-hidden="true" />
               </a>
 
-              <a href="https://github.com/souma9830" className="footer__social-link">
-                <User size={18} />
+              <a href="https://github.com/souma9830" className="footer__social-link" aria-label="GitHub">
+                <User size={18} aria-hidden="true" />
               </a>
             </div>
           </div>

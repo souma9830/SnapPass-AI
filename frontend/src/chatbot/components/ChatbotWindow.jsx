@@ -11,7 +11,7 @@ function ChatbotWindow({ isOpen, onClose }) {
     const [messages, setMessages] = useState([
         {
             sender: "bot",
-            text: "Hi 👋 I’m SnapPass Assistant. Ask me anything related to SnapPass AI."
+            text: "Hi 👋 I'm SnapPass Assistant. Ask me anything related to SnapPass AI."
         }
     ]);
 
@@ -19,20 +19,28 @@ function ChatbotWindow({ isOpen, onClose }) {
     const [isTyping, setIsTyping] = useState(false);
 
     const messagesEndRef = useRef(null);
+    const inputRef = useRef(null);
+    const closeRef = useRef(null);
 
-    // Auto scroll to latest message
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({
             behavior: "smooth"
         });
     }, [messages, isTyping]);
 
+    useEffect(() => {
+        if (isOpen) {
+            inputRef.current?.focus();
+        } else {
+            closeRef.current?.focus();
+        }
+    }, [isOpen]);
+
     const handleSendMessage = (customMessage = null) => {
         const userMessage = customMessage || input;
 
         if (!userMessage.trim()) return;
 
-        // Add user message
         const newUserMessage = {
             sender: "user",
             text: userMessage
@@ -43,7 +51,6 @@ function ChatbotWindow({ isOpen, onClose }) {
         setInput("");
         setIsTyping(true);
 
-        // Simulated assistant delay
         setTimeout(() => {
             const botReply = searchResponse(userMessage);
 
@@ -66,9 +73,12 @@ function ChatbotWindow({ isOpen, onClose }) {
     };
 
     return (
-        <div className={`chatbot-window ${isOpen ? "show-chat" : ""}`}>
-
-            {/* Header */}
+        <div
+            className={`chatbot-window ${isOpen ? "show-chat" : ""}`}
+            role="dialog"
+            aria-modal="true"
+            aria-label="SnapPass Assistant Chat"
+        >
             <div className="chatbot-header">
                 <div className="chatbot-header-left">
                     <div className="bot-icon-wrapper">
@@ -84,15 +94,15 @@ function ChatbotWindow({ isOpen, onClose }) {
                 <button
                     className="close-chat-btn"
                     onClick={onClose}
+                    aria-label="Close chat"
+                    ref={closeRef}
                 >
                     <X size={20} />
                 </button>
             </div>
 
-            {/* Messages */}
-            <div className="chatbot-messages">
+            <div className="chatbot-messages" role="log" aria-live="polite" aria-label="Chat messages">
 
-                {/* Suggested prompts */}
                 {messages.length === 1 && (
                     <SuggestedPrompts
                         onPromptClick={handleSendMessage}
@@ -111,7 +121,6 @@ function ChatbotWindow({ isOpen, onClose }) {
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
             <div className="chatbot-input-area">
                 <input
                     type="text"
@@ -119,9 +128,11 @@ function ChatbotWindow({ isOpen, onClose }) {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    aria-label="Type your question"
+                    ref={inputRef}
                 />
 
-                <button onClick={() => handleSendMessage()}>
+                <button onClick={() => handleSendMessage()} aria-label="Send message">
                     <Send size={18} />
                 </button>
             </div>

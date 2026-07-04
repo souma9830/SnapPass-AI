@@ -23,8 +23,8 @@ import {
  * User picks quantity, then downloads or prints the sheet.
  */
 function PrintPreviewPage({ darkMode, toggleTheme }) {
-  const { locale } = useLanguage();
-  const t = translations[locale] || translations.en;
+  const { language } = useLanguage();
+  const t = translations[language] || translations.en;
   const { state } = useLocation();
   const savedSession = getSession();
   useDocumentMeta({ title: 'Print Preview', description: 'Preview and print your passport photos on A4 paper.' });

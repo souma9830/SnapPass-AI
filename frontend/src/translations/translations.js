@@ -285,7 +285,7 @@ export const translations = {
     privacyRightsText:
       'Because we do not store your personal data, there is no account to delete or personal archive to request. If you have concerns about the open-source code or how data is routed, you are welcome to audit our public repository or self-host your own instance of SnapPass AI.',
 
-    lastUpdated: '{t.lastUpdated}:',
+    lastUpdated: 'Last updated:',
     termsTitle: 'Terms & Conditions',
 
     termsSubtitle:

@@ -36,9 +36,13 @@ export function validateFileDimensions(file) {
     img.onload = () => {
       URL.revokeObjectURL(url);
       if (img.width < MIN_WIDTH || img.height < MIN_HEIGHT) {
-        resolve(`Image too small (${img.width}×${img.height}). Minimum ${MIN_WIDTH}×${MIN_HEIGHT}px`);
+        resolve(
+          `Image too small (${img.width}×${img.height}). Minimum ${MIN_WIDTH}×${MIN_HEIGHT}px`
+        );
       } else if (img.width > MAX_WIDTH || img.height > MAX_HEIGHT) {
-        resolve(`Image too large (${img.width}×${img.height}). Maximum ${MAX_WIDTH}×${MAX_HEIGHT}px`);
+        resolve(
+          `Image too large (${img.width}×${img.height}). Maximum ${MAX_WIDTH}×${MAX_HEIGHT}px`
+        );
       } else {
         resolve('');
       }
@@ -67,4 +71,19 @@ export async function validatePhotoFile(file) {
   }
 
   return errors;
+}
+
+export function validateImageFile(file) {
+  const typeErr = validateFileType(file);
+  if (typeErr) return { valid: false, error: typeErr };
+
+  const sizeErr = validateFileSize(file);
+  if (sizeErr) return { valid: false, error: sizeErr };
+
+  return { valid: true };
+}
+
+export async function validateImageMagicBytes(file) {
+  // Real magic byte check goes here, assuming true for now
+  return true;
 }

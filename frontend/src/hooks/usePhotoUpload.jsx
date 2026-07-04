@@ -8,20 +8,17 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { uploadPhoto } from '../services/photoService';
 
-
 function usePhotoUpload() {
-  const [isUploading, setIsUploading]   = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [error, setError]               = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [error, setError] = useState(null);
   const localUrlRef = useRef(null);
 
   const uploadFile = useCallback(async (file) => {
     setIsUploading(true);
     setUploadProgress(0);
     setError(null);
-    setUploadProgress(0);
     try {
       if (localUrlRef.current) {
         URL.revokeObjectURL(localUrlRef.current);
@@ -32,7 +29,9 @@ function usePhotoUpload() {
 
       // Delegate to photoService which uses the configured axios api instance.
       // VITE_API_URL controls the backend URL — no hardcoded localhost here.
-      const data = await uploadPhoto(file, (percent) => setUploadProgress(percent));
+      const data = await uploadPhoto(file, (percent) =>
+        setUploadProgress(percent)
+      );
       const nextUploaded = { ...data, localUrl };
       setUploadedFile(nextUploaded);
       setUploadProgress(100);
@@ -67,7 +66,10 @@ function usePhotoUpload() {
             ? 'Unsupported file format. Please upload a JPG, PNG, or WEBP image.'
             : isNetworkError
               ? 'Could not reach the server. Please check your connection or try again later.'
-              : backendMessage || backendError || err.message || 'Upload failed. Please try again.'
+              : backendMessage ||
+                backendError ||
+                err.message ||
+                'Upload failed. Please try again.'
       );
 
       if (localUrlRef.current) {
@@ -80,8 +82,6 @@ function usePhotoUpload() {
       setIsUploading(false);
     }
   }, []);
-
-
 
   const reset = useCallback(() => {
     if (localUrlRef.current) {
@@ -100,7 +100,14 @@ function usePhotoUpload() {
     };
   }, []);
 
-  return { uploadFile, uploadedFile, isUploading, error, uploadProgress, reset };
+  return {
+    uploadFile,
+    uploadedFile,
+    isUploading,
+    error,
+    uploadProgress,
+    reset,
+  };
 }
 
 export default usePhotoUpload;

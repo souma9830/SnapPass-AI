@@ -15,7 +15,8 @@ function UploadPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
   const navigate = useNavigate();
-  const { uploadFile, uploadedFile, isUploading, error, uploadProgress } = usePhotoUpload();
+  const { uploadFile, uploadedFile, isUploading, error, uploadProgress } =
+    usePhotoUpload();
 
   const tips = [
     { type: 'ok', text: t.tipPlainBg },
@@ -29,7 +30,11 @@ function UploadPage({ darkMode, toggleTheme }) {
     const previewUrl = URL.createObjectURL(file);
     setLocalPreview(previewUrl);
     try {
-      const compressed = await compressImage(file, { maxWidth: 2048, maxHeight: 2048, quality: 0.92 });
+      const compressed = await compressImage(file, {
+        maxWidth: 2048,
+        maxHeight: 2048,
+        quality: 0.92,
+      });
       await uploadFile(compressed);
     } catch (err) {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -52,7 +57,11 @@ function UploadPage({ darkMode, toggleTheme }) {
   const displayUrl = uploadedFile?.localUrl || localPreview;
   const fadeUp = {
     hidden: { opacity: 0, y: 24 },
-    visible: (delay = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut', delay } }),
+    visible: (delay = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: 'easeOut', delay },
+    }),
   };
 
   return (
@@ -65,15 +74,24 @@ function UploadPage({ darkMode, toggleTheme }) {
           animate="visible"
           custom={0.1}
         >
-          <h1 className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}>
+          <h1
+            className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}
+          >
             {t.uploadPhoto}
           </h1>
-          <p className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}>
+          <p
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}
+          >
             {t.uploadSubtitle}
           </p>
         </motion.div>
 
-        <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.2}>
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.2}
+        >
           {displayUrl ? (
             <PhotoPreview
               imageUrl={displayUrl}
@@ -112,14 +130,17 @@ function UploadPage({ darkMode, toggleTheme }) {
           custom={0.3}
         >
           {tips.map(({ type, text }) => (
-            <div key={text} className={`upload-tip ${darkMode ? 'upload-tip-dark' : 'upload-tip-light'}`}>
+            <div
+              key={text}
+              className={`upload-tip ${darkMode ? 'upload-tip-dark' : 'upload-tip-light'}`}
+            >
               <span className="upload-tip__icon" aria-hidden="true">
                 {iconMap[type]}
               </span>
               <span className="upload-tip__text">{text}</span>
             </div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Upload Box (Wrapped in a motion div to animate together) */}
         <motion.div
@@ -131,7 +152,10 @@ function UploadPage({ darkMode, toggleTheme }) {
         >
           {isUploading ? (
             <div className="upload-progress">
-              <div className="upload-progress-bar" style={{ width: `${uploadProgress}%` }}></div>
+              <div
+                className="upload-progress-bar"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
             </div>
           ) : (
             <UploadBox onFileSelect={uploadFile} />

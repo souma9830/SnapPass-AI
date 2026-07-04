@@ -23,7 +23,7 @@
     "web-vitals": "^2.1.4",
     "jszip": "^3.10.0",
     "file-saver": "^2.0.5",
-    "jspdf": "^2.7.1"
+    "jspdf": "^2.5.1"
   },
   "scripts": {
     "dev": "vite",

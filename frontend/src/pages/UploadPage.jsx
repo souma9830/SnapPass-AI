@@ -15,8 +15,14 @@ function UploadPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
   const navigate = useNavigate();
-  const { uploadFile, uploadedFile, isUploading, uploadProgress, error, reset } = usePhotoUpload();
-  const [localPreview, setLocalPreview] = useState(null);
+  const { uploadFile, uploadedFile, isUploading, error, uploadProgress } = usePhotoUpload();
+
+  const tips = [
+    { type: 'ok', text: t.tipPlainBg },
+    { type: 'ok', text: t.tipFaceVisible },
+    { type: 'ok', text: t.tipNeutralExpression },
+    { type: 'no', text: t.tipAvoidAccessories },
+  ];
 
   const handleFileSelect = async (file) => {
     reset();
@@ -113,6 +119,23 @@ function UploadPage({ darkMode, toggleTheme }) {
               <span className="upload-tip__text">{text}</span>
             </div>
           ))}
+        </div>
+
+        {/* Upload Box (Wrapped in a motion div to animate together) */}
+        <motion.div
+          variants={fadeUpVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0.5} // Loads after the tips
+        >
+          {isUploading ? (
+            <div className="upload-progress">
+              <div className="upload-progress-bar" style={{ width: `${uploadProgress}%` }}></div>
+            </div>
+          ) : (
+            <UploadBox onFileSelect={uploadFile} />
+          )}
         </motion.div>
 
         <motion.div

@@ -14,13 +14,14 @@ function usePhotoUpload() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError]               = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const localUrlRef = useRef(null);
 
   const uploadFile = useCallback(async (file) => {
     setIsUploading(true);
     setUploadProgress(0);
     setError(null);
-
+    setUploadProgress(0);
     try {
       if (localUrlRef.current) {
         URL.revokeObjectURL(localUrlRef.current);
@@ -29,11 +30,9 @@ function usePhotoUpload() {
       const localUrl = URL.createObjectURL(file);
       localUrlRef.current = localUrl;
 
-      setUploadProgress(30);
-
-      const data = await uploadPhoto(file);
-      setUploadProgress(90);
-
+      // Delegate to photoService which uses the configured axios api instance.
+      // VITE_API_URL controls the backend URL — no hardcoded localhost here.
+      const data = await uploadPhoto(file, (percent) => setUploadProgress(percent));
       const nextUploaded = { ...data, localUrl };
       setUploadedFile(nextUploaded);
       setUploadProgress(100);
@@ -75,6 +74,7 @@ function usePhotoUpload() {
         URL.revokeObjectURL(localUrlRef.current);
         localUrlRef.current = null;
       }
+      setUploadProgress(0);
       throw err;
     } finally {
       setIsUploading(false);
@@ -100,7 +100,7 @@ function usePhotoUpload() {
     };
   }, []);
 
-  return { uploadFile, uploadedFile, isUploading, uploadProgress, error, reset };
+  return { uploadFile, uploadedFile, isUploading, error, uploadProgress, reset };
 }
 
 export default usePhotoUpload;

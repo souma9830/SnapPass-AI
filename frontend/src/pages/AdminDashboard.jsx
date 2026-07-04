@@ -25,7 +25,7 @@ function AdminDashboard({ darkMode, toggleTheme }) {
       <div className={`svg-style ${darkMode ? "svg-style-dark" : ""}`}>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M12 16V5" />
-          <circle cx="52" cy="48" r="7" />
+          <circle cx="12" cy="12" r="7" />
           <path d="M8 9l4-4 4 4" />
           <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
         </svg>

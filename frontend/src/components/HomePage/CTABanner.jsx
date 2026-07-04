@@ -5,7 +5,7 @@ import { fadeUpVariant } from "../../animations/variants.js";
 import { useLanguage } from "../../context/LanguageContext";
 import { translations } from "../../translations/translations";
 
-const CTABanner = () => {
+const CTABanner = ({ darkMode }) => {
   const { language } = useLanguage();
   const t = translations[language];
   return (

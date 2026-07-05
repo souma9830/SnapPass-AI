@@ -1,23 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
-/**
- * AdminDashboard — placeholder admin panel.
- * Shows summary stats and a table of recent uploads.
- * Backend integration pending — contributors welcome!
- */
 function AdminDashboard({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
   const [activeTab, setActiveTab] = useState('overview');
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const stats = [
-    { label: t.totalUploads, value: '—', icon: 'upload' },
-    { label: t.sheetsGenerated, value: '—', icon: 'print' },
-    { label: t.backgroundsUsed, value: '—', icon: 'palette' },
-    { label: t.activeToday, value: '—', icon: 'calendar' },
+  useEffect(() => {
+    let cancelled = false;
+    const fetchStats = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const res = await fetch('/api/analytics/stats');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const body = await res.json();
+        if (!cancelled && body.success) setAnalytics(body.data);
+      } catch (err) {
+        if (!cancelled) setError('Could not load analytics. Ensure the server is running.');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    fetchStats();
+    return () => { cancelled = true; };
+  }, []);
+
+  const stats = analytics ? [
+    { label: t.totalUploads, value: analytics.stats.totalUploads, icon: 'upload' },
+    { label: t.sheetsGenerated, value: analytics.stats.totalSheets, icon: 'print' },
+    { label: 'Processed Images', value: analytics.stats.totalProcessed, icon: 'palette' },
+    { label: t.activeToday, value: analytics.stats.todayUploads, icon: 'calendar' },
+  ] : [
+    { label: t.totalUploads, value: loading ? '...' : '\u2014', icon: 'upload' },
+    { label: t.sheetsGenerated, value: loading ? '...' : '\u2014', icon: 'print' },
+    { label: 'Processed Images', value: loading ? '...' : '\u2014', icon: 'palette' },
+    { label: t.activeToday, value: loading ? '...' : '\u2014', icon: 'calendar' },
   ];
 
   const iconMap = {
@@ -91,10 +114,11 @@ function AdminDashboard({ darkMode, toggleTheme }) {
             </h1>
             <p className="section-subtitle">{t.adminSubtitle}</p>
           </div>
-          <span className="badge badge-amber">{t.backendPending}</span>
+          {loading && <span className="badge badge-blue">Loading...</span>}
+          {error && <span className="badge badge-red" title={error}>Error</span>}
+          {analytics && <span className="badge badge-green">Live</span>}
         </div>
 
-        {/* Tabs */}
         <div className={`admin-tabs ${darkMode ? 'admin-tabs-dark' : ''}`}>
           {tabs.map(({ key, label }) => (
             <button
@@ -109,7 +133,6 @@ function AdminDashboard({ darkMode, toggleTheme }) {
           ))}
         </div>
 
-        {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className="admin-overview" role="tabpanel">
             <div className="stats-grid">
@@ -124,24 +147,30 @@ function AdminDashboard({ darkMode, toggleTheme }) {
               ))}
             </div>
 
-            <div className="admin-placeholder card">
-              <p className="admin-placeholder__icon" aria-hidden="true">
-                {iconMap.chart}
-              </p>
-              <p
-                className={`admin-placeholder__title ${darkMode ? 'admin-placeholder__title-dark' : ''}`}
-              >
-                {t.analyticsSoon}
-              </p>
-              <p className="admin-placeholder__desc">
-                {t.analyticsDesc}
-                See <code>backend/src/controllers/</code> to get started.
-              </p>
-            </div>
+            {error && (
+              <div className="admin-error card">
+                <p>{error}</p>
+                <button
+                  className="btn btn-sm btn-outline"
+                  onClick={() => window.location.reload()}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {!analytics && !loading && !error && (
+              <div className="admin-placeholder card">
+                <p className="admin-placeholder__icon" aria-hidden="true">
+                  {iconMap.chart}
+                </p>
+                <p className={`admin-placeholder__title ${darkMode ? 'admin-placeholder__title-dark' : ''}`}>{t.analyticsSoon}</p>
+                <p className="admin-placeholder__desc">{t.analyticsDesc}</p>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Uploads Tab */}
         {activeTab === 'uploads' && (
           <div className="admin-uploads card" role="tabpanel">
             <table
@@ -150,23 +179,29 @@ function AdminDashboard({ darkMode, toggleTheme }) {
               <thead>
                 <tr>
                   <th>{t.fileName}</th>
-                  <th>{t.size}</th>
-                  <th>{t.preset}</th>
-                  <th>{t.background}</th>
-                  <th>{t.date}</th>
-                  <th>{t.status}</th>
+                  <th>Date</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="admin-table__empty-row">
-                  <td colSpan={6}>{t.noUploads}</td>
-                </tr>
+                {analytics?.recentUploads?.length > 0 ? (
+                  analytics.recentUploads.map((u) => (
+                    <tr key={u.id}>
+                      <td>{u.filename}</td>
+                      <td>{new Date(u.date).toLocaleDateString()}</td>
+                      <td><span className="badge badge-green">Completed</span></td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr className="admin-table__empty-row">
+                    <td colSpan={3}>{t.noUploads}</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         )}
 
-        {/* Settings Tab */}
         {activeTab === 'settings' && (
           <div className="admin-settings card" role="tabpanel">
             <p

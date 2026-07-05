@@ -88,8 +88,31 @@
   width: 100%;
 }
 
-/* bug ->since there is no proper dark mode color variables , so applying dark mode theme  */
-/* dark mode variables */
+/* ── Validating state (async checks in progress) ─────── */
+.upload-box--validating {
+  cursor: not-allowed;
+  opacity: 0.75;
+  border-style: solid;
+  border-color: var(--color-primary);
+  pointer-events: none;
+}
+
+.upload-box--validating .upload-box__icon {
+  background: rgba(37, 99, 235, 0.18);
+}
+
+/* Spinner rotation for the validation SVG */
+@keyframes upload-box-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.upload-box__spinner {
+  animation: upload-box-spin 0.9s linear infinite;
+  transform-origin: center;
+}
+
+/* ── Dark mode ───────────────────────────────────────── */
 [data-theme='dark'] .upload-box {
   background: rgba(20, 20, 20, 0.6);
   border-color: rgba(63, 68, 74, 0.6);
@@ -99,4 +122,9 @@
 [data-theme='dark'] .upload-box:focus {
   background: rgba(30, 30, 30, 0.8);
   border-color: #3b82f6;
+}
+
+[data-theme='dark'] .upload-box--validating {
+  background: rgba(20, 20, 40, 0.7);
+  border-color: #60a5fa;
 }

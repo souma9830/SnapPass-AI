@@ -1,0 +1,45 @@
+const ENDPOINTS = [
+  { method: 'GET', path: '/api/health', description: 'Health check' },
+  { method: 'POST', path: '/api/auth/register', description: 'Register a new user' },
+  { method: 'POST', path: '/api/auth/login', description: 'Login and receive JWT cookie' },
+  { method: 'POST', path: '/api/auth/logout', description: 'Logout and invalidate session' },
+  { method: 'GET', path: '/api/auth/me', description: 'Get current user profile' },
+  { method: 'GET', path: '/api/auth/sessions', description: 'List active sessions' },
+  { method: 'DELETE', path: '/api/auth/sessions/:id', description: 'Revoke a session' },
+  { method: 'POST', path: '/api/auth/sessions/bulk-revoke', description: 'Bulk revoke sessions' },
+  { method: 'POST', path: '/api/auth/password-reset-request', description: 'Request password reset OTP' },
+  { method: 'POST', path: '/api/auth/verify-otp', description: 'Verify password reset OTP' },
+  { method: 'POST', path: '/api/auth/password-reset', description: 'Reset password with OTP' },
+  { method: 'PATCH', path: '/api/auth/role', description: 'Update user role (admin)' },
+  { method: 'POST', path: '/api/upload', description: 'Upload a single image' },
+  { method: 'POST', path: '/api/upload/batch', description: 'Upload multiple images' },
+  { method: 'POST', path: '/api/process', description: 'Process an image synchronously' },
+  { method: 'POST', path: '/api/process/job', description: 'Start async processing job' },
+  { method: 'GET', path: '/api/process/job/:jobId', description: 'Get job status and progress' },
+  { method: 'POST', path: '/api/print/generate-sheet', description: 'Generate A4 print sheet' },
+  { method: 'GET', path: '/api/print/presets', description: 'List photo size presets' },
+  { method: 'POST', path: '/api/batch/export', description: 'Export processed photos as ZIP' },
+  { method: 'GET', path: '/api/analytics/stats', description: 'Get dashboard statistics' },
+  { method: 'GET', path: '/api/analytics/trend', description: 'Get upload trend data' },
+  { method: 'GET', path: '/api/compliance', description: 'Compliance and requirements data' },
+  { method: 'GET', path: '/api/testimonials', description: 'List testimonials' },
+  { method: 'GET', path: '/api/upload-history', description: 'Get upload history' },
+  { method: 'GET', path: '/api/admin/users', description: 'List all users (admin)' },
+  { method: 'PATCH', path: '/api/admin/users/:id/role', description: 'Update user role (admin)' },
+  { method: 'DELETE', path: '/api/admin/users/:id', description: 'Delete user (admin)' },
+  { method: 'GET', path: '/api/metrics', description: 'Get server performance metrics' },
+  { method: 'DELETE', path: '/api/metrics', description: 'Reset server metrics' },
+  { method: 'GET', path: '/api/docs', description: 'This API documentation' },
+];
+
+export function getDocs(req, res) {
+  res.json({
+    success: true,
+    data: {
+      title: 'SnapPass AI API',
+      version: '1.0.0',
+      baseUrl: `${req.protocol}://${req.get('host')}`,
+      endpoints: ENDPOINTS,
+    },
+  });
+}

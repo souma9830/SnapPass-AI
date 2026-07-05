@@ -19,6 +19,7 @@ const PassportComparatorPage = lazy(
   () => import('../pages/PassportComparatorPage')
 );
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
+const ApiDocsPage = lazy(() => import('../pages/ApiDocsPage'));
 
 /**
  * AppRoutes — central route configuration for SnapPass AI.
@@ -87,6 +88,10 @@ function AppRoutes({ darkMode, toggleTheme }) {
                 toggleTheme={toggleTheme}
               />
             }
+          />
+          <Route
+            path="/api-docs"
+            element={<ApiDocsPage />}
           />
           {/* Fallback — 404 page for unknown routes */}
           <Route path="*" element={<NotFoundPage darkMode={darkMode} />} />

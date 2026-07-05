@@ -9,7 +9,9 @@ export function createJob({ payload }) {
   const jobId = crypto.randomUUID();
   jobs.set(jobId, {
     id: jobId,
-    status: 'queued', // queued | processing | done | failed
+    status: 'queued',
+    progress: 0,
+    stage: '',
     createdAt: Date.now(),
     payload,
     processedUrl: null,

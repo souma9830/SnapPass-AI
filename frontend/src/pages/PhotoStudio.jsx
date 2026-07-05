@@ -14,6 +14,7 @@ import {
     Focus,
     CloudMoon,
     SunMedium,
+    Sparkles,
 } from "lucide-react";
 import "./PhotoStudio.css";
 import { useLanguage } from '../context/LanguageContext';
@@ -22,6 +23,7 @@ import {
     DEFAULT_ADJUSTMENTS,
     renderAdjustedImageDataUrl,
 } from '../utils/imageAdjustments';
+import useProcessImage from '../hooks/useProcessImage';
 
 const ADJUSTMENT_TOOLS = [
     { id: 'brightness', labelKey: 'brightness', min: 0, max: 200, format: (v) => `${v}%` },
@@ -47,6 +49,7 @@ const TOOL_BUTTONS = [
 function PhotoStudio() {
     const { language } = useLanguage();
     const t = translations[language];
+    const processor = useProcessImage();
     const [imageSrc, setImageSrc] = useState(null);
     const [croppedImageSrc, setCroppedImageSrc] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -353,11 +356,37 @@ function PhotoStudio() {
                         <div className="toolbar-divider" />
 
                         <div className="toolbar-group">
+                            <button
+                                className="export-btn"
+                                onClick={() => processor.startProcessing({ filename: 'photo.png', backgroundColour: 'white', photoSizePreset: '35x45' })}
+                                disabled={processor.status === 'processing' || !imageSrc}
+                                title="Process with AI"
+                            >
+                                <Sparkles size={18} />
+                                <span className="hide-mobile">AI Process</span>
+                            </button>
                             <button className="export-btn tour-download" onClick={handleDownload} disabled={isCropping}>
                                 <Download size={18} />
                                 <span className="hide-mobile">{t.download}</span>
                             </button>
                         </div>
+                        {processor.status !== 'idle' && processor.status !== 'failed' && (
+                            <div className="processing-bar">
+                                <div className="processing-bar__fill" style={{ width: `${processor.progress}%` }} />
+                                <span className="processing-bar__label">{processor.stage || processor.status} ({processor.progress}%)</span>
+                            </div>
+                        )}
+                        {processor.status === 'failed' && (
+                            <div className="processing-bar processing-bar--error">
+                                <span className="processing-bar__label">Failed: {processor.error}</span>
+                                <button className="btn btn-xs btn-outline" onClick={processor.reset}>Dismiss</button>
+                            </div>
+                        )}
+                        {processor.status === 'done' && (
+                            <div className="processing-bar processing-bar--done">
+                                <span className="processing-bar__label">Processing complete!</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

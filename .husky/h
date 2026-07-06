@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-# Husky helper — sets up shell environment for Git hooks
-#
-# This file is managed by husky. Do not modify manually.
-
-command -v husky > /dev/null 2>&1 || {
-  echo "husky not found. Run 'npm install' from the repository root to install dependencies."
-  exit 1
-}

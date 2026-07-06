@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import NavbarAlignmentDetector from './NavbarAlignmentDetector';
 import './Navbar.css';
 
 const navItems = [
@@ -20,6 +21,7 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
   const { language, setLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const themeClass = darkMode ? 'dark' : 'light';
+  const navbarRef = useRef(null);
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -45,9 +47,11 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
 
   return (
     <nav
+      ref={navbarRef}
       className={`navbar navbar--${themeClass}`}
       aria-label="Primary navigation"
     >
+      <NavbarAlignmentDetector navbarRef={navbarRef} />
       <div className="navbar__inner">
         <Link className="navbar__brand" to="/" onClick={closeMenu}>
           <span className="navbar__logo-icon" aria-hidden="true">

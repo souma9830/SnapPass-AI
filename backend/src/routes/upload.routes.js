@@ -22,7 +22,7 @@ router.post(
   '/',
   uploadMiddleware.single('photo'),
   validateImageChain,
-  uploadPhoto,
+  uploadPhoto
 );
 
 export default router;

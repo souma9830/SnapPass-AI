@@ -23,7 +23,10 @@ function EmptyState({
 
   return (
     <div className={`empty-state ${darkMode ? 'empty-state-dark' : ''}`}>
-      <div className={`empty-state__illustration ${darkMode ? 'empty-state__illustration-dark' : 'empty-state__illustration-light'}`} aria-hidden="true">
+      <div
+        className={`empty-state__illustration ${darkMode ? 'empty-state__illustration-dark' : 'empty-state__illustration-light'}`}
+        aria-hidden="true"
+      >
         <svg viewBox="0 0 120 120" focusable="false" aria-hidden="true">
           <rect x="18" y="18" width="84" height="84" rx="20" />
           <path d="M36 74l18-20 16 18 12-14 16 18" />
@@ -31,7 +34,11 @@ function EmptyState({
         </svg>
       </div>
 
-      <h2 className={`empty-state__title ${darkMode ? 'empty-state__title-dark' : ''}`}>{title}</h2>
+      <h2
+        className={`empty-state__title ${darkMode ? 'empty-state__title-dark' : ''}`}
+      >
+        {title}
+      </h2>
 
       <p className="empty-state__description">{description}</p>
 

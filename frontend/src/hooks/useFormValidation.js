@@ -22,39 +22,52 @@ export default function useFormValidation(validationRules, initialValues = {}) {
     };
   }, [validationRules]);
 
-  const validateField = useCallback((name, value) => {
-    const fieldRules = validationRules[name];
-    if (!fieldRules) return '';
-    for (const rule of fieldRules) {
-      const error = rule(value, { ...values, [name]: value });
-      if (error) return error;
-    }
-    return '';
-  }, [validationRules, values]);
+  const validateField = useCallback(
+    (name, value) => {
+      const fieldRules = validationRules[name];
+      if (!fieldRules) return '';
+      for (const rule of fieldRules) {
+        const error = rule(value, { ...values, [name]: value });
+        if (error) return error;
+      }
+      return '';
+    },
+    [validationRules, values]
+  );
 
-  const setValue = useCallback((name, value) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => {
-      const error = validateField(name, value);
-      return error ? { ...prev, [name]: error } : Object.fromEntries(
-        Object.entries(prev).filter(([k]) => k !== name)
-      );
-    });
-  }, [validateField]);
+  const setValue = useCallback(
+    (name, value) => {
+      setValues((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => {
+        const error = validateField(name, value);
+        return error
+          ? { ...prev, [name]: error }
+          : Object.fromEntries(
+              Object.entries(prev).filter(([k]) => k !== name)
+            );
+      });
+    },
+    [validateField]
+  );
 
   const setFieldValue = useCallback((name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleBlur = useCallback((name) => {
-    setTouched((prev) => ({ ...prev, [name]: true }));
-    setErrors((prev) => {
-      const error = validateField(name, values[name]);
-      return error ? { ...prev, [name]: error } : Object.fromEntries(
-        Object.entries(prev).filter(([k]) => k !== name)
-      );
-    });
-  }, [validateField, values]);
+  const handleBlur = useCallback(
+    (name) => {
+      setTouched((prev) => ({ ...prev, [name]: true }));
+      setErrors((prev) => {
+        const error = validateField(name, values[name]);
+        return error
+          ? { ...prev, [name]: error }
+          : Object.fromEntries(
+              Object.entries(prev).filter(([k]) => k !== name)
+            );
+      });
+    },
+    [validateField, values]
+  );
 
   const validate = useCallback(() => {
     const errs = validator(values);
@@ -70,26 +83,32 @@ export default function useFormValidation(validationRules, initialValues = {}) {
     return Object.keys(errs).length === 0;
   }, [validator, values, validationRules]);
 
-  const reset = useCallback((newValues) => {
-    setValues(newValues || initialValues);
-    setErrors({});
-    setTouched({});
-    setSubmitted(false);
-  }, [initialValues]);
+  const reset = useCallback(
+    (newValues) => {
+      setValues(newValues || initialValues);
+      setErrors({});
+      setTouched({});
+      setSubmitted(false);
+    },
+    [initialValues]
+  );
 
   const isValid = useMemo(() => Object.keys(errors).length === 0, [errors]);
   const isDirty = useMemo(() => Object.keys(touched).length > 0, [touched]);
 
-  const getFieldProps = useCallback((name) => ({
-    name,
-    value: values[name] ?? '',
-    onChange: (e) => {
-      const val = e.target ? e.target.value : e;
-      setFieldValue(name, val);
-    },
-    onBlur: () => handleBlur(name),
-    error: touched[name] || submitted ? (errors[name] || '') : '',
-  }), [values, setFieldValue, handleBlur, errors, touched, submitted]);
+  const getFieldProps = useCallback(
+    (name) => ({
+      name,
+      value: values[name] ?? '',
+      onChange: (e) => {
+        const val = e.target ? e.target.value : e;
+        setFieldValue(name, val);
+      },
+      onBlur: () => handleBlur(name),
+      error: touched[name] || submitted ? errors[name] || '' : '',
+    }),
+    [values, setFieldValue, handleBlur, errors, touched, submitted]
+  );
 
   return {
     values,

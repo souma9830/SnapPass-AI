@@ -26,7 +26,12 @@ class ErrorBoundary extends React.Component {
   }
 
   handleReset = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null, showDetails: false });
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
+      showDetails: false,
+    });
   };
 
   handleRetry = () => {
@@ -49,7 +54,13 @@ class ErrorBoundary extends React.Component {
       <div className="error-boundary-container">
         <div className="error-boundary-card" role="alert">
           <div className="error-icon-wrapper">
-            <svg className="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="error-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="8" x2="12" y2="12" />
               <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -76,7 +87,10 @@ class ErrorBoundary extends React.Component {
               <summary onClick={this.toggleDetails}>
                 {showDetails ? 'Hide' : 'Show'} technical details
               </summary>
-              <pre>{error.name}: {error.message}{error.stack ? `\n\n${error.stack}` : ''}</pre>
+              <pre>
+                {error.name}: {error.message}
+                {error.stack ? `\n\n${error.stack}` : ''}
+              </pre>
             </details>
           )}
         </div>

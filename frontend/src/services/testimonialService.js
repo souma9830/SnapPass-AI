@@ -31,7 +31,9 @@ export async function fetchTestimonials() {
 
 function ensureApiConfigured() {
   if (!import.meta.env.VITE_API_URL) {
-    throw new Error('Review submission is unavailable until the backend API is configured.');
+    throw new Error(
+      'Review submission is unavailable until the backend API is configured.'
+    );
   }
 }
 

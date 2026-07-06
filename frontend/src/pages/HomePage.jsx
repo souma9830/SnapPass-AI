@@ -13,9 +13,23 @@ function HomePage({ darkMode, toggleTheme }) {
   return (
     <main>
       <HeroSection darkMode={darkMode} toggleTheme={toggleTheme} />
-      <AIShowcaseSection darkMode={darkMode} toggleTheme={toggleTheme} chips={chips} iconMap={iconMap} />
-      <StepsSection darkMode={darkMode} toggleTheme={toggleTheme} steps={steps} />
-      <FeaturesSection darkMode={darkMode} toggleTheme={toggleTheme} features={features} iconMap={iconMap} />
+      <AIShowcaseSection
+        darkMode={darkMode}
+        toggleTheme={toggleTheme}
+        chips={chips}
+        iconMap={iconMap}
+      />
+      <StepsSection
+        darkMode={darkMode}
+        toggleTheme={toggleTheme}
+        steps={steps}
+      />
+      <FeaturesSection
+        darkMode={darkMode}
+        toggleTheme={toggleTheme}
+        features={features}
+        iconMap={iconMap}
+      />
       <TestimonialsSection darkMode={darkMode} />
       <CTABanner darkMode={darkMode} />
       <BackToTop />

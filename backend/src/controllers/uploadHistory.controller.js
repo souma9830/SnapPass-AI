@@ -11,7 +11,14 @@ export const getHistory = async (req, res, next) => {
 
 export const getUserUploadHistory = async (req, res, next) => {
   try {
-    const { page = 1, limit = 20, search, status, startDate, endDate } = req.query;
+    const {
+      page = 1,
+      limit = 20,
+      search,
+      status,
+      startDate,
+      endDate,
+    } = req.query;
     const filter = {};
 
     if (search) {
@@ -32,14 +39,23 @@ export const getUserUploadHistory = async (req, res, next) => {
     const skip = (pageNum - 1) * limitNum;
 
     const [items, total] = await Promise.all([
-      Upload.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum).lean(),
+      Upload.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum)
+        .lean(),
       Upload.countDocuments(filter),
     ]);
 
     res.json({
       success: true,
       history: items,
-      pagination: { page: pageNum, limit: limitNum, total, pages: Math.ceil(total / limitNum) },
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.ceil(total / limitNum),
+      },
     });
   } catch (err) {
     next(err);

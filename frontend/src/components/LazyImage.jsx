@@ -1,7 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './LazyImage.css';
 
-const LazyImage = ({ src, alt, width, height, className, placeholder, onLoad }) => {
+const LazyImage = ({
+  src,
+  alt,
+  width,
+  height,
+  className,
+  placeholder,
+  onLoad,
+}) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [inView, setInView] = useState(false);

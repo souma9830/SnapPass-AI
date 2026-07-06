@@ -11,7 +11,9 @@ export const getPresets = async (req, res, next) => {
       return res.json({ success: true, presets: cached });
     }
 
-    const presets = await Preset.find({ active: true }).sort({ order: 1 }).lean();
+    const presets = await Preset.find({ active: true })
+      .sort({ order: 1 })
+      .lean();
     await setCache(cacheKey, presets, CACHE_TTL);
 
     res.json({ success: true, presets });
@@ -31,7 +33,9 @@ export const getPresetById = async (req, res, next) => {
 
     const preset = await Preset.findById(id).lean();
     if (!preset) {
-      return res.status(404).json({ success: false, message: 'Preset not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Preset not found' });
     }
 
     await setCache(cacheKey, preset, CACHE_TTL);
@@ -54,9 +58,14 @@ export const createPreset = async (req, res, next) => {
 export const updatePreset = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const preset = await Preset.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+    const preset = await Preset.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
     if (!preset) {
-      return res.status(404).json({ success: false, message: 'Preset not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Preset not found' });
     }
     await deleteCache('presets:all');
     await deleteCache(`presets:${id}`);
@@ -71,7 +80,9 @@ export const deletePreset = async (req, res, next) => {
     const { id } = req.params;
     const preset = await Preset.findByIdAndDelete(id);
     if (!preset) {
-      return res.status(404).json({ success: false, message: 'Preset not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Preset not found' });
     }
     await deleteCache('presets:all');
     await deleteCache(`presets:${id}`);

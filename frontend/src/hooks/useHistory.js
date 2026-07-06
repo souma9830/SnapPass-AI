@@ -18,15 +18,18 @@ export const useHistory = () => {
     loadHistory();
   }, [loadHistory]);
 
-  const deleteSession = useCallback((sessionId) => {
-    try {
-      const updated = history.filter((s) => s.id !== sessionId);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
-      setHistory(updated);
-    } catch (e) {
-      console.error('Failed to delete session:', e);
-    }
-  }, [history]);
+  const deleteSession = useCallback(
+    (sessionId) => {
+      try {
+        const updated = history.filter((s) => s.id !== sessionId);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+        setHistory(updated);
+      } catch (e) {
+        console.error('Failed to delete session:', e);
+      }
+    },
+    [history]
+  );
 
   const clearHistory = useCallback(() => {
     try {

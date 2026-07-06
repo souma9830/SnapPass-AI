@@ -16,7 +16,10 @@ export function logError(error, context = {}) {
 
     const existing = getErrorLog();
     existing.unshift(entry);
-    localStorage.setItem(LOG_KEY, JSON.stringify(existing.slice(0, MAX_ENTRIES)));
+    localStorage.setItem(
+      LOG_KEY,
+      JSON.stringify(existing.slice(0, MAX_ENTRIES))
+    );
 
     if (process.env.NODE_ENV === 'development') {
       console.groupCollapsed('[ErrorLogger]', entry.message);

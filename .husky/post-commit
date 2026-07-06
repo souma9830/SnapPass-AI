@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/h"
-
-# Notify user of successful commit
-echo "✅ Commit accepted — thank you for following conventional commit guidelines."

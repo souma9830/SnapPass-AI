@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './SettingsPage.css';
 import { motion } from 'framer-motion';
-import { validateEmail, validateRequired, validateMinLength, createValidator } from '../utils/validators';
+import {
+  validateEmail,
+  validateRequired,
+  validateMinLength,
+  createValidator,
+} from '../utils/validators';
 
 const preferencesRules = {
   fullName: [validateRequired, (v) => validateMinLength(v, 2, 'Full name')],
@@ -63,10 +68,16 @@ function SettingsPage({ darkMode, toggleTheme }) {
 
   const handleRevokeSession = async (sessionId) => {
     try {
-      const res = await fetch(`/api/auth/sessions/${sessionId}`, { method: 'DELETE' });
+      const res = await fetch(`/api/auth/sessions/${sessionId}`, {
+        method: 'DELETE',
+      });
       if (res.ok) {
         setSessions(sessions.filter((s) => s._id !== sessionId));
-        setSelectedSessions(prev => { const next = new Set(prev); next.delete(sessionId); return next; });
+        setSelectedSessions((prev) => {
+          const next = new Set(prev);
+          next.delete(sessionId);
+          return next;
+        });
       }
     } catch {
       // silent
@@ -76,12 +87,14 @@ function SettingsPage({ darkMode, toggleTheme }) {
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors((prev) => Object.fromEntries(Object.entries(prev).filter(([k]) => k !== field)));
+      setErrors((prev) =>
+        Object.fromEntries(Object.entries(prev).filter(([k]) => k !== field))
+      );
     }
   };
 
   const toggleSessionSelection = (sessionId) => {
-    setSelectedSessions(prev => {
+    setSelectedSessions((prev) => {
       const next = new Set(prev);
       if (next.has(sessionId)) next.delete(sessionId);
       else next.add(sessionId);
@@ -121,11 +134,17 @@ function SettingsPage({ darkMode, toggleTheme }) {
 
   const containerVariants = {
     hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' },
+    },
   };
 
   return (
-    <div className={`settings-layout ${darkMode ? 'settings-layout--dark' : ''}`}>
+    <div
+      className={`settings-layout ${darkMode ? 'settings-layout--dark' : ''}`}
+    >
       <motion.div
         className="settings-container page-content"
         variants={containerVariants}
@@ -134,7 +153,9 @@ function SettingsPage({ darkMode, toggleTheme }) {
       >
         <header className="settings-header">
           <h1 className="settings-title">Account Settings</h1>
-          <p className="settings-subtitle">Manage your profile, preferences, and active security sessions.</p>
+          <p className="settings-subtitle">
+            Manage your profile, preferences, and active security sessions.
+          </p>
         </header>
 
         <div className="settings-grid">
@@ -155,11 +176,17 @@ function SettingsPage({ darkMode, toggleTheme }) {
 
           <main className="settings-main card">
             {activeTab === 'preferences' && (
-              <form onSubmit={handleSavePreferences} className="settings-form" noValidate>
+              <form
+                onSubmit={handleSavePreferences}
+                className="settings-form"
+                noValidate
+              >
                 <h2 className="form-section-title">Application Preferences</h2>
 
                 <div className="form-group">
-                  <label className="form-label" htmlFor="fullName">Profile Full Name</label>
+                  <label className="form-label" htmlFor="fullName">
+                    Profile Full Name
+                  </label>
                   <input
                     id="fullName"
                     type="text"
@@ -168,11 +195,15 @@ function SettingsPage({ darkMode, toggleTheme }) {
                     className={`form-input ${errors.fullName ? 'form-input--error' : ''}`}
                     placeholder="Enter your name"
                   />
-                  {errors.fullName && <div className="form-error">{errors.fullName}</div>}
+                  {errors.fullName && (
+                    <div className="form-error">{errors.fullName}</div>
+                  )}
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label" htmlFor="email">Email Address</label>
+                  <label className="form-label" htmlFor="email">
+                    Email Address
+                  </label>
                   <input
                     id="email"
                     type="email"
@@ -181,11 +212,15 @@ function SettingsPage({ darkMode, toggleTheme }) {
                     className={`form-input ${errors.email ? 'form-input--error' : ''}`}
                     placeholder="Enter your email"
                   />
-                  {errors.email && <div className="form-error">{errors.email}</div>}
+                  {errors.email && (
+                    <div className="form-error">{errors.email}</div>
+                  )}
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label" htmlFor="language">Default Language</label>
+                  <label className="form-label" htmlFor="language">
+                    Default Language
+                  </label>
                   <select
                     id="language"
                     value={form.language}
@@ -207,7 +242,8 @@ function SettingsPage({ darkMode, toggleTheme }) {
                     className="form-checkbox"
                   />
                   <label htmlFor="autoSave" className="checkbox-label">
-                    <strong>Auto-save Uploads:</strong> Temporarily cache uploads locally for faster editing
+                    <strong>Auto-save Uploads:</strong> Temporarily cache
+                    uploads locally for faster editing
                   </label>
                 </div>
 
@@ -220,7 +256,8 @@ function SettingsPage({ darkMode, toggleTheme }) {
                     className="form-checkbox"
                   />
                   <label htmlFor="hiRes" className="checkbox-label">
-                    <strong>High-Resolution Exports:</strong> Export sheets with maximum DPI formatting
+                    <strong>High-Resolution Exports:</strong> Export sheets with
+                    maximum DPI formatting
                   </label>
                 </div>
 
@@ -254,14 +291,24 @@ function SettingsPage({ darkMode, toggleTheme }) {
               <div className="security-settings">
                 <h2 className="form-section-title">Active Audited Sessions</h2>
                 <p className="section-description">
-                  These are the devices and IP addresses currently logged into your account. You can revoke any session at any time.
+                  These are the devices and IP addresses currently logged into
+                  your account. You can revoke any session at any time.
                 </p>
 
-                {loadingSessions && <div className="sessions-loading">Loading session metadata...</div>}
-                {sessionError && !loadingSessions && <div className="sessions-error-box">{sessionError}</div>}
+                {loadingSessions && (
+                  <div className="sessions-loading">
+                    Loading session metadata...
+                  </div>
+                )}
+                {sessionError && !loadingSessions && (
+                  <div className="sessions-error-box">{sessionError}</div>
+                )}
 
                 {!loadingSessions && !sessionError && sessions.length === 0 && (
-                  <div className="sessions-empty">No active database sessions found. Please login to verify sessions.</div>
+                  <div className="sessions-empty">
+                    No active database sessions found. Please login to verify
+                    sessions.
+                  </div>
                 )}
 
                 {!loadingSessions && sessions.length > 0 && (
@@ -272,7 +319,9 @@ function SettingsPage({ darkMode, toggleTheme }) {
                         disabled={revoking}
                         className="revoke-btn revoke-btn--bulk"
                       >
-                        {revoking ? 'Revoking...' : `Revoke Selected (${selectedSessions.size})`}
+                        {revoking
+                          ? 'Revoking...'
+                          : `Revoke Selected (${selectedSessions.size})`}
                       </button>
                     )}
                     <div className="sessions-list">
@@ -287,12 +336,19 @@ function SettingsPage({ darkMode, toggleTheme }) {
                           />
                           <div className="session-info">
                             <div className="session-device">
-                              {sess.userAgent.length > 40 ? `${sess.userAgent.substring(0, 40)}...` : sess.userAgent}
+                              {sess.userAgent.length > 40
+                                ? `${sess.userAgent.substring(0, 40)}...`
+                                : sess.userAgent}
                             </div>
                             <div className="session-details">
-                              <span><strong>IP:</strong> {sess.ipAddress}</span>
+                              <span>
+                                <strong>IP:</strong> {sess.ipAddress}
+                              </span>
                               <span> • </span>
-                              <span><strong>Created:</strong> {new Date(sess.createdAt).toLocaleDateString()}</span>
+                              <span>
+                                <strong>Created:</strong>{' '}
+                                {new Date(sess.createdAt).toLocaleDateString()}
+                              </span>
                             </div>
                           </div>
                           <button

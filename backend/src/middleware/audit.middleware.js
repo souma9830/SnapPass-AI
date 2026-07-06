@@ -3,7 +3,7 @@ import AuditLog from '../models/auditLog.model.js';
 const EXCLUDED_PATHS = ['/health', '/diagnostics'];
 
 export const auditMiddleware = async (req, res, next) => {
-  if (EXCLUDED_PATHS.some(p => req.path.startsWith(p))) return next();
+  if (EXCLUDED_PATHS.some((p) => req.path.startsWith(p))) return next();
 
   const start = Date.now();
   const originalEnd = res.end;
@@ -19,10 +19,11 @@ export const auditMiddleware = async (req, res, next) => {
       userAgent: (req.headers['user-agent'] || '').slice(0, 255),
       userId: req.user?._id || req.user?.id || null,
       requestId: req.headers['x-request-id'] || '',
-      errorMessage: res.statusCode >= 400 ? (res.statusMessage || `${res.statusCode}`) : '',
+      errorMessage:
+        res.statusCode >= 400 ? res.statusMessage || `${res.statusCode}` : '',
     };
 
-    AuditLog.create(logEntry).catch(err => {
+    AuditLog.create(logEntry).catch((err) => {
       console.error('[Audit] Failed to persist audit log:', err.message);
     });
 

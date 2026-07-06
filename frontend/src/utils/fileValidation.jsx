@@ -10,12 +10,12 @@
 
 export const ACCEPTED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 export const ACCEPTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
-export const MAX_FILE_SIZE_MB    = 10;
+export const MAX_FILE_SIZE_MB = 10;
 export const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 // Minimum dimensions required to produce a sharp, print-quality passport photo.
 // Below these values rembg + DPI optimisation cannot guarantee 300 DPI output.
-export const MIN_PRINT_WIDTH  = 400;
+export const MIN_PRINT_WIDTH = 400;
 export const MIN_PRINT_HEIGHT = 400;
 export const MAX_PIXEL_DIMENSION = 8000; // guard against decompression-bomb payloads
 
@@ -47,8 +47,9 @@ export const validateImageMagicBytes = (file) =>
         header += arr[i].toString(16).toUpperCase().padStart(2, '0');
       }
       const isJpeg = header.startsWith('FFD8FF');
-      const isPng  = header.startsWith('89504E47');
-      const isWebp = header.startsWith('52494646') && header.includes('57454250');
+      const isPng = header.startsWith('89504E47');
+      const isWebp =
+        header.startsWith('52494646') && header.includes('57454250');
       resolve(isJpeg || isPng || isWebp);
     };
     reader.onerror = () => resolve(false);
@@ -67,7 +68,7 @@ export const validateImageFile = (file) => {
   }
 
   const hasType = ACCEPTED_MIME_TYPES.includes(file.type);
-  const hasExt  = hasAcceptedImageExtension(file.name);
+  const hasExt = hasAcceptedImageExtension(file.name);
 
   if (!hasType || !hasExt) {
     return {
@@ -104,8 +105,8 @@ export const validateImageFile = (file) => {
  */
 export const validateImageDimensions = (
   file,
-  minWidth  = MIN_PRINT_WIDTH,
-  minHeight = MIN_PRINT_HEIGHT,
+  minWidth = MIN_PRINT_WIDTH,
+  minHeight = MIN_PRINT_HEIGHT
 ) =>
   new Promise((resolve) => {
     if (!file) {
@@ -146,7 +147,10 @@ export const validateImageDimensions = (
 
     img.onerror = () => {
       URL.revokeObjectURL(objectUrl);
-      resolve({ valid: false, error: 'Could not decode image to read its dimensions.' });
+      resolve({
+        valid: false,
+        error: 'Could not decode image to read its dimensions.',
+      });
     };
 
     img.src = objectUrl;
@@ -179,7 +183,7 @@ export const validatePhotoFile = async (file) => {
   const magicOk = await validateImageMagicBytes(file);
   if (!magicOk) {
     errors.push(
-      'File signature mismatch. The file does not appear to be a valid JPEG, PNG, or WebP image.',
+      'File signature mismatch. The file does not appear to be a valid JPEG, PNG, or WebP image.'
     );
     return errors;
   }

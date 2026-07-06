@@ -28,7 +28,8 @@ function EditorPage({ darkMode, toggleTheme }) {
   const location = useLocation();
   const state = location.state || {};
 
-  const { processImage, processedUrl, isProcessing, error, reset } = useImageProcessor();
+  const { processImage, processedUrl, isProcessing, error, reset } =
+    useImageProcessor();
 
   const [background, setBackground] = useState('white');
   const [sizePreset, setSizePreset] = useState('35x45');
@@ -39,58 +40,68 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [complianceError, setComplianceError] = useState(null);
   const [cacheBuster, setCacheBuster] = useState(0);
 
-  const apiBaseUrl = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? 'http://localhost:5005/api' : '/api');
+  const apiBaseUrl =
+    import.meta.env.VITE_API_URL ??
+    (import.meta.env.DEV ? 'http://localhost:5005/api' : '/api');
   const backendRoot = apiBaseUrl.replace(/\/api\/?$/, '');
   const baseImageUrl = filename ? `${backendRoot}/uploads/${filename}` : '';
-  const currentImageUrl = processedUrl 
-    ? `${backendRoot}${processedUrl}?t=${cacheBuster}` 
-    : (baseImageUrl ? `${baseImageUrl}?t=${cacheBuster}` : (state?.localUrl || ''));
+  const currentImageUrl = processedUrl
+    ? `${backendRoot}${processedUrl}?t=${cacheBuster}`
+    : baseImageUrl
+      ? `${baseImageUrl}?t=${cacheBuster}`
+      : state?.localUrl || '';
 
-  const runComplianceCheck = useCallback(async (fileToCheck) => {
-    if (!fileToCheck) return;
-    setComplianceLoading(true);
-    setComplianceError(null);
-    try {
-      const resp = await api.post('/compliance/check', {
-        filename: fileToCheck,
-        sizePreset: sizePreset
-      });
-      if (resp.data?.success) {
-        setComplianceData(resp.data.data);
-      } else {
-        setComplianceError(resp.data?.message || 'Compliance check failed');
+  const runComplianceCheck = useCallback(
+    async (fileToCheck) => {
+      if (!fileToCheck) return;
+      setComplianceLoading(true);
+      setComplianceError(null);
+      try {
+        const resp = await api.post('/compliance/check', {
+          filename: fileToCheck,
+          sizePreset: sizePreset,
+        });
+        if (resp.data?.success) {
+          setComplianceData(resp.data.data);
+        } else {
+          setComplianceError(resp.data?.message || 'Compliance check failed');
+        }
+      } catch (err) {
+        setComplianceError(err.message || 'Failed to check compliance.');
+      } finally {
+        setComplianceLoading(false);
       }
-    } catch (err) {
-      setComplianceError(err.message || 'Failed to check compliance.');
-    } finally {
-      setComplianceLoading(false);
-    }
-  }, [sizePreset]);
+    },
+    [sizePreset]
+  );
 
   useEffect(() => {
     runComplianceCheck(filename);
   }, [filename, sizePreset, cacheBuster, runComplianceCheck]);
 
-  const handleAutoCorrect = useCallback(async (issue) => {
-    if (!filename) return;
-    setComplianceLoading(true);
-    setComplianceError(null);
-    try {
-      const resp = await api.post('/compliance/auto-correct', {
-        filename,
-        issue
-      });
-      if (resp.data?.success) {
-        setCacheBuster(prev => prev + 1);
-      } else {
-        setComplianceError(resp.data?.message || 'Auto-correct failed');
+  const handleAutoCorrect = useCallback(
+    async (issue) => {
+      if (!filename) return;
+      setComplianceLoading(true);
+      setComplianceError(null);
+      try {
+        const resp = await api.post('/compliance/auto-correct', {
+          filename,
+          issue,
+        });
+        if (resp.data?.success) {
+          setCacheBuster((prev) => prev + 1);
+        } else {
+          setComplianceError(resp.data?.message || 'Auto-correct failed');
+          setComplianceLoading(false);
+        }
+      } catch (err) {
+        setComplianceError(err.message || 'Failed to auto-correct.');
         setComplianceLoading(false);
       }
-    } catch (err) {
-      setComplianceError(err.message || 'Failed to auto-correct.');
-      setComplianceLoading(false);
-    }
-  }, [filename]);
+    },
+    [filename]
+  );
 
   useEffect(() => {
     if (state?.filename) setFilename(state.filename);
@@ -123,10 +134,15 @@ function EditorPage({ darkMode, toggleTheme }) {
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
-    visible: (delay = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut', delay } }),
+    visible: (delay = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut', delay },
+    }),
   };
 
-  const presetInfo = SIZE_PRESETS.find((p) => p.id === sizePreset) || SIZE_PRESETS[0];
+  const presetInfo =
+    SIZE_PRESETS.find((p) => p.id === sizePreset) || SIZE_PRESETS[0];
   const currentBgHex = backgroundHexMap[background] || '#ffffff';
 
   return (
@@ -139,11 +155,16 @@ function EditorPage({ darkMode, toggleTheme }) {
           animate="visible"
           custom={0.1}
         >
-          <h1 className={`section-title ${darkMode ? 'section-title-dark' : ''}`}>
+          <h1
+            className={`section-title ${darkMode ? 'section-title-dark' : ''}`}
+          >
             {t.editorTitle || 'Edit Your Photo'}
           </h1>
-          <p className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : ''}`}>
-            {t.editorSubtitle || 'Choose background, size, and attire before processing'}
+          <p
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : ''}`}
+          >
+            {t.editorSubtitle ||
+              'Choose background, size, and attire before processing'}
           </p>
         </motion.div>
 
@@ -169,8 +190,25 @@ function EditorPage({ darkMode, toggleTheme }) {
               }}
             >
               {state?.localUrl || filename ? (
-                <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', overflow: 'hidden' }}>
-                  <div style={{ position: 'relative', display: 'inline-block', maxWidth: '100%', maxHeight: '100%' }}>
+                <div
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                    }}
+                  >
                     <img
                       src={currentImageUrl}
                       alt="Preview"
@@ -183,86 +221,135 @@ function EditorPage({ darkMode, toggleTheme }) {
                         opacity: isProcessing || complianceLoading ? 0.5 : 1,
                       }}
                     />
-                    {!isProcessing && !complianceLoading && complianceData?.meta && (
-                      <svg
-                        viewBox={`0 0 ${complianceData.meta.dimensions?.w || 600} ${complianceData.meta.dimensions?.h || 800}`}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          pointerEvents: 'none',
-                        }}
-                      >
-                        {/* 1. Center Vertical Line */}
-                        <line
-                          x1={(complianceData.meta.dimensions?.w || 600) / 2}
-                          y1={0}
-                          x2={(complianceData.meta.dimensions?.w || 600) / 2}
-                          y2={complianceData.meta.dimensions?.h || 800}
-                          stroke="rgba(239, 68, 68, 0.45)"
-                          strokeWidth={Math.max(2, Math.round((complianceData.meta.dimensions?.w || 600) / 400))}
-                          strokeDasharray="4 4"
-                        />
-
-                        {/* 2. Ideal Oval Positioning Template */}
-                        <ellipse
-                          cx={(complianceData.meta.dimensions?.w || 600) / 2}
-                          cy={(complianceData.meta.dimensions?.h || 800) * 0.46}
-                          rx={(complianceData.meta.dimensions?.w || 600) * 0.22}
-                          ry={(complianceData.meta.dimensions?.h || 800) * 0.30}
-                          fill="none"
-                          stroke="rgba(255, 255, 255, 0.35)"
-                          strokeWidth={Math.max(2, Math.round((complianceData.meta.dimensions?.w || 600) / 300))}
-                        />
-
-                        {/* 3. Face Bounding Box (if detected) */}
-                        {complianceData.meta.face_rect && (
-                          <rect
-                            x={complianceData.meta.face_rect.x}
-                            y={complianceData.meta.face_rect.y}
-                            width={complianceData.meta.face_rect.w}
-                            height={complianceData.meta.face_rect.h}
-                            fill="none"
-                            stroke="#3b82f6"
-                            strokeWidth={Math.max(2, Math.round((complianceData.meta.dimensions?.w || 600) / 350))}
-                            strokeDasharray="3 3"
-                            rx="4"
+                    {!isProcessing &&
+                      !complianceLoading &&
+                      complianceData?.meta && (
+                        <svg
+                          viewBox={`0 0 ${complianceData.meta.dimensions?.w || 600} ${complianceData.meta.dimensions?.h || 800}`}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            pointerEvents: 'none',
+                          }}
+                        >
+                          {/* 1. Center Vertical Line */}
+                          <line
+                            x1={(complianceData.meta.dimensions?.w || 600) / 2}
+                            y1={0}
+                            x2={(complianceData.meta.dimensions?.w || 600) / 2}
+                            y2={complianceData.meta.dimensions?.h || 800}
+                            stroke="rgba(239, 68, 68, 0.45)"
+                            strokeWidth={Math.max(
+                              2,
+                              Math.round(
+                                (complianceData.meta.dimensions?.w || 600) / 400
+                              )
+                            )}
+                            strokeDasharray="4 4"
                           />
-                        )}
 
-                        {/* 4. Eye line and circles (if detected) */}
-                        {complianceData.meta.eyes && complianceData.meta.eyes.length === 2 && (
-                          <>
-                            <line
-                              x1={complianceData.meta.eyes[0].x}
-                              y1={complianceData.meta.eyes[0].y}
-                              x2={complianceData.meta.eyes[1].x}
-                              y2={complianceData.meta.eyes[1].y}
-                              stroke="#10b981"
-                              strokeWidth={Math.max(2, Math.round((complianceData.meta.dimensions?.w || 600) / 400))}
+                          {/* 2. Ideal Oval Positioning Template */}
+                          <ellipse
+                            cx={(complianceData.meta.dimensions?.w || 600) / 2}
+                            cy={
+                              (complianceData.meta.dimensions?.h || 800) * 0.46
+                            }
+                            rx={
+                              (complianceData.meta.dimensions?.w || 600) * 0.22
+                            }
+                            ry={
+                              (complianceData.meta.dimensions?.h || 800) * 0.3
+                            }
+                            fill="none"
+                            stroke="rgba(255, 255, 255, 0.35)"
+                            strokeWidth={Math.max(
+                              2,
+                              Math.round(
+                                (complianceData.meta.dimensions?.w || 600) / 300
+                              )
+                            )}
+                          />
+
+                          {/* 3. Face Bounding Box (if detected) */}
+                          {complianceData.meta.face_rect && (
+                            <rect
+                              x={complianceData.meta.face_rect.x}
+                              y={complianceData.meta.face_rect.y}
+                              width={complianceData.meta.face_rect.w}
+                              height={complianceData.meta.face_rect.h}
+                              fill="none"
+                              stroke="#3b82f6"
+                              strokeWidth={Math.max(
+                                2,
+                                Math.round(
+                                  (complianceData.meta.dimensions?.w || 600) /
+                                    350
+                                )
+                              )}
+                              strokeDasharray="3 3"
+                              rx="4"
                             />
-                            <circle
-                              cx={complianceData.meta.eyes[0].x}
-                              cy={complianceData.meta.eyes[0].y}
-                              r={Math.max(4, Math.round((complianceData.meta.dimensions?.w || 600) / 120))}
-                              fill="#10b981"
-                            />
-                            <circle
-                              cx={complianceData.meta.eyes[1].x}
-                              cy={complianceData.meta.eyes[1].y}
-                              r={Math.max(4, Math.round((complianceData.meta.dimensions?.w || 600) / 120))}
-                              fill="#10b981"
-                            />
-                          </>
-                        )}
-                      </svg>
-                    )}
+                          )}
+
+                          {/* 4. Eye line and circles (if detected) */}
+                          {complianceData.meta.eyes &&
+                            complianceData.meta.eyes.length === 2 && (
+                              <>
+                                <line
+                                  x1={complianceData.meta.eyes[0].x}
+                                  y1={complianceData.meta.eyes[0].y}
+                                  x2={complianceData.meta.eyes[1].x}
+                                  y2={complianceData.meta.eyes[1].y}
+                                  stroke="#10b981"
+                                  strokeWidth={Math.max(
+                                    2,
+                                    Math.round(
+                                      (complianceData.meta.dimensions?.w ||
+                                        600) / 400
+                                    )
+                                  )}
+                                />
+                                <circle
+                                  cx={complianceData.meta.eyes[0].x}
+                                  cy={complianceData.meta.eyes[0].y}
+                                  r={Math.max(
+                                    4,
+                                    Math.round(
+                                      (complianceData.meta.dimensions?.w ||
+                                        600) / 120
+                                    )
+                                  )}
+                                  fill="#10b981"
+                                />
+                                <circle
+                                  cx={complianceData.meta.eyes[1].x}
+                                  cy={complianceData.meta.eyes[1].y}
+                                  r={Math.max(
+                                    4,
+                                    Math.round(
+                                      (complianceData.meta.dimensions?.w ||
+                                        600) / 120
+                                    )
+                                  )}
+                                  fill="#10b981"
+                                />
+                              </>
+                            )}
+                        </svg>
+                      )}
                   </div>
                 </div>
               ) : (
-                <div style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem' }}>
+                <div
+                  style={{
+                    color: '#94a3b8',
+                    textAlign: 'center',
+                    padding: '2rem',
+                  }}
+                >
                   {t.noPhotoPreview || 'Upload a photo first to see preview'}
                 </div>
               )}
@@ -270,11 +357,20 @@ function EditorPage({ darkMode, toggleTheme }) {
             <div className="editor-page__info">
               <div className="editor-info-row">
                 <span className="editor-info-label">{t.size || 'Size'}</span>
-                <span className="editor-info-value">{presetInfo.dimensions}</span>
+                <span className="editor-info-value">
+                  {presetInfo.dimensions}
+                </span>
               </div>
               <div className="editor-info-row">
-                <span className="editor-info-label">{t.backgroundLabel || 'Background'}</span>
-                <span className="editor-info-value" style={{ textTransform: 'capitalize' }}>{background}</span>
+                <span className="editor-info-label">
+                  {t.backgroundLabel || 'Background'}
+                </span>
+                <span
+                  className="editor-info-value"
+                  style={{ textTransform: 'capitalize' }}
+                >
+                  {background}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -294,7 +390,10 @@ function EditorPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <BackgroundSelector selected={background} onChange={setBackground} />
+            <BackgroundSelector
+              selected={background}
+              onChange={setBackground}
+            />
 
             <hr className="divider" />
 
@@ -302,18 +401,22 @@ function EditorPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <CompliancePanel 
-              compliance={complianceData} 
-              loading={complianceLoading} 
-              error={complianceError} 
-              onAutoCorrect={handleAutoCorrect} 
-              darkMode={darkMode} 
+            <CompliancePanel
+              compliance={complianceData}
+              loading={complianceLoading}
+              error={complianceError}
+              onAutoCorrect={handleAutoCorrect}
+              darkMode={darkMode}
             />
 
             <hr className="divider" />
 
             {error && (
-              <div className="editor-page__error" role="alert" style={{ marginBottom: '0.5rem' }}>
+              <div
+                className="editor-page__error"
+                role="alert"
+                style={{ marginBottom: '0.5rem' }}
+              >
                 {error}
               </div>
             )}
@@ -327,7 +430,9 @@ function EditorPage({ darkMode, toggleTheme }) {
               <span className="editor-page__btn-icon" aria-hidden="true">
                 {isProcessing ? iconMap.refresh : iconMap.spark}
               </span>
-              {isProcessing ? t.processing || 'Processing...' : t.processWithAI || 'Process with AI'}
+              {isProcessing
+                ? t.processing || 'Processing...'
+                : t.processWithAI || 'Process with AI'}
             </button>
           </motion.div>
         </div>

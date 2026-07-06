@@ -33,11 +33,13 @@ const MULTER_ERROR_MAP = {
   },
   LIMIT_FILE_COUNT: {
     status: 400,
-    message: 'Too many files uploaded at once. Please upload one photo at a time.',
+    message:
+      'Too many files uploaded at once. Please upload one photo at a time.',
   },
   LIMIT_UNEXPECTED_FILE: {
     status: 400,
-    message: 'Unexpected form field. Use the "photo" field to upload your image.',
+    message:
+      'Unexpected form field. Use the "photo" field to upload your image.',
   },
   LIMIT_FIELD_COUNT: {
     status: 400,
@@ -61,13 +63,14 @@ const buildPayload = (statusCode, message, correlationId, detail = null) => {
   return { statusCode, payload };
 };
 
-const errorMiddleware = (err, req, res, next) => { // eslint-disable-line no-unused-vars
+const errorMiddleware = (err, req, res, next) => {
+  // eslint-disable-line no-unused-vars
   const correlationId = req.id || req.headers['x-request-id'] || null;
 
   // ── Multer errors (file upload validation) ────────────────────────────────
   if (err instanceof multer.MulterError) {
     const mapped = MULTER_ERROR_MAP[err.code];
-    const status  = mapped?.status  ?? 400;
+    const status = mapped?.status ?? 400;
     const message = mapped?.message ?? `Upload error: ${err.message}`;
 
     logger.warn({
@@ -86,7 +89,12 @@ const errorMiddleware = (err, req, res, next) => { // eslint-disable-line no-unu
       .map((e) => e.message)
       .join('; ');
 
-    logger.warn({ event: 'validation_error', messages, correlationId, path: req.path });
+    logger.warn({
+      event: 'validation_error',
+      messages,
+      correlationId,
+      path: req.path,
+    });
 
     const { payload } = buildPayload(422, messages, correlationId);
     return res.status(422).json(payload);
@@ -95,16 +103,26 @@ const errorMiddleware = (err, req, res, next) => { // eslint-disable-line no-unu
   // ── Malformed JSON body ───────────────────────────────────────────────────
   if (err instanceof SyntaxError && 'body' in err) {
     logger.warn({ event: 'malformed_json', correlationId, path: req.path });
-    const { payload } = buildPayload(400, 'Malformed JSON in request body.', correlationId);
+    const { payload } = buildPayload(
+      400,
+      'Malformed JSON in request body.',
+      correlationId
+    );
     return res.status(400).json(payload);
   }
 
   // ── JWT / auth errors ─────────────────────────────────────────────────────
   if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
-    logger.warn({ event: 'jwt_error', name: err.name, correlationId, path: req.path });
-    const msg = err.name === 'TokenExpiredError'
-      ? 'Your session has expired. Please log in again.'
-      : 'Invalid authentication token.';
+    logger.warn({
+      event: 'jwt_error',
+      name: err.name,
+      correlationId,
+      path: req.path,
+    });
+    const msg =
+      err.name === 'TokenExpiredError'
+        ? 'Your session has expired. Please log in again.'
+        : 'Invalid authentication token.';
     const { payload } = buildPayload(401, msg, correlationId);
     return res.status(401).json(payload);
   }
@@ -131,15 +149,16 @@ const errorMiddleware = (err, req, res, next) => { // eslint-disable-line no-unu
     });
   }
 
-  const userMessage = isServerError && isProduction()
-    ? 'An unexpected error occurred. Please try again later.'
-    : (err.message || 'Internal Server Error');
+  const userMessage =
+    isServerError && isProduction()
+      ? 'An unexpected error occurred. Please try again later.'
+      : err.message || 'Internal Server Error';
 
   const { payload } = buildPayload(
     statusCode,
     userMessage,
     correlationId,
-    isServerError ? err.stack : null,
+    isServerError ? err.stack : null
   );
 
   return res.status(statusCode).json(payload);

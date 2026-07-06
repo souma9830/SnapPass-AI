@@ -53,7 +53,7 @@ export const BACKGROUND_COLOURS = [
   {
     id: 'custom',
     label: 'Custom',
-    hex: null,   // user-supplied hex from colour picker
+    hex: null, // user-supplied hex from colour picker
     country: null,
   },
 ];
@@ -70,6 +70,6 @@ export const findBackground = (id) =>
  * Kept separate so we can gate the colour picker "custom" option
  * without breaking the standard preset list.
  */
-export const BACKEND_ACCEPTED_IDS = BACKGROUND_COLOURS
-  .filter((bg) => bg.id !== 'custom')
-  .map((bg) => bg.id);
+export const BACKEND_ACCEPTED_IDS = BACKGROUND_COLOURS.filter(
+  (bg) => bg.id !== 'custom'
+).map((bg) => bg.id);

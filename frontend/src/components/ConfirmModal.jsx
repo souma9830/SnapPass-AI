@@ -27,7 +27,12 @@ function ConfirmModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="confirm-modal__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             {isDanger ? (
               <circle cx="12" cy="12" r="10" />
             ) : (
@@ -38,7 +43,9 @@ function ConfirmModal({
           </svg>
         </div>
 
-        <h2 id="confirm-title" className="confirm-modal__title">{title}</h2>
+        <h2 id="confirm-title" className="confirm-modal__title">
+          {title}
+        </h2>
         <p className="confirm-modal__message">{message}</p>
 
         <div className="confirm-modal__actions">

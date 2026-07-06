@@ -2,7 +2,13 @@ import React from 'react';
 import { ButtonSpinner } from './LoadingSpinner';
 import './PrintButton.css';
 
-function PrintButton({ onClick, isLoading = false, darkMode = false, disabled = false, label = 'Generate & Download Sheet' }) {
+function PrintButton({
+  onClick,
+  isLoading = false,
+  darkMode = false,
+  disabled = false,
+  label = 'Generate & Download Sheet',
+}) {
   return (
     <button
       className={`print-btn ${isLoading ? 'print-btn--loading' : ''} ${darkMode ? 'print-btn-dark' : ''}`}

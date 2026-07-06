@@ -3,11 +3,12 @@ import React from 'react';
 function UploadProgress({ progress, darkMode }) {
   if (progress <= 0 || progress >= 100) return null;
 
-  const barColor = progress < 50
-    ? 'var(--color-warning)'
-    : progress < 80
-      ? 'var(--color-primary)'
-      : 'var(--color-success)';
+  const barColor =
+    progress < 50
+      ? 'var(--color-warning)'
+      : progress < 80
+        ? 'var(--color-primary)'
+        : 'var(--color-success)';
 
   return (
     <div

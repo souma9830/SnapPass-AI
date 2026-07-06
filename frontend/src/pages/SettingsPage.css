@@ -3,7 +3,9 @@
   padding: 40px 20px;
   background: var(--bg-fallback, #f9fafb);
   color: var(--text-color, #1f2937);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .settings-layout--dark {

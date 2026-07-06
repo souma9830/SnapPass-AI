@@ -4,12 +4,20 @@ import { compressImage } from '../utils/imageCompression';
 const UPLOAD_CONCURRENCY = 3;
 
 export const useBatchUpload = (options = {}) => {
-  const { concurrency = UPLOAD_CONCURRENCY, compress = true, compressOptions = {} } = options;
+  const {
+    concurrency = UPLOAD_CONCURRENCY,
+    compress = true,
+    compressOptions = {},
+  } = options;
 
   const [queue, setQueue] = useState([]);
   const [results, setResults] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState({ total: 0, completed: 0, failed: 0 });
+  const [progress, setProgress] = useState({
+    total: 0,
+    completed: 0,
+    failed: 0,
+  });
   const abortRef = useRef(false);
 
   const addFiles = useCallback((files) => {
@@ -27,7 +35,9 @@ export const useBatchUpload = (options = {}) => {
   const uploadSingle = async (entry, endpoint = '/api/upload') => {
     if (abortRef.current) return { ...entry, status: 'aborted' };
 
-    setQueue((prev) => prev.map((e) => e.id === entry.id ? { ...e, status: 'processing' } : e));
+    setQueue((prev) =>
+      prev.map((e) => (e.id === entry.id ? { ...e, status: 'processing' } : e))
+    );
 
     try {
       let file = entry.file;
@@ -51,26 +61,33 @@ export const useBatchUpload = (options = {}) => {
     }
   };
 
-  const startUpload = useCallback(async (endpoint = '/api/upload') => {
-    if (uploading || queue.length === 0) return;
-    setUploading(true);
-    abortRef.current = false;
+  const startUpload = useCallback(
+    async (endpoint = '/api/upload') => {
+      if (uploading || queue.length === 0) return;
+      setUploading(true);
+      abortRef.current = false;
 
-    const pool = [];
-    for (let i = 0; i < concurrency; i++) {
-      pool.push((async () => {
-        while (queue.length > 0 && !abortRef.current) {
-          const entry = queue.shift();
-          if (!entry) break;
-          const result = await uploadSingle(entry, endpoint);
-          setResults((prev) => prev.map((r) => r.id === result.id ? result : r));
-        }
-      })());
-    }
+      const pool = [];
+      for (let i = 0; i < concurrency; i++) {
+        pool.push(
+          (async () => {
+            while (queue.length > 0 && !abortRef.current) {
+              const entry = queue.shift();
+              if (!entry) break;
+              const result = await uploadSingle(entry, endpoint);
+              setResults((prev) =>
+                prev.map((r) => (r.id === result.id ? result : r))
+              );
+            }
+          })()
+        );
+      }
 
-    await Promise.all(pool);
-    setUploading(false);
-  }, [queue, uploading, concurrency, compress, compressOptions]);
+      await Promise.all(pool);
+      setUploading(false);
+    },
+    [queue, uploading, concurrency, compress, compressOptions]
+  );
 
   const abort = useCallback(() => {
     abortRef.current = true;
@@ -93,6 +110,8 @@ export const useBatchUpload = (options = {}) => {
     results,
     uploading,
     progress,
-    hasPending: results.some((r) => r.status === 'queued' || r.status === 'processing'),
+    hasPending: results.some(
+      (r) => r.status === 'queued' || r.status === 'processing'
+    ),
   };
 };

@@ -15,10 +15,14 @@ export async function compressImage(fileBlob, quality = 0.8) {
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0);
-      canvas.toBlob((blob) => {
-        if (blob) resolve(blob);
-        else reject(new Error('Compression failed'));
-      }, 'image/jpeg', quality);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Compression failed'));
+        },
+        'image/jpeg',
+        quality
+      );
     };
     img.onerror = reject;
     const url = URL.createObjectURL(fileBlob);

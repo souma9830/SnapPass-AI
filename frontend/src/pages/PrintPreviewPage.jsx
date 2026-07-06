@@ -21,7 +21,10 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   const t = translations[language] || translations.en;
   const { state } = useLocation();
   const savedSession = getSession();
-  useDocumentMeta({ title: 'Print Preview', description: 'Preview and print your passport photos on A4 paper.' });
+  useDocumentMeta({
+    title: 'Print Preview',
+    description: 'Preview and print your passport photos on A4 paper.',
+  });
 
   const [quantity, setQuantity] = useState(savedSession?.quantity || 6);
   const [layout, setLayout] = useState('a4');
@@ -106,7 +109,9 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   };
 
   return (
-    <div className={`print-preview-toggle ${darkMode ? 'print-preview-toggle-dark' : ''}`}>
+    <div
+      className={`print-preview-toggle ${darkMode ? 'print-preview-toggle-dark' : ''}`}
+    >
       <div className="print-page page-content">
         <motion.div
           className="print-page__header"
@@ -116,10 +121,14 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
           viewport={{ once: true }}
           custom={0.1}
         >
-          <h1 className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}>
+          <h1
+            className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}
+          >
             {t.printPreviewTitle}
           </h1>
-          <p className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}>
+          <p
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}
+          >
             {t.printPreviewSubtitle}
           </p>
         </motion.div>
@@ -135,7 +144,10 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
             custom={0.2}
           >
             <p className="print-page__sheet-label">{t.a4SheetPreview}</p>
-            <div className="sheet-grid" style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}>
+            <div
+              className="sheet-grid"
+              style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}
+            >
               {slots.map((_, i) => (
                 <div key={i} className="sheet-slot">
                   <img
@@ -159,13 +171,18 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
           >
             <div>
               <p className="print-info-label">{t.selectedPreset}</p>
-              <p className={`print-info-value ${darkMode ? 'print-info-value-dark' : ''}`}>
+              <p
+                className={`print-info-value ${darkMode ? 'print-info-value-dark' : ''}`}
+              >
                 {state?.sizePreset || savedSession?.sizePreset || '35x45 mm'}
               </p>
             </div>
             <div>
               <p className="print-info-label">{t.backgroundLabel}</p>
-              <p className={`print-info-value ${darkMode ? 'print-info-value-dark' : 'print-info-value-light'}`} style={{ textTransform: 'capitalize' }}>
+              <p
+                className={`print-info-value ${darkMode ? 'print-info-value-dark' : 'print-info-value-light'}`}
+                style={{ textTransform: 'capitalize' }}
+              >
                 {state?.background || savedSession?.background || 'White'}
               </p>
             </div>
@@ -230,7 +247,10 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <DownloadPackagePanel processedUrl={state?.processedUrl || savedSession?.processedUrl} originalFileName={state?.filename || savedSession?.filename} />
+            <DownloadPackagePanel
+              processedUrl={state?.processedUrl || savedSession?.processedUrl}
+              originalFileName={state?.filename || savedSession?.filename}
+            />
 
             <button
               onClick={handlePrintDirect}
@@ -267,7 +287,14 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               to="/"
               className={`print-page__home-btn ${darkMode ? 'print-page__home-btn-dark' : ''}`}
             >
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M3 12l9-9 9 9" />
                 <path d="M5 10v9a1 1 0 0 0 1 1h3v-5h6v5h3a1 1 0 0 0 1-1v-9" />
               </svg>

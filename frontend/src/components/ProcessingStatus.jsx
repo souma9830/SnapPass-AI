@@ -34,7 +34,7 @@ const ProcessingStatus = ({ jobId, onStatusChange }) => {
   useEffect(() => {
     if (!jobId) return;
     const interval = setInterval(async () => {
-      setPollCount(p => p + 1);
+      setPollCount((p) => p + 1);
       const done = await fetchStatus();
       if (done || pollCount >= 60) clearInterval(interval);
     }, 2000);
@@ -42,9 +42,15 @@ const ProcessingStatus = ({ jobId, onStatusChange }) => {
   }, [jobId, fetchStatus, pollCount]);
 
   return (
-    <div className={`processing-status processing-status--${status}`} role="status" aria-live="polite">
+    <div
+      className={`processing-status processing-status--${status}`}
+      role="status"
+      aria-live="polite"
+    >
       <div className="processing-status__indicator" />
-      <span className="processing-status__label">{STATUS_LABELS[status] || status}</span>
+      <span className="processing-status__label">
+        {STATUS_LABELS[status] || status}
+      </span>
       {error && <span className="processing-status__error">{error}</span>}
     </div>
   );

@@ -9,12 +9,33 @@ const statusToBadge = (status) => {
 };
 
 const DEFAULT_CHECKS = [
-  { id: 'face', title: 'Face Detection', detail: 'Verify face is visible', status: 'warn' },
-  { id: 'background', title: 'Background Uniformity', detail: 'Plain light background check', status: 'warn' },
-  { id: 'tilt', title: 'Face Angle & Tilt', detail: 'Check head levelness', status: 'warn' },
+  {
+    id: 'face',
+    title: 'Face Detection',
+    detail: 'Verify face is visible',
+    status: 'warn',
+  },
+  {
+    id: 'background',
+    title: 'Background Uniformity',
+    detail: 'Plain light background check',
+    status: 'warn',
+  },
+  {
+    id: 'tilt',
+    title: 'Face Angle & Tilt',
+    detail: 'Check head levelness',
+    status: 'warn',
+  },
 ];
 
-function CompliancePanel({ compliance, loading, error, onAutoCorrect, darkMode }) {
+function CompliancePanel({
+  compliance,
+  loading,
+  error,
+  onAutoCorrect,
+  darkMode,
+}) {
   const [expanded, setExpanded] = useState(true); // expanded by default to draw immediate attention
   const items = compliance?.items || DEFAULT_CHECKS;
   const hardFail = Boolean(compliance?.hard_fail);
@@ -44,61 +65,106 @@ function CompliancePanel({ compliance, loading, error, onAutoCorrect, darkMode }
           padding: 0,
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
-        <div className="compliance-panel__title" style={{ color: darkMode ? '#f3f4f6' : '#1f2937' }}>
+        <div
+          className="compliance-panel__title"
+          style={{ color: darkMode ? '#f3f4f6' : '#1f2937' }}
+        >
           Compliance Inspector
         </div>
-        <span style={{ fontSize: '12px', opacity: 0.6, color: darkMode ? '#9ca3af' : '#4b5563' }}>
+        <span
+          style={{
+            fontSize: '12px',
+            opacity: 0.6,
+            color: darkMode ? '#9ca3af' : '#4b5563',
+          }}
+        >
           {expanded ? '▲' : '▼'}
         </span>
       </button>
 
-      <div className={`compliance-panel__summary ${hardFail ? 'summary-fail' : 'summary-ok'}`} style={{ marginTop: '0.25rem' }}>
+      <div
+        className={`compliance-panel__summary ${hardFail ? 'summary-fail' : 'summary-ok'}`}
+        style={{ marginTop: '0.25rem' }}
+      >
         {headerText}
       </div>
 
       {expanded && (
         <>
           {loading && (
-            <div className="compliance-panel__loading" style={{ margin: '0.5rem 0' }}>
+            <div
+              className="compliance-panel__loading"
+              style={{ margin: '0.5rem 0' }}
+            >
               Running real-time checks...
             </div>
           )}
 
           {!!error && !loading && (
-            <div className="compliance-panel__error" style={{ margin: '0.5rem 0' }}>
-              <div className="compliance-panel__error-title">Could not run compliance check</div>
+            <div
+              className="compliance-panel__error"
+              style={{ margin: '0.5rem 0' }}
+            >
+              <div className="compliance-panel__error-title">
+                Could not run compliance check
+              </div>
               <div className="compliance-panel__error-detail">{error}</div>
             </div>
           )}
 
           {!loading && !error && items.length > 0 && (
-            <div className="compliance-panel__list" role="list" style={{ marginTop: '0.5rem' }}>
+            <div
+              className="compliance-panel__list"
+              role="list"
+              style={{ marginTop: '0.5rem' }}
+            >
               {items.map((it) => {
                 const badge = statusToBadge(it.status);
                 const showFixButton = it.auto_fixable && it.status !== 'pass';
-                
+
                 return (
-                  <div 
-                    className="compliance-panel__item" 
-                    key={it.id} 
+                  <div
+                    className="compliance-panel__item"
+                    key={it.id}
                     role="listitem"
                     style={{
-                      backgroundColor: darkMode ? 'rgba(31, 41, 55, 0.5)' : 'rgba(241, 245, 249, 0.55)',
-                      borderColor: darkMode ? 'rgba(75, 85, 99, 0.4)' : 'rgba(226, 232, 240, 0.8)',
+                      backgroundColor: darkMode
+                        ? 'rgba(31, 41, 55, 0.5)'
+                        : 'rgba(241, 245, 249, 0.55)',
+                      borderColor: darkMode
+                        ? 'rgba(75, 85, 99, 0.4)'
+                        : 'rgba(226, 232, 240, 0.8)',
                     }}
                   >
-                    <div className="compliance-panel__item-left" style={{ flex: 1 }}>
-                      <div className="compliance-panel__item-title" style={{ color: darkMode ? '#f9fafb' : '#0f172a' }}>
+                    <div
+                      className="compliance-panel__item-left"
+                      style={{ flex: 1 }}
+                    >
+                      <div
+                        className="compliance-panel__item-title"
+                        style={{ color: darkMode ? '#f9fafb' : '#0f172a' }}
+                      >
                         {it.title}
                       </div>
-                      <div className="compliance-panel__item-detail" style={{ color: darkMode ? '#9ca3af' : '#64748b' }}>
+                      <div
+                        className="compliance-panel__item-detail"
+                        style={{ color: darkMode ? '#9ca3af' : '#64748b' }}
+                      >
                         {it.detail}
                       </div>
                       {it.suggestion && it.status !== 'pass' && (
-                        <div className="compliance-panel__item-suggestion" style={{ marginTop: '4px', fontSize: '0.78rem', color: '#d97706', fontStyle: 'italic' }}>
+                        <div
+                          className="compliance-panel__item-suggestion"
+                          style={{
+                            marginTop: '4px',
+                            fontSize: '0.78rem',
+                            color: '#d97706',
+                            fontStyle: 'italic',
+                          }}
+                        >
                           💡 {it.suggestion}
                         </div>
                       )}
@@ -126,15 +192,24 @@ function CompliancePanel({ compliance, loading, error, onAutoCorrect, darkMode }
                         </button>
                       )}
                     </div>
-                    <div className={`compliance-panel__badge ${badge.cls}`}>{badge.label}</div>
+                    <div className={`compliance-panel__badge ${badge.cls}`}>
+                      {badge.label}
+                    </div>
                   </div>
                 );
               })}
             </div>
           )}
 
-          <div className="compliance-panel__note" style={{ marginTop: '0.75rem', color: darkMode ? '#9ca3af' : '#64748b' }}>
-            Pre-checks are heuristic. Use final printed result per local passport regulations.
+          <div
+            className="compliance-panel__note"
+            style={{
+              marginTop: '0.75rem',
+              color: darkMode ? '#9ca3af' : '#64748b',
+            }}
+          >
+            Pre-checks are heuristic. Use final printed result per local
+            passport regulations.
           </div>
         </>
       )}

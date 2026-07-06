@@ -39,12 +39,14 @@ export const sanitizeFileNameInput = (input) => {
 
 export const validateRequired = (value, fieldName = 'This field') => {
   if (value === null || value === undefined) return `${fieldName} is required`;
-  if (typeof value === 'string' && !value.trim()) return `${fieldName} is required`;
+  if (typeof value === 'string' && !value.trim())
+    return `${fieldName} is required`;
   return '';
 };
 
 export const validateMinLength = (value, min, fieldName = 'This field') => {
-  if (!value || value.length < min) return `${fieldName} must be at least ${min} characters`;
+  if (!value || value.length < min)
+    return `${fieldName} must be at least ${min} characters`;
   return '';
 };
 

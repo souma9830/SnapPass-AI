@@ -1,6 +1,15 @@
 /* ── PrintPreviewPage ───────────────────────────── */
-.print-page { max-width: 1000px; display: flex; flex-direction: column; gap: var(--space-xl); }
-.print-page__header { display: flex; flex-direction: column; gap: 4px; }
+.print-page {
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+.print-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 .print-page__layout {
   display: grid;
@@ -8,19 +17,31 @@
   gap: var(--space-xl);
   align-items: start;
 }
-.print-preview-toggle-dark{
+.print-preview-toggle-dark {
   width: 100%;
   height: 100vh;
   background:
-    radial-gradient(1400px 700px at 10% 10%, rgba(255, 233, 77, 0.32), transparent 35%),
-    radial-gradient(1000px 600px at 90% 10%, rgba(255, 191, 0, 0.22), transparent 40%),
+    radial-gradient(
+      1400px 700px at 10% 10%,
+      rgba(255, 233, 77, 0.32),
+      transparent 35%
+    ),
+    radial-gradient(
+      1000px 600px at 90% 10%,
+      rgba(255, 191, 0, 0.22),
+      transparent 40%
+    ),
     linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
-    margin-top: -140px;
+  margin-top: -140px;
   padding-top: 140px;
 }
 
 /* Sheet */
-.print-page__sheet { display: flex; flex-direction: column; gap: var(--space-md); }
+.print-page__sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
 .print-page__sheet-label {
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -76,7 +97,7 @@
   font-weight: 600;
   color: var(--color-text);
 }
-.print-info-value-dark{
+.print-info-value-dark {
   color: white;
 }
 
@@ -90,7 +111,7 @@
 .print-page__back-btn-dark:hover {
   gap: var(--space-sm);
   font-size: var(--font-size-sm);
-background: transparent;
+  background: transparent;
   color: white;
 }
 
@@ -113,12 +134,15 @@ background: transparent;
 }
 
 @media (max-width: 768px) {
-  .print-page__layout { grid-template-columns: 1fr; }
-  .print-page__controls { position: static; }
+  .print-page__layout {
+    grid-template-columns: 1fr;
+  }
+  .print-page__controls {
+    position: static;
+  }
 }
 
 @media print {
-
   body {
     background: white;
   }
@@ -307,9 +331,13 @@ background: transparent;
   color: white;
 }
 
-.qty-input__field:focus { outline: none; }
+.qty-input__field:focus {
+  outline: none;
+}
 .qty-input__field::-webkit-inner-spin-button,
-.qty-input__field::-webkit-outer-spin-button { -webkit-appearance: none; }
+.qty-input__field::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
 
 .qty-input__hint {
   font-size: var(--font-size-xs);

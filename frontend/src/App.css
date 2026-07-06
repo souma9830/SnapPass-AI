@@ -14,7 +14,7 @@
 }
 
 [data-theme='dark'] {
-  background-color: var(--color-bg) !important;
+  background-color: #000000 !important;
 }
 
 [data-theme='dark'] .app-shell {
@@ -26,7 +26,7 @@
 }
 
 [data-theme='dark'] .studio-header .section-title {
-  color: var(--color-text) !important;
+  color: #ffffff !important;
 }
 
  /* Navbar Container */

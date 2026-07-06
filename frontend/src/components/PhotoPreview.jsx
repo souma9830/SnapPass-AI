@@ -1,25 +1,41 @@
 import React from 'react';
 import './PhotoPreview.css';
 
-function PhotoPreview({ imageUrl, filename, onReset, onProceed, isUploading, darkMode, showOverlay = false }) {
+function PhotoPreview({
+  imageUrl,
+  filename,
+  onReset,
+  onProceed,
+  isUploading,
+  darkMode,
+  showOverlay = false,
+}) {
   return (
     <div className="photo-preview">
       <div className="photo-preview__panel">
         <div className="photo-preview__label">
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            aria-hidden="true"
+            focusable="false"
+          >
             <rect x="4" y="6" width="16" height="12" rx="3" />
             <path d="M8 12h8" />
             <path d="M12 9v6" />
           </svg>
           Uploaded Photo
-          {isUploading && <span className="photo-preview__processing-badge">Processing...</span>}
+          {isUploading && (
+            <span className="photo-preview__processing-badge">
+              Processing...
+            </span>
+          )}
         </div>
-        <div className={`photo-preview__frame ${isUploading ? 'photo-preview__frame--loading' : ''}`}>
-          <img
-            src={imageUrl}
-            alt={filename}
-            className="photo-preview__img"
-          />
+        <div
+          className={`photo-preview__frame ${isUploading ? 'photo-preview__frame--loading' : ''}`}
+        >
+          <img src={imageUrl} alt={filename} className="photo-preview__img" />
           {showOverlay && (
             <div className="photo-preview__overlay-grid" aria-hidden="true">
               <div className="photo-preview__corner photo-preview__corner--tl" />
@@ -30,7 +46,14 @@ function PhotoPreview({ imageUrl, filename, onReset, onProceed, isUploading, dar
             </div>
           )}
         </div>
-        <div className="photo-preview__actions" style={{ display: 'flex', gap: 'var(--space-sm)', marginTop: 'var(--space-sm)' }}>
+        <div
+          className="photo-preview__actions"
+          style={{
+            display: 'flex',
+            gap: 'var(--space-sm)',
+            marginTop: 'var(--space-sm)',
+          }}
+        >
           <button
             className="btn btn-ghost"
             onClick={onReset}

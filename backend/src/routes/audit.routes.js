@@ -1,5 +1,8 @@
 import express from 'express';
-import { getAuditLogs, getAuditSummary } from '../controllers/audit.controller.js';
+import {
+  getAuditLogs,
+  getAuditSummary,
+} from '../controllers/audit.controller.js';
 
 const router = express.Router();
 

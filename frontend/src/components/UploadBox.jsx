@@ -50,7 +50,7 @@ function UploadBox({ onFileSelect }) {
       if (!isMagicValid) {
         showToast(
           'Invalid file structure. The file signature does not match a valid JPG, PNG, or WebP image.',
-          'error',
+          'error'
         );
         return;
       }
@@ -72,9 +72,12 @@ function UploadBox({ onFileSelect }) {
   };
 
   /* Drag handlers */
-  const onDragOver  = (e) => { e.preventDefault(); setIsDragging(true); };
+  const onDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
   const onDragLeave = () => setIsDragging(false);
-  const onDrop      = (e) => {
+  const onDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
     handleFile(e.dataTransfer.files[0]);
@@ -97,7 +100,9 @@ function UploadBox({ onFileSelect }) {
       tabIndex={0}
       aria-label="Click or drag a photo to upload"
       aria-busy={isValidating}
-      onKeyDown={(e) => e.key === 'Enter' && !isValidating && inputRef.current.click()}
+      onKeyDown={(e) =>
+        e.key === 'Enter' && !isValidating && inputRef.current.click()
+      }
     >
       <input
         ref={inputRef}
@@ -111,8 +116,22 @@ function UploadBox({ onFileSelect }) {
 
       <div className="upload-box__icon" aria-hidden="true">
         {isValidating ? (
-          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" className="upload-box__spinner">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="31.4" strokeDashoffset="10" />
+          <svg
+            viewBox="0 0 24 24"
+            focusable="false"
+            aria-hidden="true"
+            className="upload-box__spinner"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+              strokeDasharray="31.4"
+              strokeDashoffset="10"
+            />
           </svg>
         ) : (
           <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -127,8 +146,12 @@ function UploadBox({ onFileSelect }) {
         {isValidating ? 'Checking image…' : t.dragDropPhoto}
       </p>
       <p className="upload-box__subtitle">
-        {isValidating ? 'Validating format, size, and quality' : (
-          <>or <span className="upload-box__browse">{t.browseFiles}</span></>
+        {isValidating ? (
+          'Validating format, size, and quality'
+        ) : (
+          <>
+            or <span className="upload-box__browse">{t.browseFiles}</span>
+          </>
         )}
       </p>
       <p className="upload-box__hint">{t.uploadFormatsLimit}</p>

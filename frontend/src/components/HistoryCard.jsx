@@ -11,8 +11,11 @@ function formatDate(ts) {
   if (!ts) return '';
   try {
     return new Date(ts).toLocaleDateString(undefined, {
-      year: 'numeric', month: 'short', day: 'numeric',
-      hour: '2-digit', minute: '2-digit',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   } catch {
     return '';
@@ -30,7 +33,10 @@ const sizeMap = {
 function HistoryCard({ session, onDelete, onClick }) {
   const status = session.status || 'draft';
   const label = statusLabels[status] || status;
-  const sizeLabel = sizeMap[session.photoSizePreset || session.sizePreset] || session.photoSizePreset || '—';
+  const sizeLabel =
+    sizeMap[session.photoSizePreset || session.sizePreset] ||
+    session.photoSizePreset ||
+    '—';
 
   return (
     <div className="history-card" role="listitem">
@@ -40,15 +46,26 @@ function HistoryCard({ session, onDelete, onClick }) {
         aria-label={`Open session from ${formatDate(session.savedAt)}`}
       >
         <div className="history-card__thumb" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <rect x="3" y="3" width="18" height="18" rx="3" />
             <circle cx="12" cy="12" r="3" />
           </svg>
         </div>
         <div className="history-card__info">
           <div className="history-card__row">
-            <span className="history-card__date">{formatDate(session.savedAt)}</span>
-            <span className={`history-card__badge history-card__badge--${status}`}>{label}</span>
+            <span className="history-card__date">
+              {formatDate(session.savedAt)}
+            </span>
+            <span
+              className={`history-card__badge history-card__badge--${status}`}
+            >
+              {label}
+            </span>
           </div>
           <div className="history-card__meta">
             <span>Size: {sizeLabel}</span>
@@ -58,11 +75,19 @@ function HistoryCard({ session, onDelete, onClick }) {
       </button>
       <button
         className="history-card__delete"
-        onClick={(e) => { e.stopPropagation(); onDelete?.(session.id); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete?.(session.id);
+        }}
         aria-label={`Delete session from ${formatDate(session.savedAt)}`}
         title="Delete"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <polyline points="3 6 5 6 21 6" />
           <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2l-1-14" />
           <path d="M10 11v6" />

@@ -1,4 +1,9 @@
-import { isRedisAvailable, getCache, setCache, deleteCache } from '../config/redis.js';
+import {
+  isRedisAvailable,
+  getCache,
+  setCache,
+  deleteCache,
+} from '../config/redis.js';
 
 const memoryCache = new Map();
 
@@ -22,7 +27,10 @@ export const cacheMiddleware = (durationSeconds = 300) => {
       if (isRedisAvailable()) {
         setCache(key, body, durationSeconds);
       } else {
-        memoryCache.set(key, { data: body, expiredAt: Date.now() + durationSeconds * 1000 });
+        memoryCache.set(key, {
+          data: body,
+          expiredAt: Date.now() + durationSeconds * 1000,
+        });
       }
       return originalJson.call(this, body);
     };

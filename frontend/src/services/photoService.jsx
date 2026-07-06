@@ -29,7 +29,12 @@ export const uploadPhoto = async (file, onUploadProgress) => {
  * @param {{ filename: string, backgroundColour: string, photoSizePreset: string }}
  * @returns {Promise<Blob>}
  */
-export const processPhoto = async ({ filename, backgroundColour, photoSizePreset, attire }) => {
+export const processPhoto = async ({
+  filename,
+  backgroundColour,
+  photoSizePreset,
+  attire,
+}) => {
   const { data } = await api.post(
     '/process',
     { filename, backgroundColour, photoSizePreset, attire },
@@ -44,7 +49,11 @@ export const processPhoto = async ({ filename, backgroundColour, photoSizePreset
  * @param {{ filename: string, quantity: number, photoSizePreset: string }}
  * @returns {Promise<Blob>}
  */
-export const generateSheet = async ({ filename, quantity, photoSizePreset }) => {
+export const generateSheet = async ({
+  filename,
+  quantity,
+  photoSizePreset,
+}) => {
   const { data } = await api.post(
     '/print/generate-sheet',
     { filename, quantity, photoSizePreset },

@@ -2,7 +2,15 @@ import AuditLog from '../models/auditLog.model.js';
 
 export const getAuditLogs = async (req, res, next) => {
   try {
-    const { page = 1, limit = 50, method, endpoint, statusCode, startDate, endDate } = req.query;
+    const {
+      page = 1,
+      limit = 50,
+      method,
+      endpoint,
+      statusCode,
+      startDate,
+      endDate,
+    } = req.query;
     const filter = {};
 
     if (method) filter.method = method.toUpperCase();
@@ -19,7 +27,11 @@ export const getAuditLogs = async (req, res, next) => {
     const skip = (pageNum - 1) * limitNum;
 
     const [logs, total] = await Promise.all([
-      AuditLog.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum).lean(),
+      AuditLog.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum)
+        .lean(),
       AuditLog.countDocuments(filter),
     ]);
 
@@ -42,7 +54,13 @@ export const getAuditSummary = async (req, res, next) => {
   try {
     const [methodStats, statusStats, topEndpoints] = await Promise.all([
       AuditLog.aggregate([
-        { $group: { _id: '$method', count: { $sum: 1 }, avgDuration: { $avg: '$durationMs' } } },
+        {
+          $group: {
+            _id: '$method',
+            count: { $sum: 1 },
+            avgDuration: { $avg: '$durationMs' },
+          },
+        },
         { $sort: { count: -1 } },
       ]),
       AuditLog.aggregate([
@@ -50,13 +68,22 @@ export const getAuditSummary = async (req, res, next) => {
         { $sort: { count: -1 } },
       ]),
       AuditLog.aggregate([
-        { $group: { _id: '$endpoint', count: { $sum: 1 }, avgDuration: { $avg: '$durationMs' } } },
+        {
+          $group: {
+            _id: '$endpoint',
+            count: { $sum: 1 },
+            avgDuration: { $avg: '$durationMs' },
+          },
+        },
         { $sort: { count: -1 } },
         { $limit: 20 },
       ]),
     ]);
 
-    res.json({ success: true, data: { methodStats, statusStats, topEndpoints } });
+    res.json({
+      success: true,
+      data: { methodStats, statusStats, topEndpoints },
+    });
   } catch (error) {
     next(error);
   }

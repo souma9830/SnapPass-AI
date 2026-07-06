@@ -18,7 +18,8 @@ export const uploadPhoto = async (req, res, next) => {
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: 'No image file received. Please attach a JPEG, PNG, or WebP photo.',
+        message:
+          'No image file received. Please attach a JPEG, PNG, or WebP photo.',
       });
     }
 

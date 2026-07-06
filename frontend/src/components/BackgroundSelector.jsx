@@ -28,45 +28,56 @@ function BackgroundSelector({ selected = 'white', onChange }) {
   // Determine if the current selection is a preset id or a raw hex
   const isCustomActive = selected && selected.startsWith('#');
 
-  const handlePresetClick = useCallback((id) => {
-    if (id === 'custom') {
-      // Open the native colour picker
-      colorInputRef.current?.click();
-      return;
-    }
-    onChange && onChange(id);
-  }, [onChange]);
+  const handlePresetClick = useCallback(
+    (id) => {
+      if (id === 'custom') {
+        // Open the native colour picker
+        colorInputRef.current?.click();
+        return;
+      }
+      onChange && onChange(id);
+    },
+    [onChange]
+  );
 
-  const handleCustomHexChange = useCallback((e) => {
-    const hex = e.target.value;
-    setCustomHex(hex);
-    onChange && onChange(hex);
-  }, [onChange]);
+  const handleCustomHexChange = useCallback(
+    (e) => {
+      const hex = e.target.value;
+      setCustomHex(hex);
+      onChange && onChange(hex);
+    },
+    [onChange]
+  );
 
-  const handleKeyDown = useCallback((e) => {
-    const currentIndex = BACKGROUND_COLOURS.findIndex(
-      (bg) => bg.id === selected || (bg.id === 'custom' && isCustomActive),
-    );
-    let nextIndex = currentIndex;
+  const handleKeyDown = useCallback(
+    (e) => {
+      const currentIndex = BACKGROUND_COLOURS.findIndex(
+        (bg) => bg.id === selected || (bg.id === 'custom' && isCustomActive)
+      );
+      let nextIndex = currentIndex;
 
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      e.preventDefault();
-      nextIndex = (currentIndex + 1) % BACKGROUND_COLOURS.length;
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      nextIndex = (currentIndex - 1 + BACKGROUND_COLOURS.length) % BACKGROUND_COLOURS.length;
-    } else {
-      return;
-    }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        nextIndex = (currentIndex + 1) % BACKGROUND_COLOURS.length;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        nextIndex =
+          (currentIndex - 1 + BACKGROUND_COLOURS.length) %
+          BACKGROUND_COLOURS.length;
+      } else {
+        return;
+      }
 
-    const next = BACKGROUND_COLOURS[nextIndex];
-    handlePresetClick(next.id);
+      const next = BACKGROUND_COLOURS[nextIndex];
+      handlePresetClick(next.id);
 
-    const buttons = listRef.current?.querySelectorAll('[role="radio"]');
-    if (buttons && buttons[nextIndex]) {
-      buttons[nextIndex].focus();
-    }
-  }, [selected, isCustomActive, handlePresetClick]);
+      const buttons = listRef.current?.querySelectorAll('[role="radio"]');
+      if (buttons && buttons[nextIndex]) {
+        buttons[nextIndex].focus();
+      }
+    },
+    [selected, isCustomActive, handlePresetClick]
+  );
 
   return (
     <div className="bg-selector">
@@ -83,7 +94,8 @@ function BackgroundSelector({ selected = 'white', onChange }) {
       >
         {BACKGROUND_COLOURS.map(({ id, label, hex, country }) => {
           const isActive = id === 'custom' ? isCustomActive : selected === id;
-          const swatchColor = id === 'custom' ? (isCustomActive ? selected : customHex) : hex;
+          const swatchColor =
+            id === 'custom' ? (isCustomActive ? selected : customHex) : hex;
 
           return (
             <button
@@ -99,7 +111,11 @@ function BackgroundSelector({ selected = 'white', onChange }) {
             >
               <span
                 className="bg-selector__swatch"
-                style={{ background: swatchColor || 'conic-gradient(red, yellow, green, cyan, blue, magenta, red)' }}
+                style={{
+                  background:
+                    swatchColor ||
+                    'conic-gradient(red, yellow, green, cyan, blue, magenta, red)',
+                }}
               />
               <span className="bg-selector__label">{label}</span>
               {country && (

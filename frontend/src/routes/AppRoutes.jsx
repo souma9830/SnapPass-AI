@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ScrollToTop from './ScrollToTop';
+import RouteGuard from './RouteGuard';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const UploadPage = lazy(() => import('../pages/UploadPage'));
@@ -24,7 +25,7 @@ const ApiDocsPage = lazy(() => import('../pages/ApiDocsPage'));
 
 /**
  * AppRoutes — central route configuration for SnapPass AI.
- * Add new pages here so contributors can find all routes in one place.
+ * Handles client-side view navigation mappings and guards.
  */
 function AppRoutes({ darkMode, toggleTheme }) {
   const location = useLocation();

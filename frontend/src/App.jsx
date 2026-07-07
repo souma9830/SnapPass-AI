@@ -28,6 +28,7 @@ function AppContent() {
 }
 
 function App() {
+  // Mount primary application providers and routing controls
   return (
     <BrowserRouter>
       <ToastProvider>

@@ -38,10 +38,13 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+import { logApiError } from '../utils/errorTracker';
+
 // ── Response interceptor (global error normalisation) ─────────────────────
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    logApiError(error);
     const message =
       error.response?.data?.message ||
       error.message ||

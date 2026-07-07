@@ -572,52 +572,9 @@
     border-color: #2563eb !important;
 }
 
-.processing-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.comparison-section {
     width: 100%;
-    height: 28px;
-    background: rgba(0,0,0,0.06);
-    border-radius: 14px;
-    overflow: hidden;
-    position: relative;
-    padding: 0 10px;
-    margin-top: 8px;
-}
-
-.processing-bar__fill {
-    height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-    border-radius: 14px;
-    transition: width 0.4s ease;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.processing-bar__label {
-    position: relative;
-    z-index: 1;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #1e293b;
-    white-space: nowrap;
-}
-
-.processing-bar--error {
-    background: #fecaca;
-    justify-content: space-between;
-}
-
-.processing-bar--error .processing-bar__label {
-    color: #b91c1c;
-}
-
-.processing-bar--done {
-    background: #bbf7d0;
-}
-
-.processing-bar--done .processing-bar__label {
-    color: #15803d;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 16px;
 }

@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { translations } from '../translations/translations';
 
-function AdminDashboard({ darkMode, toggleTheme }) {
+/**
+ * AdminDashboard — placeholder admin panel.
+ * Shows summary stats and a table of recent uploads.
+ * Backend integration pending — contributors welcome!
+ */
+function AdminDashboard() {
+  const { darkMode } = useTheme();
   const { language } = useLanguage();
   const t = translations[language];
   const [activeTab, setActiveTab] = useState('overview');

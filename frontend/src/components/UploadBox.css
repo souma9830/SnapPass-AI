@@ -128,7 +128,75 @@
   border-color: #3b82f6;
 }
 
-[data-theme='dark'] .upload-box--validating {
-  background: rgba(20, 20, 40, 0.7);
-  border-color: #60a5fa;
+.upload-queue {
+  width: 100%;
+  margin-top: 12px;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  padding-top: 8px;
+}
+
+.upload-queue__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary, #6b7280);
+  margin-bottom: 6px;
+}
+
+.upload-queue__badge {
+  background: var(--color-border, #e5e7eb);
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+
+.upload-queue__items {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.upload-queue__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  background: rgba(0,0,0,0.03);
+}
+
+.upload-queue__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+  color: var(--color-text, #111827);
+}
+
+.upload-queue__status {
+  font-weight: 600;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.upload-queue__item--queued .upload-queue__status { color: #6b7280; }
+.upload-queue__item--uploading .upload-queue__status { color: #3b82f6; }
+.upload-queue__item--done .upload-queue__status { color: #15803d; }
+.upload-queue__item--failed .upload-queue__status { color: #b91c1c; }
+.upload-queue__item--cancelled .upload-queue__status { color: #9ca3af; }
+
+.upload-queue__more {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #6b7280;
+  padding: 4px;
+}
+
+[data-theme='dark'] .upload-queue__item {
+  background: rgba(255,255,255,0.04);
+}
+
+[data-theme='dark'] .upload-queue__name {
+  color: #e5e7eb;
 }

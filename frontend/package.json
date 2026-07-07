@@ -28,6 +28,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
+    "prebuild": "node -e \"import('./vite-env-check.js').then(m => m.verifyViteEnvironment())\" || true",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",

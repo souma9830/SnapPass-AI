@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { sanitizeInput } from '../middleware/sanitize.middleware.js';
+import { requestAuditMiddleware } from '../middleware/auditLogger.middleware.js';
 import authRoutes from './auth.routes.js';
 import uploadRoutes from './upload.routes.js';
 import imageRoutes from './image.routes.js';
@@ -13,10 +14,12 @@ import auditRoutes from './audit.routes.js';
 import presetsRoutes from './presets.routes.js';
 import docsRoutes from './docs.routes.js';
 import analyticsRoutes from './analytics.routes.js';
+import batchRoutes from './batch.routes.js';
 
 const router = Router();
 
 router.use(sanitizeInput);
+router.use(requestAuditMiddleware);
 router.use('/auth', authRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/process', imageRoutes);
@@ -29,6 +32,7 @@ router.use('/audit-logs', auditRoutes);
 router.use('/presets', presetsRoutes);
 router.use('/docs', docsRoutes);
 router.use('/analytics', analyticsRoutes);
+router.use('/batch', batchRoutes);
 
 export { healthRoutes };
 export default router;

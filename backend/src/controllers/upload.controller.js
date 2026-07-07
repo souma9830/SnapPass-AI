@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 
 /**
  * POST /api/upload
@@ -39,6 +40,25 @@ export const uploadPhoto = async (req, res, next) => {
         // Clients can pass this filename directly to POST /api/process
         processUrl: `/api/process`,
       },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const batchUpload = async (req, res, next) => {
+  try {
+    const files = req.files || [];
+    const results = files.map((f) => ({
+      filename: f.filename,
+      originalName: f.originalname,
+      size: f.size,
+      uploaded: true,
+    }));
+    res.status(200).json({
+      success: true,
+      message: `${results.length} file(s) uploaded successfully`,
+      files: results,
     });
   } catch (err) {
     next(err);

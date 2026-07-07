@@ -19,31 +19,42 @@ import { useToast } from '../context/ToastContext';
  *      high-quality 300 DPI passport photo output (async)
  *
  * Props:
- *   onFileSelect(file) — called only when all checks pass
+ *   onFileSelect(file) — called when a valid image file is chosen
+ *   queue — optional upload queue array from useUploadQueue
+ *   addToQueue — function to add files to the queue
  */
-function UploadBox({ onFileSelect }) {
+function UploadBox({ onFileSelect, queue, addToQueue }) {
   const { language } = useLanguage();
   const t = translations[language];
   const inputRef = useRef(null);
   const { showToast } = useToast();
   const [isDragging, setIsDragging] = useState(false);
-  const [isValidating, setIsValidating] = useState(false);
+  const [error, setError] = useState('');
 
   const handleFile = async (file) => {
+    setError('');
+
     if (!file) {
       showToast('Please select an image file.', 'error');
       return;
     }
 
-    setIsValidating(true);
+    const result = validateImageFile(file);
+    if (!result.valid) {
+      showToast(result.error, 'error');
+      return;
+    }
 
-    try {
-      // Stage 1 — synchronous: MIME type, extension, file size, empty-file guard
-      const basicResult = validateImageFile(file);
-      if (!basicResult.valid) {
-        showToast(basicResult.error, 'error');
-        return;
-      }
+    const isValidMagic = await validateImageMagicBytes(file);
+    if (!isValidMagic) {
+      showToast('Invalid file structure.', 'error');
+      return;
+    }
+
+    if (addToQueue) {
+      addToQueue([file]);
+      return;
+    }
 
       // Stage 2 — async: binary magic-byte signature verification
       const isMagicValid = await validateImageMagicBytes(file);
@@ -71,21 +82,26 @@ function UploadBox({ onFileSelect }) {
     }
   };
 
-  /* Drag handlers */
-  const onDragOver = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
+  const onDragOver = (e) => { e.preventDefault(); setIsDragging(true); };
   const onDragLeave = () => setIsDragging(false);
   const onDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    handleFile(e.dataTransfer.files[0]);
+    const files = e.dataTransfer.files;
+    if (files.length > 1 && addToQueue) {
+      addToQueue(files);
+    } else {
+      handleFile(files[0]);
+    }
   };
 
-  /* Input change */
   const onChange = (e) => {
-    handleFile(e.target.files[0]);
+    const files = e.target.files;
+    if (files.length > 1 && addToQueue) {
+      addToQueue(files);
+    } else {
+      handleFile(files[0]);
+    }
     e.target.value = '';
   };
 
@@ -142,19 +158,35 @@ function UploadBox({ onFileSelect }) {
         )}
       </div>
 
-      <p className="upload-box__title">
-        {isValidating ? 'Checking image…' : t.dragDropPhoto}
-      </p>
-      <p className="upload-box__subtitle">
-        {isValidating ? (
-          'Validating format, size, and quality'
-        ) : (
-          <>
-            or <span className="upload-box__browse">{t.browseFiles}</span>
-          </>
-        )}
-      </p>
-      <p className="upload-box__hint">{t.uploadFormatsLimit}</p>
+      {error && (
+        <p className="upload-box__error" role="alert">{error}</p>
+      )}
+
+      {queue && queue.length > 0 && (
+        <div className="upload-queue">
+          <div className="upload-queue__header">
+            <span>{queue.length} file{queue.length !== 1 ? 's' : ''}</span>
+            <span className="upload-queue__badge">{queue.filter(f => f.status === 'done').length}/{queue.length}</span>
+          </div>
+          <div className="upload-queue__items">
+            {queue.slice(0, 5).map((item) => (
+              <div key={item.id} className={`upload-queue__item upload-queue__item--${item.status}`}>
+                <span className="upload-queue__name">{item.name}</span>
+                <span className="upload-queue__status">
+                  {item.status === 'queued' && 'Waiting'}
+                  {item.status === 'uploading' && `${item.progress}%`}
+                  {item.status === 'done' && 'Done'}
+                  {item.status === 'failed' && 'Failed'}
+                  {item.status === 'cancelled' && 'Cancelled'}
+                </span>
+              </div>
+            ))}
+            {queue.length > 5 && (
+              <div className="upload-queue__more">+{queue.length - 5} more</div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

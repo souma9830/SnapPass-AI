@@ -3,13 +3,12 @@
    =================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap');
-@import "tailwindcss";
 
 /* ── CSS Variables ──────────────────────────────── */
 :root {
   /* Colors */
   --color-primary: #2563eb;
-  --color-primary-dark: #d2d1d1;
+  --color-primary-dark: #facc15;
   --color-primary-hover: #1d4ed8;
   --color-primary-light: #eff6ff;
   --color-secondary: #64748b;
@@ -19,7 +18,7 @@
 
   /* Neutrals */
   --color-bg: #f8fafc;
-  --color-bg-dark: #d2d1d1;
+  --color-bg-dark: #111827;
   --color-surface: #ffffff;
   --color-surface-light: #ffffff;
   --color-surface-dark: #0e0e0e;
@@ -51,7 +50,7 @@
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.06);
 
   /* Typography */
   --font-family: 'Manrope', 'Segoe UI', sans-serif;
@@ -256,7 +255,7 @@ button {
 }
 
 .navbar {
-  z-index: 9999
+  z-index: 9999;
 }
 
 /* ── Scrollbar ──────────────────────────────────── */

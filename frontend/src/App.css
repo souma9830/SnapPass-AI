@@ -1,9 +1,15 @@
+/* ── Theme Transitions ─────────────────────────── */
+*, *::before, *::after {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+html.dark { color-scheme: dark; }
+html.light { color-scheme: light; }
+
 /* ── App Shell ─────────────────────────────────── */
 .app-shell {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* padding-top: 34px; */
 }
 
 .app-main {
@@ -14,7 +20,7 @@
 }
 
 [data-theme='dark'] {
-  background-color: var(--color-bg) !important;
+  background-color: #000000 !important;
 }
 
 [data-theme='dark'] .app-shell {
@@ -26,7 +32,7 @@
 }
 
 [data-theme='dark'] .studio-header .section-title {
-  color: var(--color-text) !important;
+  color: #ffffff !important;
 }
 
  /* Navbar Container */

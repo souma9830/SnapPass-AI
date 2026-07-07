@@ -1,0 +1,9 @@
+/* Alignment Detector Utility styles - developer diagnostic helpers */
+.navbar-alignment-status-indicator {
+  position: absolute;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+  pointer-events: none;
+  content: 'aligned';
+}

@@ -8,7 +8,7 @@ export const translations = {
     admin: 'Admin',
     getStarted: 'Get Started',
     language: 'Language',
-    history: "History",
+    history: 'History',
 
     heroTitle: 'Open-source AI-powered passport photo studio',
     heroSubtitle:
@@ -39,12 +39,10 @@ export const translations = {
     stepAIProcessSubtitle: 'Advanced AI optimization for your photo',
 
     stepChooseSize: 'Choose size & quantity',
-    stepChooseSizeSubtitle:
-      'Select your required photo format and copies',
+    stepChooseSizeSubtitle: 'Select your required photo format and copies',
 
     stepDownload: 'Download & print',
-    stepDownloadSubtitle:
-      'Get a high-quality print-ready photo instantly',
+    stepDownloadSubtitle: 'Get a high-quality print-ready photo instantly',
     featuresTitle: 'Features',
     featuresSubtitle: 'Everything you need right out of the box',
 
@@ -65,8 +63,7 @@ export const translations = {
       'Generate a printable A4 sheet with multiple photos — save on printing costs.',
     ctaTitle: 'Ready to generate your passport photo?',
 
-    ctaSubtitle:
-      'No account required. Completely free and open-source.',
+    ctaSubtitle: 'No account required. Completely free and open-source.',
 
     ctaButton: 'Get Started →',
     footerTagline:
@@ -213,8 +210,7 @@ export const translations = {
 
     status: 'Status',
 
-    noUploads:
-      'No uploads yet — connect the backend to see data here.',
+    noUploads: 'No uploads yet — connect the backend to see data here.',
 
     settingsPanel: 'Settings panel',
 
@@ -230,8 +226,7 @@ export const translations = {
       'Upload a portrait photo and let AI automatically remove the background, align your face and generate a professional passport photo sheet.',
     privacyPolicy: 'Privacy Policy',
 
-    privacySubtitle:
-      'How we handle your data with transparency and care.',
+    privacySubtitle: 'How we handle your data with transparency and care.',
 
     privacyIntroTitle: '1. Introduction',
 
@@ -249,8 +244,7 @@ export const translations = {
 
     analyticsLabel: 'Analytics:',
 
-    privacyImages:
-      'The portrait photo you upload for processing.',
+    privacyImages: 'The portrait photo you upload for processing.',
 
     privacySettings:
       'The country standard, size, and background color you select.',
@@ -272,8 +266,7 @@ export const translations = {
     privacyProcess3:
       'Your original and processed photos are permanently deleted after download.',
 
-    privacyProcess4:
-      'We do not use your photos to train AI models.',
+    privacyProcess4: 'We do not use your photos to train AI models.',
 
     privacyThirdPartyTitle: '4. Third-Party Services',
 
@@ -285,7 +278,7 @@ export const translations = {
     privacyRightsText:
       'Because we do not store your personal data, there is no account to delete or personal archive to request. If you have concerns about the open-source code or how data is routed, you are welcome to audit our public repository or self-host your own instance of SnapPass AI.',
 
-    lastUpdated: '{t.lastUpdated}:',
+    lastUpdated: 'Last updated:',
     termsTitle: 'Terms & Conditions',
 
     termsSubtitle:
@@ -315,8 +308,7 @@ export const translations = {
     termsUseText:
       'You agree to use SnapPass AI only for its intended purpose. You may not:',
 
-    termsUsePoint1:
-      'Upload inappropriate, illegal, or offensive images.',
+    termsUsePoint1: 'Upload inappropriate, illegal, or offensive images.',
 
     termsUsePoint2:
       'Abuse, bypass, or overload the API and processing endpoints.',
@@ -338,8 +330,8 @@ export const translations = {
     browseFiles: 'browse files',
 
     uploadFormatsLimit: 'JPEG, PNG, WebP · Max 10 MB',
-    showOriginal: "Show Original",
-    backToEdit: "Back To Edit",
+    showOriginal: 'Show Original',
+    backToEdit: 'Back To Edit',
 
     testimonialsTitle: 'What Our Users Say',
 
@@ -372,7 +364,8 @@ export const translations = {
     reviewCommentMax: 'Comment must be less than 500 characters',
     cancel: 'Cancel',
     formalAttire: 'Formal Attire (AI Swap)',
-    formalAttireSubtitle: 'Swap your outfit into a professional formal suit instantly.',
+    formalAttireSubtitle:
+      'Swap your outfit into a professional formal suit instantly.',
     attireNone: 'None (Original)',
     attireMaleSuit: "Men's Black Suit",
     attireFemaleBlazer: "Women's Navy Blazer",
@@ -381,8 +374,8 @@ export const translations = {
 
   hi: {
     home: 'होम',
-    showOriginal: "मूल फोटो दिखाएँ",
-    backToEdit: "संपादन पर वापस जाएँ",
+    showOriginal: 'मूल फोटो दिखाएँ',
+    backToEdit: 'संपादन पर वापस जाएँ',
     studio: 'स्टूडियो',
     upload: 'अपलोड',
     editor: 'एडिटर',
@@ -418,12 +411,10 @@ export const translations = {
     stepUploadSubtitle: 'अपने डिवाइस से फोटो चुनें',
 
     stepAIProcess: 'AI प्रोसेस और सेंटर करता है',
-    stepAIProcessSubtitle:
-      'आपकी फोटो के लिए उन्नत AI ऑप्टिमाइजेशन',
+    stepAIProcessSubtitle: 'आपकी फोटो के लिए उन्नत AI ऑप्टिमाइजेशन',
 
     stepChooseSize: 'साइज और मात्रा चुनें',
-    stepChooseSizeSubtitle:
-      'अपना आवश्यक फोटो फॉर्मेट और कॉपी चुनें',
+    stepChooseSizeSubtitle: 'अपना आवश्यक फोटो फॉर्मेट और कॉपी चुनें',
 
     stepDownload: 'डाउनलोड और प्रिंट करें',
     stepDownloadSubtitle:
@@ -449,8 +440,7 @@ export const translations = {
 
     ctaTitle: 'क्या आप अपना पासपोर्ट फोटो बनाना चाहते हैं?',
 
-    ctaSubtitle:
-      'कोई अकाउंट आवश्यक नहीं। पूरी तरह निःशुल्क और ओपन-सोर्स।',
+    ctaSubtitle: 'कोई अकाउंट आवश्यक नहीं। पूरी तरह निःशुल्क और ओपन-सोर्स।',
 
     ctaButton: 'शुरू करें →',
     footerTagline:
@@ -597,8 +587,7 @@ export const translations = {
 
     status: 'स्थिति',
 
-    noUploads:
-      'अभी तक कोई अपलोड नहीं — डेटा देखने के लिए बैकएंड कनेक्ट करें।',
+    noUploads: 'अभी तक कोई अपलोड नहीं — डेटा देखने के लिए बैकएंड कनेक्ट करें।',
 
     settingsPanel: 'सेटिंग्स पैनल',
 
@@ -633,31 +622,24 @@ export const translations = {
 
     analyticsLabel: 'एनालिटिक्स:',
 
-    privacyImages:
-      'प्रोसेसिंग के लिए आपके द्वारा अपलोड की गई पोर्ट्रेट फोटो।',
+    privacyImages: 'प्रोसेसिंग के लिए आपके द्वारा अपलोड की गई पोर्ट्रेट फोटो।',
 
-    privacySettings:
-      'आपके द्वारा चुना गया देश मानक, साइज़ और बैकग्राउंड रंग।',
+    privacySettings: 'आपके द्वारा चुना गया देश मानक, साइज़ और बैकग्राउंड रंग।',
 
     privacyAnalytics:
       'अनाम और संकलित उपयोग डेटा (जैसे पेज व्यूज़ या एरर रेट्स) जो ओपन-सोर्स प्लेटफ़ॉर्म को बेहतर बनाने में मदद करता है। हम व्यक्तिगत उपयोगकर्ताओं को ट्रैक नहीं करते।',
 
     privacyProcessTitle: '3. आपका डेटा कैसे प्रोसेस किया जाता है',
 
-    privacyProcessText:
-      'SnapPass AI Zero Retention मॉडल पर कार्य करता है।',
+    privacyProcessText: 'SnapPass AI Zero Retention मॉडल पर कार्य करता है।',
 
-    privacyProcess1:
-      'आपकी फोटो सुरक्षित सर्वर पर अपलोड की जाती है।',
+    privacyProcess1: 'आपकी फोटो सुरक्षित सर्वर पर अपलोड की जाती है।',
 
-    privacyProcess2:
-      'AI मॉडल बैकग्राउंड हटाते हैं और चेहरा सेंटर करते हैं।',
+    privacyProcess2: 'AI मॉडल बैकग्राउंड हटाते हैं और चेहरा सेंटर करते हैं।',
 
-    privacyProcess3:
-      'डाउनलोड के बाद फोटो स्थायी रूप से हटा दी जाती है।',
+    privacyProcess3: 'डाउनलोड के बाद फोटो स्थायी रूप से हटा दी जाती है।',
 
-    privacyProcess4:
-      'आपकी फोटो AI ट्रेनिंग के लिए उपयोग नहीं की जाती।',
+    privacyProcess4: 'आपकी फोटो AI ट्रेनिंग के लिए उपयोग नहीं की जाती।',
 
     privacyThirdPartyTitle: '4. थर्ड-पार्टी सेवाएँ',
 
@@ -699,8 +681,7 @@ export const translations = {
     termsUseText:
       'आप SnapPass AI का उपयोग केवल उसके निर्धारित उद्देश्य के लिए करने हेतु सहमत हैं। आप निम्न कार्य नहीं कर सकते:',
 
-    termsUsePoint1:
-      'अनुचित, अवैध या आपत्तिजनक इमेज अपलोड करना।',
+    termsUsePoint1: 'अनुचित, अवैध या आपत्तिजनक इमेज अपलोड करना।',
 
     termsUsePoint2:
       'API और प्रोसेसिंग एंडपॉइंट्स का दुरुपयोग, बायपास या ओवरलोड करना।',
@@ -753,7 +734,8 @@ export const translations = {
     reviewCommentMax: 'टिप्पणी 500 अक्षरों से कम होनी चाहिए',
     cancel: 'रद्द करें',
     formalAttire: 'औपचारिक पोशाक (AI स्वैप)',
-    formalAttireSubtitle: 'अपने पहनावे को तुरंत एक पेशेवर औपचारिक सूट में बदलें।',
+    formalAttireSubtitle:
+      'अपने पहनावे को तुरंत एक पेशेवर औपचारिक सूट में बदलें।',
     attireNone: 'कोई नहीं (मूल)',
     attireMaleSuit: 'पुरुषों का काला सूट',
     attireFemaleBlazer: 'महिलाओं का नेवी ब्लेज़र',

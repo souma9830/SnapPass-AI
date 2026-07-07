@@ -218,8 +218,7 @@ export const createProcessJob = async (req, res, next) => {
       },
     });
 
-    // Start the job in the background (non-blocking HTTP response)
-    updateJob(jobId, { status: 'processing' });
+    updateJob(jobId, { status: 'processing', progress: 5, stage: 'Initializing' });
 
     const run = async () => {
       try {
@@ -228,8 +227,6 @@ export const createProcessJob = async (req, res, next) => {
 
         const { filename, backgroundColour, photoSizePreset, attire } = job.payload;
 
-        // Reuse existing sync pipeline by calling the same AI endpoint logic.
-        // We forward a multipart request to the Python AI service like processImage does.
         const uploadsDir = path.resolve(process.cwd(), "uploads");
         const filePath = path.resolve(uploadsDir, filename);
 
@@ -238,7 +235,8 @@ export const createProcessJob = async (req, res, next) => {
           throw new Error('Access denied: Path traversal detected.');
         }
 
-        // 1) Face quality gate (same as processImage)
+        updateJob(jobId, { progress: 10, stage: 'Validating file' });
+
         try {
           const qualityCheck = await axios.post(
             `${config.aiServiceUrl}/face-quality-check`,
@@ -256,20 +254,23 @@ export const createProcessJob = async (req, res, next) => {
           }
         }
 
+        updateJob(jobId, { progress: 25, stage: 'Quality check passed' });
+
         const uploadForm = new FormData();
         uploadForm.append('image', fs.createReadStream(filePath));
         uploadForm.append('background_colour', backgroundColour);
         uploadForm.append('photo_size_preset', photoSizePreset);
         uploadForm.append('attire', attire);
 
+        updateJob(jobId, { progress: 40, stage: 'Sending to AI service' });
 
         const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
           headers: uploadForm.getHeaders(),
-
           responseType: 'arraybuffer',
         });
 
-        // Save processed image to /uploads/processed/ for later fetching
+        updateJob(jobId, { progress: 70, stage: 'AI processing complete' });
+
         const processedDir = path.resolve(uploadsDir, 'processed');
         await fs.promises.mkdir(processedDir, { recursive: true });
         const outExt = 'png';
@@ -277,10 +278,11 @@ export const createProcessJob = async (req, res, next) => {
         const outPath = path.join(processedDir, outFilename);
         await fs.promises.writeFile(outPath, Buffer.from(aiResponse.data));
 
-        const processedUrl = `/uploads/processed/${outFilename}`;
-        updateJob(jobId, { status: 'done', processedUrl });
+        updateJob(jobId, { progress: 90, stage: 'Saving result' });
 
-        // Cleanup original uploads file (optional; mirrors processImage behavior)
+        const processedUrl = `/uploads/processed/${outFilename}`;
+        updateJob(jobId, { status: 'done', progress: 100, stage: 'Complete', processedUrl });
+
         const shouldCleanupLocal = Boolean(
           config.cloudinary?.cloudName &&
           config.cloudinary?.apiKey &&
@@ -294,14 +296,13 @@ export const createProcessJob = async (req, res, next) => {
       } catch (err) {
         updateJob(jobId, {
           status: 'failed',
-          error: {
-            message: err?.message || 'Processing failed.',
-          },
+          progress: 0,
+          stage: 'Failed',
+          error: { message: err?.message || 'Processing failed.' },
         });
       }
     };
 
-    // Fire and forget
     Promise.resolve().then(run);
 
     res.status(202).json({ success: true, data: { jobId } });
@@ -322,6 +323,8 @@ export const getProcessJobStatus = async (req, res, next) => {
       success: true,
       data: {
         status: job.status,
+        progress: job.progress,
+        stage: job.stage,
         processedUrl: job.processedUrl,
         error: job.error,
       },

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import NavbarAlignmentDetector from './NavbarAlignmentDetector';
 import './Navbar.css';
 
 const navItems = [
@@ -13,13 +14,14 @@ const navItems = [
 
 const languages = [
   { value: 'en', label: 'English' },
-  { value: 'es', label: 'Español' },
+  { value: 'hi', label: 'हिन्दी' },
 ];
 
 export const Navbar = ({ darkMode = false, toggleTheme }) => {
-  const { locale, setLocale } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const themeClass = darkMode ? 'dark' : 'light';
+  const navbarRef = useRef(null);
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -44,14 +46,22 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
       .join(' ');
 
   return (
-    <nav className={`navbar navbar--${themeClass}`} aria-label="Primary navigation">
+    <nav
+      ref={navbarRef}
+      className={`navbar navbar--${themeClass}`}
+      aria-label="Primary navigation"
+    >
+      <NavbarAlignmentDetector navbarRef={navbarRef} />
       <div className="navbar__inner">
         <Link className="navbar__brand" to="/" onClick={closeMenu}>
           <span className="navbar__logo-icon" aria-hidden="true">
             📷
           </span>
-          <span className={`navbar__brand-name navbar__brand-name-${themeClass}`}>
-            SnapPass <span className={`navbar__brand-highlight-${themeClass}`}>AI</span>
+          <span
+            className={`navbar__brand-name navbar__brand-name-${themeClass}`}
+          >
+            SnapPass{' '}
+            <span className={`navbar__brand-highlight-${themeClass}`}>AI</span>
           </span>
         </Link>
 
@@ -71,13 +81,13 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
         <div className="navbar__actions">
           <select
             className={`navbar__language-selector navbar__language-selector-${themeClass} navbar__desktop-language`}
-            value={locale}
-            onChange={(event) => setLocale(event.target.value)}
+            value={language}
+            onChange={(event) => setLanguage(event.target.value)}
             aria-label="Select language"
           >
-            {languages.map((language) => (
-              <option key={language.value} value={language.value}>
-                {language.label}
+            {languages.map((lang) => (
+              <option key={lang.value} value={lang.value}>
+                {lang.label}
               </option>
             ))}
           </select>
@@ -104,7 +114,9 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
           <button
             type="button"
             className={`navbar__hamburger navbar__hamburger-${themeClass}`}
-            aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-label={
+              isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+            }
             aria-expanded={isMenuOpen}
             aria-controls="primary-mobile-navigation"
             onClick={() => setIsMenuOpen((current) => !current)}
@@ -134,8 +146,8 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
 
         <select
           className={`navbar__language-selector navbar__language-selector-${themeClass}`}
-          value={locale}
-          onChange={(event) => setLocale(event.target.value)}
+          value={language}
+          onChange={(event) => setLanguage(event.target.value)}
           aria-label="Select language"
         >
           {languages.map((language) => (

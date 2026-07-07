@@ -10,13 +10,15 @@ import api from './api';
 /**
  * Upload a photo file to the backend.
  * @param {File} file
+ * @param {Function} [onUploadProgress]
  * @returns {Promise<{ fileId, filename, fileUrl }>}
  */
-export const uploadPhoto = async (file) => {
+export const uploadPhoto = async (file, onUploadProgress) => {
   const formData = new FormData();
   formData.append('photo', file);
   const { data } = await api.post('/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress,
   });
   return data.data;
 };
@@ -27,7 +29,12 @@ export const uploadPhoto = async (file) => {
  * @param {{ filename: string, backgroundColour: string, photoSizePreset: string }}
  * @returns {Promise<Blob>}
  */
-export const processPhoto = async ({ filename, backgroundColour, photoSizePreset, attire }) => {
+export const processPhoto = async ({
+  filename,
+  backgroundColour,
+  photoSizePreset,
+  attire,
+}) => {
   const { data } = await api.post(
     '/process',
     { filename, backgroundColour, photoSizePreset, attire },
@@ -42,7 +49,11 @@ export const processPhoto = async ({ filename, backgroundColour, photoSizePreset
  * @param {{ filename: string, quantity: number, photoSizePreset: string }}
  * @returns {Promise<Blob>}
  */
-export const generateSheet = async ({ filename, quantity, photoSizePreset }) => {
+export const generateSheet = async ({
+  filename,
+  quantity,
+  photoSizePreset,
+}) => {
   const { data } = await api.post(
     '/print/generate-sheet',
     { filename, quantity, photoSizePreset },

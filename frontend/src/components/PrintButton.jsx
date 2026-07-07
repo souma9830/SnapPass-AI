@@ -2,19 +2,16 @@ import React from 'react';
 import { ButtonSpinner } from './LoadingSpinner';
 import './PrintButton.css';
 
-/**
- * PrintButton — primary CTA to trigger sheet download or browser print.
- *
- * Props:
- *   onClick    (fn)     — handler when button clicked
- *   isLoading  (bool)   — shows spinner while generating
- *   disabled   (bool)   — disables the button
- *   label      (string) — button text (default: "Generate & Download Sheet")
- */
-function PrintButton({ onClick, isLoading = false, darkMode, toggleTheme, disabled = false, label = 'Generate & Download Sheet' }) {
+function PrintButton({
+  onClick,
+  isLoading = false,
+  darkMode = false,
+  disabled = false,
+  label = 'Generate & Download Sheet',
+}) {
   return (
     <button
-      className={`print-btn ${darkMode? isLoading ? ' print-btn--loading-dark' : ' print-btn-dark' : ''}`}
+      className={`print-btn ${isLoading ? 'print-btn--loading' : ''} ${darkMode ? 'print-btn-dark' : ''}`}
       onClick={onClick}
       disabled={disabled || isLoading}
       aria-label={isLoading ? 'Generating sheet, please wait…' : label}

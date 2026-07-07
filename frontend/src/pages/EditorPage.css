@@ -1,4 +1,6 @@
 /* ── EditorPage ─────────────────────────────────── */
+@import './EditorPageDiagnostics.css';
+
 .editor-page {
   display: flex;
   flex-direction: column;
@@ -8,6 +10,8 @@
   margin: 0 auto;
   padding: var(--space-lg, 1.5rem);
   box-sizing: border-box;
+  /* GPU acceleration hint for layout scaling */
+  transform: translate3d(0, 0, 0);
 }
 
 .editor-toggle-dark {
@@ -50,7 +54,6 @@
 }
 
 .editor-page__preview {
-
   display: flex;
   flex-direction: column;
   /* Allow preview to participate in grid stretching */
@@ -144,7 +147,11 @@
   font-weight: 600;
   border-radius: 12px;
   transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-hover)
+  );
   color: var(--color-surface);
   border: none;
   box-shadow:
@@ -156,7 +163,7 @@
 
 .editor-page__process-btn-dark {
   background: linear-gradient(135deg, #939e00, #595f00);
-  color: var(--color-surface);
+  color: #ffffff;
   border: none;
   box-shadow:
     0 4px 14px rgba(37, 99, 235, 0.2),
@@ -168,7 +175,20 @@
   box-shadow:
     0 6px 20px rgba(37, 99, 235, 0.3),
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-hover)
+  );
+}
+
+.editor-page__error {
+  color: #dc2626;
+  font-size: var(--font-size-sm, 0.85rem);
+  padding: 8px 12px;
+  background: rgba(220, 38, 38, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .editor-page__process-btn-dark:hover {
@@ -221,6 +241,14 @@
   stroke-width: 2.2px;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.section-title-dark {
+  color: #f1f5f9;
+}
+
+.section-subtitle-dark {
+  color: #94a3b8;
 }
 
 @media (max-width: 992px) {

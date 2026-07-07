@@ -71,6 +71,7 @@ def _safe_photo_path(raw: str) -> str:
 
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = config.MAX_FILE_MB * 1024 * 1024
 CORS(app)
 
 limiter = Limiter(
@@ -140,12 +141,10 @@ def face_quality_check():
 @limiter.limit("10 per minute")
 @ai_error_handler
 def generate_sheet():
-    from app.services.sheet_generator import generate_a4_sheet
+    from app.services.sheet_generator import generate_sheet
 
     data = request.get_json()
     raw_photo_path = data.get("photo_path")
-    # Sanitize preset_id to alphanumeric + dash/underscore only so it cannot
-    # inject path separators into the output filename (e.g. '../evil').
     preset_id = re.sub(
         r"[^a-zA-Z0-9_\-]",
         "",
@@ -153,8 +152,13 @@ def generate_sheet():
             "preset_id",
             "35x45")) or "35x45"
     quantity = int(data.get("quantity", 8))
+    page_size = data.get("page_size", "a4")
     bg_color = tuple(data.get("bg_color", [255, 255, 255]))
     draw_guides = bool(data.get("draw_guides", True))
+
+    allowed_sizes = ["a4", "letter", "4x6"]
+    if page_size not in allowed_sizes:
+        return jsonify({"error": f"Invalid page_size. Choose from: {allowed_sizes}"}), 400
 
     if not raw_photo_path:
         return jsonify({"error": "photo_path is required"}), 400
@@ -166,15 +170,14 @@ def generate_sheet():
 
     output_dir = os.environ.get("OUTPUT_DIR", "outputs")
     os.makedirs(output_dir, exist_ok=True)
-    # Include a UUID in the filename so concurrent requests using the same
-    # preset_id do not race on the same file path.
     output_path = os.path.join(
-        output_dir, f"sheet_{preset_id}_{uuid.uuid4().hex}.jpg")
+        output_dir, f"sheet_{preset_id}_{page_size}_{uuid.uuid4().hex}.jpg")
 
-    saved = generate_a4_sheet(
+    saved = generate_sheet(
         photo_path=photo_path,
         preset_id=preset_id,
         quantity=quantity,
+        page_size=page_size,
         bg_color=bg_color,
         draw_guides=draw_guides,
         output_path=output_path,

@@ -16,21 +16,27 @@
 
 .bg-selector__item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: 4px;
+  padding: 8px 14px;
   border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   cursor: pointer;
   transition: all var(--transition-fast);
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
+  min-width: 72px;
+  text-align: center;
+  position: relative;
 }
 
 .bg-selector__item:hover {
   border-color: var(--color-primary);
   color: var(--color-text);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
 .bg-selector__item--active {
@@ -40,10 +46,69 @@
   font-weight: 600;
 }
 
-.bg-selector__swatch {
-  width: 18px;
-  height: 18px;
+.bg-selector__item--active::after {
+  content: '✓';
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 1px solid var(--color-border);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 16px;
+}
+
+.bg-selector__swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.bg-selector__label {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Country hint shown beneath the label */
+.bg-selector__country {
+  font-size: 10px;
+  color: var(--color-text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+}
+
+/* Hidden native colour-picker input */
+.bg-selector__color-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hint text shown when a custom hex colour is active */
+.bg-selector__custom-hint {
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.bg-selector__custom-hint code {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+  font-family: monospace;
+  font-size: 11px;
 }

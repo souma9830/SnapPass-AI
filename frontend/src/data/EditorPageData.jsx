@@ -1,3 +1,36 @@
+export const SIZE_PRESETS = [
+  {
+    id: '35x45',
+    label: 'India / UK Passport',
+    dimensions: '35 × 45 mm',
+    country: 'India, UK',
+  },
+  {
+    id: '51x51',
+    label: 'USA Visa',
+    dimensions: '51 × 51 mm',
+    country: 'United States',
+  },
+  {
+    id: '33x48',
+    label: 'Schengen Visa',
+    dimensions: '33 × 48 mm',
+    country: 'EU/Schengen',
+  },
+  {
+    id: '40x60',
+    label: 'China Visa',
+    dimensions: '40 × 60 mm',
+    country: 'China',
+  },
+  {
+    id: '2x2in',
+    label: 'US Passport',
+    dimensions: '2 × 2 in',
+    country: 'United States',
+  },
+];
+
 export const iconMap = {
   refresh: (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -15,9 +48,9 @@ export const iconMap = {
 };
 
 export const backgroundHexMap = {
-  white: "#ffffff",
-  "off-white": "#f5f0e8",
-  "light-grey": "#d1d5db",
-  "light-blue": "#bfdbfe",
-  "light-red": "#fecaca",
+  white: '#ffffff',
+  'off-white': '#f5f0e8',
+  'light-grey': '#d1d5db',
+  'light-blue': '#bfdbfe',
+  'light-red': '#fecaca',
 };

@@ -119,9 +119,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-success), var(--color-success));
-  color: var(--color-surface);
-  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
 }
 
 .upload-tip__icon svg {
@@ -135,8 +135,8 @@
 }
 
 .upload-tip:nth-child(4) .upload-tip__icon {
-  background: linear-gradient(135deg, var(--color-danger), var(--color-danger));
-  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .upload-tip__text {
@@ -179,9 +179,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.15), 0 2px 6px rgba(37, 99, 235, 0.1);
+  background: #eff6ff;
+  color: #2563eb;
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.15), 0 2px 6px rgba(37, 99, 235, 0.1);
   flex-shrink: 0;
 }
 

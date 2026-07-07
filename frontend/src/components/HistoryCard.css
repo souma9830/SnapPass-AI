@@ -1,0 +1,140 @@
+.history-card {
+  display: flex;
+  align-items: stretch;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, rgba(226, 232, 240, 0.8));
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.history-card:hover {
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+}
+
+.history-card__body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.history-card__body:hover {
+  background: rgba(241, 245, 249, 0.5);
+}
+
+.history-card__thumb {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  color: #4f46e5;
+  flex-shrink: 0;
+}
+
+.history-card__thumb svg {
+  width: 24px;
+  height: 24px;
+}
+
+.history-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-card__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.history-card__date {
+  font-size: var(--font-size-sm, 0.85rem);
+  font-weight: 600;
+  color: var(--color-text, #334155);
+}
+
+.history-card__badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.history-card__badge--draft {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.history-card__badge--completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.history-card__badge--failed {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.history-card__meta {
+  font-size: var(--font-size-xs, 0.78rem);
+  color: var(--color-text-light, #94a3b8);
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.history-card__delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--color-border, rgba(226, 232, 240, 0.6));
+  color: #94a3b8;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.history-card__delete:hover {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.06);
+}
+
+.history-card__delete svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 480px) {
+  .history-card__thumb {
+    width: 36px;
+    height: 36px;
+  }
+  .history-card__body {
+    padding: 10px 12px;
+  }
+  .history-card__delete {
+    width: 38px;
+  }
+}

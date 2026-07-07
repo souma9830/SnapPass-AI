@@ -3,7 +3,9 @@
   padding: 40px 20px;
   background: var(--bg-fallback, #f9fafb);
   color: var(--text-color, #1f2937);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .settings-layout--dark {
@@ -118,6 +120,22 @@
 .form-select-elem:focus {
   border-color: #2563eb;
   outline: none;
+}
+
+.form-input--error {
+  border-color: #ef4444;
+}
+
+.form-input--error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-error {
+  color: #ef4444;
+  font-size: 0.82rem;
+  margin-top: 6px;
+  font-weight: 500;
 }
 
 .form-group-checkbox {

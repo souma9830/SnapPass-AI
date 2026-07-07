@@ -2,11 +2,16 @@ import express from 'express';
 import mongoose from 'mongoose';
 import axios from 'axios';
 import { config } from '../config/config.js';
+import { isRedisAvailable } from '../config/redis.js';
 
 const router = express.Router();
 
 router.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'snappass-backend' });
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    service: 'snappass-backend',
+  });
 });
 
 router.get('/diagnostics', async (req, res) => {
@@ -22,14 +27,19 @@ router.get('/diagnostics', async (req, res) => {
       pid: process.pid,
       memoryUsage: process.memoryUsage(),
       cpuUsage: process.cpuUsage(),
-      activeHandles: process._getActiveHandles ? process._getActiveHandles().length : 0,
-      activeRequests: process._getActiveRequests ? process._getActiveRequests().length : 0,
-      eventLoopLagMs: eventLoopLag
+      activeHandles: process._getActiveHandles
+        ? process._getActiveHandles().length
+        : 0,
+      activeRequests: process._getActiveRequests
+        ? process._getActiveRequests().length
+        : 0,
+      eventLoopLagMs: eventLoopLag,
     },
     services: {
       mongodb: 'unknown',
-      pythonService: 'unknown'
-    }
+      redis: isRedisAvailable() ? 'connected' : 'disconnected',
+      pythonService: 'unknown',
+    },
   };
 
   // 1. MongoDB Check
@@ -39,7 +49,7 @@ router.get('/diagnostics', async (req, res) => {
       0: 'disconnected',
       1: 'connected',
       2: 'connecting',
-      3: 'disconnecting'
+      3: 'disconnecting',
     };
     diagnostics.services.mongodb = states[dbState] || 'unknown';
   } catch (err) {
@@ -65,7 +75,7 @@ router.get('/diagnostics', async (req, res) => {
 
   return res.status(isAllHealthy ? 200 : 200).json({
     status: isAllHealthy ? 'healthy' : 'degraded',
-    ...diagnostics
+    ...diagnostics,
   });
 });
 

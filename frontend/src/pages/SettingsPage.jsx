@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './SettingsPage.css';
 import { motion } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 
-function SettingsPage({ darkMode, toggleTheme }) {
+function SettingsPage() {
+  const { darkMode, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('preferences');
-  const [fullName, setFullName] = useState('John Doe');
-  const [email, setEmail] = useState('john.doe@example.com');
-  const [language, setLanguage] = useState('en');
-  const [autoSave, setAutoSave] = useState(true);
-  const [hiRes, setHiRes] = useState(false);
-  
-  // Audited active sessions
+  const form = useFormValidation({
+    fullName: { initialValue: 'John Doe', rules: [R.required, (v) => v.length >= 2 || 'Name too short'] },
+    email: { initialValue: 'john.doe@example.com', rules: [R.required, R.email] },
+    language: { initialValue: 'en' },
+    autoSave: { initialValue: true },
+    hiRes: { initialValue: false },
+  }, { validateOnChange: true });
+
   const [sessions, setSessions] = useState([]);
   const [loadingSessions, setLoadingSessions] = useState(false);
   const [sessionError, setSessionError] = useState('');
@@ -30,7 +33,7 @@ function SettingsPage({ darkMode, toggleTheme }) {
       } else {
         setSessionError('Log in to manage active audited sessions.');
       }
-    } catch (err) {
+    } catch {
       setSessionError('Network error while retrieving active sessions.');
     } finally {
       setLoadingSessions(false);
@@ -38,9 +41,7 @@ function SettingsPage({ darkMode, toggleTheme }) {
   };
 
   useEffect(() => {
-    if (activeTab === 'security') {
-      fetchSessions();
-    }
+    if (activeTab === 'security') fetchSessions();
   }, [activeTab]);
 
   const [selectedSessions, setSelectedSessions] = useState(new Set());
@@ -53,17 +54,28 @@ function SettingsPage({ darkMode, toggleTheme }) {
       });
       if (res.ok) {
         setSessions(sessions.filter((s) => s._id !== sessionId));
-        setSelectedSessions(prev => { const next = new Set(prev); next.delete(sessionId); return next; });
-      } else {
-        alert('Could not revoke session. Please try again.');
+        setSelectedSessions((prev) => {
+          const next = new Set(prev);
+          next.delete(sessionId);
+          return next;
+        });
       }
-    } catch (err) {
-      alert('Network error. Unable to revoke session.');
+    } catch {
+      // silent
+    }
+  };
+
+  const handleChange = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) =>
+        Object.fromEntries(Object.entries(prev).filter(([k]) => k !== field))
+      );
     }
   };
 
   const toggleSessionSelection = (sessionId) => {
-    setSelectedSessions(prev => {
+    setSelectedSessions((prev) => {
       const next = new Set(prev);
       if (next.has(sessionId)) next.delete(sessionId);
       else next.add(sessionId);
@@ -92,10 +104,9 @@ function SettingsPage({ darkMode, toggleTheme }) {
     setRevoking(false);
   };
 
-  const handleSavePreferences = (e) => {
-    e.preventDefault();
+  const handleSave = form.handleSubmit(async (values) => {
     alert('Preferences saved successfully!');
-  };
+  });
 
   const containerVariants = {
     hidden: { opacity: 0, y: 15 },
@@ -107,7 +118,9 @@ function SettingsPage({ darkMode, toggleTheme }) {
   };
 
   return (
-    <div className={`settings-layout ${darkMode ? 'settings-layout--dark' : ''}`}>
+    <div
+      className={`settings-layout ${darkMode ? 'settings-layout--dark' : ''}`}
+    >
       <motion.div
         className="settings-container page-content"
         variants={containerVariants}
@@ -116,92 +129,96 @@ function SettingsPage({ darkMode, toggleTheme }) {
       >
         <header className="settings-header">
           <h1 className="settings-title">Account Settings</h1>
-          <p className="settings-subtitle">Manage your profile, preferences, and active security sessions.</p>
+          <p className="settings-subtitle">
+            Manage your profile, preferences, and active security sessions.
+          </p>
         </header>
 
         <div className="settings-grid">
-          {/* Sidebar Navigation */}
           <aside className="settings-sidebar card">
             <button
               className={`sidebar-nav-btn ${activeTab === 'preferences' ? 'active' : ''}`}
               onClick={() => setActiveTab('preferences')}
             >
-              ⚙️ General Preferences
+              General Preferences
             </button>
             <button
               className={`sidebar-nav-btn ${activeTab === 'security' ? 'active' : ''}`}
               onClick={() => setActiveTab('security')}
             >
-              🔒 Security & Sessions
+              Security & Sessions
             </button>
           </aside>
 
-          {/* Form Content Area */}
           <main className="settings-main card">
             {activeTab === 'preferences' && (
-              <form onSubmit={handleSavePreferences} className="settings-form">
+              <form onSubmit={handleSave} className="settings-form" noValidate>
                 <h2 className="form-section-title">Application Preferences</h2>
 
-                <div className="form-group">
-                  <label className="form-label">Profile Full Name</label>
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="form-input"
-                    placeholder="Enter your name"
-                  />
-                </div>
+                <FormField
+                  label="Profile Full Name"
+                  name="fullName"
+                  value={form.values.fullName}
+                  error={form.errors.fullName}
+                  touched={form.touched.fullName}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  placeholder="Enter your name"
+                  required
+                />
 
-                <div className="form-group">
-                  <label className="form-label">Email Address</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="form-input"
-                    placeholder="Enter your email"
-                  />
-                </div>
+                <FormField
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  value={form.values.email}
+                  error={form.errors.email}
+                  touched={form.touched.email}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  placeholder="Enter your email"
+                  required
+                />
 
-                <div className="form-group">
-                  <label className="form-label">Default Language</label>
-                  <select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                    className="form-select-elem"
-                  >
-                    <option value="en">English (US)</option>
-                    <option value="es">Español (ES)</option>
-                    <option value="fr">Français (FR)</option>
-                  </select>
-                </div>
+                <FormField
+                  label="Default Language"
+                  name="language"
+                  type="select"
+                  value={form.values.language}
+                  error={form.errors.language}
+                  touched={form.touched.language}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  options={[
+                    { value: 'en', label: 'English (US)' },
+                    { value: 'es', label: 'Español (ES)' },
+                    { value: 'fr', label: 'Français (FR)' },
+                  ]}
+                />
 
-                <div className="form-group-checkbox">
-                  <input
-                    type="checkbox"
-                    id="autoSave"
-                    checked={autoSave}
-                    onChange={(e) => setAutoSave(e.target.checked)}
-                    className="form-checkbox"
-                  />
-                  <label htmlFor="autoSave" className="checkbox-label">
+                <FormField
+                  label="Auto-save Uploads"
+                  name="autoSave"
+                  type="checkbox"
+                  value={form.values.autoSave}
+                  onChange={form.handleChange}
+                >
+                  <label className="checkbox-label">
                     <strong>Auto-save Uploads:</strong> Temporarily cache uploads locally for faster editing
                   </label>
-                </div>
+                </FormField>
 
-                <div className="form-group-checkbox">
-                  <input
-                    type="checkbox"
-                    id="hiRes"
-                    checked={hiRes}
-                    onChange={(e) => setHiRes(e.target.checked)}
-                    className="form-checkbox"
-                  />
-                  <label htmlFor="hiRes" className="checkbox-label">
+                <FormField
+                  label="High-Resolution Exports"
+                  name="hiRes"
+                  type="checkbox"
+                  value={form.values.hiRes}
+                  onChange={form.handleChange}
+                >
+                  <label className="checkbox-label">
                     <strong>High-Resolution Exports:</strong> Export sheets with maximum DPI formatting
                   </label>
-                </div>
+                </FormField>
 
                 <div className="form-group">
                   <label className="form-label">Interface Theme Mode</label>
@@ -211,19 +228,19 @@ function SettingsPage({ darkMode, toggleTheme }) {
                       className={`theme-btn ${!darkMode ? 'theme-btn--active' : ''}`}
                       onClick={() => darkMode && toggleTheme()}
                     >
-                      ☀️ Light Mode
+                      Light Mode
                     </button>
                     <button
                       type="button"
                       className={`theme-btn ${darkMode ? 'theme-btn--active' : ''}`}
                       onClick={() => !darkMode && toggleTheme()}
                     >
-                      🌙 Dark Mode
+                      Dark Mode
                     </button>
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary submit-btn">
+                <button type="submit" className="btn btn-primary submit-btn" disabled={form.submitting}>
                   Save Changes
                 </button>
               </form>
@@ -233,15 +250,24 @@ function SettingsPage({ darkMode, toggleTheme }) {
               <div className="security-settings">
                 <h2 className="form-section-title">Active Audited Sessions</h2>
                 <p className="section-description">
-                  These are the devices and IP addresses currently logged into your account. You can revoke any session at any time.
+                  These are the devices and IP addresses currently logged into
+                  your account. You can revoke any session at any time.
                 </p>
 
-                {loadingSessions && <div className="sessions-loading">Loading session metadata...</div>}
-
-                {sessionError && <div className="sessions-error-box">{sessionError}</div>}
+                {loadingSessions && (
+                  <div className="sessions-loading">
+                    Loading session metadata...
+                  </div>
+                )}
+                {sessionError && !loadingSessions && (
+                  <div className="sessions-error-box">{sessionError}</div>
+                )}
 
                 {!loadingSessions && !sessionError && sessions.length === 0 && (
-                  <div className="sessions-empty">No active database sessions found. Please login to verify sessions.</div>
+                  <div className="sessions-empty">
+                    No active database sessions found. Please login to verify
+                    sessions.
+                  </div>
                 )}
 
                 {!loadingSessions && sessions.length > 0 && (
@@ -252,7 +278,9 @@ function SettingsPage({ darkMode, toggleTheme }) {
                         disabled={revoking}
                         className="revoke-btn revoke-btn--bulk"
                       >
-                        {revoking ? 'Revoking...' : `Revoke Selected (${selectedSessions.size})`}
+                        {revoking
+                          ? 'Revoking...'
+                          : `Revoke Selected (${selectedSessions.size})`}
                       </button>
                     )}
                     <div className="sessions-list">
@@ -267,10 +295,19 @@ function SettingsPage({ darkMode, toggleTheme }) {
                           />
                           <div className="session-info">
                             <div className="session-device">
-                              🖥️ {sess.userAgent.length > 40 ? sess.userAgent.substring(0, 40) + '...' : sess.userAgent}
+                              {sess.userAgent.length > 40
+                                ? `${sess.userAgent.substring(0, 40)}...`
+                                : sess.userAgent}
                             </div>
                             <div className="session-details">
-                              <span><strong>IP:</strong> {sess.ipAddress}</span> • <span><strong>Created:</strong> {new Date(sess.createdAt).toLocaleDateString()}</span>
+                              <span>
+                                <strong>IP:</strong> {sess.ipAddress}
+                              </span>
+                              <span> • </span>
+                              <span>
+                                <strong>Created:</strong>{' '}
+                                {new Date(sess.createdAt).toLocaleDateString()}
+                              </span>
                             </div>
                           </div>
                           <button

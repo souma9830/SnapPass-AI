@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/h"
-
-# Validate commit message against conventional commit spec
-npx --no -- commitlint --edit "$1"

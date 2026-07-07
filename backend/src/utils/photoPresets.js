@@ -1,6 +1,7 @@
 /**
  * Shared photo size presets used across models and controllers.
  * Centralized to prevent duplication and ensure consistency.
+ * Synchronized with frontend/src/data/presets.json metadata.
  */
 
 export const PHOTO_SIZE_PRESETS = ["35x45", "51x51", "33x48", "40x60", "2x2in", "100x150", "25x25", "50x70", "45x45", "35x50"];

@@ -4,6 +4,7 @@ import validate from "../middleware/validate.middleware.js";
 import * as authController from "../controllers/auth.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 import { otpActionLimiter, authLimiter } from "../middleware/rateLimit.middleware.js";
+import { checkTokenBlacklist } from "../middleware/blacklist.middleware.js";
 
 const router = Router();
 
@@ -26,7 +27,7 @@ router.post("/login", authLimiter, loginValidation, validate, authController.log
  * @description Logout a user and invalidate the JWT token
  * @access Private
  */
-router.post("/logout", authMiddleware, authController.logout);
+router.post("/logout", authMiddleware, checkTokenBlacklist, authController.logout);
 
 /**
  * @route GET /api/auth/me

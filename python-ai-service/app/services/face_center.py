@@ -6,7 +6,8 @@ from PIL import Image
 import io
 
 
-# ICAO 9303 guideline:face should occupy 75 % of the image height
+# ICAO 9303 guideline: face should occupy 75 % of the image height.
+# Integrated with backend image controller processing and rembg background removal.
 FACE_HEIGHT_RATIO = 0.75
 
 # How far above the top of the detected face to place the top of the crop

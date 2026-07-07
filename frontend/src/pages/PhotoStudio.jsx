@@ -23,7 +23,7 @@ import {
     DEFAULT_ADJUSTMENTS,
     renderAdjustedImageDataUrl,
 } from '../utils/imageAdjustments';
-import useProcessImage from '../hooks/useProcessImage';
+import ComparisonSlider from '../components/ComparisonSlider';
 
 const ADJUSTMENT_TOOLS = [
     { id: 'brightness', labelKey: 'brightness', min: 0, max: 200, format: (v) => `${v}%` },
@@ -51,6 +51,7 @@ function PhotoStudio() {
     const t = translations[language];
     const processor = useProcessImage();
     const [imageSrc, setImageSrc] = useState(null);
+    // Base64 and blob reference links for local preview renders
     const [croppedImageSrc, setCroppedImageSrc] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [isRenderingPreview, setIsRenderingPreview] = useState(false);
@@ -114,6 +115,7 @@ function PhotoStudio() {
     };
 
     const handleCropAction = () => {
+        // Apply target crop bounds matching the eye/chin constraints in presets.json
         if (isCropping) {
             if (!imgRef.current || !completedCrop || completedCrop.width <= 0 || completedCrop.height <= 0) {
                 setIsCropping(false);
@@ -252,6 +254,10 @@ function PhotoStudio() {
                             <Upload className="upload-icon" size={48} />
                             <p>{t.clickUploadPhoto}</p>
                             <span className="upload-hint">{t.uploadFormats}</span>
+                        </div>
+                    ) : showOriginal && previewImageSrc && imageSrc ? (
+                        <div className="comparison-section">
+                            <ComparisonSlider beforeSrc={imageSrc} afterSrc={previewImageSrc} alt="Photo edit comparison" />
                         </div>
                     ) : (
                         <div className={`image-container crop-container ${isRenderingPreview ? 'image-container--rendering' : ''}`}>

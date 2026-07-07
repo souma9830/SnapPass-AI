@@ -1,9 +1,7 @@
 /**
  * Image Controller
- * Orchestrates calls to the Python AI microservice for image processing:
- *  - Background removal
- *  - Face detection & centering
- *  - DPI optimisation & resizing
+ * Orchestrates calls to the Python AI microservice (rembg and OpenCV face_center.py)
+ * for background removal, face detection & centering, and resizing.
  */
 
 import axios from "axios";

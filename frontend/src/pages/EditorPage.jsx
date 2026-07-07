@@ -32,6 +32,7 @@ function EditorPage({ darkMode, toggleTheme }) {
   const { processImage, processedUrl, isProcessing, error, reset } =
     useImageProcessor();
 
+  // Selected editor preferences and local preview state containers
   const [background, setBackground] = useState('white');
   const [sizePreset, setSizePreset] = useState('35x45');
   const [attire, setAttire] = useState('none');
@@ -258,7 +259,7 @@ function EditorPage({ darkMode, toggleTheme }) {
                             strokeDasharray="4 4"
                           />
 
-                          {/* 2. Ideal Oval Positioning Template */}
+                          {/* 2. Ideal Oval Positioning Template (US: 2x2in, India: 35x45mm) from presets.json */}
                           <ellipse
                             cx={(complianceData.meta.dimensions?.w || 600) / 2}
                             cy={

@@ -1,0 +1,31 @@
+{
+  "presets": [
+    {
+      "id": "35x45",
+      "country": "India",
+      "width": 35,
+      "height": 45,
+      "unit": "mm",
+      "eyeLinePercent": 56,
+      "chinLinePercent": 82
+    },
+    {
+      "id": "51x51",
+      "country": "USA",
+      "width": 51,
+      "height": 51,
+      "unit": "mm",
+      "eyeLinePercent": 54,
+      "chinLinePercent": 80
+    },
+    {
+      "id": "33x48",
+      "country": "Schengen",
+      "width": 33,
+      "height": 48,
+      "unit": "mm",
+      "eyeLinePercent": 55,
+      "chinLinePercent": 81
+    }
+  ]
+}

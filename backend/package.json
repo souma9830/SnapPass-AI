@@ -40,5 +40,13 @@
     "nodemon": "^3.0.1",
     "supertest": "^6.3.4"
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^file-type$": "<rootDir>/src/__mocks__/file-type.js"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(file-type|strtok3|peek-readable|token-types|@tokenizer)/)"
+    ]
+  },
   "type": "module"
 }

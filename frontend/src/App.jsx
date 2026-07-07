@@ -17,6 +17,7 @@ function AppContent() {
     <div className="app-shell">
       <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
       <SkipToContent />
+      {/* Primary content area rendering child routes */}
       <main className="app-main" id="main-content" tabIndex={-1}>
         <AppRoutes darkMode={darkMode} toggleTheme={toggleTheme} />
       </main>

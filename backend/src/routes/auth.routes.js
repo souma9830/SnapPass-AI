@@ -72,4 +72,11 @@ router.post("/verify-otp", otpActionLimiter, verifyPasswordResetOtpValidation, v
  */
 router.post("/password-reset", otpActionLimiter, passwordResetValidation, validate, authController.resetPassword);
 
+/**
+ * @route PATCH /api/auth/role
+ * @description Update a user's role (admin only)
+ * @access Private/Admin
+ */
+router.patch("/role", authMiddleware, authController.updateRole);
+
 export default router;

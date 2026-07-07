@@ -152,6 +152,18 @@ export const verifyPasswordResetOtp = catchAsync(async (req, res) => {
   sendResponse(res, 200, true, genericSuccessMessage, null);
 });
 
+export const updateRole = catchAsync(async (req, res) => {
+  const { userId, role } = req.body;
+  if (!['user', 'admin'].includes(role)) {
+    return sendResponse(res, 400, false, 'Role must be "user" or "admin".', null);
+  }
+  const user = await authService.getMe(userId);
+  if (!user) return sendResponse(res, 404, false, 'User not found.', null);
+  user.role = role;
+  await user.save();
+  sendResponse(res, 200, true, 'Role updated successfully', { id: user._id, role: user.role });
+});
+
 export const resetPassword = catchAsync(async (req, res) => {
   const { email, otp, newPassword } = req.body;
   let user;

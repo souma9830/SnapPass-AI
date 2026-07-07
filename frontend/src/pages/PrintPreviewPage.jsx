@@ -1,7 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import QuantityInput from '../components/QuantityInput';
+import PrintButton from '../components/PrintButton';
+import PrintLayoutSelector from '../components/PrintLayoutSelector';
 import DownloadPackagePanel from '../components/DownloadPackagePanel';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import useBatchExport from '../hooks/useBatchExport';
 import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
 import ConfirmModal from '../components/ConfirmModal';
@@ -26,6 +30,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
     description: 'Preview and print your passport photos on A4 paper.',
   });
 
+  const batchExport = useBatchExport();
   const [quantity, setQuantity] = useState(savedSession?.quantity || 6);
   const [layout, setLayout] = useState('a4');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -251,6 +256,26 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               processedUrl={state?.processedUrl || savedSession?.processedUrl}
               originalFileName={state?.filename || savedSession?.filename}
             />
+
+            <button
+              onClick={() => batchExport.exportFiles(['sample_processed.png'])}
+              disabled={batchExport.exporting}
+              className={`btn ${darkMode ? 'btn-secondary-dark' : 'btn-secondary'}`}
+              style={{
+                marginTop: '10px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600'
+              }}
+            >
+              {batchExport.exporting ? 'Zipping...' : '📦 Export All as ZIP'}
+            </button>
 
             <button
               onClick={handlePrintDirect}

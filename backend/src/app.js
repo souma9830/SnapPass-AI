@@ -26,6 +26,7 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 app.use(requestId);
 app.use(loggerMiddleware);
+// Mount database session audit logger middleware
 app.use(auditMiddleware);
 
 // Serve uploaded files statically for frontend canvas access

@@ -1,28 +1,15 @@
 import express from 'express';
-import { uploadPhoto } from '../controllers/upload.controller.js';
-import {
-  uploadMiddleware,
-  validateImageChain,
-} from '../middleware/upload.middleware.js';
-
+import multer from 'multer';
+import { uploadPhoto, batchUpload } from '../controllers/upload.controller.js';
 const router = express.Router();
 
-/**
- * POST /api/upload
- *
- * Middleware chain:
- *   uploadMiddleware  — multer: MIME filter + UUID filename + size limit
- *   validateImageChain — magic bytes + pixel dimensions + compression-ratio
- *   uploadPhoto        — controller: build + return structured response
- *
- * Errors from multer (e.g. file-too-large, wrong MIME) are caught by the
- * global error middleware via next(err) and returned as 400 / 413 JSON.
- */
-router.post(
-  '/',
-  uploadMiddleware.single('photo'),
-  validateImageChain,
-  uploadPhoto
-);
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+});
+const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
+
+router.post('/', upload.single('file'), uploadPhoto);
+router.post('/batch', upload.array('files', 20), batchUpload);
 
 export default router;

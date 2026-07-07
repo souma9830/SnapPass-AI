@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './SettingsPage.css';
 import { motion } from 'framer-motion';
-import FormField from '../components/FormField';
-import useFormValidation, { defaultRules as R } from '../hooks/useFormValidation';
 import { useTheme } from '../context/ThemeContext';
 
 function SettingsPage() {

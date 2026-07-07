@@ -13,6 +13,7 @@ const TermsPage = lazy(() => import('../pages/TermsPage'));
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage'));
 const PhotoStudio = lazy(() => import('../pages/PhotoStudio'));
 const HistoryPage = lazy(() => import('../pages/HistoryPage'));
+// User configuration panel view loader
 const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 const DiagnosticsPage = lazy(() => import('../pages/DiagnosticsPage'));
 const PassportComparatorPage = lazy(

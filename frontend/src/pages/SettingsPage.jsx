@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './SettingsPage.css';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import { validateSettingsInput } from '../utils/settingsValidator.js';
 
 function SettingsPage() {
   const { darkMode, toggleTheme } = useTheme();

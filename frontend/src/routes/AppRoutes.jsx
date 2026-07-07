@@ -33,67 +33,19 @@ function AppRoutes({ darkMode, toggleTheme }) {
       <ScrollToTop />
       <Suspense fallback={<LoadingSpinner fullPage delayMs={250} />}>
         <Routes>
-          <Route
-            path="/"
-            element={<HomePage darkMode={darkMode} toggleTheme={toggleTheme} />}
-          />
-          <Route
-            path="/upload"
-            element={
-              <UploadPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/editor"
-            element={
-              <EditorPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/print-preview"
-            element={
-              <PrintPreviewPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <AdminDashboard darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
+          <Route path="/" element={<HomePage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/upload" element={<UploadPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/editor" element={<EditorPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/print-preview" element={<PrintPreviewPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/studio" element={<PhotoStudio />} />
-          <Route
-            path="/settings"
-            element={
-              <SettingsPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/diagnostics"
-            element={<DiagnosticsPage darkMode={darkMode} />}
-          />
-          <Route
-            path="/history"
-            element={
-              <HistoryPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/compare-requirements"
-            element={
-              <PassportComparatorPage
-                darkMode={darkMode}
-                toggleTheme={toggleTheme}
-              />
-            }
-          />
-          <Route
-            path="/api-docs"
-            element={<ApiDocsPage />}
-          />
-          {/* Fallback — 404 page for unknown routes */}
+          <Route path="/settings" element={<SettingsPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/diagnostics" element={<DiagnosticsPage darkMode={darkMode} />} />
+          <Route path="/history" element={<HistoryPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/compare-requirements" element={<PassportComparatorPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/api-docs" element={<ApiDocsPage />} />
           <Route path="*" element={<NotFoundPage darkMode={darkMode} />} />
         </Routes>
       </Suspense>

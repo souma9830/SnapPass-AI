@@ -8,6 +8,7 @@ import errorMiddleware from './middleware/error.middleware.js';
 import { requestId } from './middleware/requestId.middleware.js';
 import { loggerMiddleware } from './middleware/logger.middleware.js';
 import { auditMiddleware } from './middleware/audit.middleware.js';
+import { checkTokenBlacklist } from './middleware/blacklist.middleware.js';
 import apiRoutes, { healthRoutes } from './routes/index.js';
 
 const app = express();
@@ -30,7 +31,7 @@ app.use(auditMiddleware);
 
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 
-app.use('/api', apiRoutes);
+app.use('/api', checkTokenBlacklist, apiRoutes);
 app.use(healthRoutes);
 
 app.use(errorMiddleware);

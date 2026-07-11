@@ -37,7 +37,8 @@ SUPPORTED_COLOURS: dict[str, tuple[int, int, int, int]] = {
 def remove_background(
         image_bytes: bytes,
         background_colour: str = "white",
-        attire: str = "none") -> bytes:
+        attire: str = "none",
+        progress_callback=None) -> bytes:
     """
     Strip the photo background and composite onto the requested colour.
 
@@ -45,6 +46,7 @@ def remove_background(
         image_bytes:       Raw bytes of the input image.
         background_colour: Named colour id or hex string (e.g. '#4372c4').
         attire:            Optional attire overlay id ('none' to skip).
+        progress_callback: Optional callable(percent, stage) for progress updates.
 
     Returns:
         PNG bytes of the composited result.
@@ -52,11 +54,23 @@ def remove_background(
     Raises:
         ValueError: If background_colour is not a recognised name or valid hex.
     """
+    if progress_callback:
+        progress_callback(10, "Removing background")
+
     removed_bytes = remove(image_bytes)
+
+    if progress_callback:
+        progress_callback(40, "Background removed, compositing colour")
+
     foreground = Image.open(io.BytesIO(removed_bytes)).convert("RGBA")
 
     if attire != "none":
+        if progress_callback:
+            progress_callback(55, "Applying attire swap")
         foreground = apply_attire_swap(foreground, attire)
+
+    if progress_callback:
+        progress_callback(70, "Compositing final image")
 
     bg_rgba = _resolve_colour(background_colour)
 
@@ -66,6 +80,10 @@ def remove_background(
     result = composite.convert("RGB")
     output = io.BytesIO()
     result.save(output, format="PNG")
+
+    if progress_callback:
+        progress_callback(100, "Background removal complete")
+
     return output.getvalue()
 
 

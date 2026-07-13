@@ -11,6 +11,7 @@ import EmptyState from '../components/EmptyState';
 import ConfirmModal from '../components/ConfirmModal';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
+import { PrintLayoutOptions } from '../components/editor/PrintLayoutOptions';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import {
@@ -33,6 +34,12 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   const batchExport = useBatchExport();
   const [quantity, setQuantity] = useState(savedSession?.quantity || 6);
   const [layout, setLayout] = useState('a4');
+  const [layoutOptions, setLayoutOptions] = useState({
+    paperSize: 'A4',
+    spacing: 10,
+    margins: 20,
+    orientation: 'portrait'
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -203,10 +210,15 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <PrintLayoutSelector
+             <PrintLayoutSelector
               selectedLayout={layout}
               onChange={setLayout}
               darkMode={darkMode}
+            />
+
+            <PrintLayoutOptions
+              options={layoutOptions}
+              onChange={setLayoutOptions}
             />
 
             <hr className="divider" />

@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import NavbarAlignmentDetector from './NavbarAlignmentDetector';
-import './Navbar.css';
+
 
 const navItems = [
   { to: '/', label: 'Home', end: true },

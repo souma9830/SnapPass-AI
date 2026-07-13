@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Preset from '../models/preset.model.js';
 import { getCache, setCache, deleteCache } from '../config/redis.js';
 
@@ -20,6 +21,10 @@ const CACHE_TTL = 3600;
 
 export const getPresets = async (req, res, next) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json({ success: true, presets: PHOTO_SIZE_DETAILS });
+    }
+
     const cacheKey = 'presets:all';
     const cached = await getCache(cacheKey);
     if (cached) {
@@ -40,6 +45,13 @@ export const getPresets = async (req, res, next) => {
 export const getPresetById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    if (mongoose.connection.readyState !== 1) {
+      const preset = PHOTO_SIZE_DETAILS.find(p => p.id === id);
+      if (!preset) {
+        return res.status(404).json({ success: false, message: 'Preset not found' });
+      }
+      return res.json({ success: true, preset });
+    }
     const cacheKey = `presets:${id}`;
     const cached = await getCache(cacheKey);
     if (cached) {

@@ -24,6 +24,7 @@ function AdminDashboard() {
       setLoading(true);
       setError('');
       try {
+        // Future Scope: Integrate IndexedDB sync fallback if network is offline
         const res = await fetch('/api/analytics/stats');
         if (!res.ok) throw new Error('Failed to fetch');
         const body = await res.json();

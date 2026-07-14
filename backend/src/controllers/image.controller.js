@@ -10,6 +10,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { config } from "../config/config.js";
+import { WebhookService } from "../services/webhook.service.js";
 
 const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);
@@ -280,6 +281,7 @@ export const createProcessJob = async (req, res, next) => {
 
         const processedUrl = `/uploads/processed/${outFilename}`;
         updateJob(jobId, { status: 'done', progress: 100, stage: 'Complete', processedUrl });
+        await WebhookService.trigger(config.WEBHOOK_URL, 'image.processed', { jobId, processedUrl });
 
         const shouldCleanupLocal = Boolean(
           config.cloudinary?.cloudName &&

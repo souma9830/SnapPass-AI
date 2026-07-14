@@ -4,7 +4,7 @@ import * as passwordResetOtpService from '../service/passwordResetOtp.service.js
 import catchAsync from '../utils/catchAsync.js';
 import SecurityAudit from '../models/securityAudit.model.js';
 import { config } from '../config/config.js';
-import { sendEmail } from '../utils/sendEmail.js';
+import { NotificationService } from '../services/notification.service.js';
 
 const sendResponse = (res, statusCode, success, message, data) => {
   res.status(statusCode).json({
@@ -121,7 +121,7 @@ export const requestPasswordReset = catchAsync(async (req, res) => {
             </div>
         `;
 
-    await sendEmail(email, 'Password Reset OTP', emailHtml);
+    await NotificationService.sendEmail(email, 'Password Reset OTP', emailHtml);
   } catch (error) {
     // If the error is simply that the user wasn't found, we silently ignore it
     // to prevent email enumeration. Otherwise, we rethrow the internal error.

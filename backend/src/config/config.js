@@ -11,6 +11,7 @@ export const config = {
     MONGO_URI: process.env.MONGO_URI,
     CORS_ORIGIN: process.env.CORS_ORIGIN || "http://localhost:5173",
     MAX_FILE_SIZE: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024, // 10MB default
+    RETENTION_MAX_AGE_MS: parseInt(process.env.RETENTION_MAX_AGE_MS, 10) || 24 * 60 * 60 * 1000,
     UPLOAD_DIR: process.env.UPLOAD_DIR || 'uploads',
     upload: {
         allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
@@ -24,4 +25,5 @@ export const config = {
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     EMAIL_FROM: process.env.EMAIL_FROM,
+    WEBHOOK_URL: process.env.WEBHOOK_URL || 'http://localhost:3000/api/webhook-test',
 }

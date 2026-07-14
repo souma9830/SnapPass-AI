@@ -1,5 +1,4 @@
-import React from 'react';
-import './RecentlyUsedPresets.css';
+import './editor/RecentlyUsedPresets.css';
 
 function RecentlyUsedPresets({
   recentIds = [],

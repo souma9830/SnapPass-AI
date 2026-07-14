@@ -749,6 +749,10 @@ html.light { color-scheme: light; }
   background: #eff6ff;
   color: #2563eb;
 
+.activity-log-viewer {
+  animation: fadeIn 0.4s ease-out;
+}
+
 /* Image Adjustments Style */
 .image-adjustments-card {
   border-color: var(--color-border);

@@ -9,6 +9,7 @@ import { compressImage } from '../utils/imageCompression';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { iconMap } from '../data/UploadPageData';
+import { runImageDiagnostics } from '../utils/imageDiagnostics';
 import './UploadPage.css';
 
 function UploadPage({ darkMode, toggleTheme }) {
@@ -24,6 +25,7 @@ function UploadPage({ darkMode, toggleTheme }) {
     reset,
   } = usePhotoUpload();
   const [localPreview, setLocalPreview] = useState(null);
+  const [diagResults, setDiagResults] = useState(null);
 
   const tips = [
     { type: 'ok', text: t.tipPlainBg },
@@ -43,6 +45,9 @@ function UploadPage({ darkMode, toggleTheme }) {
 
   const handleFileSelect = async (file) => {
     reset();
+    setDiagResults(null);
+    const diags = await runImageDiagnostics(file);
+    setDiagResults(diags);
     const previewUrl = URL.createObjectURL(file);
     setLocalPreview(previewUrl);
     try {
@@ -101,14 +106,29 @@ function UploadPage({ darkMode, toggleTheme }) {
           custom={0.2}
         >
           {displayUrl ? (
-            <PhotoPreview
-              imageUrl={displayUrl}
-              filename={uploadedFile?.filename || 'preview'}
-              onReset={reset}
-              onProceed={handleProceed}
-              isUploading={isUploading}
-              darkMode={darkMode}
-            />
+            <>
+              <PhotoPreview
+                imageUrl={displayUrl}
+                filename={uploadedFile?.filename || 'preview'}
+                onReset={reset}
+                onProceed={handleProceed}
+                isUploading={isUploading}
+                darkMode={darkMode}
+              />
+              {diagResults && (
+                <div style={{ marginTop: '15px', padding: '12px', borderRadius: '8px', background: diagResults.success ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)', border: diagResults.success ? '1px solid rgba(16,185,129,0.2)' : '1px solid rgba(239,68,68,0.2)', textAlign: 'left' }}>
+                  <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem', fontWeight: '600', color: diagResults.success ? '#10b981' : '#ef4444' }}>
+                    {diagResults.success ? '✓ Image diagnostics passed' : '✗ Image diagnostics failed'}
+                  </p>
+                  {diagResults.errors.map((err, idx) => (
+                    <div key={idx} style={{ fontSize: '0.8rem', color: '#ef4444', margin: '2px 0' }}>• {err}</div>
+                  ))}
+                  {diagResults.warnings.map((warn, idx) => (
+                    <div key={idx} style={{ fontSize: '0.8rem', color: '#eab308', margin: '2px 0' }}>• {warn}</div>
+                  ))}
+                </div>
+              )}
+            </>
           ) : (
             <>
               <UploadBox onFileSelect={handleFileSelect} />

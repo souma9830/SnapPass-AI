@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import User from '../models/user.model.js';
 import Session from '../models/session.model.js';
 import UploadHistory from '../models/UploadHistory.js';
-import { logger } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import { runInTransaction } from '../utils/dbTransaction.js';
 
 export class AccountDeletionService {

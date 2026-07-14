@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import { config } from '../config/config.js';
-const resend = new Resend(config.RESEND_API_KEY);
+const resend = new Resend(config.RESEND_API_KEY || 're_dummy_key_for_dev');
 
 export async function sendEmail(to, subject, html) {
     try {

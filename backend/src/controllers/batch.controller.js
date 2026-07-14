@@ -1,4 +1,5 @@
-import archiver from 'archiver';
+import * as archiverModule from 'archiver';
+const archiver = archiverModule.default || archiverModule;
 import path from 'path';
 import fs from 'fs';
 

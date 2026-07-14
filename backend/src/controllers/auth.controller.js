@@ -2,6 +2,7 @@ import * as sessionService from '../services/session.service.js';
 import * as authService from '../service/auth.service.js';
 import * as passwordResetOtpService from '../service/passwordResetOtp.service.js';
 import catchAsync from '../utils/catchAsync.js';
+import SecurityAudit from '../models/securityAudit.model.js';
 import { config } from '../config/config.js';
 import { sendEmail } from '../utils/sendEmail.js';
 
@@ -28,6 +29,13 @@ export const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUser(email, password);
   await sessionService.createSession(res, user, req.ip, req.headers['user-agent']);
+  await SecurityAudit.create({
+    action: 'LOGIN_SUCCESS',
+    userId: user._id,
+    email: user.email,
+    ip: req.ip,
+    status: 'SUCCESS'
+  });
   sendResponse(res, 200, true, 'User logged in successfully', {
     id: user._id,
     fullName: user.fullName,

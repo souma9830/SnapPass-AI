@@ -119,3 +119,12 @@ html.light { color-scheme: light; }
     padding: 0.5rem 0;
   }
 }
+
+/* Image Adjustments Style */
+.image-adjustments-card {
+  border-color: var(--color-border);
+  transition: all 0.3s ease;
+}
+.image-adjustments-card input[type='range'] {
+  accent-color: var(--color-primary);
+}

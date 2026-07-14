@@ -6,6 +6,7 @@ import SkipToContent from './components/SkipToContent';
 import SnapPassAssistant from './chatbot/SnapPassAssistant';
 import { ToastProvider } from './context/ToastContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { ThemeCustomizerProvider } from './context/ThemeCustomizerContext';
 import './App.css';
 import ScrollToTopButton from './components/ScrollToTopButton';
 
@@ -34,7 +35,9 @@ function App() {
   return (
     <ToastProvider>
       <ThemeProvider>
-        <AppContent />
+        <ThemeCustomizerProvider>
+          <AppContent />
+        </ThemeCustomizerProvider>
       </ThemeProvider>
     </ToastProvider>
   );

@@ -3,6 +3,7 @@ import './SettingsPage.css';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { validateSettingsInput } from '../utils/settingsValidator.js';
+import { ThemeColorSelector } from '../components/ThemeColorSelector';
 
 function SettingsPage() {
   const { darkMode, toggleTheme } = useTheme();
@@ -240,6 +241,8 @@ function SettingsPage() {
                     </button>
                   </div>
                 </div>
+
+                <ThemeColorSelector />
 
                 <button type="submit" className="btn btn-primary submit-btn" disabled={form.submitting}>
                   Save Changes

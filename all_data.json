@@ -1,0 +1,339 @@
+{
+  "totalPRs": 115,
+  "totalIssues": 80,
+  "prBranches": [
+    {
+      "num": 1247,
+      "branch": "docs/ELUSoC_2026_documentation",
+      "title": "docs(project): comprehensive documentation overhaul with accurate status, architecture, and deployment guides",
+      "state": "closed",
+      "body": "Closes #1246 \r\n\r\n### Changes\r\n- **README.md**: Updated project status from \"scaffold/early development\" to \"fully implemented\" with checkmarks for all 8 added features; updated tech stack with specific versions (React 19, Tailwind CSS 4, Vite, MongoDB 7.0); expanded folder structure with all directories\r\n- **docs/CONTRIBUTING.md** (NEW): Complete contributing guide with prerequisites, local/Docker setup, project structure overview for all 3 services, coding guidelines (frontend/backend/Python), PR process, and label descriptions\r\n- **docs/ARCHITECTURE.md** (NEW): System architecture with ASCII diagram, data flow documentation for photo pipeline and SSE, frontend component tree, backend middleware pipeline, all 30+ API endpoints table, security architecture, Python processing modules table, environment variables reference\r\n- **docs/DEPLOYMENT.md** (NEW): Docker Compose production setup, manual deployment for all 3 services, Vercel deployment, environment variables checklist, monitoring endpoints, troubleshooting guide\r\n- **CHANGELOG.md**: Structured with Added/Changed/Fixed/Security/Infrastructure sections covering all recent PRs"
+    },
+    {
+      "num": 1245,
+      "branch": "feat/ELUSoC_2026_processing_pipeline",
+      "title": "feat(pipeline): enhance AI processing pipeline with progress tracking, more presets, and robust validation",
+      "state": "closed",
+      "body": "Closes #1244\r\n\r\n## Description\r\n\r\nEnhances the Python AI processing pipeline with more presets, progress tracking, and robust validation checks.\r\n\r\n### Changes\r\n- **python-ai-service/app/services/bg_remove.py**: Added `progress_callback(percent, stage)` parameter called at each pipeline stage (10% removing, 40% compositing, 55% attire, 70% final, 100% complete)\r\n- **python-ai-service/app/services/dpi_optimizer.py**: Expanded from 5 to 10 presets (added 35x35 Japan, 45x35 Canada, 50x50 generic, 30x40 Malaysia, 35x50 Indonesia); added `maintain_aspect` parameter; added SHEET_PRESETS for A4/Letter/4x6\r\n- **python-ai-service/app/services/face_quality_gate.py**: Added brightness validation (30-240 range), eye detection via `haarcascade_eye.xml`, image dimension minimum (100px), aspect ratio check (max 3:1), refactored with helper function `_validate_header()`\r\n- **python-ai-service/requirements.txt**: Updated opencv-python to 4.10.0.84, Pillow range to >=10.1.0,<12.0.0, added scipy>=1.11.0"
+    },
+    {
+      "num": 1243,
+      "branch": "feat/ELUSoC_2026_i18n_expansion",
+      "title": "feat(i18n): expand multi-language support with French, Spanish, German, and Bengali translations",
+      "state": "closed",
+      "body": "Closes #1242 \r\n\r\n## Description\r\n\r\nExpands i18n from 2 to 6 languages with full translation files and smart auto-detection.\r\n\r\n### Changes\r\n- **frontend/src/translations/fr.json** (NEW): French — 35+ keys (Accueil, Télécharger, Traiter avec l'IA, etc.)\r\n- **frontend/src/translations/es.json** (NEW): Spanish — 35+ keys (Inicio, Subir, Procesar con IA, etc.)\r\n- **frontend/src/translations/de.json** (NEW): German — 35+ keys (Startseite, Hochladen, Mit KI verarbeiten, etc.)\r\n- **frontend/src/translations/bn.json** (NEW): Bengali (Bangla) — 35+ keys (হোম, আপলোড, AI দিয়ে প্রক্রিয়া করুন, etc.)\r\n- **frontend/src/translations/translations.js**: Import from JSON files, export all 6 languages\r\n- **frontend/src/context/LanguageContext.jsx**: Browser auto-detection, cyclic toggle, HTML lang attribute sync"
+    },
+    {
+      "num": 1241,
+      "branch": "security/ELUSoC_2026_security_hardening",
+      "title": "security(headers, validation): add CSP, security headers, input sanitization and security utilities",
+      "state": "closed",
+      "body": "Closes #1240 \r\n\r\n### Changes\r\n- **backend/src/middleware/securityHeaders.middleware.js** (NEW): 10 headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, COEP, COOP, CORP, HSTS)\r\n- **frontend/src/utils/securityUtils.js** (NEW): `sanitizeFilename`, `validateFileType`, `validateFileSize`, `sanitizeUrl`, `escapeHtml`, `validatePresetId`, `validateBackgroundColour`, `getCspViolationReport`\r\n- **frontend/src/components/SecurityBanner.jsx** (NEW): HTTP insecure connection warning\r\n- **frontend/src/components/SecurityBanner.css** (NEW): Dark mode styles\r\n- **backend/src/app.js**: CSP directives via helmet, securityHeaders middleware chain"
+    },
+    {
+      "num": 1239,
+      "branch": "feat/ELUSoC_2026_admin_analytics",
+      "title": "feat(admin): implement full admin dashboard with real analytics, user management, and system monitoring",
+      "state": "closed",
+      "body": "Closes #1238 \r\n\r\n## Description\r\n\r\nComplete rewrite of the admin dashboard with real analytics, user management, and system monitoring from backend APIs.\r\n\r\n### Changes\r\n- **backend/src/controllers/admin.controller.js** (NEW): `getSystemInfo`, `getRecentActivity`, `getStorageSummary`, `getUserAnalytics`, `getUploadAnalytics`\r\n- **frontend/src/data/AdminDashboardData.js** (NEW): Data layer with tabs, metric cards, status badges, quick actions\r\n- **frontend/src/pages/AdminDashboard.jsx**: 4-tab rewrite with real API integration\r\n- **backend/src/routes/admin.routes.js**: Added 5 new admin endpoints"
+    },
+    {
+      "num": 1237,
+      "branch": "feat/ELUSoC_2026_pwa_support",
+      "title": "feat(pwa): add progressive web app support with service worker and offline capabilities",
+      "state": "closed",
+      "body": "Closes #1236\r\n\r\n## Description\r\n\r\nTransforms SnapPass AI into a Progressive Web App with installability and offline support.\r\n\r\n### Changes\r\n- **frontend/public/manifest.json** (NEW): Standalone display, theme color, shortcuts\r\n- **frontend/public/sw.js** (NEW): Service worker with cache strategies\r\n- **frontend/src/components/OfflineBanner.jsx** (NEW): Connectivity-aware banner\r\n- **frontend/src/components/OfflineBanner.css** (NEW): Dark mode styles\r\n- **frontend/public/icons/.gitkeep** (NEW): Icons directory\r\n- **frontend/index.html**: PWA meta tags (apple-mobile-web-app, msapplication, manifest link)\r\n- **frontend/src/index.jsx**: Service worker registration in production\r\n- **frontend/src/App.jsx**: Integrated OfflineBanner"
+    },
+    {
+      "num": 1235,
+      "branch": "feat/ELUSoC_2026_batch_upload",
+      "title": "feat(batch-upload): implement batch upload frontend with multi-file supports",
+      "state": "closed",
+      "body": "closes #1234 \r\n\r\n## Description\r\n\r\nAdds complete batch upload workflow with multi-file drag-and-drop, queue management, and per-file progress tracking.\r\n\r\n### Changes\r\n- **frontend/src/components/BatchUploadBox.jsx** (NEW): Multi-file upload with validation\r\n- **frontend/src/pages/BatchPreviewPage.jsx** (NEW): Grid thumbnails with status icons\r\n- **frontend/src/pages/BatchPreviewPage.css** (NEW): Dark mode compatible styles\r\n- **frontend/src/pages/UploadPage.jsx**: Added single/batch mode toggle\r\n- **frontend/src/pages/UploadPage.css**: Mode toggle and batch summary styles\r\n- **frontend/src/components/UploadProgress.jsx**: Labels and percentage display\r\n- **frontend/src/services/photoService.jsx**: Added `uploadPhotos()` API function\r\n"
+    },
+    {
+      "num": 1233,
+      "branch": "feat/ELUSoC_2026_websocket_realtime",
+      "title": "feat(sse, progress): add real-time SSE job progress tracking and enhancement ",
+      "state": "closed",
+      "body": "Closes #1232 \r\n\r\n## Description\r\n\r\nReplaces polling-based job status checking with persistent SSE connections for real-time progress updates.\r\n\r\n### Changes\r\n- **backend/server.js**: HTTP server with SSE route registration\r\n- **backend/src/utils/processJobStore.js**: EventEmitter-based job broadcasts\r\n- **backend/src/routes/sse.routes.js** (NEW): SSE streaming with keepalive\r\n- **backend/src/controllers/image.controller.js**: Added emitter import\r\n- **frontend/src/hooks/useProcessingProgress.js** (NEW): EventSource hook\r\n- **frontend/src/components/ProcessingStatus.jsx**: Animated progress bar, stage icons, ARIA support\r\n- **frontend/src/components/ProcessingStatus.css**: Complete redesign\r\n- **frontend/src/pages/EditorPage.jsx**: Integrated progress tracking\r\n"
+    },
+    {
+      "num": 1231,
+      "branch": "fix/ELUSoC_2026_timing_middleware_crash",
+      "title": "fix(timing, port): add missing timingMiddleware import, standardize ports, add port validation utility",
+      "state": "closed",
+      "body": "Closes #1230 \r\n\r\nFixes critical production crash caused by missing `timingMiddleware` import in `app.js`. Also standardizes inconsistent port references across frontend configs.\r\n\r\n### Changes\r\n- **backend/src/app.js**: Added missing `import { timingMiddleware }`\r\n- **backend/src/middleware/timing.middleware.js**: Wrapped in try-catch\r\n- **backend/src/utils/portValidator.js** (NEW): Port validation utility with `validatePort()` and `resolvePort()`\r\n- **backend/src/config/config.js**: Integrated portValidator\r\n- **frontend/.env**: Fixed `VITE_API_URL` from `5005` to `5000`\r\n- **frontend/src/services/api.jsx**: Updated fallback port\r\n- **frontend/src/pages/EditorPage.jsx**: Updated hardcoded port\r\n- **docker-compose.yml**: Added consistent env vars\r\n\r\n**Files changed:** 7 (1 created, 6 modified)\r\n**Branch:** `fix/ELUSoC_2026_timing_middleware_crash`"
+    },
+    {
+      "num": 1218,
+      "branch": "ELUSoC_2026_RouteGuardSecurity",
+      "title": "feat: implement RouteGuard middleware and custom authorization hook",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR implements a front-end route protection component and a role authorization hook to secure restricted views.\r\n### Closes\r\nCloses #1217 \r\n### Changes Done\r\n- **Created** `frontend/src/routes/RouteGuard.jsx` to validate authorization.\r\n- **Created** `frontend/src/hooks/useRouteGuard.js` to check role states.\r\n- **Modified** `frontend/src/routes/AppRoutes.jsx` adding comments and documentation.\r\n- **Modified** `frontend/src/App.jsx` adding layout comment boundaries.\r\n- **Deleted** `frontend/src/routes/deprecatedGuard.js` removing legacy guard files.\r\n### Verification Done\r\n- Confirmed that unauthorized users are redirected to the homepage when attempting to access restricted routes."
+    },
+    {
+      "num": 1216,
+      "branch": "ELUSoC_2026_ViteConfigOptimizer",
+      "title": "feat: optimize vite bundling settings and prebuild env checkers",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR adds prebuild environment verification checks and build diagnostics logging to the Vite configuration.\r\n### Closes\r\nCloses #1215\r\n### Changes Done\r\n- **Created** `frontend/vite-env-check.js` to verify required environment variables before building.\r\n- **Created** `frontend/vite-plugins-custom.js` to log build bundle reports.\r\n- **Modified** `frontend/vite.config.js` importing and registering the build plugin.\r\n- **Modified** `frontend/package.json` to trigger the verification script during the prebuild hook.\r\n- **Deleted** `frontend/deprecatedViteStub.js` to clean up legacy configuration files.\r\n### Verification Done\r\n- Checked that missing required variables halt production build compilation with clear warnings.\r\n"
+    },
+    {
+      "num": 1214,
+      "branch": "ELUSoC_2026_MemoryCache",
+      "title": "feat: implement backend route cache middleware for presets",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR implements backend route cache middleware for static configuration files and endpoints.\r\n### Closes\r\nCloses #1213\r\n### Changes Done\r\n- **Created** `backend/src/utils/memoryCache.js` implementing a Map cache with TTL keys.\r\n- **Created** `backend/src/middleware/cacheControl.middleware.js` to cache API JSON responses.\r\n- **Modified** `backend/src/routes/presets.routes.js` wrapping the GET presets endpoints in the cache middleware.\r\n- **Modified** `backend/src/app.js` adding router category comments.\r\n- **Deleted** `backend/src/utils/deprecatedCache.js` to clean up legacy stubs.\r\n### Verification Done\r\n- Monitored response times on repeated preset fetches; cached requests returned in less than 3ms.\r\n"
+    },
+    {
+      "num": 1212,
+      "branch": "ELUSoC_2026_APIErrorTracker",
+      "title": "feat: implement client-side api error tracker interceptor",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR adds response error tracking to Axios to automatically format and log API errors for debugging and alerts.\r\n### Closes\r\nCloses #1211 \r\n### Changes Done\r\n- **Created** `frontend/src/utils/errorTracker.js` to format API request failures.\r\n- **Created** `frontend/src/components/ErrorToast.jsx` for accessibility logging.\r\n- **Modified** `frontend/src/services/api.jsx` to log errors in response interceptors.\r\n- **Modified** `frontend/src/App.jsx` updating mount configuration comments.\r\n- **Deleted** `frontend/src/utils/deprecatedErrorTracker.js` cleaning up legacy code.\r\n### Verification Done\r\n- Simulated server offline errors and verified formatted API metrics are captured correctly.\r\n"
+    },
+    {
+      "num": 1210,
+      "branch": "ELUSoC_2026_ImagePreloader",
+      "title": "feat: implement client-side image preloader hook to eliminate rendering",
+      "state": "closed",
+      "body": "Closes #1209 \r\n\r\n### Summary\r\nThis PR adds client-side preloading hooks that prefetch processing results before updating the DOM to eliminate image flashing.\r\n\r\n### Changes Done\r\n- **Created** `frontend/src/utils/imagePreloader.js` with prefetching promises.\r\n- **Created** `frontend/src/hooks/useImagePreloader.js` to manage the preloading lifecycle.\r\n- **Modified** `frontend/src/pages/EditorPage.jsx` adding state description keys.\r\n- **Modified** `frontend/src/pages/PhotoStudio.jsx` adding comment references to local renders.\r\n- **Deleted** `frontend/src/utils/deprecatedPreloader.js` removing the legacy preloader file.\r\n### Verification Done\r\n- Verified that image containers transition smoothly on preset changes without flickering.\r\n"
+    },
+    {
+      "num": 1208,
+      "branch": "ELUSoC_2026_SessionPersistence",
+      "title": "feat: implement multi-tab state persistence and synchronization",
+      "state": "closed",
+      "body": "Closes #1207 \r\n\r\n### Summary\r\nThis PR implements cross-tab session syncing using storage listeners to maintain a consistent state across multiple open tabs.\r\n\r\n### Changes Done\r\n- **Created** `frontend/src/utils/sessionSync.js` with encoding and storage listener logic.\r\n- **Created** `frontend/src/hooks/useSessionSync.js` for state updates.\r\n- **Modified** `frontend/src/App.jsx` updating app shell wrappers.\r\n- **Modified** `frontend/src/context/ThemeContext.jsx` updating theme state sync rules.\r\n- **Deleted** `frontend/src/utils/deprecatedSessionHelper.js` removing stale session helper files.\r\n### Verification Done\r\n- Verified that switching parameters in one tab updates all other open instances of the application.\r\n\r\n\r\n"
+    },
+    {
+      "num": 1206,
+      "branch": "ELUSoC_2026_Issue1055",
+      "title": "feat: integrate AI background removal and OpenCV face centering",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR connects the backend to the Flask AI service, managing rembg background extraction and OpenCV face-centering rules.\r\n\r\n### Closes\r\nCloses #1055\r\n\r\n### Changes Done\r\n- **Created** `backend/src/utils/aiClient.js` to handle multipart requests to the AI server.\r\n- **Modified** `backend/src/controllers/image.controller.js` connecting processing requests to the client.\r\n- **Modified** `backend/src/routes/image.routes.js` documenting API lifecycles.\r\n- **Modified** `python-ai-service/app/services/face_center.py` verifying target face aspect ratios.\r\n- **Deleted** `backend/src/utils/deprecatedCache.js` to clean up legacy stubs.\r\n\r\n### Verification Done\r\n- Uploaded sample portrait photos; verified backgrounds are stripped and faces are cropped matching target ICAO specs.\r\n"
+    },
+    {
+      "num": 1205,
+      "branch": "ELUSoC_2026_Issue1060",
+      "title": "feat: support country-specific passport presets and crop guidelines",
+      "state": "closed",
+      "body": "Closes #1060 \r\n\r\n### Summary\r\nThis PR introduces country-specific configurations and responsive client-side overlay crop lines to guide eye and chin placements in real-time.\r\n\r\n### Changes Done\r\n- **Created** `frontend/src/data/presets.json` containing country dimensions and placement offsets.\r\n- **Modified** `frontend/src/pages/EditorPage.jsx` adding target placement overlay guides.\r\n- **Modified** `frontend/src/pages/PhotoStudio.jsx` adding crop aspect offset comments.\r\n- **Modified** `backend/src/utils/photoPresets.js` detailing matching sizes.\r\n- **Deleted** `backend/src/utils/deprecatedCache.js` to clean up legacy utilities.\r\n\r\n### Verification Done\r\n- Confirmed guidelines load dynamically based on selected presets.\r\n"
+    },
+    {
+      "num": 1204,
+      "branch": "ELUSoC_2026_Issue1126",
+      "title": "feat: implement interactive SettingsPage dashboard controls and schemas",
+      "state": "closed",
+      "body": "Closes #1126 \r\n\r\n### Summary\r\nThis PR implements the Settings Page dashboard route, allowing users to update their preferences, toggle theme states, and validate settings inputs.\r\n\r\n\r\n### Changes Done\r\n- **Created** `frontend/src/utils/settingsValidator.js` containing validation logic for user fields.\r\n- **Created/Modified** `frontend/src/pages/SettingsPage.jsx` integrating custom validators and themes.\r\n- **Created/Modified** `frontend/src/pages/SettingsPage.css` supporting light and dark variables.\r\n- **Modified** `frontend/src/routes/AppRoutes.jsx` to load and configure the `/settings` path.\r\n- **Deleted** `frontend/src/routes/deprecatedGuard.js` to prune obsolete routing rules.\r\n\r\n### Verification Done\r\n- Verified route loading, tab switching, and state validation error handling.\r\n"
+    },
+    {
+      "num": 1203,
+      "branch": "ELUSoC_2026_ImageCleanupService",
+      "title": "feat: implement backend scheduled image cleanup service and endpoints",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR introduces a background cleanup service to prune stale temporary uploads and free up disk space.\r\n### Closes\r\nCloses #1202 \r\n### Changes Done\r\n- **Created** `backend/src/services/cleanup.service.js` with directory scan and age calculation logic.\r\n- **Created** `backend/src/routes/cleanup.routes.js` to expose the cleanup command.\r\n- **Modified** `backend/src/routes/index.js` mounting the `/api/cleanup` routes.\r\n- **Modified** `backend/src/app.js` documenting directories serving rules.\r\n- **Deleted** `backend/src/services/deprecatedCleanupHelper.js` to remove legacy helper stubs.\r\n### Verification Done\r\n- Created temporary files in `uploads/` with old modification timestamps and verified they were safely pruned.\r\n"
+    },
+    {
+      "num": 1201,
+      "branch": "ELUSoC_2026_LoggerAudit",
+      "title": " logger audit",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR adds request audit logger utilities that record non-GET requests to `logs/audit.log` for administrative reviews.\r\n\r\n### Closes\r\nCloses #1200 \r\n### Changes Done\r\n- **Created** `backend/src/utils/auditLogger.js` to write structured logs.\r\n- **Created** `backend/src/middleware/auditLogger.middleware.js` to log request metadata.\r\n- **Modified** `backend/src/routes/index.js` to monitor the routing lifecycle.\r\n- **Modified** `backend/src/app.js` adding descriptive mount comments.\r\n- **Deleted** `backend/src/utils/deprecatedLogger.js` to clean up legacy modules.\r\n\r\n### Verification Done\r\n- Triggered several mock updates and verified structured logs are appended to `logs/audit.log`.\r\n"
+    },
+    {
+      "num": 1199,
+      "branch": "ELUSoC_2026_RequestSanitizer",
+      "title": "request sanitizer",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR implements a recursive request sanitizer that automatically strips NoSQL operators and script tags from all request parameters.\r\n\r\n### Closes\r\nCloses #1198 \r\n\r\n### Changes Done\r\n- **Created** `backend/src/utils/sanitizerRules.js` defining key scrubbing patterns.\r\n- **Created** `backend/src/middleware/requestSanitizer.middleware.js` to intercept and clean requests.\r\n- **Modified** `backend/src/routes/index.js` to apply the sanitizer across all API routes.\r\n- **Modified** `backend/src/app.js` adding configuration logs and comments.\r\n- **Deleted** `backend/src/utils/deprecatedSanitizerHelper.js` cleaning up legacy helper stubs.\r\n\r\n### Verification Done\r\n- Sent request payloads containing Mongo query objects (e.g. `{\"$gt\": \"\"}`) and verified they were safely sanitized.\r\n"
+    },
+    {
+      "num": 1197,
+      "branch": "ELUSoC_2026_JWTTokenBlacklist",
+      "title": " jwt token blacklist",
+      "state": "closed",
+      "body": "Closes #1196 \r\n\r\n### Summary\r\nThis PR implements a real-time JWT token blacklist store and middleware to immediately invalidate sessions on logout.\r\n\r\n\r\n### Changes Done\r\n- **Created** `backend/src/utils/tokenStore.js` containing the in-memory token registry.\r\n- **Created** `backend/src/middleware/blacklist.middleware.js` to block blacklisted tokens.\r\n- **Modified** `backend/src/routes/auth.routes.js` to trigger revocation on the logout endpoint.\r\n- **Modified** `backend/src/app.js` to validate incoming requests against the blacklist store.\r\n- **Deleted** `backend/src/utils/deprecatedAuthHelper.js` to clean up legacy stubs.\r\n\r\n### Verification Done\r\n- Verified that requesting `/api/auth/me` with a logged-out token returns `401 Unauthorized` immediately.\r\n"
+    },
+    {
+      "num": 1195,
+      "branch": "ELUSoC_2026_EditorPageUpgrade",
+      "title": "editor page upgrade",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR cleans up rendering states and mounts a state validator utility on the Editor screen.\r\n\r\n### Closes\r\nCloses #1194 \r\n\r\n### Changes Done\r\n- **Created** `frontend/src/pages/EditorPageDiagnostics.jsx` & `EditorPageDiagnostics.css` to validate background, size, and attire configurations in real-time.\r\n- **Modified** `frontend/src/pages/EditorPage.jsx` updating imports and wrapping diagnostics components.\r\n- **Modified** `frontend/src/pages/EditorPage.css` setting GPU translate hints to accelerate canvas render tasks.\r\n- **Deleted** `frontend/src/pages/EditorLegacyHelper.js` cleaning up unused code blocks.\r\n\r\n### Verification Done\r\n- Monitored console rendering outputs during preset transitions. Double-renders have been mitigated, and performance is completely lag-free.\r\n"
+    },
+    {
+      "num": 1193,
+      "branch": "ELUSoC_2026_NavbarAlignment",
+      "title": " navbar alignment",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR resolves center positioning sub-pixel offsets on zoomed displays and registers a dynamic developer layout checking component.\r\n\r\n### Closes\r\nCloses #1192 \r\n\r\n### Changes Done\r\n- **Created** `frontend/src/components/layout/NavbarAlignmentDetector.jsx` & `NavbarAlignmentDetector.css` which monitor center coordinate matching on window resize events.\r\n- **Modified** `frontend/src/components/layout/Navbar.jsx` attaching a ref to the nav container and mounting the layout checking helper.\r\n- **Modified** `frontend/src/components/layout/Navbar.css` to add hardware layout acceleration guidelines and clean up fixed bounds spacing.\r\n- **Deleted** `frontend/src/components/layout/NavbarLegacyHelper.js` removing outdated manual offset handlers.\r\n\r\n### Verification Done\r\n- Verified alignment coordinates on 100%, 125%, and 150% browser zoom levels. Checked developer logs for zero-offset reports.\r\n"
+    },
+    {
+      "num": 1191,
+      "branch": "ELUSoC_2026_UploadQueueSystem",
+      "title": "feat: add upload queue system with XHR progress tracking",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR builds an interactive REST API documentation viewer that reads registered route metadata.\r\n### Closes\r\nCloses #1190 \r\n### Changes Done\r\n- **Created** `backend/src/controllers/docs.controller.js` and `docs.routes.js` to parse route definitions.\r\n- **Created** `frontend/src/pages/ApiDocsPage.jsx` and `ApiDocsPage.css` for the UI.\r\n- **Modified** `frontend/src/routes/AppRoutes.jsx` and `routes/index.js` to expose the docs page.\r\n### Verification Done\r\n- Verified that all active API endpoints are properly listed and color-coded."
+    },
+    {
+      "num": 1189,
+      "branch": "ELUSoC_2026_ThemeContextRefactor",
+      "title": "feat: add ThemeContext with OS preference detection and transitions",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR adds performance monitoring middleware to track request durations and expose real-time application metrics.\r\n### Closes\r\nCloses #1188 \r\n### Changes Done\r\n- **Created** `backend/src/middleware/timing.middleware.js` to measure response times.\r\n- **Created** `backend/src/controllers/metrics.controller.js` and `metrics.routes.js` to aggregate metrics.\r\n- **Modified** `backend/src/app.js` and `routes/index.js` to register the middleware.\r\n### Verification Done\r\n- Verified timing headers are present in response payloads.\r\n"
+    },
+    {
+      "num": 1187,
+      "branch": "ELUSoC_2026_RoleBasedAccess",
+      "title": "feat: add role-based access control with admin user management",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR introduces role-based access control (RBAC) middleware for the Express backend, along with administrative endpoints for user management.\r\n### Closes\r\nCloses #1186 \r\n### Changes Done\r\n- **Created** `backend/src/middleware/role.middleware.js` providing `authorize('role')` route guards.\r\n- **Created** `backend/src/routes/admin.routes.js` exposing user administration options.\r\n- **Modified** `backend/src/controllers/auth.controller.js` implementing role modifications.\r\n- **Modified** `backend/src/routes/auth.routes.js` and `routes/index.js` to configure the middleware.\r\n### Verification Done\r\n- Tested endpoints using non-admin accounts and verified they receive `403 Forbidden` responses.\r\n"
+    },
+    {
+      "num": 1185,
+      "branch": "ELUSoC_2026_PhotoComparisonZoom",
+      "title": "feat: add photo comparison slider with zoom and pan",
+      "state": "closed",
+      "body": "Closes #1184 \r\n\r\n### Summary\r\nThis PR implements an interactive before/after image slider with synced zoom and drag-to-pan functionality.\r\n### Changes Done\r\n- **Created** `frontend/src/hooks/useZoomPan.js` to compute CSS transform scales and coordinate matrices.\r\n- **Created** `frontend/src/components/ComparisonSlider.jsx` & `ComparisonSlider.css` using absolute overlays and drag-split bar offsets.\r\n- **Modified** `frontend/src/pages/PhotoStudio.jsx` & `PhotoStudio.css` to host the preview mode switcher.\r\n### Verification Done\r\n- Verified that zooming matches cursor focus and is synchronized on both images.\r\n"
+    },
+    {
+      "num": 1183,
+      "branch": "ELUSoC_2026_PerformanceMonitoring",
+      "title": "feat: add performance monitoring with request timing middleware",
+      "state": "closed",
+      "body": "Closes #1182 \r\n\r\n### Summary\r\nThis PR implements a robust multi-file uploading system featuring XHR progress bars, retry logic, and queue cancellation controls.\r\n\r\n### Changes Done\r\n- **Created** `frontend/src/hooks/useUploadQueue.js` implementing local queues and progress state callbacks.\r\n- **Modified** `backend/src/controllers/upload.controller.js` & `upload.routes.js` handling arrays of incoming files.\r\n- **Modified** `frontend/src/components/UploadBox.jsx` & `UploadBox.css` to build an interactive queue panel.\r\n### Verification Done\r\n- Simulating offline connections correctly halts the queue and reveals retry prompts.\r\n"
+    },
+    {
+      "num": 1181,
+      "branch": "ELUSoC_2026_ImageProcessingPipeline",
+      "title": "feat: add image processing pipeline with progress tracking",
+      "state": "closed",
+      "body": "Closes #1180 \r\n\r\n### Summary\r\nThis PR enables users to download multiple processed photo presets inside a single compressed ZIP file, reducing network requests and improving usability.\r\n\r\n### Changes Done\r\n- **Created** `backend/src/controllers/batch.controller.js` utilizing streams to generate archives on-the-fly.\r\n- **Created** `backend/src/routes/batch.routes.js` defining POST paths with parameters.\r\n- **Modified** `backend/src/routes/index.js` linking the endpoints.\r\n- **Created** `frontend/src/hooks/useBatchExport.js` to manage the request and download lifecycle.\r\n- **Modified** `frontend/src/pages/PrintPreviewPage.jsx` adding the export buttons.\r\n### Verification Done\r\n- Downloaded ZIP packages and verified file integrity across macOS and Windows file systems.\r\n"
+    },
+    {
+      "num": 1179,
+      "branch": "ELUSoC_2026_FormValidationSystem",
+      "title": "feat: ELUSoC_2026 - Admin Dashboard Live Stats and Analytics API Endpoint",
+      "state": "closed",
+      "body": "### Summary\r\nThis PR delivers an analytics aggregation API along with an updated frontend dashboard panel containing cards, live badges, and recent system activity logs.\r\n### Closes\r\nCloses #1178 \r\n### Changes Done\r\n- **Created** `backend/src/controllers/analytics.controller.js` calculating total uploads, success ratios, and active queues.\r\n- **Created** `backend/src/routes/analytics.routes.js` to expose metrics via secure REST routes.\r\n- **Modified** `backend/src/routes/index.js` mounting the endpoint.\r\n- **Modified** `frontend/src/pages/AdminDashboard.jsx` & `AdminDashboard.css` displaying live counters with fade-in animations.\r\n### Verification Done\r\n- Verified aggregated queries run efficiently.\r\n- Simulated stats fetch delays and confirmed skeleton loaders render.\r\n"
+    },
+    {
+      "num": 1177,
+      "branch": "ELUSoC_2026_BatchExportSystem",
+      "title": "feat: add batch ZIP export system for processed photos",
+      "state": "closed",
+      "body": "Closes #1176 \r\n\r\n### Summary\r\nThis PR integrates multi-stage tracking into our AI processing pipeline, enabling clients to receive notifications as stages like mask removal, face alignment, and generation complete.\r\n### Changes Done\r\n- **Modified** `backend/src/controllers/image.controller.js` to report steps to job stores.\r\n- **Modified** `backend/src/utils/processJobStore.js` to support partial status updates.\r\n- **Created** `frontend/src/hooks/useProcessImage.js` implementing interval polling with exponential backoff on failure.\r\n- **Modified** `frontend/src/pages/PhotoStudio.jsx` & `PhotoStudio.css` introducing a styled multi-state progress timeline.\r\n### Verification Done\r\n- Tested polling cycle against slow network configurations.\r\n- Simulated errors and validated retry and error-screen triggers.\r\n"
+    },
+    {
+      "num": 1175,
+      "branch": "ELUSoC_2026_ApiDocumentation",
+      "title": "feat: add self-documenting API endpoint and frontend docs page",
+      "state": "closed",
+      "body": "Closes #1174 \r\n\r\n### Summary\r\nThis PR introduces a reusable `FormField` component styled for dark/light modes and pairs it with a custom `useFormValidation` hook for client-side validation logic.\r\n\r\n### Changes Done\r\n- **Created** `frontend/src/hooks/useFormValidation.js` supporting dynamic configuration schemas and touched state checks.\r\n- **Created** `frontend/src/components/FormField.jsx` & `FormField.css` to offer responsive input containers with validation labels.\r\n- **Modified** `frontend/src/utils/validators.js` adding phone, passport schema, and clean URL validators.\r\n- **Modified** `frontend/src/pages/SettingsPage.jsx` to use the validation hook and `FormField` layout.\r\n### Verification Done\r\n- Monitored form submission blocks until all fields are in valid states.\r\n- Validated CSS states for errors (red accents, focus shifts).\r\n"
+    },
+    {
+      "num": 1173,
+      "branch": "ELUSoC_2026_AdminAnalyticsAPI",
+      "title": "feat: add analytics API endpoint and real-time admin dashboard",
+      "state": "closed",
+      "body": "Closes #1172 \r\n\r\n### Summary\r\nThis PR refactors our decentralized theme styling to a React Context API pattern, adding native OS dark-mode detection, local storage persistence, and global transition animations.\r\n### Changes Done\r\n- **Created** `frontend/src/context/ThemeContext.jsx` implementing the context structure and event listener on `prefers-color-scheme`.\r\n- **Modified** `frontend/src/App.css` adding transitions to variables to avoid sharp flash changes.\r\n- **Modified** `frontend/src/App.jsx` to wrap the top-level routes structure under our new context provider.\r\n- **Modified** `frontend/src/routes/AppRoutes.jsx` to eliminate duplicate theme toggle states.\r\n- **Modified** `frontend/src/pages/SettingsPage.jsx` and `frontend/src/pages/AdminDashboard.jsx` to use the `useTheme` hook directly.\r\n### Verification Done\r\n- Verified that changing OS theme preferences changes the site layout automatically.\r\n- Tested persistence behavior across browser page refreshes.\r\n"
+    },
+    {
+      "num": 1171,
+      "branch": "bring-back-to-the-original-app-ui",
+      "title": "Bring back to the original app UI",
+      "state": "closed",
+      "body": "Closes #1170\r\n\r\n## Summary: \r\nThis pull request reverts the changes from PR #1029 (Merge pull request #1029 from DebasmitaBose0/fix/color-code-consistency). It restores the original color codes, textures, and borders across the frontend layouts to bring the application back to its original visual appearance.\r\n\r\n## Branch Name: bring-back-to-the-original-app-ui\r\n\r\n## Changes:\r\n\r\nReverted the migration of hardcoded hex values and specific styling properties to CSS variables (var(--color-*)) across all CSS modules."
+    },
+    {
+      "num": 1167,
+      "branch": "feat/redis-cache-middleware",
+      "title": "perf(redis): add Redis caching middleware with key-based TTL and auto-invalidation",
+      "state": "closed",
+      "body": "Closes #1166 \r\n\r\n**Summary:**\r\nIntroduces a full Redis caching layer: client setup in `config/redis.js`, generic get/set/delete helpers, and an Express middleware that transparently caches JSON responses with configurable TTL. Degrades gracefully when Redis is unavailable.\r\n\r\n**Changes:**\r\n- `backend/src/config/redis.js` — Redis client creation, `getCache`/`setCache`/`deleteCache` helpers, `isRedisAvailable` checker, connection error handling.\r\n- `backend/src/middleware/cache.middleware.js` — Express middleware that generates cache keys from URL, returns cached responses, and auto-caches on first miss via monkey-patched `res.json`.\r\n- `backend/src/routes/presets.routes.js` — Applied `cacheMiddleware(3600)` to GET `/`.\r\n- `backend/src/routes/uploadHistory.routes.js` — Applied `cacheMiddleware(300)` to GET `/`.\r\n\r\n**Performance:**\r\n- First request: normal (DB hit)\r\n- Subsequent requests within TTL: served from Redis (~2-5ms vs ~50-150ms DB)\r\n"
+    },
+    {
+      "num": 1165,
+      "branch": "feat/audit-logging-system",
+      "title": "feat(audit): add AuditLog model, service, and API with paginated search",
+      "state": "closed",
+      "body": "Closes #1164 \r\n\r\n**Summary:**\r\nImplements a complete audit logging system: Mongoose model with compound indexes, a service layer with filtering and pagination, and integration with all auth flows (login, logout, password reset, session revoke).\r\n\r\n**Changes:**\r\n- `backend/src/models/auditLog.model.js` — Schema with `userId`, `action`, `resource`, `resourceId`, `details`, `ipAddress`, `userAgent`, `timestamp`. Indexes on `userId + timestamp` and `action + timestamp`.\r\n- `backend/src/services/audit.service.js` — `log(action, details)`, `getLogsForUser(userId, pagination)`, `searchLogs(filters)`.\r\n- `backend/src/controllers/audit.controller.js` — `getAuditLogs` with pagination, date range, and action filter.\r\n- `backend/src/routes/audit.routes.js` — Admin-only GET endpoint.\r\n- `backend/src/controllers/auth.controller.js` — Added `auditLogger.log()` calls on register, login, logout, password reset, session revoke.\r\n\r\n**Security:**\r\n- Audit logs are write-only via the public API; no update/delete endpoints exist\r\n- Admin middleware protects the query endpoint"
+    },
+    {
+      "num": 1162,
+      "branch": "feat/theme-context-refactor",
+      "title": "refactor(theme): centralized ThemeContext with localStorage persistence and OS preference detection",
+      "state": "closed",
+      "body": "Closes #1161 \r\n\r\n**Summary:**\r\nReplaces ad-hoc dark mode prop drilling with a centralized `ThemeContext`. Reads initial value from `localStorage`, detects OS preference via `matchMedia`, and auto-updates on OS changes. User's explicit choice is persisted and takes priority.\r\n\r\n**Changes:**\r\n- `frontend/src/context/ThemeContext.jsx` — `ThemeProvider` with `useState` initialized from localStorage → matchMedia → 'light'. Sets `data-theme` on `<html>`. Listens for OS preference changes. Exports `useTheme` hook.\r\n- `frontend/src/main.jsx` — Wrapped `<App />` with `<ThemeProvider>`.\r\n- `frontend/src/App.jsx` — Removed `darkMode`/`toggleTheme` props; pages now use `useTheme()` directly.\r\n- Updated pages (SettingsPage, Footer, Navbar, etc.) — Switched from props to `useTheme()`.\r\n\r\n**How to test:**\r\n1. Clear localStorage and reload — OS dark mode should be detected\r\n2. Toggle theme — preference is saved to localStorage\r\n3. Hard refresh — theme persists\r\n4. Change OS theme setting while app is open — app follows (unless manually toggled)\r\n"
+    },
+    {
+      "num": 1160,
+      "branch": "feat/client-side-image-compression",
+      "title": "feat(utils): add compressImageWithPreview and estimateCompressionRatio helpers for upload workflows",
+      "state": "closed",
+      "body": "Closes #1159 \r\n\r\n**Summary:**\r\nProvides three client-side image compression functions (`compressImage`, `compressImageWithPreview`, `estimateCompressionRatio`) that use canvas to resize and re-encode images before upload, dramatically reducing transfer size.\r\n\r\n**Changes:**\r\n- `frontend/src/utils/imageCompression.js` — All three exported functions:\r\n  - `compressImage(file, { maxWidth, maxHeight, quality, resizeScale })` — Core compression via `canvas.toBlob()`\r\n  - `compressImageWithPreview(file, options)` — Returns `{ compressedFile, previewUrl, originalSize, compressedSize }`\r\n  - `estimateCompressionRatio(file, options)` — Returns `{ ratio, savedBytes }`\r\n\r\n**Performance:**\r\n- 10 MB phone photo → ~1.5 MB (85% reduction) at 1920px max dimension\r\n- Compression runs in a requestIdleCallback-friendly async pattern"
+    },
+    {
+      "num": 1152,
+      "branch": "feat/batch-upload-hook",
+      "title": "feat(hooks): add useBatchUpload hook with concurrency control, compression pipeline, progress tracking, and abort support",
+      "state": "closed",
+      "body": "Closes #1151 \r\n\r\n**Summary:**\r\nA production-ready React hook for batch file uploads. Features configurable concurrency (default 3), optional pre-upload compression via `compressImage`, per-file status tracking, real-time progress, and graceful abort.\r\n\r\n**Changes:**\r\n- `frontend/src/hooks/useBatchUpload.js` — Hook implementation:\r\n  - Queue state management with unique IDs\r\n  - Worker pool pattern (`concurrency` parallel workers consuming from the queue)\r\n  - Optional compression pipeline calling `compressImage()`\r\n  - `abortRef` flag to stop processing mid-batch\r\n  - Progress tracking (`total/completed/failed`)\r\n  - Full TypeScript-ready JSDoc annotations\r\n- Integrated with UploadBox (optional — can be adopted by any upload UI)\r\n\r\n**How to test:**\r\n1. Select 6 images and call `addFiles()`\r\n2. Call `startUpload('/api/upload')`\r\n3. Observe 3 uploads in flight simultaneously\r\n4. Call `abort()` — remaining queued items show 'aborted'\r\n5. Call `reset()` — state clears\r\n"
+    },
+    {
+      "num": 1150,
+      "branch": "feat/processing-status-dashboard",
+      "title": "feat(ui): add ProcessingStatus component with auto-polling for async job progress",
+      "state": "closed",
+      "body": "Closes #1149 \r\n\r\n**Summary:**\r\nA self-contained React component for displaying async job progress. Polls a job endpoint every 2s, displays a color-coded indicator (gray/blue/green/red) with a CSS pulse animation during processing, and stops on terminal states.\r\n\r\n**Changes:**\r\n- `frontend/src/components/ProcessingStatus.jsx` — Component with `useState`/`useEffect` polling, `fetchStatus` callback, automatic cleanup, `onStatusChange` notification, and `aria-live=\"polite\"` for screen readers.\r\n- `frontend/src/components/ProcessingStatus.css` — BEM-styled with CSS `@keyframes pulse` animation, status color classes, and error text styling.\r\n\r\n**How to test:**\r\n1. Render `<ProcessingStatus jobId=\"abc123\" />` with a mock endpoint\r\n2. Observe polling in Network tab every 2s\r\n3. Mock status transitions: queued → processing → done\r\n4. Verify pulse animation during processing\r\n5. Unmount the component and confirm no more network requests"
+    },
+    {
+      "num": 1148,
+      "branch": "feat/history-search-filter",
+      "title": "feat(history): add search, status filter, and pagination to upload history",
+      "state": "closed",
+      "body": "Closes #1147 \r\n\r\n\r\n\r\n**Summary:**\r\nOverhauls the upload history feature with server-side pagination, text search, status filtering, and date range support. The frontend gets a search bar, dropdown filter, and page navigation.\r\n\r\n**Changes:**\r\n- `backend/src/controllers/uploadHistory.controller.js` — Rewrote `getUserUploadHistory` with `$regex` search, status/date filters, pagination via `skip/limit`, and lean queries for performance.\r\n- `frontend/src/pages/HistoryPage.jsx` — Complete rewrite with search input, `<select>` filter, loading/empty states, pagination buttons, and `useCallback`-wrapped fetch.\r\n- `frontend/src/pages/HistoryPage.css` — New styles for filters, list items, status badges, and pagination.\r\n- `backend/src/models/upload.model.js` — Added indexes on `filename`, `status`, `userId`, and compound `{ userId: 1, createdAt: -1 }`.\r\n\r\n**How to test:**\r\n1. Upload 25+ photos with various statuses\r\n2. Visit `/history` — all items shown with pagination\r\n3. Type \"pass\" in search — only matching filenames appear\r\n4. Filter by \"failed\" — only failed uploads shown\r\n5. Combine search + filter"
+    },
+    {
+      "num": 1146,
+      "branch": "feat/dynamic-print-layouts",
+      "title": "eat(print): add multi-format sheet generator supporting A4, US Letter, and 4×6 page sizes",
+      "state": "closed",
+      "body": "Closes #1145 \r\n\r\n**Summary:**\r\nRefactors the hardcoded A4 sheet generator into a configurable layout engine that supports three page formats. Uses a `PAGE_SIZES` dictionary for mm-to-pixel conversion at 300 DPI, calculates dynamic photo placement, and maintains all existing features.\r\n\r\n**Changes:**\r\n- `python-ai-service/app/services/sheet_generator.py` — Renamed `generate_a4_sheet` to `generate_sheet` with `page_size` parameter. Added `PAGE_SIZES` lookup. Replaced hardcoded A4 constants with dynamic calculations. Backward compatible — defaults to A4.\r\n- `python-ai-service/main.py` — Updated route handler to accept `page_size`, validate against allowed values, sanitize `preset_id`, generate unique output path with UUID.\r\n- `python-ai-service/app/__init__.py` — Updated import to `generate_sheet`.\r\n\r\n**Page sizes:**\r\n| Size   | Dimensions (mm) | Pixels @ 300 DPI |\r\n|--------|----------------|-------------------|\r\n| A4     | 210 × 297      | 2480 × 3508      |\r\n| Letter | 215.9 × 279.4  | 2550 × 3300      |\r\n| 4×6    | 101.6 × 152.4  | 1200 × 1800      |\r\n"
+    },
+    {
+      "num": 1144,
+      "branch": "feat/db-index-optimization",
+      "title": "perf(db): add strategic MongoDB indexes to User and Upload models",
+      "state": "closed",
+      "body": "Closes #1143 \r\n\r\n**Summary:**\r\nAudited all query patterns across the backend and added targeted indexes to the five main Mongoose models. Every `.find()` call in controllers now has a supporting index, ensuring queries scale linearly with data size.\r\n\r\n**Changes:**\r\n- `backend/src/models/user.model.js` — Added `{ role: 1, createdAt: -1 }` and `{ lastLoginAt: 1 }` compound indexes.\r\n- `backend/src/models/upload.model.js` — Added `filename`, `status`, `userId` single-field indexes; compound `{ userId: 1, createdAt: -1 }` and `{ status: 1, createdAt: -1 }`.\r\n- `backend/src/models/session.model.js` — Verified existing indexes (`userId`, `token`, `expiresAt` TTL). No changes needed but added comment documentation.\r\n- `backend/src/models/preset.model.js` — Added `{ active: 1, order: 1 }` compound and unique `{ name: 1 }`.\r\n\r\n**Impact:**\r\n- Upload history queries: ~120ms → ~3ms (for 100K documents)\r\n- Login queries via email: already indexed, unchanged"
+    },
+    {
+      "num": 1142,
+      "branch": "feat/sanitize-all-routes",
+      "title": "feat(security): enhance sanitize middleware with HTML stripping, XSS prevention, and apply to all routes",
+      "state": "closed",
+      "body": "Closes #1141 \r\n\r\n**Summary:**\r\nReplaces the minimal sanitize middleware with a comprehensive solution that strips HTML tags, removes XSS vectors, trims whitespace, and recursively sanitizes nested objects. Applied globally so every route benefits automatically.\r\n\r\n**Changes:**\r\n- `backend/src/middleware/sanitize.middleware.js` — Complete rewrite:\r\n  - `sanitizeValue(value)` — Recursive sanitizer for strings, arrays, and objects\r\n  - HTML tag stripping via `string-strip-html`\r\n  - XSS pattern removal (`javascript:`, `on{event}=`)\r\n  - `SENSITIVE_KEYS` Set bypasses password/token/secret/apiKey fields\r\n  - Processes `req.body`, `req.query`, and `req.params`\r\n- `backend/src/routes/index.js` — Added `import { sanitizeInput }` and `router.use(sanitizeInput)` before all route mounts.\r\n\r\n**Security impact:**\r\n- XSS via stored user input is now prevented at the middleware layer\r\n- NoSQL injection via special characters in query strings is blocked\r\n- All current and future routes are protected automatically"
+    },
+    {
+      "num": 1140,
+      "branch": "feat/session-ui-bulk-revoke",
+      "title": "feat(auth): add bulk session revoke UI and backend endpoint with multi-select",
+      "state": "closed",
+      "body": "Closes #1139 \r\n\r\n**Summary:**\r\nImplements bulk session revocation: users can now select multiple active sessions via checkboxes and revoke them all at once. Includes a new backend endpoint and a frontend multi-select UI.\r\n\r\n**Changes:**\r\n- `backend/src/services/session.service.js` — Added `invalidateSessionsByIds(ids, userId)` using `updateMany` with `{ $in: ids }`.\r\n- `backend/src/controllers/auth.controller.js` — Added `bulkRevokeSessions` handler with input validation (array check, non-empty).\r\n- `backend/src/routes/auth.routes.js` — Added `POST /sessions/bulk-revoke` route.\r\n- `frontend/src/pages/SettingsPage.jsx` — Added `selectedSessions` (Set) state, `toggleSessionSelection`, `handleBulkRevoke`, checkbox inputs with `aria-label`, bulk revoke button with dynamic count and loading state.\r\n\r\n**How to test:**\r\n1. Log in from multiple devices/browsers\r\n2. Go to Settings → Security & Sessions\r\n3. Check 2-3 sessions\r\n4. Click \"Revoke Selected (3)\"\r\n5. Sessions disappear from the list\r\n"
+    },
+    {
+      "num": 1138,
+      "branch": "feat/chatbot-fuzzy-search",
+      "title": "feat(chatbot): enhance fuzzy search with multi-result suggestions and…",
+      "state": "closed",
+      "body": "Closes #1137 \r\n\r\n**Summary:**\r\nRewrites the chatbot's search algorithm with a graduated 4-step confidence pipeline: exact keyword match → high-confidence fuzzy → low-confidence suggestions → rejection. Adds `searchMultiResponse` for multi-result UI rendering.\r\n\r\n**Changes:**\r\n- `frontend/src/chatbot/utils/searchResponse.js` — Updated Fuse.js config (`threshold: 0.35`, `distance: 200`). Restructured `searchResponse` into 4 steps with suggestion generation. Added `searchMultiResponse` export returning matched item arrays.\r\n\r\n**Search pipeline:**\r\n| Step | Condition | Behavior |\r\n|------|-----------|----------|\r\n| 1 | Keyword match in `item.keywords` | Return exact answer |\r\n| 2 | Fuse score ≤ 0.4 | Return best match |\r\n| 3 | Fuse score ≤ 0.65 | Return 3 suggestions |\r\n| 4 | Otherwise | Return rejection message |\r\n"
+    },
+    {
+      "num": 1136,
+      "branch": "feat/file-validation-chain",
+      "title": "feat(upload): add multi-stage file validation chain with magic bytes, dimension, and compression ratio checks",
+      "state": "closed",
+      "body": "Closes #1135\r\n\r\n**Summary:**\r\nImplements a defense-in-depth upload validation middleware that runs three sequential checks: magic byte verification (via `file-type`), image dimension bounds (via `sharp`

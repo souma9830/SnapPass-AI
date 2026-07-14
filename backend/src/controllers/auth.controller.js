@@ -2,6 +2,7 @@ import * as sessionService from '../services/session.service.js';
 import * as authService from '../service/auth.service.js';
 import * as passwordResetOtpService from '../service/passwordResetOtp.service.js';
 import catchAsync from '../utils/catchAsync.js';
+import { AccountDeletionService } from '../services/accountDeletion.service.js';
 import { config } from '../config/config.js';
 import { sendEmail } from '../utils/sendEmail.js';
 
@@ -181,4 +182,11 @@ export const resetPassword = catchAsync(async (req, res) => {
   // Update Password
   await authService.updatePassword(user._id, newPassword);
   sendResponse(res, 200, true, 'Password reset successfully', null);
+});
+
+export const deleteAccount = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+  await AccountDeletionService.purgeUserData(userId);
+  res.clearCookie('token');
+  sendResponse(res, 200, true, 'Account and related data successfully deleted.', null);
 });

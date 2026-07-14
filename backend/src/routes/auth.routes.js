@@ -78,5 +78,6 @@ router.post("/password-reset", otpActionLimiter, passwordResetValidation, valida
  * @access Private/Admin
  */
 router.patch("/role", authMiddleware, authController.updateRole);
+router.delete("/delete-account", authMiddleware, authController.deleteAccount);
 
 export default router;

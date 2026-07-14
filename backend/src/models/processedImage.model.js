@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { PHOTO_SIZE_PRESETS } from "../utils/photoPresets.js";
+import { PHOTO_SIZE_PRESETS } from "../controllers/presets.controller.js";
 
 const processedImageSchema = new mongoose.Schema(
   {

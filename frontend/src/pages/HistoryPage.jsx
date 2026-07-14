@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { useHistory } from '../hooks/useHistory';
+import { useUploadSearch } from '../hooks/useUploadSearch';
 import HistoryCard from '../components/HistoryCard';
 import './HistoryPage.css';
 
@@ -12,22 +13,17 @@ function HistoryPage({ darkMode }) {
   const t = translations[language];
   const navigate = useNavigate();
   const { history, deleteSession, clearHistory } = useHistory();
-  const [search, setSearch] = useState('');
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const filtered = useMemo(() => {
-    if (!search.trim()) return history;
-    const q = search.toLowerCase();
-    return history.filter((s) => {
-      const dateStr = s.savedAt ? new Date(s.savedAt).toLocaleDateString() : '';
-      return (
-        (s.photoSizePreset || '').toLowerCase().includes(q) ||
-        (s.background || '').toLowerCase().includes(q) ||
-        (s.status || '').toLowerCase().includes(q) ||
-        dateStr.toLowerCase().includes(q)
-      );
-    });
-  }, [history, search]);
+  const {
+    searchTerm: search,
+    setSearchTerm: setSearch,
+    selectedPreset,
+    setSelectedPreset,
+    dateOrder,
+    setDateOrder,
+    filteredItems: filtered
+  } = useUploadSearch(history);
 
   const handleCardClick = (session) => {
     if (session.hasOutput && session.processedUrl) {

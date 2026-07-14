@@ -124,3 +124,11 @@ html.light { color-scheme: light; }
   animation: fadeIn 0.4s ease-out;
 }
 
+/* Image Adjustments Style */
+.image-adjustments-card {
+  border-color: var(--color-border);
+  transition: all 0.3s ease;
+}
+.image-adjustments-card input[type='range'] {
+  accent-color: var(--color-primary);
+}

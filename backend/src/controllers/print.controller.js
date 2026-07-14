@@ -9,7 +9,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "../config/config.js";
-import { PHOTO_SIZE_DETAILS } from "../utils/photoPresets.js";
+import { PHOTO_SIZE_DETAILS } from "./presets.controller.js";
 
 const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);

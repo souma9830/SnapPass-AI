@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const passwordResetOtpSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     otp: {
@@ -13,8 +13,8 @@ const passwordResetOtpSchema = new mongoose.Schema(
     },
     state: {
       type: String,
-      enum: ["pending", "resolve", "reject"],
-      default: "pending",
+      enum: ['pending', 'resolve', 'reject'],
+      default: 'pending',
     },
     attempts: {
       type: Number,
@@ -23,8 +23,6 @@ const passwordResetOtpSchema = new mongoose.Schema(
     expiresAt: {
       type: Date,
       required: true,
-      // Automatically delete the document after it expires
-      index: { expires: "5m" }, // Expires in 5 minutes after expiresAt
     },
   },
   {
@@ -32,8 +30,12 @@ const passwordResetOtpSchema = new mongoose.Schema(
   }
 );
 
+passwordResetOtpSchema.index({ userId: 1, state: 1 });
+passwordResetOtpSchema.index({ otp: 1 });
+passwordResetOtpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
 const PasswordResetOtp = mongoose.model(
-  "PasswordResetOtp",
+  'PasswordResetOtp',
   passwordResetOtpSchema
 );
 

@@ -37,8 +37,8 @@ const sessionSchema = new mongoose.Schema(
   }
 );
 
-// Auto-delete expired sessions using MongoDB TTL index
 sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+sessionSchema.index({ userId: 1, isValid: 1 });
 
 const Session = mongoose.model("Session", sessionSchema);
 

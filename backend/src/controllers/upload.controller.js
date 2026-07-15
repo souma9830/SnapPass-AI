@@ -1,5 +1,4 @@
-import path from 'path';
-import fs from 'fs';
+import { successResponse, errorResponse } from '../utils/httpResponse.js';
 
 /**
  * POST /api/upload
@@ -17,30 +16,20 @@ import fs from 'fs';
 export const uploadPhoto = async (req, res, next) => {
   try {
     if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message:
-          'No image file received. Please attach a JPEG, PNG, or WebP photo.',
-      });
+      return errorResponse(res, 'No image file received. Please attach a JPEG, PNG, or WebP photo.', 400);
     }
 
     const { filename, size, mimetype } = req.file;
     const meta = req.imageMeta || {};
 
-    return res.status(200).json({
-      success: true,
-      message: 'Photo uploaded and validated successfully.',
-      data: {
-        filename,
-        fileSize: size,
-        mimeType: mimetype,
-        // Pixel dimensions are populated by validateImageChain middleware
-        width: meta.width ?? null,
-        height: meta.height ?? null,
-        // Clients can pass this filename directly to POST /api/process
-        processUrl: `/api/process`,
-      },
-    });
+    return successResponse(res, {
+      filename,
+      fileSize: size,
+      mimeType: mimetype,
+      width: meta.width ?? null,
+      height: meta.height ?? null,
+      processUrl: `/api/process`,
+    }, 'Photo uploaded and validated successfully.');
   } catch (err) {
     next(err);
   }
@@ -55,11 +44,7 @@ export const batchUpload = async (req, res, next) => {
       size: f.size,
       uploaded: true,
     }));
-    res.status(200).json({
-      success: true,
-      message: `${results.length} file(s) uploaded successfully`,
-      files: results,
-    });
+    successResponse(res, { files: results }, `${results.length} file(s) uploaded successfully`);
   } catch (err) {
     next(err);
   }

@@ -120,7 +120,7 @@ html.light { color-scheme: light; }
   }
 }
 /* ── Navbar ─────────────────────────────────────── */
-@import './NavbarAlignmentDetector.css';
+
 
 .navbar {
   position: fixed;
@@ -748,6 +748,7 @@ html.light { color-scheme: light; }
 .navbar__language-menu-light button:hover {
   background: #eff6ff;
   color: #2563eb;
+}
 
 .activity-log-viewer {
   animation: fadeIn 0.4s ease-out;

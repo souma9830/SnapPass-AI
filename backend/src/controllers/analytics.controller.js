@@ -2,8 +2,9 @@ import Upload from '../models/upload.model.js';
 import User from '../models/user.model.js';
 import PrintSheet from '../models/printSheet.model.js';
 import ProcessedImage from '../models/processedImage.model.js';
+import { successResponse, errorResponse } from '../utils/httpResponse.js';
 
-export async function getDashboardStats(req, res) {
+export async function getDashboardStats(req, res, next) {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -24,30 +25,26 @@ export async function getDashboardStats(req, res) {
       Upload.find().sort({ createdAt: -1 }).limit(10).lean(),
     ]);
 
-    return res.json({
-      success: true,
-      data: {
-        stats: {
-          totalUploads,
-          todayUploads,
-          totalUsers,
-          totalSheets,
-          totalProcessed,
-        },
-        recentUploads: recentUploads.map((u) => ({
-          id: u._id,
-          filename: u.filename,
-          date: u.createdAt,
-        })),
+    return successResponse(res, {
+      stats: {
+        totalUploads,
+        todayUploads,
+        totalUsers,
+        totalSheets,
+        totalProcessed,
       },
-    });
+      recentUploads: recentUploads.map((u) => ({
+        id: u._id,
+        filename: u.filename,
+        date: u.createdAt,
+      })),
+    }, 'Dashboard stats fetched successfully');
   } catch (err) {
-    console.error('Analytics error:', err);
-    return res.status(500).json({ success: false, message: 'Failed to fetch analytics' });
+    next(err);
   }
 }
 
-export async function getUploadsByDay(req, res) {
+export async function getUploadsByDay(req, res, next) {
   try {
     const { days = 7 } = req.query;
     const since = new Date();
@@ -65,9 +62,8 @@ export async function getUploadsByDay(req, res) {
     ];
 
     const data = await Upload.aggregate(pipeline);
-    return res.json({ success: true, data });
+    return successResponse(res, data, 'Uploads by day fetched successfully');
   } catch (err) {
-    console.error('Uploads by day error:', err);
-    return res.status(500).json({ success: false, message: 'Failed to fetch trend' });
+    next(err);
   }
 }

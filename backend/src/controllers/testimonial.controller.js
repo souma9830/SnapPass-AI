@@ -1,13 +1,6 @@
 import catchAsync from "../utils/catchAsync.js";
 import * as testimonialService from "../service/testimonial.service.js";
-
-const sendSuccess = (res, statusCode, message, data) => {
-  res.status(statusCode).json({
-    success: true,
-    message,
-    data,
-  });
-};
+import { successResponse } from "../utils/httpResponse.js";
 
 export const getTestimonials = catchAsync(async (req, res) => {
   const clientFingerprint =
@@ -17,7 +10,7 @@ export const getTestimonials = catchAsync(async (req, res) => {
 
   const data = await testimonialService.getApprovedTestimonials(clientFingerprint, { page, limit });
 
-  sendSuccess(res, 200, "Testimonials fetched successfully", data);
+  successResponse(res, data, "Testimonials fetched successfully");
 });
 
 export const submitTestimonial = catchAsync(async (req, res) => {
@@ -27,7 +20,7 @@ export const submitTestimonial = catchAsync(async (req, res) => {
     submitterIp
   );
 
-  sendSuccess(res, 201, "Review submitted successfully", { testimonial });
+  successResponse(res, { testimonial }, "Review submitted successfully", 201);
 });
 
 export const updateTestimonial = catchAsync(async (req, res) => {
@@ -37,5 +30,5 @@ export const updateTestimonial = catchAsync(async (req, res) => {
     submitterIp
   );
 
-  sendSuccess(res, 200, "Review updated successfully", { testimonial });
+  successResponse(res, { testimonial }, "Review updated successfully");
 });

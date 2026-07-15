@@ -29,11 +29,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     logApiError(error);
-    const message =
-      error.response?.data?.message ||
-      error.message ||
-      'An unexpected error occurred.';
-    return Promise.reject(new Error(message));
+    // Pass the original error through so the caller can read error.response.status etc.
+    return Promise.reject(error);
   }
 );
 

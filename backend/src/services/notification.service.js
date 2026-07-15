@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { config } from '../config/config.js';
 import { logger } from '../utils/logger.js';
 
-const resend = new Resend(config.RESEND_API_KEY);
+const resend = new Resend(config.RESEND_API_KEY || 're_dummy_key_123');
 
 export class NotificationService {
   /**

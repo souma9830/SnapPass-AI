@@ -89,8 +89,8 @@ export const generateSheet = async (req, res, next) => {
       { responseType: "arraybuffer" }
     );
 
-    res.set("Content-Type", "image/png");
-    res.set("Content-Disposition", `attachment; filename="snappass_sheet_${Date.now()}.png"`);
+    res.set("Content-Type", "image/jpeg");
+    res.set("Content-Disposition", `attachment; filename="snappass_sheet_${Date.now()}.jpg"`);
     res.send(Buffer.from(aiResponse.data));
   } catch (error) {
     if (error.code === "ECONNREFUSED") {

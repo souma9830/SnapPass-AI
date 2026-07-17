@@ -16,7 +16,6 @@ import { cachePhotoOffline } from '../services/indexedDb';
 import api from '../services/api';
 import { autoEnhanceImage } from '../utils/imageEnhancer';
 import { AttireManualAdjuster } from '../components/AttireManualAdjuster';
-import { ImageAdjustments } from '../components/ImageAdjustments';
 import './EditorPage.css';
 
 const SIZE_PRESETS = [

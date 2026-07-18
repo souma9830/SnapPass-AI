@@ -145,6 +145,7 @@ def generate_sheet():
 
     data = request.get_json()
     raw_photo_path = data.get("photo_path")
+    raw_photo_paths = data.get("photo_paths")
     preset_id = re.sub(
         r"[^a-zA-Z0-9_\-]",
         "",
@@ -160,11 +161,13 @@ def generate_sheet():
     if page_size not in allowed_sizes:
         return jsonify({"error": f"Invalid page_size. Choose from: {allowed_sizes}"}), 400
 
-    if not raw_photo_path:
-        return jsonify({"error": "photo_path is required"}), 400
+    input_paths = raw_photo_paths or ([raw_photo_path] if raw_photo_path else [])
+
+    if not input_paths:
+        return jsonify({"error": "photo_path or photo_paths is required"}), 400
 
     try:
-        photo_path = _safe_photo_path(raw_photo_path)
+        photo_paths = [_safe_photo_path(p) for p in input_paths]
     except ValueError:
         return jsonify({"error": "Invalid photo_path."}), 400
 
@@ -174,7 +177,7 @@ def generate_sheet():
         output_dir, f"sheet_{preset_id}_{page_size}_{uuid.uuid4().hex}.jpg")
 
     saved = generate_sheet(
-        photo_path=photo_path,
+        photo_paths=photo_paths,
         preset_id=preset_id,
         quantity=quantity,
         page_size=page_size,

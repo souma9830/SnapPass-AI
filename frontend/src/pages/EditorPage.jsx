@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
-import { saveSession } from '../utils/sessionManager';
+import { saveSession, getSession } from '../utils/sessionManager';
 import SizeSelector from '../components/SizeSelector';
 import BackgroundSelector from '../components/BackgroundSelector';
 import AttireSelector from '../components/AttireSelector';
@@ -147,16 +147,28 @@ function EditorPage({ darkMode, toggleTheme }) {
         sizePreset,
         attire,
       }).catch(() => {});
+      const currentSession = getSession() || {};
+      const processedPhotos = currentSession.processedPhotos || [];
+      const newPhoto = { processedUrl: resultUrl, filename, background, sizePreset, attire };
+
       saveSession({
+        ...currentSession,
         step: 'editor',
         processedUrl: resultUrl,
         filename,
         background,
         sizePreset,
         attire,
+        processedPhotos: [...processedPhotos, newPhoto]
       });
       navigate('/print-preview', {
-        state: { processedUrl: resultUrl, filename, background, sizePreset },
+        state: { 
+          processedUrl: resultUrl, 
+          filename, 
+          background, 
+          sizePreset,
+          processedPhotos: [...processedPhotos, newPhoto]
+        },
       });
     } catch (err) {
       // error handled by hook

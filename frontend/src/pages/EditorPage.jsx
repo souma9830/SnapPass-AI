@@ -411,6 +411,13 @@ function EditorPage({ darkMode, toggleTheme }) {
                 </span>
               </div>
             </div>
+
+            <div style={{ marginTop: '1rem' }}>
+              <BackgroundSelector
+                selected={background}
+                onChange={setBackground}
+              />
+            </div>
           </motion.div>
 
           <motion.div
@@ -424,13 +431,6 @@ function EditorPage({ darkMode, toggleTheme }) {
               presets={SIZE_PRESETS}
               selected={sizePreset}
               onChange={setSizePreset}
-            />
-
-            <hr className="divider" />
-
-            <BackgroundSelector
-              selected={background}
-              onChange={setBackground}
             />
 
             <hr className="divider" />

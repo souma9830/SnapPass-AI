@@ -43,6 +43,18 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const processedPhotos = state?.processedPhotos || savedSession?.processedPhotos || [];
+  if (processedPhotos.length === 0) {
+    if (state?.processedUrl || savedSession?.processedUrl) {
+      processedPhotos.push({
+        processedUrl: state?.processedUrl || savedSession?.processedUrl,
+        filename: state?.filename || savedSession?.filename,
+        background: state?.background || savedSession?.background,
+        sizePreset: state?.sizePreset || savedSession?.sizePreset
+      });
+    }
+  }
+
   useEffect(() => {
     const sessionData = {
       step: 'print-preview',
@@ -50,21 +62,22 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
       filename: state?.filename || savedSession?.filename,
       background: state?.background || savedSession?.background,
       sizePreset: state?.sizePreset || savedSession?.sizePreset,
+      processedPhotos,
       quantity,
     };
 
-    if (sessionData.processedUrl) {
+    if (sessionData.processedUrl || sessionData.processedPhotos.length > 0) {
       saveSession(sessionData);
     }
-  }, [state, quantity]);
+  }, [state, quantity, processedPhotos]);
 
   const handleGenerateSheet = useCallback(async () => {
     setIsGenerating(true);
     try {
       const blob = await generateSheet({
-        filename: state?.filename || savedSession?.filename,
+        filenames: processedPhotos.map(p => p.filename),
         quantity,
-        photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
+        photoSizePreset: processedPhotos[0]?.sizePreset || state?.sizePreset || savedSession?.sizePreset,
         layout,
       });
       const url = URL.createObjectURL(blob);
@@ -99,7 +112,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
 
   const slots = Array.from({ length: quantity });
 
-  if (!(state?.processedUrl || savedSession?.processedUrl)) {
+  if (processedPhotos.length === 0) {
     return (
       <EmptyState
         title={t.noProcessedPhoto}
@@ -160,15 +173,18 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               className="sheet-grid"
               style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}
             >
-              {slots.map((_, i) => (
-                <div key={i} className="sheet-slot">
-                  <img
-                    src={state?.processedUrl || savedSession?.processedUrl}
-                    alt={`Sheet slot ${i + 1}`}
-                    className="sheet-slot__img"
-                  />
-                </div>
-              ))}
+              {slots.map((_, i) => {
+                const photoToRender = processedPhotos[i % processedPhotos.length];
+                return (
+                  <div key={i} className="sheet-slot">
+                    <img
+                      src={photoToRender?.processedUrl}
+                      alt={`Sheet slot ${i + 1}`}
+                      className="sheet-slot__img"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </motion.section>
 
@@ -263,6 +279,28 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
             </div>
 
             <hr className="divider" />
+
+            <Link
+              to="/"
+              className={`btn btn-secondary ${darkMode ? 'btn-secondary-dark' : ''}`}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                background: 'rgba(59,130,246,0.1)',
+                color: '#3b82f6',
+                border: '1px dashed #3b82f6',
+                textDecoration: 'none'
+              }}
+            >
+              + Add another person
+            </Link>
 
             <DownloadPackagePanel
               processedUrl={state?.processedUrl || savedSession?.processedUrl}

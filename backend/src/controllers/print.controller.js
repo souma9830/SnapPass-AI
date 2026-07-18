@@ -21,53 +21,60 @@ const localDirname = path.dirname(localFilename);
  */
 export const generateSheet = async (req, res, next) => {
   try {
-    const { filename, quantity = 6, photoSizePreset = "35x45", layout = "a4" } = req.body;
+    const { filename, filenames, quantity = 6, photoSizePreset = "35x45", layout = "a4" } = req.body;
 
-    if (!filename) {
-      return res.status(400).json({ success: false, message: "filename is required." });
+    const inputFilenames = filenames || (filename ? [filename] : []);
+    
+    if (inputFilenames.length === 0) {
+      return res.status(400).json({ success: false, message: "filename or filenames array is required." });
     }
 
-    // 1. Filename validation (alphanumeric, dots, hyphens, and underscores only)
-    const filenameRegex = /^[a-zA-Z0-9_\-\.]+$/;
-    if (!filenameRegex.test(filename)) {
-      return res.status(400).json({ success: false, message: "Invalid filename format." });
-    }
-
-    // 2. Hidden file blocking
-    if (filename.startsWith(".") || path.basename(filename).startsWith(".")) {
-      return res.status(403).json({ success: false, message: "Access denied: Hidden files are blocked." });
-    }
-
-    // 3. Allowed extension whitelist
-    const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
-    const ext = path.extname(filename).toLowerCase();
-    if (!allowedExtensions.includes(ext)) {
-      return res.status(400).json({ success: false, message: "Access denied: Unsupported file extension." });
-    }
-
-    // 4. Strict directory containment (prevent path traversal completely)
+    const filePaths = [];
     const uploadsDir = path.resolve(localDirname, "..", "..", "uploads");
-    const filePath = path.resolve(uploadsDir, filename);
 
-    const relative = path.relative(uploadsDir, filePath);
-    if (relative.startsWith("..") || path.isAbsolute(relative)) {
-      return res.status(403).json({ success: false, message: "Access denied: Path traversal detected." });
-    }
+    for (const f of inputFilenames) {
+      // 1. Filename validation (alphanumeric, dots, hyphens, and underscores only)
+      const filenameRegex = /^[a-zA-Z0-9_\-\.]+$/;
+      if (!filenameRegex.test(f)) {
+        return res.status(400).json({ success: false, message: `Invalid filename format: ${f}` });
+      }
 
-    // 5. Async existence, symlink protection & regular file enforcement (non-blocking TOCTOU prevention)
-    try {
-      const stats = await fs.promises.lstat(filePath);
-      if (stats.isSymbolicLink()) {
-        return res.status(403).json({ success: false, message: "Access denied: Symbolic links are blocked." });
+      // 2. Hidden file blocking
+      if (f.startsWith(".") || path.basename(f).startsWith(".")) {
+        return res.status(403).json({ success: false, message: `Access denied: Hidden files are blocked: ${f}` });
       }
-      if (!stats.isFile()) {
-        return res.status(400).json({ success: false, message: "Access denied: Target is not a file." });
+
+      // 3. Allowed extension whitelist
+      const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+      const ext = path.extname(f).toLowerCase();
+      if (!allowedExtensions.includes(ext)) {
+        return res.status(400).json({ success: false, message: `Access denied: Unsupported file extension: ${f}` });
       }
-    } catch (err) {
-      if (err.code === "ENOENT") {
-        return res.status(404).json({ success: false, message: "File not found on server." });
+
+      // 4. Strict directory containment (prevent path traversal completely)
+      const filePath = path.resolve(uploadsDir, f);
+      const relative = path.relative(uploadsDir, filePath);
+      if (relative.startsWith("..") || path.isAbsolute(relative)) {
+        return res.status(403).json({ success: false, message: `Access denied: Path traversal detected: ${f}` });
       }
-      throw err;
+
+      // 5. Async existence, symlink protection & regular file enforcement (non-blocking TOCTOU prevention)
+      try {
+        const stats = await fs.promises.lstat(filePath);
+        if (stats.isSymbolicLink()) {
+          return res.status(403).json({ success: false, message: `Access denied: Symbolic links are blocked: ${f}` });
+        }
+        if (!stats.isFile()) {
+          return res.status(400).json({ success: false, message: `Access denied: Target is not a file: ${f}` });
+        }
+      } catch (err) {
+        if (err.code === "ENOENT") {
+          return res.status(404).json({ success: false, message: `File not found on server: ${f}` });
+        }
+        throw err;
+      }
+      
+      filePaths.push(filePath);
     }
 
     // 6. Quantity boundary check (1 to 50)
@@ -85,7 +92,7 @@ export const generateSheet = async (req, res, next) => {
     // 7. Call python AI microservice with correct parameter mappings
     const aiResponse = await axios.post(
       `${config.aiServiceUrl}/generate-sheet`,
-      { photo_path: filePath, quantity: parsedQuantity, preset_id: photoSizePreset, layout },
+      { photo_paths: filePaths, quantity: parsedQuantity, preset_id: photoSizePreset, layout },
       { responseType: "arraybuffer" }
     );
 

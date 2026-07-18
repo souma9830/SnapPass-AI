@@ -50,13 +50,14 @@ export const processPhoto = async ({
  * @returns {Promise<Blob>}
  */
 export const generateSheet = async ({
-  filename,
+  filenames,
   quantity,
   photoSizePreset,
+  layout
 }) => {
   const { data } = await api.post(
     '/print/generate-sheet',
-    { filename, quantity, photoSizePreset },
+    { filenames, quantity, photoSizePreset, layout },
     { responseType: 'blob' }
   );
   return data;

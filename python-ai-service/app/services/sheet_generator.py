@@ -33,7 +33,7 @@ def mm_to_px(mm: float) -> int:
 
 
 def generate_sheet(
-    photo_path: str,
+    photo_paths: list,
     preset_id: str = "35x45",
     quantity: int = 8,
     page_size: str = "a4",
@@ -58,7 +58,10 @@ def generate_sheet(
     photo_w = mm_to_px(preset["w"])
     photo_h = mm_to_px(preset["h"])
 
-    photo = _prepare_photo(photo_path, photo_w, photo_h)
+    if isinstance(photo_paths, str):
+        photo_paths = [photo_paths]
+    
+    photos = [_prepare_photo(p, photo_w, photo_h) for p in photo_paths]
     cols, rows = _compute_grid(photo_w, photo_h, page_w_px, page_h_px, margin_px, gutter_px)
 
     if cols == 0 or rows == 0:
@@ -79,6 +82,7 @@ def generate_sheet(
                 break
             x = origin_x + col * (photo_w + gutter_px)
             y = origin_y + row * (photo_h + gutter_px)
+            photo = photos[placed % len(photos)]
             canvas.paste(photo, (x, y))
             if draw:
                 _draw_crop_marks(draw, x, y, photo_w, photo_h, tick_len_px=gutter_px // 2, color=(180, 180, 180))

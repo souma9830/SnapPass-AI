@@ -16,6 +16,7 @@ import { cachePhotoOffline } from '../services/indexedDb';
 import api from '../services/api';
 import { autoEnhanceImage } from '../utils/imageEnhancer';
 import { AttireManualAdjuster } from '../components/AttireManualAdjuster';
+import { uploadPhoto } from '../services/photoService';
 import './EditorPage.css';
 
 const SIZE_PRESETS = [
@@ -53,6 +54,9 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [attireScale, setAttireScale] = useState(1.0);
   const [attireX, setAttireX] = useState(0);
   const [attireY, setAttireY] = useState(0);
+  const [isAutoEnhanced, setIsAutoEnhanced] = useState(false);
+  const [enhancedDataUrl, setEnhancedDataUrl] = useState(null);
+  const [isEnhancing, setIsEnhancing] = useState(false);
 
   const apiBaseUrl =
     import.meta.env.VITE_API_URL ??
@@ -117,15 +121,29 @@ function EditorPage({ darkMode, toggleTheme }) {
     [filename]
   );
 
-  const handleAutoEnhance = useCallback(() => {
-    const enhanced = autoEnhanceImage();
-    if (enhanced.success) {
-      setComplianceData(prev => ({
-        ...prev,
-        enhanced: true
-      }));
+  const handleToggleEnhance = async () => {
+    if (!isAutoEnhanced) {
+      if (!enhancedDataUrl) {
+        setIsEnhancing(true);
+        try {
+          const targetUrl = baseImageUrl ? `${baseImageUrl}?t=${cacheBuster}` : state?.localUrl;
+          if (targetUrl) {
+            const enhanced = await autoEnhanceImage(targetUrl);
+            setEnhancedDataUrl(enhanced);
+          }
+        } catch (e) {
+          console.error('Enhancement failed', e);
+        } finally {
+          setIsEnhancing(false);
+        }
+      }
+      setIsAutoEnhanced(true);
+    } else {
+      setIsAutoEnhanced(false);
     }
-  }, []);
+  };
+
+  const displayImageUrl = isAutoEnhanced && enhancedDataUrl ? enhancedDataUrl : currentImageUrl;
 
   useEffect(() => {
     if (state?.filename) setFilename(state.filename);
@@ -134,15 +152,25 @@ function EditorPage({ darkMode, toggleTheme }) {
   const handleProcess = useCallback(async () => {
     if (!filename) return;
     try {
+      let processFilename = filename;
+      
+      if (isAutoEnhanced && enhancedDataUrl) {
+        const res = await fetch(enhancedDataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], 'enhanced.jpg', { type: 'image/jpeg' });
+        const uploadResult = await uploadPhoto(file);
+        processFilename = uploadResult.filename;
+      }
+
       const resultUrl = await processImage({
-        filename,
+        filename: processFilename,
         backgroundColour: background,
         photoSizePreset: sizePreset,
         attire,
       });
       await cachePhotoOffline({
         processedUrl: resultUrl,
-        filename,
+        filename: processFilename,
         background,
         sizePreset,
         attire,
@@ -150,18 +178,18 @@ function EditorPage({ darkMode, toggleTheme }) {
       saveSession({
         step: 'editor',
         processedUrl: resultUrl,
-        filename,
+        filename: processFilename,
         background,
         sizePreset,
         attire,
       });
       navigate('/print-preview', {
-        state: { processedUrl: resultUrl, filename, background, sizePreset },
+        state: { processedUrl: resultUrl, filename: processFilename, background, sizePreset },
       });
     } catch (err) {
       // error handled by hook
     }
-  }, [filename, background, sizePreset, attire, processImage, navigate]);
+  }, [filename, background, sizePreset, attire, processImage, navigate, isAutoEnhanced, enhancedDataUrl]);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -247,7 +275,7 @@ function EditorPage({ darkMode, toggleTheme }) {
                     }}
                   >
                     <img
-                      src={currentImageUrl}
+                      src={displayImageUrl}
                       alt="Preview"
                       style={{
                         display: 'block',
@@ -473,15 +501,21 @@ function EditorPage({ darkMode, toggleTheme }) {
               </div>
             )}
 
-            <button
-              type="button"
-              className="btn btn-secondary auto-enhance-btn"
-              onClick={handleAutoEnhance}
-              disabled={!filename}
-              style={{ width: '100%', marginBottom: '0.5rem', background: 'rgba(59,130,246,0.1)', color: '#3b82f6', border: '1px dashed #3b82f6', padding: '12px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
-            >
-              🪄 Auto-Enhance Contrast & Colors
-            </button>
+            <div className="toggle-switch-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', padding: '12px', background: 'rgba(59,130,246,0.1)', borderRadius: '8px', border: '1px dashed #3b82f6' }}>
+              <span style={{ fontWeight: '600', color: '#3b82f6' }}>🪄 Auto-Enhance Lighting</span>
+              <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px' }}>
+                <input
+                  type="checkbox"
+                  checked={isAutoEnhanced}
+                  onChange={handleToggleEnhance}
+                  disabled={!filename || isEnhancing}
+                  style={{ opacity: 0, width: 0, height: 0 }}
+                />
+                <span className="slider round" style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: isAutoEnhanced ? '#3b82f6' : '#ccc', transition: '.4s', borderRadius: '24px' }}>
+                  <span style={{ position: 'absolute', content: '""', height: '18px', width: '18px', left: isAutoEnhanced ? '23px' : '3px', bottom: '3px', backgroundColor: 'white', transition: '.4s', borderRadius: '50%' }} />
+                </span>
+              </label>
+            </div>
 
             <button
               className={`editor-page__process-btn ${darkMode ? 'editor-page__process-btn-dark' : ''}`}

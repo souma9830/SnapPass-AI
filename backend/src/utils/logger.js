@@ -1,3 +1,6 @@
+/**
+ * winston.js — Structured Logging & Traceability Engine
+ */
 import winston from 'winston';
 
 const logger = winston.createLogger({

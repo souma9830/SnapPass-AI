@@ -16,6 +16,7 @@ Keep this list in sync with frontend/src/data/backgroundColours.js.
 from rembg import remove
 from PIL import Image
 import io
+import hashlib
 from app.services.attire_swap import apply_attire_swap
 
 

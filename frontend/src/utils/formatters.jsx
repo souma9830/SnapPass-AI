@@ -8,18 +8,26 @@
  * @returns {string}
  */
 export const formatFileSize = (bytes) => {
-  if (bytes < 1024)       return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  if (bytes === null || bytes === undefined) return '0 B';
+  const num = Number(bytes);
+  if (isNaN(num) || num <= 0) return '0 B';
+
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let val = num;
+  let unitIndex = 0;
+  while (val >= 1024 && unitIndex < units.length - 1) {
+    val /= 1024;
+    unitIndex++;
+  }
+  const formatted = val % 1 === 0 ? val.toString() : val.toFixed(1);
+  return `${formatted} ${units[unitIndex]}`;
 };
 
-/**
- * Format a Date object or ISO string into a readable date.
- * @param {Date|string} date
- * @returns {string}
- */
 export const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-IN', {
+  if (!date) return 'Invalid date';
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return 'Invalid date';
+  return d.toLocaleDateString('en-IN', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',

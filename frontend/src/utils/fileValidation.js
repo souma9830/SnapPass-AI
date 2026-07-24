@@ -1,3 +1,5 @@
+import { readFileBytes, detectImageFormat } from './magicBytes';
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -16,9 +18,10 @@ export function validateFileType(file) {
 
 export function validateFileSize(file) {
   if (!file) return 'No file provided';
+  if (file.size === 0) return 'File size is 0 bytes. Please upload a valid image';
   if (file.size > MAX_FILE_SIZE_BYTES) {
     const mb = (file.size / (1024 * 1024)).toFixed(1);
-    return `File is ${mb}MB. Maximum allowed is ${MAX_FILE_SIZE_MB}MB`;
+    return `File size is ${mb}MB. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB`;
   }
   return '';
 }
@@ -80,10 +83,8 @@ export function validateImageFile(file) {
   const sizeErr = validateFileSize(file);
   if (sizeErr) return { valid: false, error: sizeErr };
 
-  return { valid: true };
+  return { valid: true, error: '' };
 }
-
-import { readFileBytes, detectImageFormat } from './magicBytes';
 
 export async function validateImageMagicBytes(file) {
   if (!file || file.size === 0) return false;

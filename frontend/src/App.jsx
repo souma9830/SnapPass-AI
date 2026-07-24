@@ -30,16 +30,20 @@ function AppContent() {
   );
 }
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 function App() {
   // Mount primary application providers and routing controls
   return (
-    <ToastProvider>
-      <ThemeProvider>
-        <ThemeCustomizerProvider>
-          <AppContent />
-        </ThemeCustomizerProvider>
-      </ThemeProvider>
-    </ToastProvider>
+    <ErrorBoundary>
+      <ToastProvider>
+        <ThemeProvider>
+          <ThemeCustomizerProvider>
+            <AppContent />
+          </ThemeCustomizerProvider>
+        </ThemeProvider>
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
 

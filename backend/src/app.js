@@ -40,6 +40,14 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use('/api', apiRoutes);
 app.use(healthRoutes);
 
+// 404 Handler for unmatched routes
+app.use((req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: `Route not found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
 app.use(errorMiddleware);
 
 export default app;

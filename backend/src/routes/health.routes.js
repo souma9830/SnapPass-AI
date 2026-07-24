@@ -6,11 +6,18 @@ import { isRedisAvailable } from '../config/redis.js';
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'SnapPass AI Backend API',
+  });
+});
+
 router.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    service: 'snappass-backend',
+    service: 'SnapPass AI Backend',
   });
 });
 

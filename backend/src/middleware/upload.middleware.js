@@ -1,7 +1,6 @@
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { fileTypeFromBuffer } from 'file-type';
 import fs from 'fs';
 import sharp from 'sharp';
 
@@ -52,6 +51,7 @@ export const uploadMiddleware = multer({
 
 const validateMagicBytes = async (filePath) => {
   const buffer = fs.readFileSync(filePath);
+  const { fileTypeFromBuffer } = await import('file-type');
   const type = await fileTypeFromBuffer(buffer);
   if (!type || !ALLOWED_MIME.has(type.mime)) {
     return {

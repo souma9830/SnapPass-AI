@@ -1,5 +1,3 @@
-import * as archiverModule from 'archiver';
-const archiver = archiverModule.default || archiverModule;
 import path from 'path';
 import fs from 'fs';
 
@@ -18,6 +16,8 @@ export async function exportBatch(req, res, next) {
     res.set('Content-Type', 'application/zip');
     res.set('Content-Disposition', `attachment; filename="snappass-batch-${Date.now()}.zip"`);
 
+    const archiverModule = await import('archiver');
+    const archiver = archiverModule.default || archiverModule;
     const archive = archiver('zip', { zlib: { level: 6 } });
     archive.on('error', (err) => { throw err; });
     archive.pipe(res);

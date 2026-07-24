@@ -3,6 +3,8 @@ import numpy as np
 from dataclasses import dataclass
 from typing import Optional, Tuple, Dict, Any
 from PIL import Image
+import io
+from app.services.preset_compliance_engine import PresetComplianceEngine
 from app.services.compliance_score import calculate_composite_score
 
 # --- Rules (approximate heuristics) ---

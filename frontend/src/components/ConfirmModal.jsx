@@ -1,5 +1,6 @@
 import React from 'react';
 import './ConfirmModal.css';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 function ConfirmModal({
   title = 'Confirm',
@@ -13,6 +14,7 @@ function ConfirmModal({
   variant = 'primary',
 }) {
   const isDanger = variant === 'danger';
+  const modalRef = useFocusTrap(true);
 
   return (
     <div
@@ -23,6 +25,7 @@ function ConfirmModal({
       aria-labelledby="confirm-title"
     >
       <div
+        ref={modalRef}
         className={`confirm-modal ${darkMode ? 'confirm-modal-dark' : ''}`}
         onClick={(e) => e.stopPropagation()}
       >

@@ -1,62 +1,46 @@
 import { useEffect, useRef } from 'react';
 
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'textarea:not([disabled])',
-  'select:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
-
-export default function useFocusTrap(active = false) {
-  const ref = useRef(null);
+export function useFocusTrap(active = true) {
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!active || !ref.current) return;
+    if (!active || !containerRef.current) return;
 
-    const container = ref.current;
-    const previouslyFocused = document.activeElement;
+    const container = containerRef.current;
+    const focusableElements = container.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
 
-    const focusableEls = container.querySelectorAll(FOCUSABLE_SELECTOR);
-    const firstFocusable = focusableEls[0];
-    const lastFocusable = focusableEls[focusableEls.length - 1];
+    if (focusableElements.length === 0) return;
 
-    if (firstFocusable) {
-      firstFocusable.focus();
-    }
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
 
-    function handleKeyDown(e) {
+    firstElement.focus();
+
+    const handleKeyDown = (e) => {
       if (e.key !== 'Tab') return;
 
-      const isShift = e.shiftKey;
-      const currentFocusable = Array.from(focusableEls);
-      const currentIndex = currentFocusable.indexOf(document.activeElement);
-
-      if (currentIndex === -1) {
-        e.preventDefault();
-        firstFocusable?.focus();
-        return;
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
       }
+    };
 
-      if (isShift && currentIndex === 0) {
-        e.preventDefault();
-        lastFocusable?.focus();
-      } else if (!isShift && currentIndex === focusableEls.length - 1) {
-        e.preventDefault();
-        firstFocusable?.focus();
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
-
+    container.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      if (previouslyFocused && previouslyFocused.focus) {
-        previouslyFocused.focus();
-      }
+      container.removeEventListener('keydown', handleKeyDown);
     };
   }, [active]);
 
-  return ref;
+  return containerRef;
 }
+
+export default useFocusTrap;

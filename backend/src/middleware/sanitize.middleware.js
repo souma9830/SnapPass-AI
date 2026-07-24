@@ -1,11 +1,9 @@
-import { stripHtml } from 'string-strip-html';
-
 const SENSITIVE_KEYS = new Set(['password', 'token', 'secret', 'apiKey']);
 
 const sanitizeValue = (value) => {
   if (typeof value === 'string') {
     let cleaned = value.trim();
-    cleaned = stripHtml(cleaned).result;
+    cleaned = cleaned.replace(/<[^>]*>?/gm, '');
     cleaned = cleaned.replace(/[<>"'&]/g, '');
     cleaned = cleaned.replace(/javascript:/gi, '');
     cleaned = cleaned.replace(/on\w+=/gi, '');

@@ -1,3 +1,5 @@
+import { readFileBytes, detectImageFormat } from './magicBytes';
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -82,8 +84,6 @@ export function validateImageFile(file) {
 
   return { valid: true };
 }
-
-import { readFileBytes, detectImageFormat } from './magicBytes';
 
 export async function validateImageMagicBytes(file) {
   if (!file || file.size === 0) return false;

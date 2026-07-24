@@ -9,6 +9,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { useToast } from '../context/ToastContext';
 import { correctImageOrientation } from '../utils/exifRotation';
+import { compressImagePipeline } from '../utils/imageCompressorPipeline';
 
 /**
  * UploadBox — drag-and-drop + click-to-browse photo uploader.
@@ -44,7 +45,9 @@ function UploadBox({ onFileSelect, queue, addToQueue }) {
     setIsValidating(true);
     try {
       // Auto-rotate the image if EXIF orientation is present
-      const processedFile = await correctImageOrientation(file);
+      const rotatedFile = await correctImageOrientation(file);
+      const { compressedFile } = await compressImagePipeline(rotatedFile);
+      const processedFile = compressedFile;
 
       const result = validateImageFile(processedFile);
       if (!result.valid) {

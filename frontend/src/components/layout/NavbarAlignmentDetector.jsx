@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 const NavbarAlignmentDetector = ({ navbarRef }) => {
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production' && navbarRef?.current) {
+    if (import.meta.env.DEV && navbarRef?.current) {
       const handleAlignmentCheck = () => {
         const rect = navbarRef.current.getBoundingClientRect();
         const viewportWidth = window.innerWidth;

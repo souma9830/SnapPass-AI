@@ -16,6 +16,8 @@ export default async function authMiddleware(req, res, next) {
             email: 'anonymous',
             ip: req.ip,
             status: 'FAILURE',
+            severity: 'WARNING',
+            userAgent: req.headers['user-agent'] || '',
             details: 'No token provided'
         }).catch(() => {});
         return next(new AuthError("No token provided"));

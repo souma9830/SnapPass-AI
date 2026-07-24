@@ -26,6 +26,11 @@
   text-align: center;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
   animation: errorFadeIn 0.35s ease-out;
+  transition: box-shadow 0.25s ease;
+}
+
+.error-boundary-card:hover {
+  box-shadow: 0 12px 30px -5px rgba(239, 68, 68, 0.2);
 }
 
 @keyframes errorFadeIn {

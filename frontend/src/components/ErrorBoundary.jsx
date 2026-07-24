@@ -67,7 +67,7 @@ class ErrorBoundary extends React.Component {
             </svg>
           </div>
 
-          <h2 className="error-title">Something went wrong</h2>
+          <h2 className="error-title" aria-live="assertive">Something went wrong</h2>
           <p className="error-message">
             An unexpected error occurred. You can try reloading the page or
             return to the previous screen.

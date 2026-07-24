@@ -489,7 +489,11 @@ function EditorPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <ImageAdjustments filters={filters} onChange={setFilters} />
+            <ImageAdjustments
+              filters={filters}
+              onChange={setFilters}
+              onReset={() => setFilters({ brightness: 100, contrast: 100, saturation: 100 })}
+            />
 
             <hr className="divider" />
 

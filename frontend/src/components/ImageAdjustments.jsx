@@ -1,6 +1,7 @@
 import React from 'react';
+import './ImageAdjustments.css';
 
-export const ImageAdjustments = ({ filters, onChange }) => {
+export const ImageAdjustments = ({ filters, onChange, onReset }) => {
   const handleSliderChange = (name, value) => {
     onChange({
       ...filters,
@@ -8,55 +9,84 @@ export const ImageAdjustments = ({ filters, onChange }) => {
     });
   };
 
+  const handleReset = () => {
+    if (onReset) {
+      onReset();
+    } else {
+      onChange({
+        brightness: 100,
+        contrast: 100,
+        saturation: 100,
+        hueRotate: 0,
+        sepia: 0,
+      });
+    }
+  };
+
   return (
-    <div className="image-adjustments-card" style={{ padding: '15px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.08)', background: 'rgba(255,255,255,0.02)', marginTop: '15px' }}>
-      <h4 style={{ margin: '0 0 12px 0', fontSize: '0.95rem' }}>Image Adjustments</h4>
-      
-      <div style={{ marginBottom: '10px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#888' }}>
-          <label>Brightness</label>
-          <span>{filters.brightness}%</span>
+    <div className="image-adjustments-card">
+      <div className="image-adjustments-header">
+        <h4 className="image-adjustments-title">Image Adjustments</h4>
+        <button
+          type="button"
+          className="image-adjustments-reset-btn"
+          onClick={handleReset}
+          title="Reset filters to default"
+        >
+          Reset
+        </button>
+      </div>
+
+      <div className="adjustment-field">
+        <div className="adjustment-label-row">
+          <label htmlFor="brightness-slider">Brightness</label>
+          <span>{filters?.brightness ?? 100}%</span>
         </div>
         <input
+          id="brightness-slider"
           type="range"
           min="50"
           max="150"
-          value={filters.brightness}
+          value={filters?.brightness ?? 100}
           onChange={(e) => handleSliderChange('brightness', e.target.value)}
-          style={{ width: '100%' }}
+          className="adjustment-slider"
         />
       </div>
 
-      <div style={{ marginBottom: '10px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#888' }}>
-          <label>Contrast</label>
-          <span>{filters.contrast}%</span>
+      <div className="adjustment-field">
+        <div className="adjustment-label-row">
+          <label htmlFor="contrast-slider">Contrast</label>
+          <span>{filters?.contrast ?? 100}%</span>
         </div>
         <input
+          id="contrast-slider"
           type="range"
           min="50"
           max="150"
-          value={filters.contrast}
+          value={filters?.contrast ?? 100}
           onChange={(e) => handleSliderChange('contrast', e.target.value)}
-          style={{ width: '100%' }}
+          className="adjustment-slider"
         />
       </div>
 
-      <div style={{ marginBottom: '10px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#888' }}>
-          <label>Saturation</label>
-          <span>{filters.saturation}%</span>
+      <div className="adjustment-field">
+        <div className="adjustment-label-row">
+          <label htmlFor="saturation-slider">Saturation</label>
+          <span>{filters?.saturation ?? 100}%</span>
         </div>
         <input
+          id="saturation-slider"
           type="range"
           min="50"
           max="150"
-          value={filters.saturation}
+          value={filters?.saturation ?? 100}
           onChange={(e) => handleSliderChange('saturation', e.target.value)}
-          style={{ width: '100%' }}
+          className="adjustment-slider"
         />
       </div>
     </div>
   );
 };
+
 export default ImageAdjustments;
+

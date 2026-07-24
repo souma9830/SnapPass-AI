@@ -1,0 +1,66 @@
+.image-adjustments-card {
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  margin-top: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.image-adjustments-card:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.image-adjustments-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.image-adjustments-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color, #e2e8f0);
+}
+
+.image-adjustments-reset-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.image-adjustments-reset-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.adjustment-field {
+  margin-bottom: 12px;
+}
+
+.adjustment-field:last-child {
+  margin-bottom: 0;
+}
+
+.adjustment-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.adjustment-slider {
+  width: 100%;
+  accent-color: #6366f1;
+  cursor: pointer;
+}

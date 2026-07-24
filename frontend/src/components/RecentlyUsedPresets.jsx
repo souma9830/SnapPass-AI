@@ -8,9 +8,12 @@ function RecentlyUsedPresets({
   title = 'Recently used',
 }) {
   const normalizedLimit = Number.isFinite(limit) ? limit : 5;
-  const safeRecentIds = Array.isArray(recentIds) ? recentIds.slice(0, normalizedLimit) : [];
+  const uniqueRecentIds = Array.from(new Set(Array.isArray(recentIds) ? recentIds : [])).slice(
+    0,
+    normalizedLimit
+  );
 
-  if (!safeRecentIds.length) return null;
+  if (!uniqueRecentIds.length) return null;
 
   const byId = new Map((presets || []).map((p) => [p.id, p]));
 
@@ -18,7 +21,7 @@ function RecentlyUsedPresets({
     <div className="recently-used-presets" aria-label="Recently used presets">
       <div className="recently-used-presets__title">{title}</div>
       <div className="recently-used-presets__list">
-        {safeRecentIds.map((id) => {
+        {uniqueRecentIds.map((id) => {
           const preset = byId.get(id);
           const label = preset?.label || id;
 

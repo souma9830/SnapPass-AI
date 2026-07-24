@@ -1,5 +1,6 @@
 import React from 'react';
 import './PhotoPreview.css';
+import VisualCropOverlay from './editor/VisualCropOverlay';
 
 function PhotoPreview({
   imageUrl,
@@ -36,6 +37,7 @@ function PhotoPreview({
           className={`photo-preview__frame ${isUploading ? 'photo-preview__frame--loading' : ''}`}
         >
           <img src={imageUrl} alt={filename} className="photo-preview__img" />
+          <VisualCropOverlay visible={showOverlay} />
           {showOverlay && (
             <div className="photo-preview__overlay-grid" aria-hidden="true">
               <div className="photo-preview__corner photo-preview__corner--tl" />

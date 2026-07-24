@@ -101,3 +101,9 @@ export async function validateImageDimensions(file) {
   if (dimErr) return { valid: false, error: dimErr };
   return { valid: true };
 }
+
+export function validateCompressionRatio(originalBytes, newBytes) {
+  if (!originalBytes || !newBytes) return { valid: true, ratio: 1.0 };
+  const ratio = newBytes / originalBytes;
+  return { valid: ratio >= 0.05, ratio: parseFloat(ratio.toFixed(2)) };
+}

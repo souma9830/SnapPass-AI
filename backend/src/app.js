@@ -10,6 +10,7 @@ import { loggerMiddleware } from './middleware/logger.middleware.js';
 import { auditMiddleware } from './middleware/audit.middleware.js';
 import { checkTokenBlacklist } from './middleware/blacklist.middleware.js';
 import { timingMiddleware } from './middleware/timing.middleware.js';
+import { telemetryContextMiddleware } from './middleware/telemetryContext.middleware.js';
 import { apiRateLimiter } from './middleware/rateLimiter.middleware.js';
 import apiRoutes, { healthRoutes } from './routes/index.js';
 
@@ -33,6 +34,7 @@ app.use(loggerMiddleware);
 // Mount database session audit logger middleware
 app.use(auditMiddleware);
 app.use(timingMiddleware);
+app.use(telemetryContextMiddleware);
 
 // Serve uploaded files statically for frontend canvas access
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));

@@ -19,6 +19,7 @@
 
 import multer from 'multer';
 import logger from '../utils/logger.js';
+import { TelemetryLogger } from '../utils/telemetryLogger.js';
 import { config } from '../config/config.js';
 
 const isProduction = () => config.NODE_ENV === 'production';

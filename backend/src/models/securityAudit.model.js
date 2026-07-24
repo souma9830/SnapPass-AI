@@ -7,6 +7,8 @@ const securityAuditSchema = new mongoose.Schema(
     email: { type: String, required: true },
     ip: { type: String, default: '' },
     status: { type: String, enum: ['SUCCESS', 'FAILURE'], default: 'SUCCESS' },
+    severity: { type: String, enum: ['INFO', 'WARNING', 'CRITICAL'], default: 'INFO' },
+    userAgent: { type: String, default: '' },
     details: { type: String, default: '' },
   },
   {

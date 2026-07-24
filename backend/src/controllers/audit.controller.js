@@ -88,3 +88,19 @@ export const getAuditSummary = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSecurityAuditLogs = async (req, res, next) => {
+  try {
+    const { action, status, severity } = req.query;
+    const filter = {};
+    if (action) filter.action = action;
+    if (status) filter.status = status;
+    if (severity) filter.severity = severity;
+
+    const logs = await SecurityAudit.find(filter).sort({ createdAt: -1 }).limit(100).lean();
+    res.json({ success: true, count: logs.length, data: logs });
+  } catch (error) {
+    next(error);
+  }
+};
+

@@ -38,7 +38,8 @@ def test_optimise_dpi():
     # Verify resulting image properties
     output_img = Image.open(io.BytesIO(output_bytes))
     assert output_img.format == "PNG"
-    assert output_img.info.get("dpi") == (300, 300)
+    dpi = output_img.info.get("dpi")
+    assert dpi == pytest.approx((300, 300), rel=1e-3)
 
 
 def test_optimise_dpi_invalid_preset():

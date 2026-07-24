@@ -22,3 +22,13 @@ def test_inspect_compliance_no_face(tmp_path):
     assert report["passed"] is False
     assert report["hard_fail"] is True
     assert any(item["id"] == "face" for item in report["items"])
+
+def test_inspect_compliance_items_structure(tmp_path):
+    image = np.ones((400, 300, 3), dtype=np.uint8) * 200
+    test_file = str(tmp_path / "blank_photo.jpg")
+    cv2.imwrite(test_file, image)
+    
+    report = inspect_compliance(test_file, "35x45")
+    assert "items" in report
+    assert "overall_passed" in report
+

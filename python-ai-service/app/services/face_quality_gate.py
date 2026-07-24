@@ -14,6 +14,7 @@ class FaceQualityReport:
     passed: bool
     face_count: int = 0
     blur_score: float = 0.0
+    quality_score: float = 0.0
     face_region: Optional[Tuple[int, int, int, int]] = None
     rejection_code: Optional[str] = None
     rejection_reason: Optional[str] = None

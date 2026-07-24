@@ -44,7 +44,9 @@ function CompliancePanel({
     if (loading) return 'Checking compliance...';
     if (error) return 'Compliance check unavailable';
     if (!compliance) return 'Check results pending';
-    return hardFail ? 'Not ICAO-compliant yet' : 'Looks compliant (pre-check)';
+    const score = compliance?.quality_score || compliance?.overall_score;
+    const scoreText = score ? ` (${score}% Score)` : '';
+    return hardFail ? `Not ICAO-compliant yet${scoreText}` : `Looks compliant${scoreText}`;
   }, [loading, error, compliance, hardFail]);
 
   return (

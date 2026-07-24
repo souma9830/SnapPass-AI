@@ -100,10 +100,6 @@ export const processImage = async (req, res, next) => {
       // If quality gate service is down, fail safe and continue
     }
 
-    // Forward to Python AI service
-    const form = new FormData();
-
-    // Forward to Python AI service
     const form = new FormData();
     form.append("image", fs.createReadStream(filePath));
     form.append("background_colour", backgroundColour);

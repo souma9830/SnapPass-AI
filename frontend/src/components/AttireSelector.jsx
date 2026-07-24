@@ -32,6 +32,13 @@ const ATTIRES = [
     descEn: 'Tuxedo & bowtie', 
     descHi: 'टक्सीडो और बो टाई' 
   },
+  { 
+    id: 'formal_shirt', 
+    labelKey: 'attireFormalShirt', 
+    emoji: '👔', 
+    descEn: 'White formal collared shirt', 
+    descHi: 'सफेद फॉर्मल कॉलर वाली कमीज' 
+  },
 ];
 
 function AttireSelector({ selected = 'none', onChange }) {

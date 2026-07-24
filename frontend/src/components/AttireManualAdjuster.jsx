@@ -1,13 +1,14 @@
 import React from 'react';
+import './AttireManualAdjuster.css';
 
 export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, onChangeX, onChangeY }) => {
   return (
-    <div className="attire-manual-adjuster" style={{ padding: '15px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)', marginTop: '12px' }}>
-      <h4 style={{ margin: '0 0 10px 0', fontSize: '0.85rem', fontWeight: '600', color: '#cbd5e1' }}>Manual Attire Fitting</h4>
+    <div className="attire-manual-adjuster">
+      <h4 className="attire-adjuster-title">Manual Attire Fitting</h4>
       
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '2px' }}>
+      <div className="attire-adjuster-group">
+        <div className="attire-adjuster-row">
+          <div className="attire-adjuster-label-bar">
             <span>Scale</span>
             <span>{Math.round(scale * 100)}%</span>
           </div>
@@ -18,12 +19,12 @@ export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, o
             step="0.05"
             value={scale}
             onChange={(e) => onChangeScale(parseFloat(e.target.value))}
-            style={{ width: '100%' }}
+            className="attire-adjuster-slider"
           />
         </div>
 
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '2px' }}>
+        <div className="attire-adjuster-row">
+          <div className="attire-adjuster-label-bar">
             <span>Horizontal Position (X)</span>
             <span>{xOffset}px</span>
           </div>
@@ -33,13 +34,13 @@ export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, o
             max="100"
             step="2"
             value={xOffset}
-            onChange={(e) => onChangeX(parseInt(e.target.value))}
-            style={{ width: '100%' }}
+            onChange={(e) => onChangeX(parseInt(e.target.value, 10))}
+            className="attire-adjuster-slider"
           />
         </div>
 
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#94a3b8', marginBottom: '2px' }}>
+        <div className="attire-adjuster-row">
+          <div className="attire-adjuster-label-bar">
             <span>Vertical Position (Y)</span>
             <span>{yOffset}px</span>
           </div>
@@ -49,8 +50,8 @@ export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, o
             max="100"
             step="2"
             value={yOffset}
-            onChange={(e) => onChangeY(parseInt(e.target.value))}
-            style={{ width: '100%' }}
+            onChange={(e) => onChangeY(parseInt(e.target.value, 10))}
+            className="attire-adjuster-slider"
           />
         </div>
       </div>
@@ -59,3 +60,4 @@ export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, o
 };
 
 export default AttireManualAdjuster;
+

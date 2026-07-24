@@ -117,7 +117,7 @@
 .attire-card--active {
   border-color: var(--color-primary);
   background: var(--color-primary-light);
-  box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-md);
+  box-shadow: 0 0 0 2px var(--color-primary), var(--shadow-md);
   transform: scale(1.02);
 }
 

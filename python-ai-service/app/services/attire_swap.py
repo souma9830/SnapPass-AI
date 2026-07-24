@@ -3,17 +3,16 @@ import cv2
 import numpy as np
 from PIL import Image
 
-def apply_attire_swap(foreground: Image.Image, attire_name: str) -> Image.Image:
+def apply_attire_swap(
+    foreground: Image.Image,
+    attire_name: str,
+    scale_multiplier: float = 1.0,
+    x_offset_px: int = 0,
+    y_offset_px: int = 0
+) -> Image.Image:
     """
     Detects the face in the transparent foreground image and aligns/overlays
     the specified formal attire template over the user's shoulders.
-    
-    Args:
-        foreground: PIL Image in RGBA format (background removed).
-        attire_name: Name of the attire template (e.g. 'male_suit', 'female_blazer').
-        
-    Returns:
-        Modified PIL Image with the formal attire overlaid.
     """
     # 1. Convert PIL Image to OpenCV BGR for face detection
     img_np = np.array(foreground)

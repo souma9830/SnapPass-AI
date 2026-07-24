@@ -1,0 +1,39 @@
+.attire-manual-adjuster {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 14px;
+}
+
+.attire-adjuster-title {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color, #e2e8f0);
+}
+
+.attire-adjuster-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attire-adjuster-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.attire-adjuster-label-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.attire-adjuster-slider {
+  width: 100%;
+  accent-color: #6366f1;
+  cursor: pointer;
+}

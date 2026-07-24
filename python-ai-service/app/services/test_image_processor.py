@@ -2,6 +2,7 @@ import pytest
 import io
 from PIL import Image
 from dpi_optimizer import optimise_dpi, get_preset_dimensions, list_presets, PRESETS
+from sheet_generator import generate_sheet
 
 
 def test_get_preset_dimensions_valid():
@@ -50,3 +51,8 @@ def test_optimise_dpi_invalid_preset():
 
     with pytest.raises(ValueError):
         optimise_dpi(img_bytes, "invalid_preset")
+
+
+def test_generate_sheet_empty_photo_paths():
+    with pytest.raises(ValueError, match="photo_paths list cannot be empty"):
+        generate_sheet([], preset_id="35x45", quantity=8)

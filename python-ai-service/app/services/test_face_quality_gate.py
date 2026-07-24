@@ -7,7 +7,6 @@ from app.services.face_quality_gate import assess_face_quality
 def test_rejects_unreadable_file():
     report = assess_face_quality("nonexistent_file.jpg")
     assert not report.passed
-    assert report.rejection_code == "FILE_NOT_FOUND"
     assert report.rejection_code == "UNREADABLE_FILE"
 
 

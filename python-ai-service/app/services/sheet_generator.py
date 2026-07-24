@@ -60,7 +60,10 @@ def generate_sheet(
 
     if isinstance(photo_paths, str):
         photo_paths = [photo_paths]
-    
+
+    if not photo_paths:
+        raise ValueError("photo_paths list cannot be empty.")
+
     photos = [_prepare_photo(p, photo_w, photo_h) for p in photo_paths]
     cols, rows = _compute_grid(photo_w, photo_h, page_w_px, page_h_px, margin_px, gutter_px)
 

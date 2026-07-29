@@ -304,33 +304,4 @@ export const createProcessJob = async (req, res, next) => {
     };
 
     Promise.resolve().then(run);
-
-    res.status(202).json({ success: true, data: { jobId } });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getProcessJobStatus = async (req, res, next) => {
-  try {
-    const { jobId } = req.params;
-    if (!jobId) return res.status(400).json({ success: false, message: 'jobId is required.' });
-
-    const job = getJob(jobId);
-    if (!job) return res.status(404).json({ success: false, message: 'Job not found.' });
-
-    res.json({
-      success: true,
-      data: {
-        status: job.status,
-        progress: job.progress,
-        stage: job.stage,
-        processedUrl: job.processedUrl,
-        error: job.error,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
+    .catch(err => console.error(err))

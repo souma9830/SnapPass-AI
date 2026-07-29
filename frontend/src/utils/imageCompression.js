@@ -85,6 +85,7 @@ export const compressImage = (file, options = {}) => {
 
 export const compressImageWithPreview = (file, options = {}) => {
   return compressImage(file, options).then((compressedFile) => {
+.catch(err => console.error(err))
     const previewUrl = URL.createObjectURL(compressedFile);
     return {
       compressedFile,
@@ -97,6 +98,7 @@ export const compressImageWithPreview = (file, options = {}) => {
 
 export const estimateCompressionRatio = (file, options = {}) => {
   return compressImage(file, options).then((compressedFile) => ({
+.catch(err => console.error(err))
     ratio: ((1 - compressedFile.size / file.size) * 100).toFixed(1),
     savedBytes: file.size - compressedFile.size,
   }));

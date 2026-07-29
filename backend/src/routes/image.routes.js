@@ -4,6 +4,6 @@ import { sanitizeInput } from '../middleware/sanitize.middleware.js';
 const router = express.Router();
 
 // Image processing router communicating with the Python AI Flask service
-router.post('/process', sanitizeInput, processImage);
+router.post('/', sanitizeInput, processImage);
 
 export default router;

@@ -3,7 +3,7 @@
  * @use This module interacts with the User DAO to perform database operations and handles business logic for authentication.
  */
 import bcrypt from "bcryptjs";
-import { createUser, findUserByEmail,findUserById,updateUserPassword } from "../dao/user.dao.js";
+import { createUser, findUserByEmail, findUserById, updateUserPassword, updateUserRole as updateUserRoleDao } from "../dao/user.dao.js";
 import AppError from "../utils/errors/AppError.js";
 import NotFoundError from "../utils/errors/NotFoundError.js";
 
@@ -39,6 +39,14 @@ export async function getMe(userId) {
 
 export async function getUserByEmail(email) {
     const user = await findUserByEmail(email);
+    if (!user) {
+        throw new NotFoundError("User not found");
+    }
+    return user;
+}
+
+export async function updateUserRole(userId, role) {
+    const user = await updateUserRoleDao(userId, role);
     if (!user) {
         throw new NotFoundError("User not found");
     }

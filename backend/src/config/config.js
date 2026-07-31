@@ -8,6 +8,7 @@ export const config = {
     NODE_ENV: process.env.NODE_ENV || "development",
     port: resolvePort(process.env.PORT, 3000),
     aiServiceUrl: process.env.AI_SERVICE_URL || 'http://localhost:8000',
+    INTERNAL_API_SECRET: process.env.INTERNAL_API_SECRET || '',
     MONGO_URI: process.env.MONGO_URI,
     CORS_ORIGIN: process.env.CORS_ORIGIN || "http://localhost:5173",
     MAX_FILE_SIZE: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024, // 10MB default

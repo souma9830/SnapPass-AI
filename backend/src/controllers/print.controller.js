@@ -4,11 +4,10 @@
  * Coordinates with the AI service's sheet generation endpoint.
  */
 
-import axios from "axios";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { config } from "../config/config.js";
+import aiClient from "../services/aiClient.js";
 import { PHOTO_SIZE_DETAILS } from "./presets.controller.js";
 
 const localFilename = fileURLToPath(import.meta.url);
@@ -90,8 +89,8 @@ export const generateSheet = async (req, res, next) => {
     }
 
     // 7. Call python AI microservice with correct parameter mappings
-    const aiResponse = await axios.post(
-      `${config.aiServiceUrl}/generate-sheet`,
+    const aiResponse = await aiClient.post(
+      '/generate-sheet',
       { photo_paths: filePaths, quantity: parsedQuantity, preset_id: photoSizePreset, layout },
       { responseType: "arraybuffer" }
     );

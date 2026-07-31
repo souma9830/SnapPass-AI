@@ -88,6 +88,16 @@ def rate_limit_handler(e):
 
 
 @app.before_request
+def check_internal_secret():
+    # Require a shared secret on every endpoint so the AI service cannot be
+    # called directly from outside the application (bypassing Express auth,
+    # rate limiting, and MIME validation).
+    secret = config.INTERNAL_API_SECRET
+    if secret and request.headers.get("X-Internal-Secret") != secret:
+        return jsonify({"error": "Unauthorized"}), 401
+
+
+@app.before_request
 def check_payload_size():
     max_bytes = config.MAX_FILE_MB * 1024 * 1024
     if request.content_length and request.content_length > max_bytes:
@@ -208,4 +218,7 @@ def generate_sheet():
 
 # Run
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG)
+    # Bind to 127.0.0.1 by default so the service is unreachable from the
+    # network; override with HOST=0.0.0.0 only inside an isolated container
+    # network where the shared secret still gates access.
+    app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)

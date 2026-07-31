@@ -1,14 +1,5 @@
 import Upload from '../models/upload.model.js';
 
-export const getHistory = async (req, res, next) => {
-  try {
-    const history = await Upload.find().sort({ createdAt: -1 }).lean();
-    res.json({ success: true, history });
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const getUserUploadHistory = async (req, res, next) => {
   try {
     const {
@@ -19,7 +10,9 @@ export const getUserUploadHistory = async (req, res, next) => {
       startDate,
       endDate,
     } = req.query;
-    const filter = {};
+    // Scope every query to the authenticated user to prevent IDOR: without
+    // this, any logged-in user could page through every user's upload records.
+    const filter = { userId: req.user.id };
 
     if (search) {
       filter.$or = [

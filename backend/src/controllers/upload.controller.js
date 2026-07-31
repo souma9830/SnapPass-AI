@@ -1,4 +1,5 @@
 import { successResponse, errorResponse } from '../utils/httpResponse.js';
+import { config } from '../config/config.js';
 
 /**
  * POST /api/upload
@@ -38,6 +39,10 @@ export const uploadPhoto = async (req, res, next) => {
 export const batchUpload = async (req, res, next) => {
   try {
     const files = req.files || [];
+    const maxBatchFiles = config.upload.maxBatchFiles;
+    if (files.length > maxBatchFiles) {
+      return errorResponse(res, `Maximum ${maxBatchFiles} files per batch`, 400);
+    }
     const results = files.map((f) => ({
       filename: f.filename,
       originalName: f.originalname,

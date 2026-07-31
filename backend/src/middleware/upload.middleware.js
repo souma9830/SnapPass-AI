@@ -160,6 +160,26 @@ export const validateImageChain = async (req, res, next) => {
   }
 };
 
+export const validateBatchImageChain = async (req, res, next) => {
+  const files = req.files || [];
+  if (files.length === 0) return next();
+
+  for (const file of files) {
+    const mbResult = await validateMagicBytes(file.path);
+    if (!mbResult.valid) {
+      for (const f of files) {
+        if (f.path && fs.existsSync(f.path)) fs.unlinkSync(f.path);
+      }
+      return res
+        .status(400)
+        .json({ success: false, message: `File "${file.originalname}" rejected: ${mbResult.error}` });
+    }
+  }
+
+  req.batchImageMeta = files.map((file) => ({ filename: file.filename, originalname: file.originalname }));
+  next();
+};
+
 export const validateImageBuffer = async (req, res, next) => {
   if (!req.file) return next();
   try {

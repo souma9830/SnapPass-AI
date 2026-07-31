@@ -31,7 +31,17 @@ export function verifyEnvironment() {
     console.error('Please configure these keys in your backend .env file.');
     console.error('See backend/.env.example for details.');
     console.error('================================================================\n');
-    
+
+    // Fail fast in ALL environments when security-critical secrets are missing.
+    // A hardcoded fallback JWT secret is a public, repo-known value that lets
+    // anyone forge a valid session JWT, so we must never boot without a real one.
+    const missingSecuritySecrets = missing.filter((item) => item.key === 'JWT_SECRET');
+    if (missingSecuritySecrets.length > 0) {
+      console.error('FATAL: JWT_SECRET must be explicitly configured. ' +
+        'Refusing to boot with a missing signing secret.');
+      process.exit(1);
+    }
+
     // In production, exit immediately to prevent corrupted container boots
     if (process.env.NODE_ENV === 'production') {
       process.exit(1);

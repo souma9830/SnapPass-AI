@@ -104,8 +104,42 @@
 }
 
 .hero__btn-primary {
+  position: relative;
   font-size: var(--font-size-md);
-  padding: 12px var(--space-xl);
+  padding: 14px var(--space-xl);
+  border-radius: var(--radius-lg);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #0ea5a4 130%);
+  color: #ffffff;
+  box-shadow:
+    0 10px 24px rgba(37, 99, 235, 0.32),
+    0 3px 8px rgba(37, 99, 235, 0.2);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease,
+    background 0.25s ease;
+}
+
+.hero__btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 16px 34px rgba(37, 99, 235, 0.42),
+    0 6px 12px rgba(37, 99, 235, 0.24);
+  filter: brightness(1.08);
+  text-decoration: none;
+}
+
+.hero__btn-primary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow:
+    0 6px 14px rgba(37, 99, 235, 0.3);
+}
+
+.hero__btn-primary:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.5);
+  outline-offset: 3px;
 }
 
 .btn-primary-dark {

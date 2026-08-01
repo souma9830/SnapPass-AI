@@ -2,6 +2,9 @@
 preset_compliance_engine.py — Rule-based ICAO/ISO passport photo compliance score evaluator.
 """
 
+__all__ = ["PresetComplianceEngine"]
+
+
 class PresetComplianceEngine:
     @staticmethod
     def evaluate_compliance(face_confidence: float, eye_line_ratio: float, background_uniformity: float) -> dict:

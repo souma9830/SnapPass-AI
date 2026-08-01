@@ -19,6 +19,9 @@ import io
 from app.services.attire_swap import apply_attire_swap
 
 
+__all__ = ["remove_background", "SUPPORTED_COLOURS"]
+
+
 # Named colour presets — (R, G, B, A) tuples where A is always 255.
 # Ordered to match the frontend registry for easier cross-reference.
 SUPPORTED_COLOURS: dict[str, tuple[int, int, int, int]] = {

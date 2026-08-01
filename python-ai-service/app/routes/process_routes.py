@@ -1,3 +1,8 @@
+"""
+process_routes.py — /remove-bg endpoint for background removal, face
+centering, and DPI optimisation.
+"""
+
 import os
 import uuid
 from flask import Blueprint, request, jsonify, send_file
@@ -6,6 +11,8 @@ from app.services.bg_remove import remove_background
 from app.services.face_center import center_face
 from app.services.dpi_optimizer import optimise_dpi
 process_bp = Blueprint("process", __name__)
+
+__all__ = ["process_bp"]
 
 
 @process_bp.post("/remove-bg")

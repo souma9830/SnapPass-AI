@@ -9,6 +9,7 @@ const HomePage = lazy(() => import('../pages/HomePage'));
 const UploadPage = lazy(() => import('../pages/UploadPage'));
 const EditorPage = lazy(() => import('../pages/EditorPage'));
 const PrintPreviewPage = lazy(() => import('../pages/PrintPreviewPage'));
+const DigitalDownloadPage = lazy(() => import('../pages/DigitalDownloadPage'));
 const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
 const TermsPage = lazy(() => import('../pages/TermsPage'));
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage'));
@@ -36,6 +37,7 @@ function AppRoutes({ darkMode, toggleTheme }) {
           <Route path="/upload" element={<UploadPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
           <Route path="/editor" element={<EditorPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
           <Route path="/print-preview" element={<PrintPreviewPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/digital-download" element={<DigitalDownloadPage darkMode={darkMode} />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />

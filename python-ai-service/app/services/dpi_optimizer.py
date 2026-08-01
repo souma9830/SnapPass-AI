@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageDraw
 import io
 
 
@@ -11,6 +11,15 @@ PRESETS = {
     "33x48": (33, 48),    # Schengen visa
     "40x60": (40, 60),    # China visa
     "2x2in": (50.8, 50.8),  # US passport(2 × 2 inches)
+}
+
+# Digital-use presets: direct pixel dimensions, no physical size.
+# Preset: (width_px, height_px, shape)
+DIGITAL_PRESETS = {
+    "linkedin-400": (400, 400, "square"),
+    "slack-512": (512, 512, "circle"),
+    "github-460": (460, 460, "square"),
+    "teams-400": (400, 400, "circle"),
 }
 
 
@@ -26,6 +35,9 @@ def optimise_dpi(image_bytes: bytes, preset: str = "35x45") -> bytes:
     Raises:
         ValueError: If preset is not recognised.
     """
+    if preset in DIGITAL_PRESETS:
+        return _optimise_digital(image_bytes, preset)
+
     if preset not in PRESETS:
         raise ValueError(
             f"Unknown preset '{preset}'. "
@@ -44,11 +56,41 @@ def optimise_dpi(image_bytes: bytes, preset: str = "35x45") -> bytes:
     return output.getvalue()
 
 
+def _optimise_digital(image_bytes: bytes, preset: str) -> bytes:
+    """Resize to the exact pixel dimensions of a digital-use preset.
+
+    Circular presets (e.g. Slack, Teams avatars) are cropped to a circle
+    centered on the square canvas, so the exported file is ready to upload.
+    """
+    width_px, height_px, shape = DIGITAL_PRESETS[preset]
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+    resized = img.resize((width_px, height_px), Image.LANCZOS)
+
+    if shape == "circle":
+        mask = Image.new("L", (width_px, height_px), 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, width_px, height_px), fill=255)
+        resized.putalpha(mask)
+
+    output = io.BytesIO()
+    resized.save(output, format="PNG")
+    return output.getvalue()
+
+
 def get_preset_dimensions(preset: str) -> dict:
     """
     Return width, height in mm and px for a given preset.
     Useful for the /presets API endpoint.
     """
+    if preset in DIGITAL_PRESETS:
+        w_px, h_px, shape = DIGITAL_PRESETS[preset]
+        return {
+            "preset": preset,
+            "category": "digital",
+            "width_px": w_px,
+            "height_px": h_px,
+            "shape": shape,
+        }
     if preset not in PRESETS:
         raise ValueError(f"Unknown preset '{preset}'.")
     w_mm, h_mm = PRESETS[preset]
@@ -64,7 +106,9 @@ def get_preset_dimensions(preset: str) -> dict:
 
 def list_presets() -> list:
     """Return all presets as a list of dimension dicts."""
-    return [get_preset_dimensions(p) for p in PRESETS]
+    presets = [get_preset_dimensions(p) for p in PRESETS]
+    presets.extend(get_preset_dimensions(p) for p in DIGITAL_PRESETS)
+    return presets
 
 
 # Helpers

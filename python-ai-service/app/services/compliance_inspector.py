@@ -454,6 +454,16 @@ def inspect_compliance(image_path: str, size_preset: Optional[str] = None) -> Di
         "meta": lighting,
     })
 
+    # Dedicated warning flag for the frontend to surface as a dismissable banner.
+    warnings = []
+    if mean_diff > LIGHTING_MAX_MEAN_DIFF:
+        warnings.append({
+            "id": "uneven_lighting",
+            "title": "Uneven lighting detected",
+            "message": "Your face appears lit from one side. Retake the photo facing a window or light source for even lighting.",
+            "code": "SHADOWS_DETECTED",
+        })
+
     # 9) Accessories/glasses (soft warning)
     acc_item = _accessories_soft_warning(image)
     if acc_item:
@@ -469,6 +479,7 @@ def inspect_compliance(image_path: str, size_preset: Optional[str] = None) -> Di
         "passed": passed,
         "hard_fail": hard_fail,
         "items": items,
+        "warnings": warnings,
         "meta": {
             "face_rect": {"x": fx, "y": fy, "w": fw, "h": fh},
             "roll_deg": roll_deg,

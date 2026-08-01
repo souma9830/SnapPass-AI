@@ -3,6 +3,9 @@ import cv2
 import numpy as np
 from PIL import Image
 
+__all__ = ["apply_attire_swap"]
+
+
 def apply_attire_swap(
     foreground: Image.Image,
     attire_name: str,

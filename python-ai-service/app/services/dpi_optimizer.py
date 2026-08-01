@@ -13,6 +13,14 @@ PRESETS = {
     "2x2in": (50.8, 50.8),  # US passport(2 × 2 inches)
 }
 
+__all__ = [
+    "optimise_dpi",
+    "get_preset_dimensions",
+    "list_presets",
+    "TARGET_DPI",
+    "PRESETS",
+]
+
 
 def optimise_dpi(image_bytes: bytes, preset: str = "35x45") -> bytes:
     """

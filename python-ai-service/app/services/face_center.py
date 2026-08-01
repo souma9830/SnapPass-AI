@@ -14,6 +14,8 @@ FACE_HEIGHT_RATIO = 0.75
 # (to include forehead + a small margin above hair)
 HEAD_TOP_PADDING_RATIO = 0.20
 
+__all__ = ["center_face", "FACE_HEIGHT_RATIO", "HEAD_TOP_PADDING_RATIO"]
+
 
 def center_face(image_bytes: bytes) -> bytes:
 

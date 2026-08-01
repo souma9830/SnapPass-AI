@@ -239,6 +239,79 @@ function PhotoStudio() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [activeTool]);
 
+    // Keyboard micro-adjustments while cropping: arrow keys nudge the crop
+    // position by 1px, and +/- micro-zoom the crop selection around its center.
+    useEffect(() => {
+        if (!isCropping) return undefined;
+
+        const NUDGE_STEP = 1;
+        const ZOOM_STEP = 0.01;
+
+        const handleKeyDown = (e) => {
+            const isTyping =
+                e.target?.tagName === 'INPUT' ||
+                e.target?.tagName === 'TEXTAREA' ||
+                e.target?.isContentEditable;
+            if (isTyping) return;
+
+            const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '+', '=', '-'];
+            if (!keys.includes(e.key)) return;
+
+            e.preventDefault();
+
+            setCrop((prev) => {
+                if (!prev) return prev;
+                const box = imgRef.current;
+                const maxX = box?.width ?? prev.x + prev.width;
+                const maxY = box?.height ?? prev.y + prev.height;
+                let next = { ...prev };
+
+                switch (e.key) {
+                    case 'ArrowUp':
+                        next.y = Math.max(0, Math.round(prev.y - NUDGE_STEP));
+                        break;
+                    case 'ArrowDown':
+                        next.y = Math.min(maxY - next.height, Math.round(prev.y + NUDGE_STEP));
+                        break;
+                    case 'ArrowLeft':
+                        next.x = Math.max(0, Math.round(prev.x - NUDGE_STEP));
+                        break;
+                    case 'ArrowRight':
+                        next.x = Math.min(maxX - next.width, Math.round(prev.x + NUDGE_STEP));
+                        break;
+                    case '+':
+                    case '=': {
+                        const factor = 1 - ZOOM_STEP;
+                        next.width = Math.max(4, prev.width * factor);
+                        next.height = Math.max(4, prev.height * factor);
+                        next.x = prev.x + (prev.width - next.width) / 2;
+                        next.y = prev.y + (prev.height - next.height) / 2;
+                        break;
+                    }
+                    case '-': {
+                        const factor = 1 + ZOOM_STEP;
+                        next.width = Math.min(maxX - next.x, prev.width * factor);
+                        next.height = Math.min(maxY - next.y, prev.height * factor);
+                        next.x = prev.x + (prev.width - next.width) / 2;
+                        next.y = prev.y + (prev.height - next.height) / 2;
+                        break;
+                    }
+                    default:
+                        return prev;
+                }
+
+                setCompletedCrop((completed) => {
+                    if (!completed) return next;
+                    return { ...completed, x: next.x, y: next.y, width: next.width, height: next.height };
+                });
+                return next;
+            });
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isCropping]);
+
     const previewImageSrc = showOriginal
         ? workingSource
         : (isCropping
@@ -288,6 +361,11 @@ function PhotoStudio() {
                         </div>
                     ) : (
                         <div className={`image-container crop-container ${isRenderingPreview ? 'image-container--rendering' : ''}`}>
+                            {isCropping && (
+                                <p className="crop-keyboard-tip">
+                                    Tip: Use arrow keys for precise adjustments.
+                                </p>
+                            )}
                             {isCropping ? (
                                 <ReactCrop
                                     crop={crop}

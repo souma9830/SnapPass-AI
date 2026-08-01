@@ -27,6 +27,12 @@ export async function findUserById(id) {
     return user;
 }
 
+export async function updateUserRole(id, role) {
+    const user = await User.findByIdAndUpdate(id, { role }, { returnDocument: "after" });
+    await deleteCache(`user:${id}`);
+    return user;
+}
+
 export async function updateUserLastLogin(id) {
     const user = await User.findByIdAndUpdate(id, { lastLoginAt: new Date() }, { returnDocument: "after" });
     await deleteCache(`user:${id}`);

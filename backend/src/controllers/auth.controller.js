@@ -165,10 +165,8 @@ export const updateRole = catchAsync(async (req, res) => {
   if (!['user', 'admin'].includes(role)) {
     return sendResponse(res, 400, false, 'Role must be "user" or "admin".', null);
   }
-  const user = await authService.getMe(userId);
+  const user = await authService.updateUserRole(userId, role);
   if (!user) return sendResponse(res, 404, false, 'User not found.', null);
-  user.role = role;
-  await user.save();
   sendResponse(res, 200, true, 'Role updated successfully', { id: user._id, role: user.role });
 });
 

@@ -9,6 +9,7 @@ import useBatchExport from '../hooks/useBatchExport';
 import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
 import ConfirmModal from '../components/ConfirmModal';
+import SkeletonImage from '../components/SkeletonImage';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
 import { PrintLayoutOptions } from '../components/editor/PrintLayoutOptions';
@@ -177,7 +178,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
                 const photoToRender = processedPhotos[i % processedPhotos.length];
                 return (
                   <div key={i} className="sheet-slot">
-                    <img
+                    <SkeletonImage
                       src={photoToRender?.processedUrl}
                       alt={`Sheet slot ${i + 1}`}
                       className="sheet-slot__img"

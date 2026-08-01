@@ -30,7 +30,7 @@ function SignUp({ darkMode }) {
         <h2>Create Account</h2>
         <p className="auth-subtitle">Join SnapPass-AI today to get started.</p>
         
-        {error && <div className="auth-error-alert">{error}</div>}
+        {error && <div className="auth-error-alert" role="alert">{error}</div>}
         
         <form onSubmit={handleSignUp} className="auth-form">
           <div className="form-group">

@@ -127,13 +127,30 @@ function AdminDashboard() {
           {analytics && <span className="badge badge-green">Live</span>}
         </div>
 
-        <div className={`admin-tabs ${darkMode ? 'admin-tabs-dark' : ''}`}>
+        <div
+          className={`admin-tabs ${darkMode ? 'admin-tabs-dark' : ''}`}
+          role="tablist"
+          aria-label={t.adminDashboard}
+          onKeyDown={(e) => {
+            if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+            e.preventDefault();
+            const idx = tabs.findIndex((t) => t.key === activeTab);
+            const next =
+              e.key === 'ArrowRight'
+                ? (idx + 1) % tabs.length
+                : (idx - 1 + tabs.length) % tabs.length;
+            setActiveTab(tabs[next].key);
+          }}
+        >
           {tabs.map(({ key, label }) => (
             <button
               key={key}
+              id={`admin-tab-${key}`}
               className={`admin-tab ${activeTab === key ? (darkMode ? 'admin-tab--active-dark' : 'admin-tab--active-light') : ''}`}
               role="tab"
               aria-selected={activeTab === key}
+              aria-controls={`admin-panel-${key}`}
+              tabIndex={activeTab === key ? 0 : -1}
               onClick={() => setActiveTab(key)}
             >
               {label}
@@ -142,7 +159,7 @@ function AdminDashboard() {
         </div>
 
         {activeTab === 'overview' && (
-          <div className="admin-overview" role="tabpanel">
+          <div className="admin-overview" role="tabpanel" id="admin-panel-overview" aria-labelledby="admin-tab-overview">
             <div className="stats-grid">
               {stats.map(({ label, value, icon }) => (
                 <div key={label} className="stat-card card">
@@ -180,7 +197,7 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'uploads' && (
-          <div className="admin-uploads card" role="tabpanel">
+          <div className="admin-uploads card" role="tabpanel" id="admin-panel-uploads" aria-labelledby="admin-tab-uploads">
             <table
               className={`admin-table ${darkMode ? 'admin-table-dark' : ''}`}
             >
@@ -211,7 +228,7 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'settings' && (
-          <div className="admin-settings card" role="tabpanel">
+          <div className="admin-settings card" role="tabpanel" id="admin-panel-settings" aria-labelledby="admin-tab-settings">
             <p
               className={`admin-placeholder__title ${darkMode ? 'admin-placeholder__title-dark' : ''}`}
             >

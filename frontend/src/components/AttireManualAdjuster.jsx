@@ -20,6 +20,7 @@ export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, o
             value={scale}
             onChange={(e) => onChangeScale(parseFloat(e.target.value))}
             className="attire-adjuster-slider"
+            aria-label={`Scale ${Math.round(scale * 100)}%`}
           />
         </div>
 
@@ -36,6 +37,7 @@ export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, o
             value={xOffset}
             onChange={(e) => onChangeX(parseInt(e.target.value, 10))}
             className="attire-adjuster-slider"
+            aria-label={`Horizontal Position (X) ${xOffset}px`}
           />
         </div>
 
@@ -52,6 +54,7 @@ export const AttireManualAdjuster = ({ scale, xOffset, yOffset, onChangeScale, o
             value={yOffset}
             onChange={(e) => onChangeY(parseInt(e.target.value, 10))}
             className="attire-adjuster-slider"
+            aria-label={`Vertical Position (Y) ${yOffset}px`}
           />
         </div>
       </div>

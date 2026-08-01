@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import useOfflineStorage from '../hooks/useOfflineStorage';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import './HistoryPage.css';
 
 function HistoryPage({ darkMode }) {
@@ -13,6 +14,16 @@ function HistoryPage({ darkMode }) {
   const { history, deleteSession, clearHistory } = useHistory();
   const { cachedPhotos } = useOfflineStorage();
   const [showConfirm, setShowConfirm] = useState(false);
+  const confirmRef = useFocusTrap(showConfirm);
+
+  useEffect(() => {
+    if (!showConfirm) return;
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') setShowConfirm(false);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [showConfirm]);
 
   const combinedHistory = useMemo(() => {
     const offlineItems = (cachedPhotos || []).map((photo) => ({
@@ -186,14 +197,21 @@ function HistoryPage({ darkMode }) {
 
       {showConfirm && (
         <div
+          ref={confirmRef}
           className="history-page__confirm-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="history-confirm-title"
           onClick={() => setShowConfirm(false)}
         >
           <div
             className="history-page__confirm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="history-page__confirm-title">
+            <div
+              id="history-confirm-title"
+              className="history-page__confirm-title"
+            >
               {t.confirmClearTitle || 'Clear all history?'}
             </div>
             <div className="history-page__confirm-text">

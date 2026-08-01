@@ -6,6 +6,7 @@ import SuggestedPrompts from './SuggestedPrompts';
 import TypingIndicator from './TypingIndicator';
 
 import { searchResponse } from '../utils/searchResponse';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 function ChatbotWindow({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
@@ -21,6 +22,7 @@ function ChatbotWindow({ isOpen, onClose }) {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const closeRef = useRef(null);
+  const windowRef = useFocusTrap(isOpen);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -35,6 +37,18 @@ function ChatbotWindow({ isOpen, onClose }) {
       closeRef.current?.focus();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+        closeRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
 
   const handleSendMessage = (customMessage = null) => {
     const userMessage = customMessage || input;
@@ -74,6 +88,7 @@ function ChatbotWindow({ isOpen, onClose }) {
 
   return (
     <div
+      ref={windowRef}
       className={`chatbot-window ${isOpen ? 'show-chat' : ''}`}
       role="dialog"
       aria-modal="true"

@@ -2,7 +2,6 @@ import React from 'react';
 import './AttireSelector.css';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
-
 const ATTIRES = [
   { 
     id: 'none', 
@@ -45,6 +44,19 @@ function AttireSelector({ selected = 'none', onChange }) {
   const { language } = useLanguage();
   const t = translations[language];
 
+  const handleKeyDown = (e, id) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    const currentIndex = ATTIRES.findIndex((a) => a.id === id);
+    let nextIndex;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % ATTIRES.length;
+    } else {
+      nextIndex = (currentIndex - 1 + ATTIRES.length) % ATTIRES.length;
+    }
+    onChange && onChange(ATTIRES[nextIndex].id);
+  };
+
   return (
     <div className="attire-selector">
       <div className="attire-selector__header">
@@ -65,6 +77,7 @@ function AttireSelector({ selected = 'none', onChange }) {
               aria-checked={isActive}
               tabIndex={isActive ? 0 : -1}
               title={t[labelKey]}
+              onKeyDown={(e) => handleKeyDown(e, id)}
             >
               <div className="attire-card__icon">{emoji}</div>
               <div className="attire-card__content">

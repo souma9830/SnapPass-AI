@@ -26,17 +26,29 @@ function ComparisonSlider({ beforeSrc, afterSrc, alt = 'Comparison' }) {
     dragging.current = false;
   }, []);
 
+  const onKeyDown = useCallback((e) => {
+    let next = sliderPos;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = sliderPos - 5;
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = sliderPos + 5;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = 100;
+    else return;
+    e.preventDefault();
+    setSliderPos(Math.max(0, Math.min(100, next)));
+  }, [sliderPos]);
+
   return (
     <div className="comparison-wrapper">
       <div className="comparison-zoom-controls">
-        <button onClick={zoomOut} title="Zoom out" className="comparison-zoom-btn">−</button>
+        <button onClick={zoomOut} title="Zoom out" aria-label="Zoom out" className="comparison-zoom-btn">−</button>
         <span className="comparison-zoom-level">{Math.round(zoom * 100)}%</span>
-        <button onClick={zoomIn} title="Zoom in" className="comparison-zoom-btn">+</button>
-        <button onClick={resetView} title="Reset view" className="comparison-zoom-btn">⟲</button>
+        <button onClick={zoomIn} title="Zoom in" aria-label="Zoom in" className="comparison-zoom-btn">+</button>
+        <button onClick={resetView} title="Reset view" aria-label="Reset view" className="comparison-zoom-btn">⟲</button>
         <select
           className="comparison-zoom-select"
           value={zoom}
           onChange={(e) => setZoomLevel(e.target.value)}
+          aria-label="Zoom level"
         >
           {[0.5, 0.75, 1, 1.5, 2, 3, 4, 5].map((z) => (
             <option key={z} value={z}>{Math.round(z * 100)}%</option>
@@ -58,8 +70,10 @@ function ComparisonSlider({ beforeSrc, afterSrc, alt = 'Comparison' }) {
         aria-label="Compare original and processed image"
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-valuenow={sliderPos}
+        aria-valuenow={Math.round(sliderPos)}
+        aria-valuetext={`${Math.round(sliderPos)}%`}
         tabIndex={0}
+        onKeyDown={onKeyDown}
       >
         <div
           className="comparison-image comparison-image--after"

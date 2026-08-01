@@ -295,6 +295,11 @@
     border-color: #2563eb;
 }
 
+.chatbot-input-area input:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+}
+
 .chatbot-input-area button {
     width: 44px;
     height: 44px;

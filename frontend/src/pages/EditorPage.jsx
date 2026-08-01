@@ -543,10 +543,12 @@ function EditorPage({ darkMode, toggleTheme }) {
             )}
 
             <div className="toggle-switch-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', padding: '12px', background: darkMode ? 'rgba(59,130,246,0.15)' : 'rgba(59,130,246,0.1)', borderRadius: '8px', border: darkMode ? '1px dashed #60a5fa' : '1px dashed #3b82f6' }}>
-              <span style={{ fontWeight: '600', color: darkMode ? '#60a5fa' : '#3b82f6' }}>🪄 Auto-Enhance Lighting</span>
-              <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px' }}>
+              <span id="auto-enhance-label" style={{ fontWeight: '600', color: darkMode ? '#60a5fa' : '#3b82f6' }}>🪄 Auto-Enhance Lighting</span>
+              <label className="switch" htmlFor="auto-enhance-toggle" style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px' }}>
                 <input
+                  id="auto-enhance-toggle"
                   type="checkbox"
+                  aria-labelledby="auto-enhance-label"
                   checked={isAutoEnhanced}
                   onChange={handleToggleEnhance}
                   disabled={!filename || isEnhancing}

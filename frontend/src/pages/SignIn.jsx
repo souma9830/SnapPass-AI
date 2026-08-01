@@ -26,7 +26,7 @@ function SignIn({ darkMode }) {
         <h2>Sign In to SnapPass-AI</h2>
         <p className="auth-subtitle">Welcome back! Please enter your details.</p>
         
-        {error && <div className="auth-error-alert">{error}</div>}
+        {error && <div className="auth-error-alert" role="alert">{error}</div>}
         
         <form onSubmit={handleSignIn} className="auth-form">
           <div className="form-group">

@@ -134,6 +134,33 @@ button {
   border: none;
 }
 
+/* ── Global focus indicators ─────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+[data-theme='dark'] :focus-visible {
+  outline-color: var(--color-primary-dark);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ── Utility Classes ────────────────────────────── */
 .card {
   background: var(--color-surface);

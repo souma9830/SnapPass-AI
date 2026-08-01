@@ -42,6 +42,19 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [password, setPassword] = useState('');
+
+  const strength = Math.min(4, password.length ? Math.ceil(password.length / 4) : 0);
+  const strengthLabel =
+    strength === 0
+      ? t.noPassword || 'Enter a password to secure the sheet'
+      : strength === 1
+        ? t.weak || 'Weak'
+        : strength === 2
+          ? t.medium || 'Medium'
+          : strength === 3
+            ? t.strong || 'Strong'
+            : t.excellent || 'Excellent';
 
   const processedPhotos = state?.processedPhotos || savedSession?.processedPhotos || [];
   if (processedPhotos.length === 0) {
@@ -240,13 +253,17 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
             <hr className="divider" />
 
             <div className="password-section">
-              <label className="print-info-label">{t.securePassword}</label>
+              <label className="print-info-label" htmlFor="print-password">
+                {t.securePassword}
+              </label>
               <input
                 type="password"
+                id="print-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t.enterPassword}
                 className="password-input"
+                aria-describedby="password-feedback"
               />
               <div className="password-meter">
                 <div
@@ -263,6 +280,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
                 />
               </div>
               <span
+                id="password-feedback"
                 aria-live="polite"
                 className={`password-feedback ${
                   strength <= 1

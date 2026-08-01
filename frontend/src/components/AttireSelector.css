@@ -94,6 +94,11 @@
   outline: none;
 }
 
+.attire-card:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .editor-toggle-dark .attire-card {
   background: #1e293b;
   border-color: #334155;

@@ -5,20 +5,23 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class ImageProcessingError(Exception):
     """Base exception for image operations failures."""
     pass
 
+
 class FaceNotFoundError(ImageProcessingError):
     """Raised when face detector finds 0 faces."""
     pass
+
 
 def ai_error_handler(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         try:
             return f(*args, **kwargs)
-        except HTTPException as e:
+        except HTTPException:
             raise
         except FaceNotFoundError as e:
             logger.warning("Face not found: %s", str(e))

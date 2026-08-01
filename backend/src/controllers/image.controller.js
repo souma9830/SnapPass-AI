@@ -4,12 +4,12 @@
  * for background removal, face detection & centering, and resizing.
  */
 
-import axios from "axios";
 import FormData from "form-data";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { config } from "../config/config.js";
+import aiClient from "../services/aiClient.js";
 import { WebhookService } from "../services/webhook.service.js";
 
 const localFilename = fileURLToPath(import.meta.url);
@@ -82,7 +82,7 @@ export const processImage = async (req, res, next) => {
     }
     // Face quality gate — reject blurry, multi-face, or non-frontal photos early
     try {
-      const qualityCheck = await axios.post(`${config.aiServiceUrl}/face-quality-check`, 
+      const qualityCheck = await aiClient.post('/face-quality-check',
         { file_path: filePath },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -127,7 +127,7 @@ export const processImage = async (req, res, next) => {
       });
     }
 
-    const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, form, {
+    const aiResponse = await aiClient.post('/remove-bg', form, {
       headers: form.getHeaders(),
       responseType: "arraybuffer",
     });
@@ -256,8 +256,8 @@ export const createProcessJob = async (req, res, next) => {
         updateJob(jobId, { progress: 10, stage: 'Validating file' });
 
         try {
-          const qualityCheck = await axios.post(
-            `${config.aiServiceUrl}/face-quality-check`,
+          const qualityCheck = await aiClient.post(
+            '/face-quality-check',
             { file_path: filePath },
             { headers: { 'Content-Type': 'application/json' } }
           );
@@ -282,7 +282,7 @@ export const createProcessJob = async (req, res, next) => {
 
         updateJob(jobId, { progress: 40, stage: 'Sending to AI service' });
 
-        const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
+        const aiResponse = await aiClient.post('/remove-bg', uploadForm, {
           headers: uploadForm.getHeaders(),
           responseType: 'arraybuffer',
         });

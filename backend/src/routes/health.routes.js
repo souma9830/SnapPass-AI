@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import axios from 'axios';
-import { config } from '../config/config.js';
+import aiClient from '../services/aiClient.js';
 import { isRedisAvailable } from '../config/redis.js';
 
 const router = express.Router();
@@ -65,8 +64,7 @@ router.get('/diagnostics', async (req, res) => {
 
   // 2. Python AI Service Check
   try {
-    const pythonUrl = config.aiServiceUrl || 'http://localhost:8000';
-    const response = await axios.get(`${pythonUrl}/health`, { timeout: 3000 });
+    const response = await aiClient.get('/health', { timeout: 3000 });
     if (response.status === 200) {
       diagnostics.services.pythonService = 'healthy';
     } else {

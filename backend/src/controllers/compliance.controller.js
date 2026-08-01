@@ -4,10 +4,9 @@
  * Forwards { filename } to python-ai-service /check and returns a JSON checklist.
  */
 
-import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
-import { config } from '../config/config.js';
+import aiClient from '../services/aiClient.js';
 
 /**
  * Resolve uploads/<filename> to an absolute path while preventing traversal.
@@ -97,8 +96,8 @@ export const complianceCheck = async (req, res, next) => {
     }
 
     // Ensure python-ai-service has access to the same absolute path
-    const response = await axios.post(
-      `${config.aiServiceUrl}/check`,
+    const response = await aiClient.post(
+      '/check',
       { file_path: filePath, size_preset: sizePreset },
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -186,8 +185,8 @@ export const complianceAutoCorrect = async (req, res, next) => {
         .json({ success: false, message: 'Access denied: Invalid file type.' });
     }
 
-    const response = await axios.post(
-      `${config.aiServiceUrl}/auto-correct`,
+    const response = await aiClient.post(
+      '/auto-correct',
       { file_path: filePath, issue },
       { headers: { 'Content-Type': 'application/json' } }
     );

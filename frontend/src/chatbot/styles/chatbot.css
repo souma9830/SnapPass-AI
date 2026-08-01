@@ -2,8 +2,8 @@
 
 .chatbot-floating-button {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: 32px;
+    right: 32px;
     width: 64px;
     height: 64px;
     border: none;
@@ -39,8 +39,8 @@
 
 .chatbot-window {
     position: fixed;
-    bottom: 100px;
-    right: 24px;
+    bottom: 112px;
+    right: 32px;
 
     width: 370px;
     height: 560px;
@@ -366,6 +366,21 @@
 
 /* ── MOBILE RESPONSIVE ───────────────────────── */
 
+@media (max-width: 768px) and (min-width: 601px) {
+    .chatbot-floating-button {
+        width: 60px;
+        height: 60px;
+
+        right: 28px;
+        bottom: 28px;
+    }
+
+    .chatbot-window {
+        right: 24px;
+        bottom: 96px;
+    }
+}
+
 @media (max-width: 600px) {
 
     .chatbot-window {
@@ -380,8 +395,8 @@
         width: 58px;
         height: 58px;
 
-        right: 16px;
-        bottom: 16px;
+        right: 18px;
+        bottom: 18px;
     }
 
     .message-bubble {

@@ -29,11 +29,29 @@ describe('translations structure', () => {
     expect(enKeys).toEqual(hiKeys);
   });
 
+  it('has matching keys across locales (es)', () => {
+    const enKeys = Object.keys(en).sort();
+    const esKeys = Object.keys(es).sort();
+    expect(esKeys).toEqual(enKeys);
+  });
+
   it('has no missing translations', () => {
     const enKeys = Object.keys(en);
     for (const key of enKeys) {
       expect(hi[key]).toBeDefined();
       expect(hi[key]).not.toBe('');
     }
+  });
+
+  it('has no missing or empty translations in Spanish (es)', () => {
+    const enKeys = Object.keys(en);
+    for (const key of enKeys) {
+      expect(es[key]).toBeDefined();
+      expect(es[key]).not.toBe('');
+    }
+  });
+
+  it('overrides the home key in Spanish', () => {
+    expect(es.home).toBe('Inicio');
   });
 });

@@ -6,6 +6,8 @@ blur score, head ratio, and background uniformity.
 
 from typing import Dict, Any
 
+__all__ = ["calculate_composite_score"]
+
 def calculate_composite_score(metrics: Dict[str, Any]) -> Dict[str, Any]:
     """
     Given a set of image quality metrics, compute individual aspect scores

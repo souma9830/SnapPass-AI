@@ -71,3 +71,7 @@ export const getSizePresets = async () => {
   const { data } = await api.get('/print/presets');
   return data.data;
 };
+
+const photoService = { uploadPhoto, processPhoto, generateSheet, getSizePresets };
+
+export default photoService;

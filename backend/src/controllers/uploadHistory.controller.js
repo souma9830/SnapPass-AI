@@ -1,13 +1,4 @@
-import Upload from '../models/upload.model.js';
-
-export const getHistory = async (req, res, next) => {
-  try {
-    const history = await Upload.find().sort({ createdAt: -1 }).lean();
-    res.json({ success: true, history });
-  } catch (err) {
-    next(err);
-  }
-};
+import UploadHistory from '../models/UploadHistory.js';
 
 export const getUserUploadHistory = async (req, res, next) => {
   try {
@@ -19,7 +10,9 @@ export const getUserUploadHistory = async (req, res, next) => {
       startDate,
       endDate,
     } = req.query;
-    const filter = {};
+    // Scope every query to the authenticated user to prevent IDOR: without
+    // this, any logged-in user could page through every user's upload records.
+    const filter = { user: req.user.id };
 
     if (search) {
       filter.$or = [
@@ -39,12 +32,12 @@ export const getUserUploadHistory = async (req, res, next) => {
     const skip = (pageNum - 1) * limitNum;
 
     const [items, total] = await Promise.all([
-      Upload.find(filter)
+      UploadHistory.find(filter)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limitNum)
         .lean(),
-      Upload.countDocuments(filter),
+      UploadHistory.countDocuments(filter),
     ]);
 
     res.json({

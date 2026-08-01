@@ -7,6 +7,15 @@ const uploadHistorySchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    fileId: {
+      type: String,
+      required: true,
+    },
+    filename: {
+      type: String,
+      required: true,
+      index: true,
+    },
     originalImage: {
       type: String,
       required: true,
@@ -17,12 +26,16 @@ const uploadHistorySchema = new mongoose.Schema(
     presetSize: {
       type: String,
       enum: ['35x45', '51x51', '33x48', '40x60', '2x2in'],
-      required: true,
+      default: '35x45',
     },
     backgroundColor: {
       type: String,
       enum: ['white', 'off-white', 'light-gray', 'light-blue', 'light-red'],
       default: 'white',
+    },
+    processed: {
+      type: Boolean,
+      default: false,
     },
     status: {
       type: String,

@@ -1,4 +1,5 @@
 import { successResponse, errorResponse } from '../utils/httpResponse.js';
+import UploadHistory from '../models/UploadHistory.js';
 
 /**
  * POST /api/upload
@@ -22,6 +23,17 @@ export const uploadPhoto = async (req, res, next) => {
     const { filename, size, mimetype } = req.file;
     const meta = req.imageMeta || {};
 
+    if (req.user?.id) {
+      await UploadHistory.create({
+        user: req.user.id,
+        fileId: req.file.id || filename,
+        filename,
+        originalImage: filename,
+        processed: false,
+        status: 'pending',
+      }).catch((err) => next(err));
+    }
+
     return successResponse(res, {
       filename,
       fileSize: size,
@@ -44,6 +56,20 @@ export const batchUpload = async (req, res, next) => {
       size: f.size,
       uploaded: true,
     }));
+
+    if (req.user?.id && files.length > 0) {
+      await UploadHistory.insertMany(
+        files.map((f) => ({
+          user: req.user.id,
+          fileId: f.id || f.filename,
+          filename: f.filename,
+          originalImage: f.filename,
+          processed: false,
+          status: 'pending',
+        }))
+      ).catch((err) => next(err));
+    }
+
     successResponse(res, { files: results }, `${results.length} file(s) uploaded successfully`);
   } catch (err) {
     next(err);

@@ -15,6 +15,7 @@ export const config = {
     UPLOAD_DIR: process.env.UPLOAD_DIR || 'uploads',
     upload: {
         allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+        maxBatchFiles: parseInt(process.env.MAX_BATCH_FILES, 10) || 10,
     },
     cloudinary: {
         cloudName: process.env.CLOUDINARY_CLOUD_NAME,

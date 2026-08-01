@@ -5,6 +5,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["ai_error_handler", "ImageProcessingError", "FaceNotFoundError"]
+
+
 class ImageProcessingError(Exception):
     """Base exception for image operations failures."""
     pass

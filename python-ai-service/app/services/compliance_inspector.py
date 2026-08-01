@@ -7,6 +7,15 @@ import io
 from app.services.preset_compliance_engine import PresetComplianceEngine
 from app.services.compliance_score import calculate_composite_score
 
+__all__ = [
+    "inspect_compliance",
+    "ComplianceItem",
+    "TILT_HARD_FAIL_DEG",
+    "BLUR_THRESHOLD",
+    "PRESET_FACE_RATIOS",
+    "PRESET_ASPECT_RATIOS",
+]
+
 # --- Rules (approximate heuristics) ---
 
 # Passport-style tilt guidance (roll angle). Hard fail if abs(roll) > 3 degrees.

@@ -8,6 +8,13 @@ ALLOWED_MAGIC_BYTES = {
     b'RIFF': 'webp',            # WebP
 }
 
+__all__ = [
+    "validate_image_bytes",
+    "detect_image_type",
+    "ALLOWED_EXTENSIONS",
+    "ALLOWED_MAGIC_BYTES",
+]
+
 
 def detect_image_type(file_path: str) -> str | None:
     with open(file_path, 'rb') as f:

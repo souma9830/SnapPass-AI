@@ -7,6 +7,14 @@ BLUR_THRESHOLD = 80.0
 MIN_FACE_W = 300
 MIN_FACE_H = 375
 
+__all__ = [
+    "assess_face_quality",
+    "FaceQualityReport",
+    "BLUR_THRESHOLD",
+    "MIN_FACE_W",
+    "MIN_FACE_H",
+]
+
 
 # Enhanced Face Quality Gate for Studio Passport Photo AI Pipeline
 @dataclass

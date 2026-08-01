@@ -5,6 +5,7 @@ import {
   generatePdf,
   createZip,
   sanitizeFileName,
+  stripImageMetadata,
 } from '../utils/exportHelpers';
 import { saveAs } from 'file-saver';
 
@@ -28,6 +29,7 @@ export default function DownloadPackagePanel({
     transparent: false,
     rename: false,
     pdf: false,
+    stripMetadata: false,
   });
   const [loading, setLoading] = useState(false);
 
@@ -50,7 +52,12 @@ export default function DownloadPackagePanel({
         : 'photo';
 
       // Load original processed image blob
-      const originalBlob = await fetchBlob(processedUrl);
+      let originalBlob = await fetchBlob(processedUrl);
+
+      // Optionally strip EXIF / GPS / device metadata for privacy before export
+      if (options.stripMetadata) {
+        originalBlob = await stripImageMetadata(originalBlob);
+      }
 
       if (options.compressed) {
         const compressedBlob = await compressImage(originalBlob, 0.8);
@@ -64,8 +71,7 @@ export default function DownloadPackagePanel({
         const name = options.rename
           ? `${baseName}_transparent.png`
           : `${baseName}.png`;
-        const transparentBlob = await fetchBlob(processedUrl);
-        blobMap[name] = transparentBlob;
+        blobMap[name] = originalBlob;
       }
 
       if (options.pdf) {
@@ -78,8 +84,7 @@ export default function DownloadPackagePanel({
         const name = options.rename
           ? `${baseName}_sheet.jpg`
           : `${baseName}_sheet.jpg`;
-        const sheetBlob = await fetchBlob(processedUrl);
-        blobMap[name] = sheetBlob;
+        blobMap[name] = originalBlob;
       }
 
       const selectedCount = Object.keys(blobMap).length;
@@ -146,6 +151,14 @@ export default function DownloadPackagePanel({
             onChange={() => toggleOption('pdf')}
           />
           Export as PDF (single image)
+        </label>
+        <label title="Removes EXIF data such as camera model, GPS coordinates and capture date">
+          <input
+            type="checkbox"
+            checked={options.stripMetadata}
+            onChange={() => toggleOption('stripMetadata')}
+          />
+          Strip Image Metadata for Privacy
         </label>
       </div>
       <button

@@ -76,3 +76,32 @@ export async function createZip(filesMap, zipName = 'download_package.zip') {
 export function sanitizeFileName(originalName) {
   return originalName.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
 }
+
+/**
+ * Strip EXIF and other metadata from an image by redrawing it through a
+ * canvas. Canvas-redrawn images contain no EXIF/GPS/device metadata.
+ * Returns a Blob of the given mime type (defaults to the source type).
+ */
+export async function stripImageMetadata(imageBlob, mimeType) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Metadata strip failed'));
+        },
+        mimeType || imageBlob.type || 'image/png',
+        1.0
+      );
+    };
+    img.onerror = reject;
+    const url = URL.createObjectURL(imageBlob);
+    img.src = url;
+  });
+}

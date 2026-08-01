@@ -10,7 +10,7 @@ import './HomePage.css';
 
 function HomePage({ darkMode, toggleTheme }) {
   return (
-    <main>
+    <div className="home-page-root">
       <HeroSection darkMode={darkMode} toggleTheme={toggleTheme} />
       <AIShowcaseSection
         darkMode={darkMode}
@@ -32,7 +32,7 @@ function HomePage({ darkMode, toggleTheme }) {
       <TestimonialsSection darkMode={darkMode} />
       <CTABanner darkMode={darkMode} />
       
-    </main>
+    </div>
   );
 }
 

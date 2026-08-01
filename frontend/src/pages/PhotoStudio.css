@@ -126,8 +126,16 @@
     border: 2px dashed #94a3b8;
     border-radius: 24px;
     cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    text-align: center;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+}
+
+.upload-placeholder:focus-visible {
+    outline: 3px solid #3b82f6;
+    outline-offset: 2px;
 }
 
 .upload-placeholder:hover {
@@ -258,6 +266,11 @@
     background: #e2e8f0;
     border-radius: 99px;
     outline: none;
+}
+
+.slider:focus-visible {
+    outline: 3px solid #3b82f6;
+    outline-offset: 3px;
 }
 
 .slider::-webkit-slider-thumb {

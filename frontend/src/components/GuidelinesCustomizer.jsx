@@ -6,8 +6,8 @@ import React from 'react';
  */
 const GuidelinesCustomizer = ({ guideColor, onColorChange }) => (
   <div>
-    <label>Guide Color:</label>
-    <input type="color" value={guideColor} onChange={(e) => onColorChange(e.target.value)} />
+    <label htmlFor="guide-color">Guide Color:</label>
+    <input id="guide-color" type="color" value={guideColor} onChange={(e) => onColorChange(e.target.value)} />
   </div>
 );
 

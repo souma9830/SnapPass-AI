@@ -90,8 +90,9 @@ const AddTestimonialForm = ({
         </div>
 
         <div className="form-group">
-          <label className={darkMode ? 'label-dark' : 'label-light'}>{t.reviewNameLabel}</label>
+          <label htmlFor="review-name" className={darkMode ? 'label-dark' : 'label-light'}>{t.reviewNameLabel}</label>
           <input
+            id="review-name"
             type="text"
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
@@ -112,8 +113,9 @@ const AddTestimonialForm = ({
         </div>
 
         <div className="form-group">
-          <label className={darkMode ? 'label-dark' : 'label-light'}>{t.reviewCommentLabel}</label>
+          <label htmlFor="review-comment" className={darkMode ? 'label-dark' : 'label-light'}>{t.reviewCommentLabel}</label>
           <textarea
+            id="review-comment"
             value={formData.comment}
             onChange={(e) => handleChange('comment', e.target.value)}
             placeholder={t.reviewCommentPlaceholder}

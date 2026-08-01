@@ -277,11 +277,15 @@ function PhotoStudio() {
                     )}
 
                     {!imageSrc ? (
-                        <div className="upload-placeholder tour-upload" onClick={() => fileInputRef.current.click()}>
+                        <button
+                            type="button"
+                            className="upload-placeholder tour-upload"
+                            onClick={() => fileInputRef.current.click()}
+                        >
                             <Upload className="upload-icon" size={48} />
                             <p>{t.clickUploadPhoto}</p>
                             <span className="upload-hint">{t.uploadFormats}</span>
-                        </div>
+                        </button>
                     ) : showOriginal && previewImageSrc && imageSrc ? (
                         <div className="comparison-section">
                             <ComparisonSlider beforeSrc={imageSrc} afterSrc={previewImageSrc} alt="Photo edit comparison" />
@@ -349,6 +353,7 @@ function PhotoStudio() {
                                 value={adjustments[tool.id]}
                                 onChange={(e) => updateAdjustment(tool.id, e.target.value)}
                                 className="slider"
+                                aria-label={`${t[tool.labelKey]} ${tool.format(adjustments[tool.id])}`}
                             />
                         </div>
                     ))}

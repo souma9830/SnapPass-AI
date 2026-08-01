@@ -579,3 +579,4 @@ function EditorPage({ darkMode, toggleTheme }) {
 }
 
 export default EditorPage;
+export { EditorPage };

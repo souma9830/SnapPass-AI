@@ -37,8 +37,12 @@ function CompliancePanel({
   darkMode,
 }) {
   const [expanded, setExpanded] = useState(true); // expanded by default to draw immediate attention
+  const [dismissedWarnings, setDismissedWarnings] = useState({});
   const items = compliance?.items || DEFAULT_CHECKS;
   const hardFail = Boolean(compliance?.hard_fail);
+  const warnings = (compliance?.warnings || []).filter(
+    (w) => w && !dismissedWarnings[w.id]
+  );
 
   const headerText = useMemo(() => {
     if (loading) return 'Checking compliance...';
@@ -96,6 +100,79 @@ function CompliancePanel({
 
       {expanded && (
         <>
+          {warnings.length > 0 && (
+            <div className="compliance-panel__warnings" style={{ marginTop: '0.5rem' }}>
+              {warnings.map((warning) => (
+                <div
+                  className="compliance-panel__warning"
+                  key={warning.id}
+                  role="alert"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '8px',
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    backgroundColor: darkMode
+                      ? 'rgba(217, 119, 6, 0.18)'
+                      : 'rgba(255, 247, 237, 0.9)',
+                    border: `1px solid ${darkMode ? 'rgba(217, 119, 6, 0.45)' : 'rgba(217, 119, 6, 0.35)'}`,
+                  }}
+                >
+                  <span aria-hidden="true" style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                    ⚠️
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      className="compliance-panel__warning-title"
+                      style={{
+                        fontWeight: '600',
+                        fontSize: '0.82rem',
+                        color: darkMode ? '#fbbf24' : '#92400e',
+                      }}
+                    >
+                      {warning.title || warning.id}
+                    </div>
+                    {warning.message && (
+                      <div
+                        className="compliance-panel__warning-message"
+                        style={{
+                          fontSize: '0.78rem',
+                          color: darkMode ? '#fcd34d' : '#b45309',
+                          marginTop: '2px',
+                        }}
+                      >
+                        {warning.message}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    aria-label={`Dismiss ${warning.title || 'warning'}`}
+                    onClick={() =>
+                      setDismissedWarnings((prev) => ({
+                        ...prev,
+                        [warning.id]: true,
+                      }))
+                    }
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      lineHeight: '1',
+                      color: darkMode ? '#fcd34d' : '#92400e',
+                      opacity: 0.75,
+                      padding: '0 2px',
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
           {loading && (
             <div
               className="compliance-panel__loading"

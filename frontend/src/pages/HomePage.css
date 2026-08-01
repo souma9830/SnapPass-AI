@@ -495,6 +495,8 @@
   margin-top: var(--space-xl);
 
   width: 100%;
+
+  align-items: stretch;
 }
 
 .feature-card {
@@ -516,6 +518,10 @@
     box-shadow 0.35s ease,
     border-color 0.35s ease,
     background 0.35s ease;
+}
+
+.feature-card__preview {
+  flex-shrink: 0;
 }
 
 .feature-card-dark {
@@ -621,6 +627,7 @@
 /* Icon */
 
 .feature-card__icon {
+  flex-shrink: 0;
   width: 46px;
   height: 46px;
 
@@ -655,6 +662,7 @@
 /* Typography */
 
 .feature-card__title {
+  flex-shrink: 0;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--color-text);
@@ -665,6 +673,7 @@
 }
 
 .feature-card__desc {
+  flex: 1 1 auto;
   font-size: var(--font-size-sm);
   line-height: 1.7;
   color: var(--color-text-muted);

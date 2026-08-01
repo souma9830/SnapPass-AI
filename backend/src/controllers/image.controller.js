@@ -143,7 +143,16 @@ export const processImage = async (req, res, next) => {
     res.json({ success: true, data: { processedUrl } });
   } catch (error) {
     // Graceful local sharp processing fallback if AI service is offline
-    if (error.code === "ECONNREFUSED" || error.code === "ENOTFOUND") {
+    const AI_UNAVAILABLE = {
+      success: false,
+      message: "AI service is unavailable. Please ensure python-ai-service is running.",
+    };
+    if (
+      error.code === "ECONNREFUSED" ||
+      error.code === "ENOTFOUND" ||
+      error.code === "ETIMEDOUT" ||
+      error.code === "ECONNABORTED"
+    ) {
       try {
         const sharp = (await import('sharp')).default;
         const uploadsDir = path.resolve(process.cwd(), "uploads");
@@ -165,7 +174,9 @@ export const processImage = async (req, res, next) => {
         const processedUrl = `/uploads/processed/${outFilename}`;
         return res.json({ success: true, data: { processedUrl }, fallback: true });
       } catch (fallbackErr) {
-        return res.status(500).json({ success: false, message: "Local photo processing failed." });
+        // AI service is down and the local fallback could not run: return a
+        // consistent 503 instead of leaking an internal error or stack trace.
+        return res.status(503).json(AI_UNAVAILABLE);
       }
     }
     next(error);

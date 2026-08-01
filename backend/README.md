@@ -236,6 +236,17 @@ It is called once when the server starts in `server.js`:
 }
 ```
 
+**When the Python AI service is unreachable**, the endpoint returns a
+consistent `503 Service Unavailable` (instead of a generic 500 or a leaked
+stack trace) so the frontend can show a graceful fallback message:
+
+```json
+{
+  "success": false,
+  "message": "AI service is unavailable. Please ensure python-ai-service is running."
+}
+```
+
 ---
 
 ### Print

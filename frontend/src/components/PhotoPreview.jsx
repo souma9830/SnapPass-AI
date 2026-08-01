@@ -10,6 +10,7 @@ function PhotoPreview({
   isUploading,
   darkMode,
   showOverlay = false,
+  uploadProgress = 0,
 }) {
   return (
     <div className="photo-preview">
@@ -29,7 +30,7 @@ function PhotoPreview({
           Uploaded Photo
           {isUploading && (
             <span className="photo-preview__processing-badge">
-              Processing...
+              Uploading — {uploadProgress}%
             </span>
           )}
         </div>

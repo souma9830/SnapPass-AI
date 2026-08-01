@@ -76,3 +76,60 @@ export async function createZip(filesMap, zipName = 'download_package.zip') {
 export function sanitizeFileName(originalName) {
   return originalName.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
 }
+
+/**
+ * Render an image to a canvas at the exact target pixel dimensions.
+ * Optional circular mask for avatar-style exports.
+ */
+export function renderToPixelCanvas(
+  source,
+  { width, height, shape = 'square' } = {}
+) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
+      if (shape === 'circle') {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, Math.PI * 2);
+        ctx.clip();
+      }
+
+      const scale = Math.max(width / img.width, height / img.height);
+      const dw = img.width * scale;
+      const dh = img.height * scale;
+      ctx.drawImage(img, (width - dw) / 2, (height - dh) / 2, dw, dh);
+
+      if (shape === 'circle') ctx.restore();
+
+      resolve(canvas);
+    };
+    img.onerror = reject;
+    img.src = source;
+  });
+}
+
+/**
+ * Export a single high-resolution digital image (PNG or JPEG) at the
+ * exact pixel dimensions of the selected preset.
+ */
+export async function exportDigitalImage(
+  source,
+  { width, height, shape = 'square', format = 'png', quality = 0.95, filename = 'avatar.png' }
+) {
+  const canvas = await renderToPixelCanvas(source, { width, height, shape });
+  const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Export failed'))), mimeType, quality);
+  });
+  saveAs(blob, filename);
+  return blob;
+}

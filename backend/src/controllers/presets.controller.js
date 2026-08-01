@@ -5,6 +5,13 @@ import { successResponse, errorResponse } from '../utils/httpResponse.js';
 
 export const PHOTO_SIZE_PRESETS = ["35x45", "51x51", "33x48", "40x60", "2x2in", "100x150", "25x25", "50x70", "45x45", "35x50"];
 
+export const DIGITAL_SIZE_PRESETS = [
+  { id: "linkedin-400", category: "digital", label: "LinkedIn Square", widthPx: 400, heightPx: 400, shape: "square" },
+  { id: "slack-512", category: "digital", label: "Slack Circular Avatar", widthPx: 512, heightPx: 512, shape: "circle" },
+  { id: "github-460", category: "digital", label: "GitHub Profile", widthPx: 460, heightPx: 460, shape: "square" },
+  { id: "teams-400", category: "digital", label: "Microsoft Teams Avatar", widthPx: 400, heightPx: 400, shape: "circle" },
+];
+
 export const PHOTO_SIZE_DETAILS = [
   { id: "35x45", label: "35×45 mm (India / UK)", widthMm: 35, heightMm: 45 },
   { id: "51x51", label: "51×51 mm (USA Visa)", widthMm: 51, heightMm: 51 },
@@ -23,7 +30,7 @@ const CACHE_TTL = 3600;
 export const getPresets = async (req, res, next) => {
   try {
     if (mongoose.connection.readyState !== 1) {
-      return successResponse(res, PHOTO_SIZE_DETAILS, 'Presets fetched successfully');
+      return successResponse(res, [...PHOTO_SIZE_DETAILS, ...DIGITAL_SIZE_PRESETS], 'Presets fetched successfully');
     }
 
     const cacheKey = 'presets:all';

@@ -6,6 +6,7 @@
       "width": 35,
       "height": 45,
       "unit": "mm",
+      "category": "passport",
       "eyeLinePercent": 56,
       "chinLinePercent": 82
     },
@@ -15,6 +16,7 @@
       "width": 51,
       "height": 51,
       "unit": "mm",
+      "category": "passport",
       "eyeLinePercent": 54,
       "chinLinePercent": 80
     },
@@ -24,8 +26,45 @@
       "width": 33,
       "height": 48,
       "unit": "mm",
+      "category": "passport",
       "eyeLinePercent": 55,
       "chinLinePercent": 81
+    },
+    {
+      "id": "linkedin-400",
+      "category": "digital",
+      "label": "LinkedIn Square",
+      "width": 400,
+      "height": 400,
+      "unit": "px",
+      "shape": "square"
+    },
+    {
+      "id": "slack-512",
+      "category": "digital",
+      "label": "Slack Circular Avatar",
+      "width": 512,
+      "height": 512,
+      "unit": "px",
+      "shape": "circle"
+    },
+    {
+      "id": "github-460",
+      "category": "digital",
+      "label": "GitHub Profile",
+      "width": 460,
+      "height": 460,
+      "unit": "px",
+      "shape": "square"
+    },
+    {
+      "id": "teams-400",
+      "category": "digital",
+      "label": "Microsoft Teams Avatar",
+      "width": 400,
+      "height": 400,
+      "unit": "px",
+      "shape": "circle"
     }
   ]
 }

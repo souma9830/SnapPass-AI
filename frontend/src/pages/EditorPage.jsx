@@ -20,12 +20,19 @@ import { uploadPhoto } from '../services/photoService';
 import './EditorPage.css';
 
 const SIZE_PRESETS = [
-  { id: '35x45', label: 'India / UK Passport', dimensions: '35 × 45 mm' },
-  { id: '51x51', label: 'USA Visa', dimensions: '51 × 51 mm' },
-  { id: '33x48', label: 'Schengen Visa', dimensions: '33 × 48 mm' },
-  { id: '40x60', label: 'China Visa', dimensions: '40 × 60 mm' },
-  { id: '2x2in', label: 'US Passport', dimensions: '2 × 2 in' },
+  { id: '35x45', label: 'India / UK Passport', dimensions: '35 × 45 mm', category: 'passport' },
+  { id: '51x51', label: 'USA Visa', dimensions: '51 × 51 mm', category: 'passport' },
+  { id: '33x48', label: 'Schengen Visa', dimensions: '33 × 48 mm', category: 'passport' },
+  { id: '40x60', label: 'China Visa', dimensions: '40 × 60 mm', category: 'passport' },
+  { id: '2x2in', label: 'US Passport', dimensions: '2 × 2 in', category: 'passport' },
+  { id: 'linkedin-400', label: 'LinkedIn Square', dimensions: '400 × 400 px', category: 'digital', widthPx: 400, heightPx: 400, shape: 'square' },
+  { id: 'slack-512', label: 'Slack Circular Avatar', dimensions: '512 × 512 px', category: 'digital', widthPx: 512, heightPx: 512, shape: 'circle' },
+  { id: 'github-460', label: 'GitHub Profile', dimensions: '460 × 460 px', category: 'digital', widthPx: 460, heightPx: 460, shape: 'square' },
+  { id: 'teams-400', label: 'Microsoft Teams Avatar', dimensions: '400 × 400 px', category: 'digital', widthPx: 400, heightPx: 400, shape: 'circle' },
 ];
+
+const isDigitalPreset = (presetId) =>
+  SIZE_PRESETS.some((p) => p.id === presetId && p.category === 'digital');
 
 function EditorPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
@@ -204,6 +211,23 @@ function EditorPage({ darkMode, toggleTheme }) {
         attire,
         processedPhotos: [...processedPhotos, newPhoto]
       });
+
+      if (isDigitalPreset(sizePreset)) {
+        const preset = SIZE_PRESETS.find((p) => p.id === sizePreset);
+        navigate('/digital-download', {
+          state: {
+            processedUrl: resultUrl,
+            filename: processFilename,
+            background,
+            sizePreset,
+            widthPx: preset?.widthPx,
+            heightPx: preset?.heightPx,
+            shape: preset?.shape,
+          },
+        });
+        return;
+      }
+
       navigate('/print-preview', {
         state: { 
           processedUrl: resultUrl, 

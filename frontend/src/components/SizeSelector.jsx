@@ -18,13 +18,26 @@ function SizeSelector({ presets = [], selected, onChange }) {
           className="size-selector__select"
           value={selected}
           onChange={(e) => onChange && onChange(e.target.value)}
-          aria-label="Select passport photo size preset"
+          aria-label="Select photo size preset"
         >
-          {presets.map((preset) => (
-            <option key={preset.id} value={preset.id}>
-              {preset.label}
-            </option>
-          ))}
+          <optgroup label="Country Passports">
+            {presets
+              .filter((preset) => preset.category !== 'digital')
+              .map((preset) => (
+                <option key={preset.id} value={preset.id}>
+                  {preset.label}
+                </option>
+              ))}
+          </optgroup>
+          <optgroup label="Digital Profiles">
+            {presets
+              .filter((preset) => preset.category === 'digital')
+              .map((preset) => (
+                <option key={preset.id} value={preset.id}>
+                  {preset.label}
+                </option>
+              ))}
+          </optgroup>
         </select>
       </div>
       {presets.find((p) => p.id === selected) && (
@@ -33,7 +46,8 @@ function SizeSelector({ presets = [], selected, onChange }) {
         </div>
       )}
       <div className="size-selector__hint">
-        Select the standard that matches your destination country
+        Country Passports produce a print sheet; Digital Profiles export a
+        single high-resolution image.
       </div>
     </div>
   );

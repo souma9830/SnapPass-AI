@@ -1,0 +1,119 @@
+/* ── DigitalDownloadPage ────────────────────────── */
+.digital-page {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 100px;
+  padding-bottom: 40px;
+}
+.digital-page-dark {
+  background:
+    radial-gradient(
+      1400px 700px at 10% 10%,
+      rgba(99, 102, 241, 0.22),
+      transparent 35%
+    ),
+    linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #0d1117 100%);
+}
+.digital-page__content {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding: 0 var(--space-md);
+}
+.digital-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.digital-page__layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+/* Preview */
+.digital-page__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.digital-page__canvas {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.digital-page__dims {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Controls */
+.digital-page__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.digital-page__panel-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+.digital-page__note {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+.digital-page__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.digital-page__action {
+  width: 100%;
+  justify-content: center;
+}
+.digital-page__error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #dc2626;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+.digital-page__back {
+  justify-content: center;
+}
+
+.digital-page__empty {
+  max-width: 480px;
+  margin: 120px auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-xl);
+}
+.digital-page__empty h2 {
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
+.digital-page__empty p {
+  color: var(--color-text-light);
+}
+
+@media (max-width: 768px) {
+  .digital-page__layout {
+    grid-template-columns: 1fr;
+  }
+}

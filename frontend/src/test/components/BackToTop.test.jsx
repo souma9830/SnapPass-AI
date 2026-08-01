@@ -33,4 +33,56 @@ describe('BackToTop component', () => {
       behavior: 'smooth',
     });
   });
+
+  test('hides button at intermediate scroll offset below threshold', () => {
+    const { getByRole } = render(<BackToTop />);
+    window.scrollY = 250;
+    fireEvent.scroll(window);
+    expect(getByRole('button', { name: /back to top/i })).not.toHaveClass('show');
+  });
+
+  test('remains visible at large scroll offsets above threshold', () => {
+    const { getByRole } = render(<BackToTop />);
+    window.scrollY = 1200;
+    fireEvent.scroll(window);
+    expect(getByRole('button', { name: /back to top/i })).toHaveClass('show');
+  });
+
+  test('exact threshold boundary of 400 keeps the button hidden', () => {
+    const { getByRole } = render(<BackToTop />);
+    window.scrollY = 400;
+    fireEvent.scroll(window);
+    expect(getByRole('button', { name: /back to top/i })).not.toHaveClass('show');
+  });
+
+  test('scroll offset just above the threshold shows the button', () => {
+    const { getByRole } = render(<BackToTop />);
+    window.scrollY = 401;
+    fireEvent.scroll(window);
+    expect(getByRole('button', { name: /back to top/i })).toHaveClass('show');
+  });
+
+  test('hides the button again when scrolling back below the threshold', () => {
+    const { getByRole } = render(<BackToTop />);
+    window.scrollY = 700;
+    fireEvent.scroll(window);
+    const btn = getByRole('button', { name: /back to top/i });
+    expect(btn).toHaveClass('show');
+    window.scrollY = 300;
+    fireEvent.scroll(window);
+    expect(btn).not.toHaveClass('show');
+  });
+
+  test('removes the window scroll listener on unmount', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener');
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
+    const { unmount } = render(<BackToTop />);
+    expect(addSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
+
+    unmount();
+    expect(removeSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
+
+    addSpy.mockRestore();
+    removeSpy.mockRestore();
+  });
 });

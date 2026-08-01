@@ -10,6 +10,12 @@ function buildFallbackPayload() {
   };
 }
 
+/**
+ * Fetches testimonials and aggregate stats from the backend. Falls back to
+ * bundled sample data when VITE_API_URL is unset or the request fails, so
+ * review widgets never crash in an unconfigured environment.
+ * @returns {Promise<Object>}
+ */
 export async function fetchTestimonials() {
   const fingerprint = getReviewFingerprint();
 
@@ -37,6 +43,12 @@ function ensureApiConfigured() {
   }
 }
 
+/**
+ * Submits a new testimonial. Throws a descriptive error when the backend
+ * API is not configured rather than silently failing.
+ * @param {Object} payload Review form data.
+ * @returns {Promise<Object>} The stored testimonial record.
+ */
 export async function submitTestimonial(payload) {
   ensureApiConfigured();
   const clientFingerprint = getReviewFingerprint();
@@ -60,3 +72,7 @@ export async function updateTestimonial(payload) {
 
   return data.data.testimonial;
 }
+
+const testimonialService = { fetchTestimonials, submitTestimonial, updateTestimonial };
+
+export default testimonialService;

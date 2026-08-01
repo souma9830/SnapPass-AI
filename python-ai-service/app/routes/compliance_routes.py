@@ -1,7 +1,14 @@
+"""
+compliance_routes.py — /check and /auto-correct endpoints for passport
+compliance inspection and automated fixes.
+"""
+
 from flask import Blueprint, request, jsonify
 from app.services.compliance_inspector import inspect_compliance
 
 compliance_bp = Blueprint("compliance", __name__)
+
+__all__ = ["compliance_bp"]
 
 @compliance_bp.post("/check")
 def compliance_check():

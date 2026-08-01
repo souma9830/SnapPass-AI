@@ -188,5 +188,8 @@ export const resetPassword = catchAsync(async (req, res) => {
   await passwordResetOtpService.verifyOtp(user._id, otp);
   // Update Password
   await authService.updatePassword(user._id, newPassword);
+  // Revoke all existing sessions so any previously-issued JWTs (including
+  // an attacker's session from a takeover) are immediately invalidated.
+  await sessionService.invalidateAllUserSessions(user._id);
   sendResponse(res, 200, true, 'Password reset successfully', null);
 });

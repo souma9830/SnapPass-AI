@@ -27,25 +27,42 @@ export class CleanupTask {
         }
       }
       logger.info(`Cleanup finished. Removed ${count} expired files.`);
+      return { removed: count, skipped: 0 };
     } catch (error) {
       logger.error(`Error during file cleanup: ${error.message}`);
+      return { removed: 0, skipped: 0 };
     }
   }
 
   /**
+   * Runs a single cleanup sweep across the uploads directory and its
+   * processed subdirectory.
+   */
+  static async sweep(maxAgeMs = config.RETENTION_MAX_AGE_MS || 24 * 60 * 60 * 1000) {
+    const uploadsDir = path.resolve(process.cwd(), config.UPLOAD_DIR || 'uploads');
+    await CleanupTask.execute(uploadsDir, maxAgeMs);
+
+    const processedDir = path.join(uploadsDir, 'processed');
+    await CleanupTask.execute(processedDir, maxAgeMs);
+  }
+
+  /**
    * Starts a periodic cron-like interval timer for background cleanups.
+   * Runs an immediate sweep on startup so stale files from a previous run
+   * are purged right away instead of lingering for up to a full retention
+   * window before the first scheduled sweep fires.
    */
   static startScheduler() {
     const intervalMs = 60 * 60 * 1000; // Run every hour
     const maxAgeMs = config.RETENTION_MAX_AGE_MS || 24 * 60 * 60 * 1000; // Default 24 hours
-    
+
     logger.info('Initializing background storage cleanup scheduler...');
-    setInterval(async () => {
-      const uploadsDir = path.resolve(process.cwd(), config.UPLOAD_DIR || 'uploads');
-      await CleanupTask.execute(uploadsDir, maxAgeMs);
-      
-      const processedDir = path.join(uploadsDir, 'processed');
-      await CleanupTask.execute(processedDir, maxAgeMs);
-    }, intervalMs);
+
+    // Sweep immediately on boot, then periodically.
+    CleanupTask.sweep(maxAgeMs)
+      .then(() => logger.info('Initial storage cleanup sweep completed.'))
+      .catch((err) => logger.error(`Initial storage cleanup sweep failed: ${err.message}`));
+
+    setInterval(() => CleanupTask.sweep(maxAgeMs), intervalMs);
   }
 }

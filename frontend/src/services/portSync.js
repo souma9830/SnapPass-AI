@@ -1,5 +1,3 @@
-import api from './api';
-
 const CANDIDATE_PORTS = [3000, 3001, 3002, 5000, 5005, 8080];
 let isScanning = false;
 
@@ -45,6 +43,8 @@ export async function scanBackendPorts() {
     const activePort = results.find(port => port !== null);
 
     if (activePort) {
+      // Import lazily to avoid a static circular dependency with api.js.
+      const { default: api } = await import('./api');
       const newUrl = `http://localhost:${activePort}/api`;
       api.defaults.baseURL = newUrl;
       sessionStorage.setItem('snappass_backend_port', activePort.toString());

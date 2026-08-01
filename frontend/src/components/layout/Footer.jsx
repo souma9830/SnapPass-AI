@@ -6,9 +6,8 @@ import {
   Globe,
   BadgeCheck,
   ArrowRight,
-  Share2,
-  User,
 } from 'lucide-react';
+import { FaLinkedin, FaFacebook, FaGithub } from 'react-icons/fa6';
 
 import './Footer.css';
 import { useLanguage } from '../../context/LanguageContext';
@@ -156,24 +155,30 @@ function Footer({ darkMode }) {
                 href="https://www.linkedin.com/in/soumadeep-s/"
                 className="footer__social-link"
                 aria-label="LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Globe size={18} aria-hidden="true" />
+                <FaLinkedin size={18} aria-hidden="true" />
               </a>
 
               <a
                 href="https://www.facebook.com/soumadeep9830"
                 className="footer__social-link"
                 aria-label="Facebook"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Share2 size={18} aria-hidden="true" />
+                <FaFacebook size={18} aria-hidden="true" />
               </a>
 
               <a
                 href="https://github.com/souma9830"
                 className="footer__social-link"
                 aria-label="GitHub"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <User size={18} aria-hidden="true" />
+                <FaGithub size={18} aria-hidden="true" />
               </a>
             </div>
           </div>

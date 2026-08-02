@@ -9,13 +9,4 @@ export const useImagePreloader = (imageUrls) => {
     setLoaded(false);
 
     preloadMultipleImages(imageUrls).then(() => {
-      if (active) setLoaded(true);
-    });
-
-    return () => {
-      active = false;
-    };
-  }, [imageUrls]);
-
-  return loaded;
-};
+    .catch(err => console.error(err))

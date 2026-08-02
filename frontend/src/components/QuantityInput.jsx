@@ -20,7 +20,7 @@ function QuantityInput({ darkMode, toggleTheme, value = 6, onChange, min = 1, ma
 
   const handleChange = (e) => {
     const num = parseInt(e.target.value, 10);
-    if (!isNaN(num) && num >= min && num <= max) {
+    if (!Number.isNaN(num) && num >= min && num <= max) {
       onChange && onChange(num);
     }
   };

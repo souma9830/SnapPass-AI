@@ -16,7 +16,8 @@ const ProcessingStatus = ({ jobId, onStatusChange }) => {
   const fetchStatus = useCallback(async () => {
     try {
       const res = await fetch(`/api/process/job/${jobId}`);
-      const json = await res.json();
+      if (!res.ok) throw new Error("Request failed");
+const json = await res.json();
       if (json.success) {
         setStatus(json.data.status);
         setError(json.data.error?.message || null);

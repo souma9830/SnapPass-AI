@@ -5,10 +5,13 @@ import config
 from app.services.bg_remove import remove_background
 from app.services.face_center import center_face
 from app.services.dpi_optimizer import optimise_dpi
-process_bp = Blueprint("process", __name__)
+from app.services.rbac import require_role
+
+process_bp = Blueprint("process_bp", __name__)
 
 
-@process_bp.post("/remove-bg")
+@process_bp.route("/remove-bg", methods=["POST"])
+@require_role(["admin", "staff"])
 def remove_bg():
     """
     Test endpoint — background removal only.

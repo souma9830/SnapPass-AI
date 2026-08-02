@@ -20,43 +20,4 @@ function AppContent() {
   useEffect(() => {
     if (import.meta.env.DEV) {
       scanBackendPorts().then((discoveredPort) => {
-        if (discoveredPort) {
-          showToast(`[PortSync] Connected to backend on port ${discoveredPort}`, 'success');
-        }
-      });
-    }
-  }, [showToast]);
-
-  return (
-    <div className="app-shell">
-      <SkipToContent />
-      {/* Primary content area rendering child routes */}
-      <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
-      <main className="app-main" id="main-content" tabIndex={-1}>
-        <AppRoutes darkMode={darkMode} toggleTheme={toggleTheme} />
-      </main>
-      <Footer darkMode={darkMode} />
-      <SnapPassAssistant />
-      <ScrollToTopButton />
-    </div>
-  );
-}
-
-import ErrorBoundary from './components/ErrorBoundary';
-
-function App() {
-  // Mount primary application providers and routing controls
-  return (
-    <ErrorBoundary>
-      <ToastProvider>
-        <ThemeProvider>
-          <ThemeCustomizerProvider>
-            <AppContent />
-          </ThemeCustomizerProvider>
-        </ThemeProvider>
-      </ToastProvider>
-    </ErrorBoundary>
-  );
-}
-
-export default App;
+      .catch(err => console.error(err))

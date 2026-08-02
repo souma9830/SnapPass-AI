@@ -33,6 +33,17 @@ def remove_bg():
 
     try:
         image_bytes = file.read()
+        
+        if request.form.get("analyze_clothing", "false").lower() == "true":
+            from app.services.clothing_analysis import analyze_clothing_compliance
+            clothing_status = analyze_clothing_compliance(image_bytes, bg_colour)
+            if not clothing_status["compliant"]:
+                return jsonify({
+                    "success": False,
+                    "message": "Clothing compliance check failed.",
+                    "warnings": clothing_status["warnings"]
+                }), 400
+
         result_bytes = remove_background(image_bytes, bg_colour, attire)
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)

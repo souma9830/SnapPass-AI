@@ -52,11 +52,24 @@ def remove_background(
     Raises:
         ValueError: If background_colour is not a recognised name or valid hex.
     """
-    removed_bytes = remove(image_bytes)
+    # Enable alpha matting for smoother edges, especially around hair
+    removed_bytes = remove(
+        image_bytes,
+        alpha_matting=True,
+        alpha_matting_foreground_threshold=240,
+        alpha_matting_background_threshold=10,
+        alpha_matting_erode_size=10
+    )
     foreground = Image.open(io.BytesIO(removed_bytes)).convert("RGBA")
 
     if attire != "none":
         foreground = apply_attire_swap(foreground, attire)
+
+    if background_colour.lower() == "transparent":
+        result = foreground
+        output = io.BytesIO()
+        result.save(output, format="PNG")
+        return output.getvalue()
 
     bg_rgba = _resolve_colour(background_colour)
 

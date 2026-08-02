@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { Sun, Moon } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import NavbarAlignmentDetector from './NavbarAlignmentDetector';
 
@@ -95,11 +96,12 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
           {typeof toggleTheme === 'function' && (
             <button
               type="button"
-              className={`navbar__language-selector navbar__language-selector-${themeClass}`}
+              className={`navbar__theme-toggle navbar__theme-toggle-${themeClass}`}
               onClick={toggleTheme}
               aria-label={`Switch to ${darkMode ? 'light' : 'dark'} theme`}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              {darkMode ? 'Light' : 'Dark'}
+              {darkMode ? <Sun size={20} color="#facc15" /> : <Moon size={20} color="#64748b" />}
             </button>
           )}
 

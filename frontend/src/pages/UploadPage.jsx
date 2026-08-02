@@ -10,6 +10,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { iconMap } from '../data/UploadPageData';
 import { runImageDiagnostics } from '../utils/imageDiagnostics';
+import WebcamOverlay from '../components/WebcamOverlay';
 import './UploadPage.css';
 
 function UploadPage({ darkMode, toggleTheme }) {
@@ -26,6 +27,7 @@ function UploadPage({ darkMode, toggleTheme }) {
   } = usePhotoUpload();
   const [localPreview, setLocalPreview] = useState(null);
   const [diagResults, setDiagResults] = useState(null);
+  const [useWebcam, setUseWebcam] = useState(false);
 
   const tips = [
     { type: 'ok', text: t.tipPlainBg },
@@ -138,9 +140,26 @@ function UploadPage({ darkMode, toggleTheme }) {
                 </div>
               )}
             </>
+          ) : useWebcam ? (
+            <div>
+              <WebcamOverlay onCapture={(file) => {
+                setUseWebcam(false);
+                handleFileSelect(file);
+              }} />
+              <button onClick={() => setUseWebcam(false)} style={{ marginTop: '10px', background: 'transparent', color: '#64748b', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                Cancel Webcam
+              </button>
+            </div>
           ) : (
             <>
               <UploadBox onFileSelect={handleFileSelect} />
+              <div style={{ textAlign: 'center', marginTop: '15px' }}>
+                <button 
+                  onClick={() => setUseWebcam(true)}
+                  style={{ padding: '8px 16px', background: '#e2e8f0', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  📸 Use Webcam
+                </button>
+              </div>
               <UploadProgress progress={uploadProgress} darkMode={darkMode} />
             </>
           )}

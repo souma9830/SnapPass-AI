@@ -157,7 +157,9 @@ def generate_sheet():
     bg_color = tuple(data.get("bg_color", [255, 255, 255]))
     draw_guides = bool(data.get("draw_guides", True))
 
-    allowed_sizes = ["a4", "letter", "4x6"]
+    output_format = data.get("output_format", "jpeg").lower()
+    
+    allowed_sizes = ["a4", "letter", "4x6", "5x7"]
     if page_size not in allowed_sizes:
         return jsonify({"error": f"Invalid page_size. Choose from: {allowed_sizes}"}), 400
 
@@ -173,8 +175,10 @@ def generate_sheet():
 
     output_dir = os.environ.get("OUTPUT_DIR", "outputs")
     os.makedirs(output_dir, exist_ok=True)
+    
+    ext = "pdf" if output_format == "pdf" else "jpg"
     output_path = os.path.join(
-        output_dir, f"sheet_{preset_id}_{page_size}_{uuid.uuid4().hex}.jpg")
+        output_dir, f"sheet_{preset_id}_{page_size}_{uuid.uuid4().hex}.{ext}")
 
     saved = generate_sheet(
         photo_paths=photo_paths,
@@ -184,13 +188,15 @@ def generate_sheet():
         bg_color=bg_color,
         draw_guides=draw_guides,
         output_path=output_path,
+        output_format=output_format,
     )
 
     # Build the response first, then register cleanup via call_on_close so
     # the file is only deleted after the WSGI server has finished sending
     # all bytes — safer than after_this_request which can fire before
     # transmission completes and fails on Windows while the handle is open.
-    response = send_file(saved, mimetype="image/jpeg")
+    mimetype = "application/pdf" if output_format == "pdf" else "image/jpeg"
+    response = send_file(saved, mimetype=mimetype)
     saved_path = saved
 
     def _delete_sheet():

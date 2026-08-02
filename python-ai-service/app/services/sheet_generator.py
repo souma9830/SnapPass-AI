@@ -41,6 +41,7 @@ def generate_sheet(
     bg_color: tuple = (255, 255, 255),
     draw_guides: bool = True,
     output_path: str = "sheet.jpg",
+    output_format: str = "jpeg",
 ) -> str:
     if preset_id not in PRESETS:
         raise ValueError(f"Unknown preset '{preset_id}'. Choose from: {list(PRESETS)}")
@@ -95,7 +96,17 @@ def generate_sheet(
             break
 
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    canvas.save(output_path, "JPEG", quality=95, dpi=(DPI, DPI))
+    
+    if output_format.lower() == "pdf":
+        if not output_path.lower().endswith(".pdf"):
+            output_path = str(Path(output_path).with_suffix(".pdf"))
+        # Save as PDF with exact DPI mapping
+        canvas.save(output_path, "PDF", resolution=DPI)
+    else:
+        if not output_path.lower().endswith(".jpg") and not output_path.lower().endswith(".jpeg"):
+            output_path = str(Path(output_path).with_suffix(".jpg"))
+        canvas.save(output_path, "JPEG", quality=95, dpi=(DPI, DPI))
+        
     return str(Path(output_path).resolve())
 
 

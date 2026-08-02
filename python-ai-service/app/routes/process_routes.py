@@ -33,8 +33,9 @@ def remove_bg():
 
     try:
         image_bytes = file.read()
+        country_standard = request.form.get("country_standard", "default")
         result_bytes = remove_background(image_bytes, bg_colour, attire)
-        centered = center_face(result_bytes)
+        centered = center_face(result_bytes, country_standard)
         final_image = optimise_dpi(centered, preset)
 
         filename = f"{uuid.uuid4().hex}.png"

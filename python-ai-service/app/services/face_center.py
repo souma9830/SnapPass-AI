@@ -8,14 +8,17 @@ import io
 
 # ICAO 9303 guideline: face should occupy 75 % of the image height.
 # Integrated with backend image controller processing and rembg background removal.
-FACE_HEIGHT_RATIO = 0.75
+COUNTRY_STANDARDS = {
+    "default": {"face_height_ratio": 0.75, "head_top_padding_ratio": 0.20},
+    "us": {"face_height_ratio": 0.50, "head_top_padding_ratio": 0.15},
+    "uk": {"face_height_ratio": 0.65, "head_top_padding_ratio": 0.10},
+    "canada": {"face_height_ratio": 0.60, "head_top_padding_ratio": 0.15},
+    "australia": {"face_height_ratio": 0.70, "head_top_padding_ratio": 0.15},
+    "schengen": {"face_height_ratio": 0.75, "head_top_padding_ratio": 0.20},
+}
 
-# How far above the top of the detected face to place the top of the crop
-# (to include forehead + a small margin above hair)
-HEAD_TOP_PADDING_RATIO = 0.20
 
-
-def center_face(image_bytes: bytes) -> bytes:
+def center_face(image_bytes: bytes, country_standard: str = "default") -> bytes:
 
     img_pil = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
     img_np = np.array(img_pil)
@@ -36,13 +39,17 @@ def center_face(image_bytes: bytes) -> bytes:
     face_cx = fx + fw // 2  # horizontal centre of face
     face_top = fy           # top of bounding box (eyebrows area)
 
+    standards = COUNTRY_STANDARDS.get(country_standard.lower(), COUNTRY_STANDARDS["default"])
+    face_height_ratio = standards["face_height_ratio"]
+    head_top_padding_ratio = standards["head_top_padding_ratio"]
+
     # --- Compute the target canvas height from the face height ---
-    # FACE_HEIGHT_RATIO tells us: fh / target_h = FACE_HEIGHT_RATIO
-    target_h = int(fh / FACE_HEIGHT_RATIO)
+    # face_height_ratio tells us: fh / target_h = face_height_ratio
+    target_h = int(fh / face_height_ratio)
     target_w = img_pil.width  # keep original width initially
 
     # How much space above the face-top we want (forehead + hair room)
-    head_clearance = int(HEAD_TOP_PADDING_RATIO * target_h)
+    head_clearance = int(head_top_padding_ratio * target_h)
 
     # The y-coordinate in the original image that maps to y=0 in the crop
     crop_top = face_top - head_clearance

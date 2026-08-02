@@ -37,7 +37,8 @@ SUPPORTED_COLOURS: dict[str, tuple[int, int, int, int]] = {
 def remove_background(
         image_bytes: bytes,
         background_colour: str = "white",
-        attire: str = "none") -> bytes:
+        attire: str = "none",
+        advanced_hair_matting: bool = False) -> bytes:
     """
     Strip the photo background and composite onto the requested colour.
 
@@ -45,6 +46,7 @@ def remove_background(
         image_bytes:       Raw bytes of the input image.
         background_colour: Named colour id or hex string (e.g. '#4372c4').
         attire:            Optional attire overlay id ('none' to skip).
+        advanced_hair_matting: Whether to apply edge refinement for fine hair.
 
     Returns:
         PNG bytes of the composited result.
@@ -54,6 +56,10 @@ def remove_background(
     """
     removed_bytes = remove(image_bytes)
     foreground = Image.open(io.BytesIO(removed_bytes)).convert("RGBA")
+
+    if advanced_hair_matting:
+        from app.services.hair_matting import apply_advanced_hair_matting
+        foreground = apply_advanced_hair_matting(foreground)
 
     if attire != "none":
         foreground = apply_attire_swap(foreground, attire)

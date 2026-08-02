@@ -33,6 +33,12 @@ def remove_bg():
 
     try:
         image_bytes = file.read()
+        
+        # Apply subtle retouching if requested
+        if request.form.get("apply_retouch", "false").lower() == "true":
+            from app.services.retouch import apply_subtle_retouch
+            image_bytes = apply_subtle_retouch(image_bytes)
+
         result_bytes = remove_background(image_bytes, bg_colour, attire)
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)

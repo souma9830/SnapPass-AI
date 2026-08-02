@@ -13,7 +13,7 @@ const defaultRules = {
   phone: (v) => !v || PHONE_RE.test(v) || 'Invalid phone number',
   pattern: (re, msg) => (v) => !v || re.test(v) || msg || 'Invalid format',
   match: (field, label) => (v, values) => !v || v === values[field] || `Must match ${label || field}`,
-  number: (v) => !v || !isNaN(Number(v)) || 'Must be a number',
+  number: (v) => !v || !Number.isNaN(Number(v)) || 'Must be a number',
   min: (min) => (v) => !v || Number(v) >= min || `Minimum value is ${min}`,
   max: (max) => (v) => !v || Number(v) <= max || `Maximum value is ${max}`,
 };

@@ -33,6 +33,14 @@ def remove_bg():
 
     try:
         image_bytes = file.read()
+        
+        # Check facial expression for neutrality
+        if request.form.get("check_expression", "false").lower() == "true":
+            from app.services.facial_expression import analyze_facial_expression
+            expression_result = analyze_facial_expression(image_bytes)
+            if not expression_result["is_neutral"]:
+                return jsonify({"success": False, "message": expression_result["reason"]}), 422
+                
         country_standard = request.form.get("country_standard", "default")
         
         # Apply lighting and shadow correction

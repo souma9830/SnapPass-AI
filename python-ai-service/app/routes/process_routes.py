@@ -41,6 +41,17 @@ def remove_bg():
         save_path = os.path.join(config.UPLOAD_DIR, filename)
         with open(save_path, "wb") as f:
             f.write(final_image)
+            
+        webhook_url = request.form.get("webhook_url")
+        if webhook_url:
+            from app.services.webhook import trigger_webhook
+            payload = {
+                "status": "success",
+                "filename": filename,
+                "preset": preset,
+                "message": "Processing completed successfully."
+            }
+            trigger_webhook(webhook_url, payload, request.form.get("webhook_secret"))
 
         return send_file(
             save_path,

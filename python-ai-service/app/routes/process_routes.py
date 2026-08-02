@@ -33,6 +33,13 @@ def remove_bg():
 
     try:
         image_bytes = file.read()
+        country_standard = request.form.get("country_standard", "default")
+        
+        # Reduce glasses glare if requested
+        if request.form.get("reduce_glare", "false").lower() == "true":
+            from app.services.glare_reduction import reduce_glasses_glare
+            image_bytes = reduce_glasses_glare(image_bytes)
+
         result_bytes = remove_background(image_bytes, bg_colour, attire)
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)

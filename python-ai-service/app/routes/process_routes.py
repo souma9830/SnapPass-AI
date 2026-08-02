@@ -37,6 +37,12 @@ def remove_bg():
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)
 
+        # Apply watermark for previews if requested
+        watermark_text = request.form.get("watermark_text")
+        if request.form.get("apply_watermark", "false").lower() == "true":
+            from app.services.watermark import apply_watermark
+            final_image = apply_watermark(final_image, watermark_text) if watermark_text else apply_watermark(final_image)
+
         filename = f"{uuid.uuid4().hex}.png"
         save_path = os.path.join(config.UPLOAD_DIR, filename)
         with open(save_path, "wb") as f:

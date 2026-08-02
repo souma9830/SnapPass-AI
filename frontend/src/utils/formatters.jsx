@@ -10,7 +10,7 @@
 export const formatFileSize = (bytes) => {
   if (bytes === null || bytes === undefined) return '0 B';
   const num = Number(bytes);
-  if (isNaN(num) || num <= 0) return '0 B';
+  if (Number.isNaN(num) || num <= 0) return '0 B';
 
   const units = ['B', 'KB', 'MB', 'GB'];
   let val = num;
@@ -26,7 +26,7 @@ export const formatFileSize = (bytes) => {
 export const formatDate = (date) => {
   if (!date) return 'Invalid date';
   const d = new Date(date);
-  if (isNaN(d.getTime())) return 'Invalid date';
+  if (Number.isNaN(d.getTime())) return 'Invalid date';
   return d.toLocaleDateString('en-IN', {
     day: '2-digit',
     month: 'short',

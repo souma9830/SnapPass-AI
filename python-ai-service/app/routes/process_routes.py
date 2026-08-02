@@ -33,8 +33,28 @@ def remove_bg():
 
     try:
         image_bytes = file.read()
+        
+        # Check facial expression for neutrality
+        if request.form.get("check_expression", "false").lower() == "true":
+            from app.services.facial_expression import analyze_facial_expression
+            expression_result = analyze_facial_expression(image_bytes)
+            if not expression_result["is_neutral"]:
+                return jsonify({"success": False, "message": expression_result["reason"]}), 422
+                
+        country_standard = request.form.get("country_standard", "default")
+        
+        # Correct red-eye if requested
+        if request.form.get("correct_red_eye", "false").lower() == "true":
+            from app.services.red_eye_correction import correct_red_eye
+            image_bytes = correct_red_eye(image_bytes)
+            
+        # Reduce glasses glare if requested
+        if request.form.get("reduce_glare", "false").lower() == "true":
+            from app.services.glare_reduction import reduce_glasses_glare
+            image_bytes = reduce_glasses_glare(image_bytes)
+
         result_bytes = remove_background(image_bytes, bg_colour, attire)
-        centered = center_face(result_bytes)
+        centered = center_face(result_bytes, country_standard)
         final_image = optimise_dpi(centered, preset)
 
         filename = f"{uuid.uuid4().hex}.png"

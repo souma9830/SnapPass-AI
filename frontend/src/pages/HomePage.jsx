@@ -3,6 +3,7 @@ import HeroSection from '../components/HomePage/HeroSection';
 import FeaturesSection from '../components/HomePage/FeaturesSection';
 import StepsSection from '../components/HomePage/StepsSection';
 import AIShowcaseSection from '../components/HomePage/AIShowcaseSection';
+import CountryRequirementsExplorer from '../components/HomePage/CountryRequirementsExplorer';
 import TestimonialsSection from '../components/testimonials/TestimonialsSection';
 import CTABanner from '../components/HomePage/CTABanner';
 import { features, steps, chips, iconMap } from '../data/HomePageData';
@@ -29,6 +30,7 @@ function HomePage({ darkMode, toggleTheme }) {
         features={features}
         iconMap={iconMap}
       />
+      <CountryRequirementsExplorer darkMode={darkMode} />
       <TestimonialsSection darkMode={darkMode} />
       <CTABanner darkMode={darkMode} />
       

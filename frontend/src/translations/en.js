@@ -369,4 +369,18 @@ export const en = {
     attireMaleSuit: "Men's Black Suit",
     attireFemaleBlazer: "Women's Navy Blazer",
     attireMaleBowtie: 'Black Suit & Bowtie',
+    explorerTitle: 'Explore Global Passport Requirements',
+    explorerSubtitle:
+      'Pick a country to see its official passport photo dimensions, background and guideline at a glance.',
+    explorerSearchPlaceholder: 'Search a country or region…',
+    explorerClearSearch: 'Clear search',
+    explorerSelectCountry: 'Select a country',
+    explorerNoResults: 'No matching countries found.',
+    explorerDimensions: 'Dimensions',
+    explorerBackground: 'Background',
+    explorerHeadRatio: 'Head Ratio',
+    explorerEyePosition: 'Eye Position',
+    explorerExpression: 'Facial Expression',
+    explorerAccessories: 'Glasses & Accessories',
+    explorerPrintFormat: 'Printable Format',
 };

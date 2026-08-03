@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PassportRequirementComparator from '../components/PassportRequirementComparator';
-import SEOMetadata from '../components/SEOMetadata';
+import SEOMetadata from '../components/layout/SEOMetadata';
 import './PassportComparatorPage.css';
 
 /**

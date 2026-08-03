@@ -3,9 +3,11 @@ import { config } from './src/config/config.js';
 import connectDatabase from './src/config/db.js';
 import { verifyEnvironment } from './src/utils/envCheck.js';
 import { CleanupTask } from './src/services/cleanupTask.js';
+import { SessionCleaner } from './src/services/sessionCleaner.service.js';
 
 verifyEnvironment();
 CleanupTask.startScheduler();
+SessionCleaner.startScheduler();
 const PREFERRED_PORT = config.port;
 
 connectDatabase();

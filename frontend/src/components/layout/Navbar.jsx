@@ -15,6 +15,8 @@ const navItems = [
 const languages = [
   { value: 'en', label: 'English' },
   { value: 'hi', label: 'हिन्दी' },
+  { value: 'es', label: 'Español' },
+  { value: 'ml', label: 'മലയാളം' },
 ];
 
 export const Navbar = ({ darkMode = false, toggleTheme }) => {

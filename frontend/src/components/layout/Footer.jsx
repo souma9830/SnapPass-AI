@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import './Footer.css';
+import './FooterResponsive.css';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 

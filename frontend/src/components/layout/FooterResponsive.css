@@ -1,0 +1,31 @@
+/* ───────────────── FOOTER MOBILE LAYOUT (issue 1014) ───────────────── */
+
+@media (max-width: 768px) {
+
+  .footer__top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2.5rem;
+  }
+
+  .footer__brand,
+  .footer__columns {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+
+  .footer__top {
+    gap: 2rem;
+  }
+
+  .footer__columns {
+    gap: 2rem;
+  }
+
+  .footer__column {
+    width: 100%;
+  }
+}

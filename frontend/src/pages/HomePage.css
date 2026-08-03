@@ -111,6 +111,15 @@
 .btn-primary-dark {
   background-color: var(--color-text-dark);
   color: #ffffff;
+  box-shadow: 0 4px 16px rgba(250, 204, 21, 0.35), 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.btn-primary-dark:hover {
+  background-color: #facc15;
+  color: #111827;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(250, 204, 21, 0.5), 0 4px 10px rgba(0, 0, 0, 0.35);
 }
 
 /* Hero visual */

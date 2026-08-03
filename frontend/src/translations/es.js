@@ -19,4 +19,6 @@ export const es = {
   a4PrintLayout: 'Diseño de impresión A4',
   openSourceFree: 'Código Abierto · Gratis',
   uploadPhoto: 'Subir tu foto',
+  historyTitle: 'Historial de Sesiones de Pasaporte',
+  historySubtitle: 'Revisa tus sesiones anteriores de fotos de pasaporte',
 };

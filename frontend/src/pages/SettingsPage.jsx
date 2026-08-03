@@ -5,6 +5,11 @@ import { useTheme } from '../context/ThemeContext';
 import { validateSettingsInput } from '../utils/settingsValidator.js';
 import { ThemeColorSelector } from '../components/ThemeColorSelector';
 import { ActivityLogViewer } from '../components/ActivityLogViewer';
+import {
+  fetchSessions as getSessions,
+  revokeSession as deleteSession,
+  bulkRevokeSessions as revokeSessions,
+} from '../services/sessionService';
 
 function SettingsPage() {
   const { darkMode, toggleTheme } = useTheme();
@@ -25,19 +30,18 @@ function SettingsPage() {
     setLoadingSessions(true);
     setSessionError('');
     try {
-      const res = await fetch('/api/auth/sessions');
-      if (res.ok) {
-        const body = await res.json();
-        if (body.success) {
-          setSessions(body.data || []);
-        } else {
-          setSessionError(body.message || 'Failed to load sessions');
-        }
+      const body = await getSessions();
+      if (body.success) {
+        setSessions(body.data || []);
       } else {
-        setSessionError('Log in to manage active audited sessions.');
+        setSessionError(body.message || 'Failed to load sessions');
       }
-    } catch {
-      setSessionError('Network error while retrieving active sessions.');
+    } catch (err) {
+      if (err.response) {
+        setSessionError('Log in to manage active audited sessions.');
+      } else {
+        setSessionError('Network error while retrieving active sessions.');
+      }
     } finally {
       setLoadingSessions(false);
     }
@@ -52,17 +56,13 @@ function SettingsPage() {
 
   const handleRevokeSession = async (sessionId) => {
     try {
-      const res = await fetch(`/api/auth/sessions/${sessionId}`, {
-        method: 'DELETE',
+      await deleteSession(sessionId);
+      setSessions(sessions.filter((s) => s._id !== sessionId));
+      setSelectedSessions((prev) => {
+        const next = new Set(prev);
+        next.delete(sessionId);
+        return next;
       });
-      if (res.ok) {
-        setSessions(sessions.filter((s) => s._id !== sessionId));
-        setSelectedSessions((prev) => {
-          const next = new Set(prev);
-          next.delete(sessionId);
-          return next;
-        });
-      }
     } catch {
       // silent
     }
@@ -90,18 +90,10 @@ function SettingsPage() {
     if (selectedSessions.size === 0) return;
     setRevoking(true);
     try {
-      const res = await fetch('/api/auth/sessions/bulk-revoke', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionIds: Array.from(selectedSessions) }),
-      });
-      if (res.ok) {
-        setSessions(sessions.filter((s) => !selectedSessions.has(s._id)));
-        setSelectedSessions(new Set());
-      } else {
-        alert('Could not revoke selected sessions.');
-      }
-    } catch (err) {
+      await revokeSessions(Array.from(selectedSessions));
+      setSessions(sessions.filter((s) => !selectedSessions.has(s._id)));
+      setSelectedSessions(new Set());
+    } catch {
       alert('Network error during bulk revoke.');
     }
     setRevoking(false);

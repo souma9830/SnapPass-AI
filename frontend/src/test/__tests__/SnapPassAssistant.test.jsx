@@ -19,6 +19,16 @@ describe('SnapPassAssistant AI Chatbot', () => {
       const response = searchResponse('');
       expect(response).toBe('Please ask a question related to SnapPass AI.');
     });
+
+    test('returns Hindi answer for Hindi upload query', () => {
+      const response = searchResponse('मैं फोटो कैसे अपलोड करूं?');
+      expect(response).toContain('अपलोड पेज पर जाएं');
+    });
+
+    test('returns Hindi fallback for unsupported Hindi query', () => {
+      const response = searchResponse('मौसम कैसा है?');
+      expect(response).toContain('SnapPass AI');
+    });
   });
 
   describe('SnapPassAssistant Component', () => {

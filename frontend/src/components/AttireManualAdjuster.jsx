@@ -31,7 +31,7 @@ export const AttireManualAdjuster = ({
         <div className="attire-adjuster-row">
           <div className="attire-adjuster-label-bar">
             <span>Scale</span>
-            <span>{Math.round(scale * 100)}%</span>
+            <span>{Math.round(scale * 100 + Number.EPSILON)}%</span>
           </div>
           <input
             type="range"

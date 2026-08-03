@@ -24,13 +24,17 @@ export const cacheMiddleware = (durationSeconds = 300) => {
 
     const originalJson = res.json;
     res.json = function (body) {
-      if (isRedisAvailable()) {
-        setCache(key, body, durationSeconds);
-      } else {
-        memoryCache.set(key, {
-          data: body,
-          expiredAt: Date.now() + durationSeconds * 1000,
-        });
+      const statusCode = this.statusCode || 200;
+      const isSuccess = statusCode >= 200 && statusCode < 300;
+      if (isSuccess) {
+        if (isRedisAvailable()) {
+          setCache(key, body, durationSeconds);
+        } else {
+          memoryCache.set(key, {
+            data: body,
+            expiredAt: Date.now() + durationSeconds * 1000,
+          });
+        }
       }
       return originalJson.call(this, body);
     };

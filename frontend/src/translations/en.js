@@ -369,4 +369,7 @@ export const en = {
     attireMaleSuit: "Men's Black Suit",
     attireFemaleBlazer: "Women's Navy Blazer",
     attireMaleBowtie: 'Black Suit & Bowtie',
+
+    historyTitle: 'Passport Session History',
+    historySubtitle: 'Review your past passport photo sessions',
 };

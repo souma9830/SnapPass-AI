@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import useOfflineStorage from '../hooks/useOfflineStorage';
+import { useHistory } from '../hooks/useHistory';
+import { useUploadSearch } from '../hooks/useUploadSearch';
+import HistoryCard from '../components/HistoryCard';
 import './HistoryPage.css';
 
 function HistoryPage({ darkMode }) {

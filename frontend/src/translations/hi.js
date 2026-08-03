@@ -366,4 +366,6 @@ export const hi = {
     attireMaleSuit: 'पुरुषों का काला सूट',
     attireFemaleBlazer: 'महिलाओं का नेवी ब्लेज़र',
     attireMaleBowtie: 'काला सूट और बो टाई',
+    historyTitle: 'पासपोर्ट सत्र इतिहास',
+    historySubtitle: 'अपने पिछले पासपोर्ट फोटो सत्र देखें',
 };

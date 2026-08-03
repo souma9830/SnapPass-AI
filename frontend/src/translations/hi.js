@@ -366,4 +366,8 @@ export const hi = {
     attireMaleSuit: 'पुरुषों का काला सूट',
     attireFemaleBlazer: 'महिलाओं का नेवी ब्लेज़र',
     attireMaleBowtie: 'काला सूट और बो टाई',
+    editorResumeBanner: 'हमने आपकी एडिटिंग प्रगति सहेज ली है।',
+    editorResumePrompt: 'पिछला एडिट फिर से शुरू करें?',
+    editorResume: 'जारी रखें',
+    editorStartFresh: 'नई शुरुआत करें',
 };

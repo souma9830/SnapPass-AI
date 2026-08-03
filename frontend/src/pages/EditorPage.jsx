@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { saveSession, getSession } from '../utils/sessionManager';
+import useSessionDraft from '../hooks/useSessionDraft';
 import SizeSelector from '../components/SizeSelector';
 import BackgroundSelector from '../components/BackgroundSelector';
 import AttireSelector from '../components/AttireSelector';
@@ -58,6 +59,10 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [enhancedDataUrl, setEnhancedDataUrl] = useState(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
 
+  const { draft, saveDraft, clearDraft } = useSessionDraft();
+  const [resumedUrl, setResumedUrl] = useState(null);
+  const [showResumeBanner, setShowResumeBanner] = useState(false);
+
   const getBackendRoot = () => {
     if (import.meta?.env?.VITE_API_URL) {
       return import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '');
@@ -78,11 +83,13 @@ function EditorPage({ darkMode, toggleTheme }) {
   };
 
   const baseImageUrl = filename ? resolveImageUrl(`/uploads/${filename}`) : (state?.localUrl || state?.fileUrl || '');
-  const currentImageUrl = processedUrl
-    ? `${resolveImageUrl(processedUrl)}?t=${cacheBuster}`
-    : baseImageUrl
-      ? (baseImageUrl.includes('?') ? baseImageUrl : `${baseImageUrl}?t=${cacheBuster}`)
-      : '';
+  const currentImageUrl = resumedUrl
+    ? resumedUrl
+    : processedUrl
+      ? `${resolveImageUrl(processedUrl)}?t=${cacheBuster}`
+      : baseImageUrl
+        ? (baseImageUrl.includes('?') ? baseImageUrl : `${baseImageUrl}?t=${cacheBuster}`)
+        : '';
 
   const runComplianceCheck = useCallback(
     async (fileToCheck) => {
@@ -164,6 +171,55 @@ function EditorPage({ darkMode, toggleTheme }) {
     if (state?.filename) setFilename(state.filename);
   }, [state?.filename]);
 
+  useEffect(() => {
+    const hasFreshUpload = state?.localUrl || state?.fileUrl || state?.filename;
+    if (hasFreshUpload) {
+      clearDraft();
+      return;
+    }
+    if (draft && !filename) {
+      setShowResumeBanner(true);
+    }
+    // Only run once on mount; draft presence is read from sessionStorage.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!filename) return;
+    const displayUrl = isAutoEnhanced && enhancedDataUrl ? enhancedDataUrl : displayImageUrl;
+    saveDraft({
+      filename,
+      background,
+      sizePreset,
+      attire,
+      filters,
+      processedUrl: processedUrl || (displayUrl && !displayUrl.startsWith('blob:') ? displayUrl : null),
+      processedBase64:
+        displayUrl && displayUrl.startsWith('data:') ? displayUrl : null,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filename, background, sizePreset, attire, filters, processedUrl, enhancedDataUrl, isAutoEnhanced]);
+
+  const handleResumeDraft = () => {
+    if (!draft) return;
+    if (draft.filename) setFilename(draft.filename);
+    setBackground(draft.background || 'white');
+    setSizePreset(draft.sizePreset || '35x45');
+    setAttire(draft.attire || 'none');
+    if (draft.filters) setFilters(draft.filters);
+    if (draft.processedBase64) {
+      setResumedUrl(draft.processedBase64);
+    } else if (draft.processedUrl && !draft.processedUrl.startsWith('blob:')) {
+      setResumedUrl(resolveImageUrl(draft.processedUrl));
+    }
+    setShowResumeBanner(false);
+  };
+
+  const handleStartFresh = () => {
+    clearDraft();
+    setShowResumeBanner(false);
+  };
+
   const handleProcess = useCallback(async () => {
     if (!filename) return;
     try {
@@ -242,6 +298,32 @@ function EditorPage({ darkMode, toggleTheme }) {
         filename={filename}
       />
       <div className="editor-page">
+        {showResumeBanner && (
+          <div
+            className={`editor-page__resume-banner ${darkMode ? 'editor-page__resume-banner--dark' : ''}`}
+            role="status"
+          >
+            <p className="editor-page__resume-text">
+              {t.editorResumeBanner} {t.editorResumePrompt}
+            </p>
+            <div className="editor-page__resume-actions">
+              <button
+                type="button"
+                className="editor-page__resume-btn editor-page__resume-btn--primary"
+                onClick={handleResumeDraft}
+              >
+                {t.editorResume}
+              </button>
+              <button
+                type="button"
+                className="editor-page__resume-btn"
+                onClick={handleStartFresh}
+              >
+                {t.editorStartFresh}
+              </button>
+            </div>
+          </div>
+        )}
         <motion.div
           className="editor-page__header"
           variants={fadeUp}

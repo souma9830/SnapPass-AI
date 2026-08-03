@@ -369,4 +369,8 @@ export const en = {
     attireMaleSuit: "Men's Black Suit",
     attireFemaleBlazer: "Women's Navy Blazer",
     attireMaleBowtie: 'Black Suit & Bowtie',
+    editorResumeBanner: 'We saved your editing progress.',
+    editorResumePrompt: 'Resume your previous edit?',
+    editorResume: 'Resume',
+    editorStartFresh: 'Start Fresh',
 };

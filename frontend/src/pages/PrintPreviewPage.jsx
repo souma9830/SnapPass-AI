@@ -12,6 +12,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
 import { PrintLayoutOptions } from '../components/editor/PrintLayoutOptions';
+import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import {
@@ -43,6 +44,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
   const [selectedDpi, setSelectedDpi] = useState(300);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [password, setPassword] = useState('');
 
   const processedPhotos = state?.processedPhotos || savedSession?.processedPhotos || [];
   if (processedPhotos.length === 0) {
@@ -243,42 +245,18 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
             <hr className="divider" />
 
             <div className="password-section">
-              <label className="print-info-label">{t.securePassword}</label>
+              <label className="print-info-label" htmlFor="print-password">
+                {t.securePassword}
+              </label>
               <input
+                id="print-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t.enterPassword}
                 className="password-input"
               />
-              <div className="password-meter">
-                <div
-                  className={`password-meter__fill ${
-                    strength <= 1
-                      ? 'password-meter__fill--weak'
-                      : strength === 2
-                        ? 'password-meter__fill--medium'
-                        : strength === 3
-                          ? 'password-meter__fill--strong'
-                          : 'password-meter__fill--excellent'
-                  }`}
-                  style={{ width: `${(strength / 4) * 100}%` }}
-                />
-              </div>
-              <span
-                aria-live="polite"
-                className={`password-feedback ${
-                  strength <= 1
-                    ? 'password-feedback--weak'
-                    : strength === 2
-                      ? 'password-feedback--medium'
-                      : strength === 3
-                        ? 'password-feedback--strong'
-                        : 'password-feedback--excellent'
-                }`}
-              >
-                {strengthLabel}
-              </span>
+              <PasswordStrengthMeter password={password} />
             </div>
 
             <hr className="divider" />

@@ -362,6 +362,16 @@ export const en = {
     reviewCommentMin: 'Comment must be at least 10 characters',
     reviewCommentMax: 'Comment must be less than 500 characters',
     cancel: 'Cancel',
+    passwordStrengthLabel: 'Password strength',
+    passwordEntropyLabel: 'Entropy',
+    passwordWeak: 'Weak',
+    passwordMedium: 'Medium',
+    passwordStrong: 'Strong',
+    passwordExcellent: 'Excellent',
+    generateStrongPassword: 'Generate Strong Password',
+    saltToggleLabel: 'Add client-side salt',
+    saltToggleHint:
+      'Append a high-entropy salt generated with your browser crypto before saving.',
     formalAttire: 'Formal Attire (AI Swap)',
     formalAttireSubtitle:
       'Swap your outfit into a professional formal suit instantly.',

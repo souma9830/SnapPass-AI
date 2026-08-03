@@ -359,6 +359,16 @@ export const hi = {
     reviewCommentMin: 'टिप्पणी कम से कम 10 अक्षरों की होनी चाहिए',
     reviewCommentMax: 'टिप्पणी 500 अक्षरों से कम होनी चाहिए',
     cancel: 'रद्द करें',
+    passwordStrengthLabel: 'पासवर्ड मजबूती',
+    passwordEntropyLabel: 'एंट्रोपी',
+    passwordWeak: 'कमजोर',
+    passwordMedium: 'मध्यम',
+    passwordStrong: 'मजबूत',
+    passwordExcellent: 'उत्कृष्ट',
+    generateStrongPassword: 'मजबूत पासवर्ड बनाएं',
+    saltToggleLabel: 'क्लाइंट-साइड सॉल्ट जोड़ें',
+    saltToggleHint:
+      'सहेजने से पहले अपने ब्राउज़र क्रिप्टो से उत्पन्न उच्च-एंट्रोपी सॉल्ट जोड़ें।',
     formalAttire: 'औपचारिक पोशाक (AI स्वैप)',
     formalAttireSubtitle:
       'अपने पहनावे को तुरंत एक पेशेवर औपचारिक सूट में बदलें।',

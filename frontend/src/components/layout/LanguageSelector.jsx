@@ -14,6 +14,7 @@ export const LanguageSelector = ({ className = '' }) => {
       <option value="en">English</option>
       <option value="hi">हिन्दी (Hindi)</option>
       <option value="es">Español (Spanish)</option>
+      <option value="ml">മലയാളം (Malayalam)</option>
     </select>
   );
 };

@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import ThemeColorSelector from '../ThemeColorSelector';
 import NavbarAlignmentDetector from './NavbarAlignmentDetector';
+import './NavbarResponsive.css';
 
 const navItems = [
   { to: '/', label: 'Home', end: true },

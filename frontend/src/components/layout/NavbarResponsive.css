@@ -1,0 +1,20 @@
+/* ───────────────── NAVBAR WIDE-SCREEN RESPONSIVE (issue 1419) ───────────────── */
+
+@media (min-width: 1200px) and (max-width: 1440px) {
+  .navbar {
+    width: min(92%, 1200px);
+    max-width: 1200px;
+  }
+}
+
+@media (min-width: 1441px) {
+  .navbar {
+    width: min(88%, 1400px);
+    max-width: 1400px;
+  }
+
+  .navbar__links {
+    justify-content: space-evenly;
+    gap: 8px;
+  }
+}

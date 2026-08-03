@@ -369,4 +369,8 @@ export const en = {
     attireMaleSuit: "Men's Black Suit",
     attireFemaleBlazer: "Women's Navy Blazer",
     attireMaleBowtie: 'Black Suit & Bowtie',
+    editorPreviewProcessing: 'Passport photo preview — processing in progress',
+    editorPreviewEnhancing: 'Passport photo preview — AI enhancement in progress',
+    editorPreviewCompliance: 'Passport photo preview — checking compliance guidelines',
+    editorPreviewReady: 'Processed passport photo preview with compliance overlay',
 };

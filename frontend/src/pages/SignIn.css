@@ -67,6 +67,63 @@
   border-color: #444;
   color: #fff;
 }
+.password-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.password-tools__generate {
+  align-self: flex-start;
+  padding: 8px 14px;
+  border: 1px solid #007bff;
+  background: transparent;
+  color: #007bff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.password-tools__generate:hover {
+  background: #007bff;
+  color: #fff;
+}
+.dark-mode .password-tools__generate {
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+.dark-mode .password-tools__generate:hover {
+  background: #60a5fa;
+  color: #0b1220;
+}
+.password-tools__salt {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #333;
+}
+.password-tools__salt input {
+  margin-top: 2px;
+  width: auto;
+  accent-color: #007bff;
+}
+.password-tools__salt-hint {
+  display: block;
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.dark-mode .password-tools__salt {
+  color: #e5e7eb;
+}
+.dark-mode .password-tools__salt-hint {
+  color: #9ca3af;
+}
 .auth-submit-btn {
   width: 100%;
   padding: 12px;

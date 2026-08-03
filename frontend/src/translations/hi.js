@@ -359,6 +359,20 @@ export const hi = {
     reviewCommentMin: 'टिप्पणी कम से कम 10 अक्षरों की होनी चाहिए',
     reviewCommentMax: 'टिप्पणी 500 अक्षरों से कम होनी चाहिए',
     cancel: 'रद्द करें',
+    cameraTakePhoto: 'फोटो लें',
+    cameraTitle: 'फोटो खींचें',
+    cameraStart: 'कैमरा शुरू करें',
+    cameraCapture: 'कैप्चर करें',
+    cameraRetake: 'फिर से लें',
+    cameraConfirm: 'फोटो का उपयोग करें',
+    cameraPermissionDenied:
+      'कैमरा अनुमति अस्वीकार कर दी गई। कृपया अनुमति दें और फिर से प्रयास करें।',
+    cameraNotFound: 'इस डिवाइस पर कोई कैमरा नहीं मिला।',
+    cameraNotSupported:
+      'यह ब्राउज़र या डिवाइस कैमरा कैप्चर का समर्थन नहीं करता है।',
+    cameraInstruction:
+      'अपना चेहरा फ्रेम में रखें और कैप्चर दबाएं।',
+    cameraClose: 'बंद करें',
     formalAttire: 'औपचारिक पोशाक (AI स्वैप)',
     formalAttireSubtitle:
       'अपने पहनावे को तुरंत एक पेशेवर औपचारिक सूट में बदलें।',

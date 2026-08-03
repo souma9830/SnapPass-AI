@@ -10,7 +10,7 @@
 export const formatFileSize = (bytes) => {
   if (bytes === null || bytes === undefined) return '0 B';
   const num = Number(bytes);
-  if (isNaN(num) || num <= 0) return '0 B';
+  if (Number.isNaN(num) || num <= 0) return '0 B';
 
   const units = ['B', 'KB', 'MB', 'GB'];
   let val = num;

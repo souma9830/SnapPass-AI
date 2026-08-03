@@ -369,4 +369,6 @@ export const en = {
     attireMaleSuit: "Men's Black Suit",
     attireFemaleBlazer: "Women's Navy Blazer",
     attireMaleBowtie: 'Black Suit & Bowtie',
+    editorShowGrid: 'Show Grid Lines',
+    editorShowEyeline: 'Show Eyeline Guide',
 };

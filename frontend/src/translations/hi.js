@@ -366,4 +366,6 @@ export const hi = {
     attireMaleSuit: 'पुरुषों का काला सूट',
     attireFemaleBlazer: 'महिलाओं का नेवी ब्लेज़र',
     attireMaleBowtie: 'काला सूट और बो टाई',
+    editorShowGrid: 'ग्रिड लाइनें दिखाएँ',
+    editorShowEyeline: 'आईलाइन गाइड दिखाएँ',
 };

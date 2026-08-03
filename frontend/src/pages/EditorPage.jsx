@@ -57,6 +57,8 @@ function EditorPage({ darkMode, toggleTheme }) {
   const [isAutoEnhanced, setIsAutoEnhanced] = useState(false);
   const [enhancedDataUrl, setEnhancedDataUrl] = useState(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [showGrid, setShowGrid] = useState(false);
+  const [showEyeline, setShowEyeline] = useState(false);
 
   const getBackendRoot = () => {
     if (import.meta?.env?.VITE_API_URL) {
@@ -283,6 +285,25 @@ function EditorPage({ darkMode, toggleTheme }) {
                 justifyContent: 'center',
               }}
             >
+              <div className="editor-page__preview-toolbar">
+                <button
+                  type="button"
+                  className={`editor-page__toggle ${showGrid ? 'editor-page__toggle--active' : ''}`}
+                  onClick={() => setShowGrid((value) => !value)}
+                  aria-pressed={showGrid}
+                >
+                  {t.editorShowGrid}
+                </button>
+                <button
+                  type="button"
+                  className={`editor-page__toggle ${showEyeline ? 'editor-page__toggle--active' : ''}`}
+                  onClick={() => setShowEyeline((value) => !value)}
+                  aria-pressed={showEyeline}
+                  disabled={!showGrid}
+                >
+                  {t.editorShowEyeline}
+                </button>
+              </div>
               {state?.localUrl || filename ? (
                 <div
                   style={{
@@ -443,6 +464,18 @@ function EditorPage({ darkMode, toggleTheme }) {
                             )}
                         </svg>
                       )}
+                    {showGrid && (
+                      <div
+                        className="editor-page__grid-overlay"
+                        aria-hidden="true"
+                      />
+                    )}
+                    {showGrid && showEyeline && (
+                      <div
+                        className="editor-page__eyeline-overlay"
+                        aria-hidden="true"
+                      />
+                    )}
                   </div>
                 </div>
               ) : (

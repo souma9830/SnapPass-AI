@@ -26,7 +26,7 @@ if (!fs.existsSync(backendEnvPath)) {
   requiredKeys.forEach(key => {
     const regex = new RegExp(`^${key}\\s*=\\s*(.*)$`, 'm');
     const match = content.match(regex);
-    if (!match || !match[1] || match[1].trim() === '' || match[1].includes('your_') || match[1].includes('placeholder')) {
+    if (!match || !match[1] || match[1].trim().length === 0 || match[1].includes('your_') || match[1].includes('placeholder')) {
       console.warn(`⚠️  Warning: ${key} is missing or appears to be a placeholder value in backend/.env`);
     } else {
       console.log(`   - ${key} is configured`);

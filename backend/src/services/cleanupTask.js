@@ -40,7 +40,7 @@ export class CleanupTask {
     const maxAgeMs = config.RETENTION_MAX_AGE_MS || 24 * 60 * 60 * 1000; // Default 24 hours
     
     logger.info('Initializing background storage cleanup scheduler...');
-    setInterval(async () => {
+    clearInterval(window.__interval); window.__interval = setInterval(async () => {
       const uploadsDir = path.resolve(process.cwd(), config.UPLOAD_DIR || 'uploads');
       await CleanupTask.execute(uploadsDir, maxAgeMs);
       

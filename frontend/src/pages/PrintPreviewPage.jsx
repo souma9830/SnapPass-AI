@@ -19,6 +19,7 @@ import {
   getSession,
   saveSessionToHistory,
 } from '../utils/sessionManager';
+import { clearEditorDraft } from '../hooks/useSessionDraft';
 import './PrintPreviewPage.css';
 
 function PrintPreviewPage({ darkMode, toggleTheme }) {
@@ -88,17 +89,18 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
       a.click();
       URL.revokeObjectURL(url);
 
-      saveSessionToHistory({
-        step: 'print-preview',
-        filename: state?.filename || savedSession?.filename,
-        background: state?.background || savedSession?.background,
-        photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
-        quantity,
-        status: 'completed',
-        outputStatus: 'downloaded',
-        hasOutput: true,
-        exportType: 'print-sheet',
-      });
+        saveSessionToHistory({
+          step: 'print-preview',
+          filename: state?.filename || savedSession?.filename,
+          background: state?.background || savedSession?.background,
+          photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
+          quantity,
+          status: 'completed',
+          outputStatus: 'downloaded',
+          hasOutput: true,
+          exportType: 'print-sheet',
+        });
+        clearEditorDraft();
     } catch (error) {
       alert(error.message || 'Sheet generation failed.');
     } finally {

@@ -302,3 +302,81 @@
     position: static;
   }
 }
+
+.editor-page__resume-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+}
+
+.editor-page__resume-banner--dark {
+  background: rgba(30, 58, 95, 0.6);
+  border-color: #1e40af;
+}
+
+.editor-page__resume-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #1e40af;
+}
+
+.editor-page__resume-banner--dark .editor-page__resume-text {
+  color: #bfdbfe;
+}
+
+.editor-page__resume-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editor-page__resume-btn {
+  border: 1px solid #bfdbfe;
+  background: #ffffff;
+  color: #1e40af;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.editor-page__resume-btn:hover {
+  border-color: #3b82f6;
+}
+
+.editor-page__resume-btn--primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.editor-page__resume-btn--primary:hover {
+  background: #1d4ed8;
+}
+
+.editor-page__resume-banner--dark .editor-page__resume-btn {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: #3b82f6;
+  color: #bfdbfe;
+}
+
+.editor-page__resume-banner--dark .editor-page__resume-btn--primary {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .editor-page__resume-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+

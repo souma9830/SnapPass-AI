@@ -362,6 +362,37 @@ export const en = {
     reviewCommentMin: 'Comment must be at least 10 characters',
     reviewCommentMax: 'Comment must be less than 500 characters',
     cancel: 'Cancel',
+    cookiesTitle: 'Cookies Policy',
+    cookiesSubtitle:
+      'How SnapPass AI uses cookies and how you can manage them',
+    cookiesIntroTitle: 'What are cookies?',
+    cookiesIntroText:
+      'Cookies are small text files stored on your device when you visit a website. They help the site remember your preferences and improve your experience.',
+    cookiesTypesTitle: 'Types of cookies we use',
+    cookiesEssential: 'Essential cookies',
+    cookiesEssentialText:
+      'Required for core functionality, such as remembering your language and theme preferences.',
+    cookiesFunctional: 'Functional cookies',
+    cookiesFunctionalText:
+      'Remember choices you make so we can personalize your experience.',
+    cookiesAnalytics: 'Analytics cookies',
+    cookiesAnalyticsText:
+      'Help us understand how visitors use the site so we can improve features and performance.',
+    cookiesRetentionTitle: 'Cookie retention',
+    cookiesRetentionText:
+      'Most cookies are session cookies and are removed when you close your browser. Persistent cookies may remain for up to 30 days unless cleared by you.',
+    cookiesManageTitle: 'Managing cookies',
+    cookiesManageText:
+      'You can accept, reject, or customize cookie categories using the consent banner on this site, or clear cookies at any time through your browser settings.',
+    cookiesContactTitle: 'Contact us',
+    cookiesContactText:
+      'If you have questions about our use of cookies, please contact us at support@snappassai.com.',
+    cookiesBannerIntro:
+      'We use cookies to improve your experience and analyze site traffic.',
+    cookiesAcceptAll: 'Accept All',
+    cookiesRejectNonEssential: 'Reject Non-Essential',
+    cookiesCustomize: 'Customize Preferences',
+    cookiesSavePreferences: 'Save Preferences',
     formalAttire: 'Formal Attire (AI Swap)',
     formalAttireSubtitle:
       'Swap your outfit into a professional formal suit instantly.',

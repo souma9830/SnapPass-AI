@@ -254,6 +254,15 @@ function Footer({ darkMode }) {
               >
                 {t.termsConditions}
               </Link>
+
+              <Link
+                to="/cookies"
+                className={`footer__item ${
+                  darkMode ? 'footer__item-dark' : ''
+                }`}
+              >
+                {t.cookiesTitle}
+              </Link>
             </div>
 
             {/* CONTACT */}

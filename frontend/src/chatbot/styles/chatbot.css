@@ -149,6 +149,24 @@
     transition: color 0.2s ease;
 }
 
+.clear-chat-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    color: #64748b;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: color 0.2s ease;
+}
+
+.clear-chat-btn:hover {
+    color: #dc2626;
+}
+
 .close-chat-btn:hover {
     color: #0f172a;
 }
@@ -421,6 +439,14 @@
     color: #94a3b8;
 }
 
+[data-theme='dark'] .clear-chat-btn {
+    color: #94a3b8;
+}
+
+[data-theme='dark'] .clear-chat-btn:hover {
+    color: #f87171;
+}
+
 [data-theme='dark'] .close-chat-btn:hover {
     color: #ffffff;
 }
@@ -480,6 +506,7 @@
 
 .chatbot-floating-button:focus-visible,
 .close-chat-btn:focus-visible,
+.clear-chat-btn:focus-visible,
 .prompt-chip:focus-visible,
 .chatbot-input-area input:focus-visible {
     outline: 3px solid #3b82f6;

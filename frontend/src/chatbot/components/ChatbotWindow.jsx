@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Send, X, Bot } from 'lucide-react';
+import { Send, X, Bot, Trash2 } from 'lucide-react';
 
 import ChatMessage from './ChatMessage';
 import SuggestedPrompts from './SuggestedPrompts';
@@ -72,6 +72,18 @@ function ChatbotWindow({ isOpen, onClose }) {
     }
   };
 
+  const handleClearConversation = () => {
+    setMessages([
+      {
+        sender: 'bot',
+        text: "Hi 👋 I'm SnapPass Assistant. Ask me anything related to SnapPass AI.",
+      },
+    ]);
+    setIsTyping(false);
+    setInput('');
+    inputRef.current?.focus();
+  };
+
   return (
     <div
       className={`chatbot-window ${isOpen ? 'show-chat' : ''}`}
@@ -90,6 +102,15 @@ function ChatbotWindow({ isOpen, onClose }) {
             <p>Ask platform-related questions</p>
           </div>
         </div>
+
+        <button
+          className="clear-chat-btn"
+          onClick={handleClearConversation}
+          aria-label="Clear conversation"
+          title="Clear conversation"
+        >
+          <Trash2 size={18} />
+        </button>
 
         <button
           className="close-chat-btn"

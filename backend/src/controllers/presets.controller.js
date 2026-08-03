@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Preset from '../models/preset.model.js';
 import { getCache, setCache, deleteCache } from '../config/redis.js';
 import { successResponse, errorResponse } from '../utils/httpResponse.js';
+import { validateAndSanitizePreset } from '../utils/presetManager.js';
 
 export const PHOTO_SIZE_PRESETS = ["35x45", "51x51", "33x48", "40x60", "2x2in", "100x150", "25x25", "50x70", "45x45", "35x50"];
 
@@ -73,7 +74,11 @@ export const getPresetById = async (req, res, next) => {
 
 export const createPreset = async (req, res, next) => {
   try {
-    const preset = await Preset.create(req.body);
+    const result = validateAndSanitizePreset(req.body);
+    if (!result.ok) {
+      return errorResponse(res, result.errors.join(' '), 400);
+    }
+    const preset = await Preset.create(result.value);
     await deleteCache('presets:all');
     successResponse(res, preset, 'Preset created successfully', 201);
   } catch (err) {
@@ -84,7 +89,11 @@ export const createPreset = async (req, res, next) => {
 export const updatePreset = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const preset = await Preset.findByIdAndUpdate(id, req.body, {
+    const result = validateAndSanitizePreset(req.body, { partial: true });
+    if (!result.ok) {
+      return errorResponse(res, result.errors.join(' '), 400);
+    }
+    const preset = await Preset.findByIdAndUpdate(id, result.value, {
       new: true,
       runValidators: true,
     });

@@ -1,4 +1,7 @@
+import { en } from './en.js';
+
 export const ml = {
+    ...en,
     home: 'ഹോം',
     studio: 'സ്റ്റുഡിയോ',
     upload: 'അപ്‌ലോഡ്',

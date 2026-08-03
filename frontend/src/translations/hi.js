@@ -366,4 +366,18 @@ export const hi = {
     attireMaleSuit: 'पुरुषों का काला सूट',
     attireFemaleBlazer: 'महिलाओं का नेवी ब्लेज़र',
     attireMaleBowtie: 'काला सूट और बो टाई',
+    explorerTitle: 'वैश्विक पासपोर्ट आवश्यकताओं का अन्वेषण करें',
+    explorerSubtitle:
+      'देश चुनें और उसकी आधिकारिक पासपोर्ट फोटो डाइमेंशन, बैकग्राउंड और गाइडलाइन एक नज़र में देखें।',
+    explorerSearchPlaceholder: 'देश या क्षेत्र खोजें…',
+    explorerClearSearch: 'खोज साफ़ करें',
+    explorerSelectCountry: 'देश चुनें',
+    explorerNoResults: 'कोई मिलता-जुलता देश नहीं मिला।',
+    explorerDimensions: 'डाइमेंशन',
+    explorerBackground: 'बैकग्राउंड',
+    explorerHeadRatio: 'हेड अनुपात',
+    explorerEyePosition: 'आंखों की स्थिति',
+    explorerExpression: 'चेहरे का भाव',
+    explorerAccessories: 'चश्मा और सामान',
+    explorerPrintFormat: 'प्रिंट फॉर्मेट',
 };

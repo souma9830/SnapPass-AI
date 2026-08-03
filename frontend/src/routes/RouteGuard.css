@@ -1,0 +1,46 @@
+.route-guard-denied {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.route-guard-denied__card {
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.route-guard-denied__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text, #0f172a);
+  margin-bottom: 0.75rem;
+}
+
+.route-guard-denied__message {
+  color: var(--color-text-muted, #475569);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.route-guard-denied__link {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  border-radius: 10px;
+  background: var(--color-primary, #3b82f6);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.route-guard-denied__link:hover {
+  background: #2563eb;
+}

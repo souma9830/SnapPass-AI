@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 
+const readSession = (requiredRole) => {
+  // Simple front-end authorization checker hook
+  const token = localStorage.getItem('token');
+  const userRole = localStorage.getItem('user_role') || 'user';
+  const isAuthenticated = Boolean(token);
+  const allowed =
+    !requiredRole || (isAuthenticated && userRole === requiredRole);
+  return { allowed, loading: false, isAuthenticated, userRole };
+};
+
 export const useRouteGuard = (requiredRole) => {
-  const [state, setState] = useState({ allowed: true, loading: false });
+  const [state, setState] = useState(() => readSession(requiredRole));
 
   useEffect(() => {
-    // Simple front-end authorization checker hook
-    const token = localStorage.getItem('token');
-    const userRole = localStorage.getItem('user_role') || 'user';
-    
-    if (requiredRole && (!token || userRole !== requiredRole)) {
-      setState({ allowed: false, loading: false });
-    } else {
-      setState({ allowed: true, loading: false });
-    }
+    setState(readSession(requiredRole));
   }, [requiredRole]);
 
   return state;

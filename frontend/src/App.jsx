@@ -4,6 +4,7 @@ import Footer from './components/layout/Footer';
 import AppRoutes from './routes/AppRoutes';
 import SkipToContent from './components/SkipToContent';
 import SnapPassAssistant from './chatbot/SnapPassAssistant';
+import CookieConsentBanner from './components/CookieConsentBanner';
 import { ToastProvider, useToast } from './context/ToastContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { ThemeCustomizerProvider } from './context/ThemeCustomizerContext';
@@ -37,6 +38,7 @@ function AppContent() {
       </main>
       <Footer darkMode={darkMode} />
       <SnapPassAssistant />
+      <CookieConsentBanner />
       <ScrollToTopButton />
     </div>
   );

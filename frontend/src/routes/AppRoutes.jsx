@@ -12,6 +12,7 @@ const PrintPreviewPage = lazy(() => import('../pages/PrintPreviewPage'));
 const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
 const TermsPage = lazy(() => import('../pages/TermsPage'));
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage'));
+const CookiesPage = lazy(() => import('../pages/CookiesPage'));
 const PhotoStudio = lazy(() => import('../pages/PhotoStudio'));
 const HistoryPage = lazy(() => import('../pages/HistoryPage'));
 const SettingsPage = lazy(() => import('../pages/SettingsPage'));
@@ -39,6 +40,7 @@ function AppRoutes({ darkMode, toggleTheme }) {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
           <Route path="/studio" element={<PhotoStudio />} />
           <Route path="/settings" element={<SettingsPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
           <Route path="/diagnostics" element={<DiagnosticsPage darkMode={darkMode} />} />

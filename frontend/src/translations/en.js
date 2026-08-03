@@ -324,6 +324,9 @@ export const en = {
 
     termsChangesText:
       'As this project is in active development, these terms may be updated at any time. Continued use of the platform implies acceptance of any revised terms.',
+
+    faqTitle: 'FAQ',
+    faqSubtitle: 'Frequently asked questions about SnapPass AI',
     dragDropPhoto: 'Drag & drop your photo here',
 
     browseFiles: 'browse files',

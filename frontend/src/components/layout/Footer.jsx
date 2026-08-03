@@ -254,6 +254,15 @@ function Footer({ darkMode }) {
               >
                 {t.termsConditions}
               </Link>
+
+              <Link
+                to="/faq"
+                className={`footer__item ${
+                  darkMode ? 'footer__item-dark' : ''
+                }`}
+              >
+                {t.faqTitle}
+              </Link>
             </div>
 
             {/* CONTACT */}

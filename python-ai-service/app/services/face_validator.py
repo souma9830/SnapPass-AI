@@ -5,7 +5,6 @@ ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.webp'}
 ALLOWED_MAGIC_BYTES = {
     b'\xff\xd8\xff': 'jpeg',   # JPEG
     b'\x89PNG': 'png',          # PNG
-    b'RIFF': 'webp',            # WebP
 }
 
 
@@ -15,6 +14,11 @@ def detect_image_type(file_path: str) -> str | None:
     for magic, img_type in ALLOWED_MAGIC_BYTES.items():
         if header.startswith(magic):
             return img_type
+    # WebP is a RIFF container: verify BOTH the 'RIFF' signature
+    # (bytes 0-3) and the 'WEBP' format header (bytes 8-11). Otherwise
+    # any RIFF file (e.g. WAV audio, AVI video) would be misdetected.
+    if header.startswith(b'RIFF') and header[8:12] == b'WEBP':
+        return 'webp'
     return None
 
 

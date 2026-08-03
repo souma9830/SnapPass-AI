@@ -130,6 +130,7 @@ function UploadBox({ onFileSelect, queue, addToQueue }) {
       <input
         ref={inputRef}
         type="file"
+        name="photo-file"
         accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
         className="upload-box__input"
         onChange={onChange}

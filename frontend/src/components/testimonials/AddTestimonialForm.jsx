@@ -81,6 +81,7 @@ const AddTestimonialForm = ({
           <label htmlFor="website">Website</label>
           <input
             id="website"
+            name="website"
             type="text"
             tabIndex={-1}
             autoComplete="off"
@@ -93,6 +94,8 @@ const AddTestimonialForm = ({
           <label className={darkMode ? 'label-dark' : 'label-light'}>{t.reviewNameLabel}</label>
           <input
             type="text"
+            id="review-name"
+            name="name"
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder={t.reviewNamePlaceholder}
@@ -114,6 +117,8 @@ const AddTestimonialForm = ({
         <div className="form-group">
           <label className={darkMode ? 'label-dark' : 'label-light'}>{t.reviewCommentLabel}</label>
           <textarea
+            id="review-comment"
+            name="comment"
             value={formData.comment}
             onChange={(e) => handleChange('comment', e.target.value)}
             placeholder={t.reviewCommentPlaceholder}

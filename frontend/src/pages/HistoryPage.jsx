@@ -113,6 +113,8 @@ function HistoryPage({ darkMode }) {
           <input
             className="history-page__search-input"
             type="search"
+            id="history-search-input"
+            name="history-search"
             placeholder={t.searchHistory || 'Search sessions...'}
             value={search}
             onChange={(e) => setSearch(e.target.value)}

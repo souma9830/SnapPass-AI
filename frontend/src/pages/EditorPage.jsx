@@ -547,6 +547,7 @@ function EditorPage({ darkMode, toggleTheme }) {
               <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px' }}>
                 <input
                   type="checkbox"
+                  name="auto-enhance"
                   checked={isAutoEnhanced}
                   onChange={handleToggleEnhance}
                   disabled={!filename || isEnhancing}

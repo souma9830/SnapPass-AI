@@ -35,6 +35,7 @@ export const AttireManualAdjuster = ({
           </div>
           <input
             type="range"
+            name="attire-scale"
             min="0.5"
             max="1.5"
             step="0.05"
@@ -51,6 +52,7 @@ export const AttireManualAdjuster = ({
           </div>
           <input
             type="range"
+            name="attire-x"
             min="-100"
             max="100"
             step="2"
@@ -67,6 +69,7 @@ export const AttireManualAdjuster = ({
           </div>
           <input
             type="range"
+            name="attire-y"
             min="-100"
             max="100"
             step="2"
@@ -84,6 +87,7 @@ export const AttireManualAdjuster = ({
             </div>
             <input
               type="range"
+              name="attire-rotation"
               min="-45"
               max="45"
               step="1"

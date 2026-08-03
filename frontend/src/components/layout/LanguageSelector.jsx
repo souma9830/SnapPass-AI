@@ -7,6 +7,7 @@ export const LanguageSelector = ({ className = '' }) => {
   return (
     <select
       className={`language-selector-select ${className}`}
+      name="language"
       value={language}
       onChange={(e) => setLanguage(e.target.value)}
       aria-label="Select Application Language"

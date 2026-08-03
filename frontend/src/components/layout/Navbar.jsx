@@ -113,6 +113,7 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
 
           <select
             className={`navbar__language-selector navbar__language-selector-${themeClass} navbar__desktop-language`}
+            name="language"
             value={language}
             onChange={(event) => setLanguage(event.target.value)}
             aria-label="Select language"
@@ -180,6 +181,7 @@ export const Navbar = ({ darkMode = false, toggleTheme }) => {
 
         <select
           className={`navbar__language-selector navbar__language-selector-${themeClass}`}
+          name="language-mobile"
           value={language}
           onChange={(event) => setLanguage(event.target.value)}
           aria-label="Select language"

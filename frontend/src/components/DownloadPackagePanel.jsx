@@ -110,6 +110,7 @@ export default function DownloadPackagePanel({
         <label>
           <input
             type="checkbox"
+            name="package-compressed"
             checked={options.compressed}
             onChange={() => toggleOption('compressed')}
           />
@@ -118,6 +119,7 @@ export default function DownloadPackagePanel({
         <label>
           <input
             type="checkbox"
+            name="package-printable"
             checked={options.printable}
             onChange={() => toggleOption('printable')}
           />
@@ -126,6 +128,7 @@ export default function DownloadPackagePanel({
         <label>
           <input
             type="checkbox"
+            name="package-transparent"
             checked={options.transparent}
             onChange={() => toggleOption('transparent')}
           />
@@ -134,6 +137,7 @@ export default function DownloadPackagePanel({
         <label>
           <input
             type="checkbox"
+            name="package-rename"
             checked={options.rename}
             onChange={() => toggleOption('rename')}
           />
@@ -142,6 +146,7 @@ export default function DownloadPackagePanel({
         <label>
           <input
             type="checkbox"
+            name="package-pdf"
             checked={options.pdf}
             onChange={() => toggleOption('pdf')}
           />

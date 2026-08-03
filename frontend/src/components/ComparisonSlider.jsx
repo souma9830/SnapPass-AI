@@ -34,6 +34,7 @@ function ComparisonSlider({ beforeSrc, afterSrc, alt = 'Comparison' }) {
         <button onClick={zoomIn} title="Zoom in" className="comparison-zoom-btn">+</button>
         <button onClick={resetView} title="Reset view" className="comparison-zoom-btn">⟲</button>
         <select
+          name="comparison-zoom"
           className="comparison-zoom-select"
           value={zoom}
           onChange={(e) => setZoomLevel(e.target.value)}

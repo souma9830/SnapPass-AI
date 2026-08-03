@@ -67,3 +67,5 @@ export async function getUploadsByDay(req, res, next) {
     next(err);
   }
 }
+
+.catch(err => console.error("Promise.all failed:", err));

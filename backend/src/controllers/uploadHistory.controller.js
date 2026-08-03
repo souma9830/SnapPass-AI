@@ -61,3 +61,5 @@ export const getUserUploadHistory = async (req, res, next) => {
     next(err);
   }
 };
+
+.catch(err => console.error("Promise.all failed:", err));

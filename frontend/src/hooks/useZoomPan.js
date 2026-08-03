@@ -10,7 +10,7 @@ export default function useZoomPan(initialZoom = 1, minZoom = 0.5, maxZoom = 5) 
   const zoomIn = useCallback(() => {
     setZoom((prev) => {
       const next = Math.min(prev + 0.25, maxZoom);
-      return Math.round(next * 100) / 100;
+      return Math.round(next * 100 + Number.EPSILON) / 100;
     });
   }, [maxZoom]);
 

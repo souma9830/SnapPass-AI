@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
+/**
+ * ScrollToTop — resets the window scroll position whenever the route
+ * pathname or search string changes, so users always land at the top of
+ * a newly navigated page.
+ */
 function ScrollToTop() {
   const { pathname, search } = useLocation();
 
@@ -12,3 +17,4 @@ function ScrollToTop() {
 }
 
 export default ScrollToTop;
+export { ScrollToTop };

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Camera } from 'lucide-react';
 import UploadBox from '../components/UploadBox';
+import CameraCapture from '../components/CameraCapture';
 import PhotoPreview from '../components/PhotoPreview';
 import UploadProgress from '../components/UploadProgress';
 import usePhotoUpload from '../hooks/usePhotoUpload';
@@ -26,6 +28,7 @@ function UploadPage({ darkMode, toggleTheme }) {
   } = usePhotoUpload();
   const [localPreview, setLocalPreview] = useState(null);
   const [diagResults, setDiagResults] = useState(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
 
   const tips = [
     { type: 'ok', text: t.tipPlainBg },
@@ -140,7 +143,17 @@ function UploadPage({ darkMode, toggleTheme }) {
             </>
           ) : (
             <>
-              <UploadBox onFileSelect={handleFileSelect} />
+              <div className="upload-page__entry">
+                <UploadBox onFileSelect={handleFileSelect} />
+                <button
+                  type="button"
+                  className="upload-page__camera-btn"
+                  onClick={() => setCameraOpen(true)}
+                >
+                  <Camera size={18} aria-hidden="true" />
+                  {t.cameraTakePhoto}
+                </button>
+              </div>
               <UploadProgress progress={uploadProgress} darkMode={darkMode} />
             </>
           )}
@@ -192,6 +205,12 @@ function UploadPage({ darkMode, toggleTheme }) {
           <span>{t.uploadPrivacy}</span>
         </motion.div>
       </div>
+
+      <CameraCapture
+        open={cameraOpen}
+        onClose={() => setCameraOpen(false)}
+        onCapture={handleFileSelect}
+      />
     </div>
   );
 }

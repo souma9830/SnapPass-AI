@@ -362,6 +362,20 @@ export const en = {
     reviewCommentMin: 'Comment must be at least 10 characters',
     reviewCommentMax: 'Comment must be less than 500 characters',
     cancel: 'Cancel',
+    cameraTakePhoto: 'Take Photo',
+    cameraTitle: 'Take a Photo',
+    cameraStart: 'Start Camera',
+    cameraCapture: 'Capture',
+    cameraRetake: 'Retake',
+    cameraConfirm: 'Use Photo',
+    cameraPermissionDenied:
+      'Camera permission was denied. Please allow access and try again.',
+    cameraNotFound: 'No camera was found on this device.',
+    cameraNotSupported:
+      'Camera capture is not supported on this browser or device.',
+    cameraInstruction:
+      'Position your face in the frame and press Capture.',
+    cameraClose: 'Close',
     formalAttire: 'Formal Attire (AI Swap)',
     formalAttireSubtitle:
       'Swap your outfit into a professional formal suit instantly.',

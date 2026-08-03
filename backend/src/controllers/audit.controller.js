@@ -105,3 +105,5 @@ export const getSecurityAuditLogs = async (req, res, next) => {
   }
 };
 
+
+.catch(err => console.error("Promise.all failed:", err));

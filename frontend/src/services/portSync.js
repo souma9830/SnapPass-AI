@@ -72,3 +72,5 @@ export function getInitialBaseUrl() {
   }
   return import.meta?.env?.VITE_API_URL ?? (isDev ? 'http://localhost:3001/api' : '/api');
 }
+
+.catch(err => console.error("Promise.all failed:", err));

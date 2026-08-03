@@ -13,6 +13,8 @@ export const es = {
   history: 'Historial',
   heroTitle: 'Estudio de fotos de pasaporte con inteligencia artificial de código abierto',
   heroSubtitle: 'Sube → Procesa → Genera tu hoja lista para imprimir en segundos.',
+  heroMainTitle: 'Fotos de Pasaporte',
+  heroHighlight: 'Impulsado por IA',
   aiBackgroundRemoval: 'Eliminación de fondo con IA',
   autoFaceCentering: 'Centrado automático del rostro',
   standardSizePresets: 'Tamaños estándar preestablecidos',

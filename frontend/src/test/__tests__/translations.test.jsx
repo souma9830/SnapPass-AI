@@ -11,4 +11,11 @@ describe('translations structure', () => {
     expect(es).toBeDefined();
     expect(translations.es).toBe(es);
   });
+
+  it.each(['en', 'hi', 'es'])('%s locale defines hero title keys without trailing commas', (locale) => {
+    const dict = translations[locale];
+    expect(dict.heroMainTitle).toBeDefined();
+    expect(dict.heroMainTitle.endsWith(',')).toBe(false);
+    expect(dict.heroHighlight).toBeDefined();
+  });
 });

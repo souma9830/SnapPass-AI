@@ -19,7 +19,7 @@ export const en = {
     a4PrintLayout: 'A4 Print Layout',
     openSourceFree: 'Open Source · Free to Use',
 
-    heroMainTitle: 'Passport Photos,',
+    heroMainTitle: 'Passport Photos',
     heroHighlight: 'Powered by AI',
 
     heroDescription:

@@ -21,7 +21,7 @@ export const hi = {
     a4PrintLayout: 'A4 प्रिंट लेआउट',
     openSourceFree: 'ओपन सोर्स · निःशुल्क उपयोग',
 
-    heroMainTitle: 'पासपोर्ट फोटो,',
+    heroMainTitle: 'पासपोर्ट फोटो',
     heroHighlight: 'AI द्वारा संचालित',
 
     heroDescription:

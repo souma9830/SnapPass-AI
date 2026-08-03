@@ -125,6 +125,12 @@ const validateCompressionRatio = async (filePath) => {
   }
 };
 
+export const stripImageExifData = async (filePath) => {
+  const input = fs.readFileSync(filePath);
+  const buffer = await sharp(input).rotate().toBuffer();
+  fs.writeFileSync(filePath, buffer);
+};
+
 export const validateImageChain = async (req, res, next) => {
   if (!req.file) return next();
 
@@ -147,6 +153,16 @@ export const validateImageChain = async (req, res, next) => {
     if (!crResult.valid) {
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       return res.status(400).json({ success: false, message: crResult.error });
+    }
+
+    try {
+      await stripImageExifData(filePath);
+    } catch (err) {
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      return res.status(400).json({
+        success: false,
+        message: 'Could not strip EXIF metadata from the image.',
+      });
     }
 
     req.imageMeta = {

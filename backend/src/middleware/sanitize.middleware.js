@@ -1,10 +1,17 @@
 const SENSITIVE_KEYS = new Set(['password', 'token', 'secret', 'apiKey']);
 
+const htmlEncode = (str) =>
+  str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
 const sanitizeValue = (value) => {
   if (typeof value === 'string') {
     let cleaned = value.trim();
-    cleaned = cleaned.replace(/<[^>]*>?/gm, '');
-    cleaned = cleaned.replace(/[<>"'&]/g, '');
+    cleaned = htmlEncode(cleaned);
     cleaned = cleaned.replace(/javascript:/gi, '');
     cleaned = cleaned.replace(/on\w+=/gi, '');
     return cleaned;

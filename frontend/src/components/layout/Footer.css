@@ -3,6 +3,25 @@
    Add below your existing CSS
 ========================================================= */
 
+/* ───────────────── BASE FOOTER ───────────────── */
+
+.footer {
+  width: 100%;
+  padding: 0 1.5rem 2.5rem;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.footer-dark {
+  background: #0b0f19;
+}
+
+.footer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 /* ───────────────── CTA SECTION ───────────────── */
 
 .footer__cta {
@@ -296,14 +315,28 @@
 }
 
 .footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+
   max-width: 1200px;
   margin: 2rem auto 0;
   padding-top: 2rem;
+
+  border-top: 1px solid var(--color-border);
+
+  color: var(--color-text-muted);
 }
 
 .footer__copy,
 .footer__status {
   font-size: 0.92rem;
+}
+
+.footer__status {
+  font-weight: 600;
 }
 
 /* ───────────────── RESPONSIVE ───────────────── */
@@ -315,12 +348,20 @@
     align-items: flex-start;
   }
 
+  .footer__top {
+    gap: 3rem;
+  }
+
   .footer__columns {
     gap: 3rem;
   }
 }
 
 @media (max-width: 768px) {
+
+  .footer {
+    padding: 0 1rem 2rem;
+  }
 
   .footer__cta {
     padding: 2rem;
@@ -333,6 +374,15 @@
   .footer__trust {
     justify-content: flex-start;
     gap: 1.5rem;
+  }
+
+  .footer__top {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .footer__brand {
+    max-width: 100%;
   }
 
   .footer__columns {
@@ -362,5 +412,10 @@
 
   .footer__logo {
     font-size: 1.7rem;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

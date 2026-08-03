@@ -37,6 +37,12 @@ Object.defineProperty(window, 'scrollTo', {
   value: () => {},
 });
 
+// Mock scrollIntoView which is not implemented in jsdom
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  writable: true,
+  value: () => {},
+});
+
 // Mock localStorage
 const localStorageMock = (() => {
   let store = {};

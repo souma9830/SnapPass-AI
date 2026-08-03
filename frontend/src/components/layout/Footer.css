@@ -279,8 +279,16 @@
 }
 /* ───────────────── CONTACT ───────────────── */
 
+.footer__contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+
 .footer__contact svg {
   color: #f59e0b;
+  flex-shrink: 0;
 }
 
 /* ───────────────── BOTTOM BAR ───────────────── */

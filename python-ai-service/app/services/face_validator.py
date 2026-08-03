@@ -1,5 +1,6 @@
 import cv2
 from pathlib import Path
+from PIL import Image
 
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.webp'}
 ALLOWED_MAGIC_BYTES = {
@@ -7,6 +8,8 @@ ALLOWED_MAGIC_BYTES = {
     b'\x89PNG': 'png',          # PNG
     b'RIFF': 'webp',            # WebP
 }
+
+MAX_DIMENSION = 8000
 
 
 def detect_image_type(file_path: str) -> str | None:
@@ -16,6 +19,21 @@ def detect_image_type(file_path: str) -> str | None:
         if header.startswith(magic):
             return img_type
     return None
+
+
+def check_image_resolution(file_path: str) -> None:
+    try:
+        with Image.open(file_path) as img:
+            width, height = img.size
+    except Exception as exc:
+        raise ValueError(
+            "Rejected: could not read image header for resolution check."
+        ) from exc
+    if width > MAX_DIMENSION or height > MAX_DIMENSION:
+        raise ValueError(
+            f"Rejected: image resolution ({width}x{height}) exceeds "
+            f"maximum {MAX_DIMENSION}x{MAX_DIMENSION} pixels."
+        )
 
 
 def validate_image_bytes(file_path: str) -> bool:
@@ -30,7 +48,10 @@ def validate_image_bytes(file_path: str) -> bool:
         raise ValueError(
             f"Rejected: file does not match any allowed image format (JPEG, PNG, WebP).")
 
-    # 3. OpenCV decode check
+    # 3. Resolution check (lightweight PIL header read, avoids OOM on pixel-bombs)
+    check_image_resolution(file_path)
+
+    # 4. OpenCV decode check
     img = cv2.imread(file_path)
     if img is None:
         raise ValueError(

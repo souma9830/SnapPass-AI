@@ -16,6 +16,7 @@ function SizeSelector({ presets = [], selected, onChange }) {
       <div className="size-selector__controls">
         <select
           className="size-selector__select"
+          name="photo-size-preset"
           value={selected}
           onChange={(e) => onChange && onChange(e.target.value)}
           aria-label="Select passport photo size preset"

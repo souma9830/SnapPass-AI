@@ -71,6 +71,7 @@ function PassportRequirementComparator() {
       <div className="passport-comparator__search-wrapper">
         <input
           type="text"
+          name="requirement-search"
           placeholder="Search country or document type..."
           className="passport-comparator__search"
           value={search}
@@ -120,6 +121,7 @@ function PassportRequirementComparator() {
             >
               <input
                 type="checkbox"
+                name="requirement-select"
                 checked={selectedIds.includes(requirement.id)}
                 onChange={() => handleSelection(requirement.id)}
                 tabIndex={-1}

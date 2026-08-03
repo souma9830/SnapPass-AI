@@ -246,6 +246,8 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               <label className="print-info-label">{t.securePassword}</label>
               <input
                 type="password"
+                id="print-password"
+                name="print-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t.enterPassword}

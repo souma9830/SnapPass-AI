@@ -321,6 +321,7 @@ function PhotoStudio() {
 
                     <input
                         type="file"
+                        name="photo-upload"
                         ref={fileInputRef}
                         onChange={handleImageUpload}
                         accept="image/*"
@@ -344,6 +345,7 @@ function PhotoStudio() {
                             </div>
                             <input
                                 type="range"
+                                name={tool.id}
                                 min={tool.min}
                                 max={tool.max}
                                 value={adjustments[tool.id]}

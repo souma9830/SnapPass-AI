@@ -293,6 +293,7 @@ function SettingsPage() {
                         <div key={sess._id} className="session-item">
                           <input
                             type="checkbox"
+                            name="session-selection"
                             checked={selectedSessions.has(sess._id)}
                             onChange={() => toggleSessionSelection(sess._id)}
                             className="session-checkbox"

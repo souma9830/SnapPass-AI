@@ -113,6 +113,8 @@ function BackgroundSelector({ selected = 'white', onChange }) {
 
       <input
         ref={colorInputRef}
+        id="background-color-input"
+        name="background-color"
         type="color"
         value={isCustomActive ? selected : customHex}
         onChange={handleCustomHexChange}

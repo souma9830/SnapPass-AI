@@ -60,6 +60,7 @@ export const ThemeColorSelector = ({ compact = false }) => {
             <label style={{ fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <input
                 type="checkbox"
+                name="high-contrast"
                 checked={highContrast}
                 onChange={(e) => setHighContrast(e.target.checked)}
               />

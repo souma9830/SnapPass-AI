@@ -123,6 +123,7 @@ function ChatbotWindow({ isOpen, onClose }) {
       <div className="chatbot-input-area">
         <input
           type="text"
+          name="chatbot-message"
           placeholder="Ask something..."
           value={input}
           onChange={(e) => setInput(e.target.value)}

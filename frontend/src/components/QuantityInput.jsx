@@ -49,6 +49,7 @@ function QuantityInput({ darkMode, toggleTheme, value = 6, onChange, min = 1, ma
         <input
           className={`qty-input__field ${darkMode ? 'qty-input__field-dark' : ''}`}
           type="number"
+          name="photo-quantity"
           value={value}
           min={min}
           max={max}

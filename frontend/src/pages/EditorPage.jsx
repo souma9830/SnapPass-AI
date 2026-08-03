@@ -160,6 +160,14 @@ function EditorPage({ darkMode, toggleTheme }) {
 
   const displayImageUrl = isAutoEnhanced && enhancedDataUrl ? enhancedDataUrl : currentImageUrl;
 
+  const previewAlt = isProcessing
+    ? t.editorPreviewProcessing
+    : isEnhancing
+      ? t.editorPreviewEnhancing
+      : complianceLoading
+        ? t.editorPreviewCompliance
+        : t.editorPreviewReady;
+
   useEffect(() => {
     if (state?.filename) setFilename(state.filename);
   }, [state?.filename]);
@@ -305,7 +313,7 @@ function EditorPage({ darkMode, toggleTheme }) {
                   >
                     <img
                       src={displayImageUrl}
-                      alt="Preview"
+                      alt={previewAlt}
                       onError={(e) => {
                         if (filename && !e.target.dataset.retried) {
                           e.target.dataset.retried = 'true';

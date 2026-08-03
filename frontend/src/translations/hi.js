@@ -366,4 +366,8 @@ export const hi = {
     attireMaleSuit: 'पुरुषों का काला सूट',
     attireFemaleBlazer: 'महिलाओं का नेवी ब्लेज़र',
     attireMaleBowtie: 'काला सूट और बो टाई',
+    editorPreviewProcessing: 'पासपोर्ट फोटो पूर्वावलोकन — प्रोसेसिंग जारी है',
+    editorPreviewEnhancing: 'पासपोर्ट फोटो पूर्वावलोकन — AI एन्हांसमेंट जारी है',
+    editorPreviewCompliance: 'पासपोर्ट फोटो पूर्वावलोकन — कंप्लायंस गाइडलाइन जांच हो रही है',
+    editorPreviewReady: 'कंप्लायंस ओवरले के साथ प्रोसेस किया गया पासपोर्ट फोटो पूर्वावलोकन',
 };

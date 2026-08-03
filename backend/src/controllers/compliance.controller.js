@@ -8,6 +8,7 @@ import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
 import { config } from '../config/config.js';
+import { computePassportComplianceScore } from '../utils/passportComplianceScore.js';
 
 /**
  * Resolve uploads/<filename> to an absolute path while preventing traversal.
@@ -103,7 +104,12 @@ export const complianceCheck = async (req, res, next) => {
       { headers: { 'Content-Type': 'application/json' } }
     );
 
-    return res.json({ success: true, data: response.data });
+    const items = Array.isArray(response.data?.items) ? response.data.items : [];
+    const complianceScore = computePassportComplianceScore(items, {
+      hardFail: response.data?.hard_fail === true,
+    });
+
+    return res.json({ success: true, data: response.data, complianceScore });
   } catch (error) {
     if (error.code === 'ECONNREFUSED') {
       return res.status(503).json({

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import './TermsPage.css';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
@@ -7,6 +8,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 const TermsPage = () => {
     const { language } = useLanguage();
+    const navigate = useNavigate();
     useDocumentMeta({ title: 'Terms of Service', description: 'SnapPass AI terms of service and usage agreement.' });
     const t = translations[language];
     const fadeUpVariant = {
@@ -20,6 +22,21 @@ const TermsPage = () => {
 
     return (
         <div className="terms-page page-content">
+         <motion.div 
+                className="terms-page__back-container"
+                variants={fadeUpVariant}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={0}
+            >
+                <button 
+                    onClick={() => navigate(-1)} // Navigates back one step in browser history
+                    className="terms-page__back-btn"
+                >
+                 ← {t.backLabel || 'Back'}
+                </button>
+            </motion.div>
             <motion.div
                 className="terms-page__header"
                 variants={fadeUpVariant}

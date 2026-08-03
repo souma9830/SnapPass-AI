@@ -8,6 +8,29 @@
     padding: 120px var(--space-lg, 1.5rem) var(--space-lg, 1.5rem);
     box-sizing: border-box;
 }
+.terms-page__back-container {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    width: 100%;
+}
+
+.terms-page__back-btn {
+    background: none;
+    border: none;
+    color: var(--text-color, #333);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.terms-page__back-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
 .terms-page__header {
     display: flex;

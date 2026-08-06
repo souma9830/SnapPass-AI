@@ -18,6 +18,8 @@ const HistoryPage = lazy(() => import('../pages/HistoryPage'));
 const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 const DiagnosticsPage = lazy(() => import('../pages/DiagnosticsPage'));
 const PassportComparatorPage = lazy(() => import('../pages/PassportComparatorPage'));
+const QueuePage = lazy(() => import('../pages/QueuePage'));
+const SharedPhotoPage = lazy(() => import('../pages/SharedPhotoPage'));
 const SignIn = lazy(() => import('../pages/SignIn'));
 const SignUp = lazy(() => import('../pages/SignUp'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));

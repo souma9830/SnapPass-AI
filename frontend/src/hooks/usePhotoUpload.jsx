@@ -27,12 +27,24 @@ function usePhotoUpload() {
       const localUrl = URL.createObjectURL(file);
       localUrlRef.current = localUrl;
 
-      // Delegate to photoService which uses the configured axios api instance.
-      // VITE_API_URL controls the backend URL — no hardcoded localhost here.
-      const data = await uploadPhoto(file, (percent) =>
-        setUploadProgress(percent)
-      );
-      const nextUploaded = { ...data, localUrl };
+      let nextUploaded;
+      try {
+        // Delegate to photoService which uses the configured axios api instance.
+        // VITE_API_URL controls the backend URL — no hardcoded localhost here.
+        const data = await uploadPhoto(file, (percent) =>
+          setUploadProgress(percent)
+        );
+        nextUploaded = { ...data, localUrl };
+      } catch (uploadErr) {
+        console.warn('[usePhotoUpload] Backend upload unavailable or returned error, using local fallback:', uploadErr);
+        nextUploaded = {
+          fileId: `local-${Date.now()}`,
+          filename: file.name || 'uploaded_photo.jpg',
+          fileUrl: localUrl,
+          localUrl,
+          isLocalFallback: true,
+        };
+      }
       setUploadedFile(nextUploaded);
       setUploadProgress(100);
       return nextUploaded;
@@ -72,10 +84,6 @@ function usePhotoUpload() {
                 'Upload failed. Please try again.'
       );
 
-      if (localUrlRef.current) {
-        URL.revokeObjectURL(localUrlRef.current);
-        localUrlRef.current = null;
-      }
       setUploadProgress(0);
       throw err;
     } finally {

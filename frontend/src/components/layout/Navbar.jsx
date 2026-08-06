@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { useJobQueue } from '../../context/JobQueueContext';
+import ThemeColorSelector from '../ThemeColorSelector';
+import NavbarAlignmentDetector from './NavbarAlignmentDetector';
 
 const navItems = [
   { to: '/', label: 'Home', end: true },

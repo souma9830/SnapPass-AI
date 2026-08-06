@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import QuantityInput from '../components/QuantityInput';
-import PrintButton from '../components/PrintButton';
 import PrintLayoutSelector from '../components/PrintLayoutSelector';
 import PrintSheetLayoutCustomizer from '../components/PrintSheetLayoutCustomizer';
 import generatePassportPDFSheet from '../utils/pdfExportGenerator';

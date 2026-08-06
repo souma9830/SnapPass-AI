@@ -82,7 +82,9 @@ function EditorPage({ darkMode, toggleTheme }) {
     return backendRoot ? `${backendRoot}${path.startsWith('/') ? '' : '/'}${path}` : path.startsWith('/') ? path : `/${path}`;
   };
 
-  const baseImageUrl = filename ? resolveImageUrl(`/uploads/${filename}`) : (state?.localUrl || state?.fileUrl || '');
+  const baseImageUrl = (state?.localUrl || state?.fileUrl)
+    ? resolveImageUrl(state?.localUrl || state?.fileUrl)
+    : (filename ? resolveImageUrl(`/uploads/${filename}`) : '');
   const currentImageUrl = processedUrl
     ? `${resolveImageUrl(processedUrl)}?t=${cacheBuster}`
     : baseImageUrl

@@ -311,6 +311,18 @@ Home
 | `GET`  | `/api/print/presets` | List size presets |
 | `GET`  | `/health` | Backend health check |
 
+### Print Sheet Generation — Input Validation
+
+The `/api/print/generate-sheet` endpoint validates all inputs and returns `400` for invalid values:
+
+| Field | Type | Constraints | Default |
+|-------|------|-------------|---------|
+| `quantity` | integer | 1–50 | 8 |
+| `bg_color` | array | Exactly 3 integers (0–255) | `[255, 255, 255]` |
+| `draw_guides` | boolean | `true`/`false` (string accepted) | `true` |
+| `page_size` | string | `a4`, `letter`, or `4x6` | `a4` |
+| `photo_path` / `photo_paths` | string / array | Valid filename(s) in uploads directory | — |
+
 ---
 
 ## 🌍 Supported Passport Photo Sizes

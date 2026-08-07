@@ -11,6 +11,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import { config } from "../config/config.js";
 import { WebhookService } from "../services/webhook.service.js";
+import backgroundQualityRepairService from '../services/backgroundQualityRepair.service.js';
 
 const localFilename = fileURLToPath(import.meta.url);
 const localDirname = path.dirname(localFilename);
@@ -126,8 +127,6 @@ export const processImage = async (req, res, next) => {
         }
       });
     }
-
-import backgroundQualityRepairService from '../services/backgroundQualityRepair.service.js';
 
     const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, form, {
       headers: form.getHeaders(),
@@ -366,6 +365,11 @@ export const getProcessJobStatus = async (req, res, next) => {
         payload: job.payload,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const repairImageQualityController = async (req, res, next) => {
   try {
     const {

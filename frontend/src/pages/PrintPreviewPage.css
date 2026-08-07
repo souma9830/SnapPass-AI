@@ -19,7 +19,7 @@
 }
 .print-preview-toggle-dark {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background:
     radial-gradient(
       1400px 700px at 10% 10%,
@@ -32,8 +32,7 @@
       transparent 40%
     ),
     linear-gradient(145deg, #000000 10%, #0f0f0f 50%, #1a1200 100%);
-  margin-top: -140px;
-  padding-top: 140px;
+  padding-top: var(--space-xxl, 140px);
 }
 
 /* Sheet */

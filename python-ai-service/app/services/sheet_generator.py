@@ -55,6 +55,9 @@ def generate_sheet(
     if page_size not in PAGE_SIZES:
         raise ValueError(f"Unknown page size '{page_size}'. Choose from: {list(PAGE_SIZES)}")
 
+    if not isinstance(quantity, int) or quantity < 1:
+        raise ValueError("quantity must be greater than zero.")
+
     preset = PRESETS[preset_id]
     page = PAGE_SIZES[page_size]
 

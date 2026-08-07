@@ -25,6 +25,8 @@ const SignUp = lazy(() => import('../pages/SignUp'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const ApiDocsPage = lazy(() => import('../pages/ApiDocsPage'));
 const CookiesPage = lazy(() => import('../pages/CookiesPage'));
+const QueuePage = lazy(() => import('../pages/QueuePage'));
+const SharedPhotoPage = lazy(() => import('../pages/SharedPhotoPage'));
 
 function AppRoutes({ darkMode, toggleTheme }) {
   const location = useLocation();

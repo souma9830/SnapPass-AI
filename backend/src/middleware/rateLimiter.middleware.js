@@ -14,9 +14,10 @@ export const createRateLimiter = (options = {}) => {
     const clientKey = `${rawIp}:${req.headers['user-agent'] || 'unknown'}`;
     const now = Date.now();
 
-
-    if (!requestCounts.has(ip)) {
-      requestCounts.set(ip, []);
+    // Track the IP-level bucket so blocked clients stay blocked even when
+    // they rotate their User-Agent header between requests.
+    if (!requestCounts.has(rawIp)) {
+      requestCounts.set(rawIp, []);
     }
 
     if (!requestCounts.has(clientKey)) {

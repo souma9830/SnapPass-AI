@@ -1,0 +1,41 @@
+name: PR Branch and Title Validator
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate:
+    name: Validate Branch and PR Title
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Validate Branch Name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Checking branch name: $BRANCH_NAME"
+          # Allowed prefixes: feat, fix, docs, refactor, style, test, ci, chore, accessibility, ux, dx, security
+          PATTERN="^(feat|fix|docs|refactor|style|test|ci|chore|accessibility|ux|dx|security)\/[a-z0-9-]+$"
+          if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
+            echo "ERROR: Branch name '$BRANCH_NAME' does not follow convention."
+            echo "Branch name must start with a prefix (e.g. feat/, fix/, docs/, ci/, refactor/, accessibility/) followed by lowercase letters, numbers, and hyphens."
+            echo "Example: fix/navbar-mobile-overflow or feat/onboarding-tour"
+            exit 1
+          fi
+          echo "Branch name validation passed!"
+
+      - name: Validate PR Title
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "Checking PR Title: $PR_TITLE"
+          # Conventional commit pattern
+          PATTERN="^(feat|fix|docs|refactor|style|test|ci|chore|perf|security|accessibility|ux|dx)(\(.+\))?: .+$"
+          if [[ ! "$PR_TITLE" =~ $PATTERN ]]; then
+            echo "ERROR: PR Title '$PR_TITLE' does not follow Conventional Commits standard."
+            echo "PR Title must start with a valid type followed by a colon and description."
+            echo "Example: feat: add new onboarding steps or fix: resolve auth cookie security issue"
+            exit 1
+          fi
+          echo "PR Title validation passed!"

@@ -58,8 +58,7 @@ function UploadPage({ darkMode, toggleTheme }) {
       });
       await uploadFile(compressed);
     } catch (err) {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      setLocalPreview(null);
+      console.warn('[UploadPage] Error during photo handling:', err);
     }
   };
 
@@ -177,19 +176,6 @@ function UploadPage({ darkMode, toggleTheme }) {
               <span className="upload-tip__text">{text}</span>
             </div>
           ))}
-        </motion.div>
-
-        <motion.div
-          className={`upload-page__privacy ${darkMode ? 'upload-page__privacy-dark' : ''}`}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.4}
-        >
-          <span className="upload-page__privacy-icon" aria-hidden="true">
-            {iconMap.lock}
-          </span>
-          <span>{t.uploadPrivacy}</span>
         </motion.div>
       </div>
     </div>

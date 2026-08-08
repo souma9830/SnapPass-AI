@@ -1,11 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
 import { HealthCheckService } from '../healthCheck.service.js';
 
-vi.mock('mongoose', () => ({
+jest.mock('mongoose', () => ({
   connection: { readyState: 1 },
 }));
 
-vi.mock('../config/redis.js', () => ({
+jest.mock('../../config/redis.js', () => ({
   isRedisAvailable: () => true,
 }));
 
@@ -17,13 +16,15 @@ describe('HealthCheckService', () => {
     expect(result.checks.redis).toBe('HEALTHY');
   });
 
+
   it('returns DEGRADED when MongoDB is unavailable', async () => {
-    vi.doMock('mongoose', () => ({
+    jest.doMock('mongoose', () => ({
       connection: { readyState: 0 },
     }));
     const result = await HealthCheckService.performReadinessCheck();
     expect(result.status).toBe('DEGRADED');
   });
+
 
   it('includes timestamp and checks in response', async () => {
     const result = await HealthCheckService.performReadinessCheck();

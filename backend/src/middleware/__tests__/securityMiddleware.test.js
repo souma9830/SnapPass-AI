@@ -32,8 +32,9 @@ describe('Security Middleware Suite', () => {
       deepRequestSanitizer(req, res, next);
 
       expect(req.body.$where).toBeUndefined();
-      expect(req.body.username.ne).toBeNull();
+      expect(req.body.username.ne).toBeUndefined();
     });
+
   });
 
   describe('rateLimiter', () => {

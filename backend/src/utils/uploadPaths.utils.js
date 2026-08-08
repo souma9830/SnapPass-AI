@@ -1,8 +1,18 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const getDirname = () => {
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.url) {
+      return path.dirname(fileURLToPath(import.meta.url));
+    }
+  } catch (e) {
+    // Fallback for CommonJS/Jest transpilation
+  }
+  return path.resolve(process.cwd(), 'src', 'utils');
+};
+
+const __dirname = getDirname();
 
 export function resolveUploadPath(filename) {
   if (!filename || typeof filename !== 'string') {

@@ -123,4 +123,69 @@ export const PASSPORT_REQUIREMENTS = [
     eyePosition: 'Centered',
     expressionRules: 'Shoulders visible, even lighting',
   },
+  {
+    id: '35x45_de',
+    label: 'Passport Size Photo — Germany / Schengen Biometric',
+    region: 'Europe',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Neutral light gray or white',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, look straight into camera',
+  },
+  {
+    id: '50x70_br',
+    label: 'Passport Size Photo — Brazil Passport',
+    region: 'Americas',
+    width: 50,
+    height: 70,
+    dpi: 300,
+    background: 'Plain white background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, no reflections on glasses',
+  },
+  {
+    id: '40x60_uae',
+    label: 'Passport Size Photo — UAE Residency / Visa',
+    region: 'Middle East',
+    width: 40,
+    height: 60,
+    dpi: 300,
+    background: 'White background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Frontal pose, clear facial contour',
+  },
+  {
+    id: '35x45_kr',
+    label: 'Passport Size Photo — South Korea Passport',
+    region: 'Asia',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Plain white background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Natural expression, ears uncovered',
+  },
 ];
+
+export function getRequirementsByRegion(region) {
+  if (!region || region === 'All') return PASSPORT_REQUIREMENTS;
+  return PASSPORT_REQUIREMENTS.filter((item) => item.region === region);
+}
+
+export function searchPresets(query) {
+  if (!query) return PASSPORT_REQUIREMENTS;
+  const q = query.toLowerCase();
+  return PASSPORT_REQUIREMENTS.filter(
+    (item) =>
+      item.label.toLowerCase().includes(q) ||
+      item.region.toLowerCase().includes(q) ||
+      item.id.toLowerCase().includes(q)
+  );
+}
+

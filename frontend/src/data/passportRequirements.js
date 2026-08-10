@@ -171,6 +171,18 @@ export const PASSPORT_REQUIREMENTS = [
     eyePosition: 'Centered',
     expressionRules: 'Natural expression, ears uncovered',
   },
+  {
+    id: '35x45_in_matte',
+    label: 'Passport Size Photo — India Passport Matte',
+    region: 'Asia',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Off-white / Light Grey plain background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, matte finish paper requirement',
+  },
 ];
 
 export function getRequirementsByRegion(region) {

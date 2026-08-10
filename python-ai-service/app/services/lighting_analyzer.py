@@ -64,6 +64,12 @@ def analyze_facial_lighting(image_bytes: bytes) -> dict:
         shadow_pct = float(np.sum(face_roi < 30) / face_roi.size) * 100.0
         has_heavy_shadows = shadow_pct > 8.0
 
+        # Calculate specular highlight ratio and vertical shadow gradient index
+        specular_ratio = round(float(np.sum(face_roi > 240) / face_roi.size) * 100.0, 2)
+        top_half_lum = float(np.mean(face_roi[:face_roi.shape[0] // 2, :]))
+        bottom_half_lum = float(np.mean(face_roi[face_roi.shape[0] // 2:, :]))
+        vertical_shadow_gradient = round(abs(top_half_lum - bottom_half_lum), 2)
+
         # Calculate composite lighting compliance score
         brightness_penalty = 0.0
         if overall_brightness < 80 or overall_brightness > 220:
@@ -76,6 +82,8 @@ def analyze_facial_lighting(image_bytes: bytes) -> dict:
             "symmetry_percentage": symmetry_pct,
             "has_glare": has_glare,
             "has_heavy_shadows": has_heavy_shadows,
+            "specular_highlight_ratio": specular_ratio,
+            "vertical_shadow_gradient": vertical_shadow_gradient,
             "left_luminance": round(left_lum, 2),
             "right_luminance": round(right_lum, 2),
             "overall_brightness": round(overall_brightness, 2),

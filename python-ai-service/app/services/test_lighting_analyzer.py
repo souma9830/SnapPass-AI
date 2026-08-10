@@ -21,3 +21,5 @@ def test_analyze_facial_lighting_synthetic_image():
     assert result["has_heavy_shadows"] is False
     assert "left_luminance" in result
     assert "right_luminance" in result
+    assert "specular_highlight_ratio" in result
+    assert "vertical_shadow_gradient" in result

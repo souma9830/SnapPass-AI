@@ -21,6 +21,7 @@ import cleanupRoutes from './cleanup.routes.js';
 import janitorRoutes from './janitor.routes.js';
 import batchExportRoutes from './batchExport.routes.js';
 import shareRoutes from './share.routes.js';
+import complianceReportRoutes from '../../server/routes/complianceReportRoutes.js';
 
 const router = Router();
 
@@ -45,6 +46,7 @@ router.use('/admin', adminRoutes);
 router.use('/cleanup', cleanupRoutes);
 router.use('/admin', janitorRoutes);
 router.use('/share', shareRoutes);
+router.use('/compliance-stream', complianceReportRoutes);
 
 export { healthRoutes };
 export default router;

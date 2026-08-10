@@ -3,9 +3,7 @@ import { fileURLToPath } from 'url';
 
 const getDirname = () => {
   try {
-    if (typeof import.meta !== 'undefined' && import.meta.url) {
-      return path.dirname(fileURLToPath(import.meta.url));
-    }
+    return path.dirname(fileURLToPath(import.meta.url));
   } catch (e) {
     // Fallback for CommonJS/Jest transpilation
   }
@@ -16,6 +14,9 @@ const __dirname = getDirname();
 
 export function resolveUploadPath(filename) {
   if (!filename || typeof filename !== 'string') {
+    return null;
+  }
+  if (path.basename(filename).startsWith('.')) {
     return null;
   }
   const uploadsDir = path.resolve(__dirname, '..', '..', 'uploads');

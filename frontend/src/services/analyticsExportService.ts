@@ -89,5 +89,5 @@ export function exportAnalyticsToJSON(summary: AnalyticsSummary): void {
   downloadAnchor.setAttribute('download', `SnapPass_Analytics_Report_${new Date().toISOString().slice(0, 10)}.json`);
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
-  downloadAnchor.removeChild(downloadAnchor);
+  document.body.removeChild(downloadAnchor);
 }

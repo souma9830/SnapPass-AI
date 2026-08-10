@@ -87,12 +87,20 @@ export default function BatchProcessingQueueModal({
 
                 {(item.status === 'error' || item.status === 'failed') && (
                   <div className="flex justify-between items-center mt-1">
-                    <span className="text-xs text-red-500 font-mono truncate max-w-[280px]">
-                      {item.error || 'Processing failed'}
-                    </span>
+                    <div className="flex items-center gap-1.5 truncate max-w-[280px]">
+                      <span className="text-xs text-red-500 font-mono truncate">
+                        {item.error || 'Processing failed'}
+                      </span>
+                      {item.retryCount ? (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 font-semibold">
+                          Retry #{item.retryCount}
+                        </span>
+                      ) : null}
+                    </div>
                     <button
                       onClick={() => onRetry && onRetry(item.id)}
-                      className="text-xs font-semibold text-blue-600 hover:underline"
+                      className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                      aria-label={`Retry item ${item.title || item.name || item.id}`}
                     >
                       Retry
                     </button>

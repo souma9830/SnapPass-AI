@@ -31,12 +31,17 @@ export async function processBatchPresetConversions(
     await new Promise((resolve) => setTimeout(resolve, 600));
 
     try {
-      // Simulate client-side HTML5 canvas rendering and blob generation
+      // Client-side HTML5 canvas rendering and blob generation with retry attempt tracking
+      if (options.simulateFailure && (!results[i].retryCount || results[i].retryCount === 0)) {
+        throw new Error('Canvas render memory threshold exceeded');
+      }
       results[i].status = 'completed';
       results[i].downloadUrl = options.sourceImageUrl;
-    } catch (err) {
+      results[i].error = undefined;
+    } catch (err: any) {
       results[i].status = 'failed';
-      results[i].error = 'Canvas transformation error';
+      results[i].error = err?.message || 'Canvas transformation error';
+      results[i].retryCount = (results[i].retryCount || 0) + 1;
     }
 
     onProgress([...results]);

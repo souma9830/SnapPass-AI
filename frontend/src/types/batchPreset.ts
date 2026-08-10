@@ -13,6 +13,7 @@ export interface BatchItemResult {
   status: 'pending' | 'processing' | 'completed' | 'failed';
   downloadUrl?: string;
   error?: string;
+  retryCount?: number;
 }
 
 export interface BatchConversionOptions {
@@ -20,4 +21,5 @@ export interface BatchConversionOptions {
   selectedPresetIds: string[];
   maintainAspectCrop: boolean;
   highQualityExport: boolean;
+  simulateFailure?: boolean;
 }

@@ -20,6 +20,10 @@ export function analyzeMockExifMetadata(filename?: string): ExifAnalysisResult {
   };
 }
 
+export function getSensitiveTagsOnly(tags: ExifTagItem[]): ExifTagItem[] {
+  return tags.filter((t) => t.isSensitive);
+}
+
 export async function scrubExifFromCanvas(
   sourceCanvas: HTMLCanvasElement
 ): Promise<Blob> {

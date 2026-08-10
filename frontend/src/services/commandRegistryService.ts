@@ -12,6 +12,14 @@ export function getRegisteredCommands(): CommandItem[] {
   return registeredCommands;
 }
 
+export function unregisterCommand(commandId: string): void {
+  registeredCommands = registeredCommands.filter((c) => c.id !== commandId);
+}
+
+export function clearRegisteredCommands(): void {
+  registeredCommands = [];
+}
+
 export function groupCommandsByCategory(commands: CommandItem[]): CommandCategoryGroup[] {
   const groups: { [key: string]: CommandItem[] } = {};
 

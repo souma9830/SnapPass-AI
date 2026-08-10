@@ -21,6 +21,7 @@ import cleanupRoutes from './cleanup.routes.js';
 import janitorRoutes from './janitor.routes.js';
 import batchExportRoutes from './batchExport.routes.js';
 import shareRoutes from './share.routes.js';
+import circuitBreakerTelemetryRoutes from '../../server/routes/circuitBreakerTelemetryRoutes.js';
 
 const router = Router();
 
@@ -45,6 +46,7 @@ router.use('/admin', adminRoutes);
 router.use('/cleanup', cleanupRoutes);
 router.use('/admin', janitorRoutes);
 router.use('/share', shareRoutes);
+router.use('/telemetry', circuitBreakerTelemetryRoutes);
 
 export { healthRoutes };
 export default router;

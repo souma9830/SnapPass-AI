@@ -26,11 +26,31 @@ export function calculateMaxFitTiles(
   };
 }
 
+export function loadCustomPrintTemplates(): CustomPrintTemplatePreset[] {
+  try {
+    return JSON.parse(localStorage.getItem('custom_print_templates') || '[]');
+  } catch (e) {
+    console.error('Failed to load print templates from localStorage', e);
+    return [];
+  }
+}
+
 export function saveCustomPrintTemplate(preset: CustomPrintTemplatePreset): void {
   try {
-    const existing = JSON.parse(localStorage.getItem('custom_print_templates') || '[]');
-    localStorage.setItem('custom_print_templates', JSON.stringify([...existing, preset]));
+    const existing = loadCustomPrintTemplates();
+    const updated = existing.filter((p) => p.id !== preset.id);
+    localStorage.setItem('custom_print_templates', JSON.stringify([...updated, preset]));
   } catch (e) {
     console.error('Failed to save print template to localStorage', e);
+  }
+}
+
+export function deleteCustomPrintTemplate(presetId: string): void {
+  try {
+    const existing = loadCustomPrintTemplates();
+    const updated = existing.filter((p) => p.id !== presetId);
+    localStorage.setItem('custom_print_templates', JSON.stringify(updated));
+  } catch (e) {
+    console.error('Failed to delete print template from localStorage', e);
   }
 }

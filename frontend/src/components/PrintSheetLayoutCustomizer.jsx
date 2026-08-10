@@ -60,29 +60,33 @@ export function PrintSheetLayoutCustomizer({
           id="cropGuidesToggle"
           checked={showCropGuides}
           onChange={(e) => onToggleCropGuides(e.target.checked)}
-          style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+          style={{ width: '1rem', height: '1rem', cursor: 'pointer' }}
         />
         <label htmlFor="cropGuidesToggle" style={{ fontSize: '0.85rem', color: '#cbd5e1', cursor: 'pointer' }}>
-          Show Cutting Guides & Alignment Lines
+          Show Trim / Cut Guides
         </label>
       </div>
 
-      <button
-        onClick={onDownloadPDF}
-        disabled={isExporting}
-        style={{
-          padding: '0.75rem 1.25rem',
-          backgroundColor: '#3b82f6',
-          color: '#ffffff',
-          fontWeight: 600,
-          border: 'none',
-          borderRadius: '8px',
-          cursor: isExporting ? 'not-allowed' : 'pointer',
-          transition: 'background-color 200ms ease',
-        }}
-      >
-        {isExporting ? 'Generating PDF...' : '📥 Download Printable Sheet (PDF)'}
-      </button>
+      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+        <button
+          onClick={onDownloadPDF}
+          disabled={isExporting}
+          style={{
+            flex: 1,
+            padding: '0.7rem 1rem',
+            borderRadius: '8px',
+            backgroundColor: '#3b82f6',
+            color: '#ffffff',
+            fontWeight: 600,
+            border: 'none',
+            cursor: isExporting ? 'not-allowed' : 'pointer',
+            opacity: isExporting ? 0.6 : 1,
+          }}
+          aria-label="Download High-DPI PDF Print Sheet"
+        >
+          {isExporting ? 'Generating PDF...' : '📄 Download Printable PDF'}
+        </button>
+      </div>
     </div>
   );
 }

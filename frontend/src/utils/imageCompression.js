@@ -106,3 +106,8 @@ export const getCompressedBlob = async (file, options = {}) => {
   const compressed = await compressImage(file, options);
   return compressed;
 };
+
+export const stripExifMetadata = async (file) => {
+  return compressImage(file, { quality: 0.95, outputFormat: 'image/jpeg' });
+};
+

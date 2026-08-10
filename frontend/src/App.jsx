@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import AppRoutes from './routes/AppRoutes';
@@ -6,7 +6,7 @@ import SkipToContent from './components/SkipToContent';
 import SnapPassAssistant from './chatbot/SnapPassAssistant';
 import { ToastProvider, useToast } from './context/ToastContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
-import { ThemeCustomizerProvider } from './context/ThemeCustomizerContext';
+import { OfflineStatusIndicator } from './components/common/OfflineStatusIndicator';
 import './App.css';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import CookieConsentBanner from './components/cookie/CookieConsentBanner';
@@ -22,22 +22,35 @@ function AppContent() {
   // Retrieve global visual and functional preferences from mounted contexts
   const { darkMode, toggleTheme } = useTheme();
   const { showToast } = useToast();
+  const navigate = useNavigate();
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      scanBackendPorts().then((discoveredPort) => {
-        if (discoveredPort && typeof showToast === 'function') {
-          showToast(`[PortSync] Connected to backend on port ${discoveredPort}`, 'success');
-        }
-      });
-    }
-  }, [showToast]);
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const defaultCommands = [
+    { id: 'c1', title: 'Go to Home', category: 'Navigation', iconEmoji: '🏠', hotkey: 'Ctrl+H', action: () => navigate('/') },
+    { id: 'c2', title: 'Go to Photo Editor', category: 'Navigation', iconEmoji: '✏️', hotkey: 'Ctrl+E', action: () => navigate('/editor') },
+    { id: 'c3', title: 'Go to Upload Page', category: 'Navigation', iconEmoji: '📤', action: () => navigate('/upload') },
+    { id: 'c4', title: 'Go to Compliance Analytics', category: 'Navigation', iconEmoji: '📊', action: () => navigate('/analytics') },
+    { id: 'c5', title: 'Go to Print Preview', category: 'Navigation', iconEmoji: '🖨️', action: () => navigate('/print-preview') },
+    { id: 'c6', title: 'Toggle Light / Dark Mode', category: 'Settings', iconEmoji: '🌓', action: () => toggleTheme() },
+  ];
 
   return (
     <div className="app-shell">
       <SkipToContent />
       <ToastContainer />
       <CustomCursor />
+      <OfflineStatusIndicator />
       {/* Primary content area rendering child routes */}
       <Navbar darkMode={darkMode} toggleTheme={toggleTheme} />
       <main className="app-main" id="main-content" tabIndex={-1}>

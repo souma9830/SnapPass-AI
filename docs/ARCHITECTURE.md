@@ -34,3 +34,7 @@ SnapPass AI is an enterprise-grade AI-powered passport photo generation platform
 ## Data Persistence & Offline Cache
 - **IndexedDB Storage**: Stores compressed offline photo sessions for instant access during connectivity drops.
 - **Token Revocation Store**: In-memory token blacklisting for revoked sessions with automated TTL cleanup.
+
+## Studio Telemetry & Commercial Reporting
+- **Financial PDF Exporter**: Client-side jsPDF generator constructing A4 commercial telemetry reports detailing revenue, consumables expense, and profit margin.
+

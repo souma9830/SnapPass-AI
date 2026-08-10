@@ -126,3 +126,26 @@ def compliance_auto_correct():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@compliance_bp.post("/analyze-lighting")
+def compliance_analyze_lighting():
+    data = request.get_json(silent=True) or {}
+    file_path = data.get("file_path")
+    if not file_path:
+        return jsonify({"error": "file_path is required"}), 400
+
+    try:
+        safe_photo_path(file_path)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    try:
+        from app.services.lighting_analyzer import analyze_facial_lighting
+        with open(file_path, "rb") as f:
+            img_bytes = f.read()
+        report = analyze_facial_lighting(img_bytes)
+        return jsonify({"success": True, "data": report})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+

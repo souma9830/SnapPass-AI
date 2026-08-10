@@ -12,5 +12,9 @@ This document outlines the security controls, threat vectors, and mitigation str
 | JWT Replay & Session Hijacking | CRITICAL | HTTP-only cookies, token revocation store check on every authenticated request, and session inactivity janitor. |
 | XSS & Header Injection | MEDIUM | Helmet HTTP headers enforcement, CSP rules, and HTML sanitization of text inputs. |
 
+## Client-Side EXIF Privacy Scrubbing
+The `ExifMetadataInspector` component provides a one-click client-side canvas re-encoding mechanism (`stripExifMetadata`), purging GPS geolocation, camera serial numbers, and device timestamp tags before photo submission.
+
+
 ## Compliance & Auditing
 All authentication events (logins, logouts, failed token validation, session revocations) are logged into the `SecurityAudit` MongoDB collection with IP, User-Agent, and severity telemetry.

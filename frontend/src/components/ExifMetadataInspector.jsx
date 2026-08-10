@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './ExifMetadataInspector.css';
+import { stripExifMetadata } from '../utils/imageCompression';
 
-function ExifMetadataInspector({ file, darkMode }) {
+function ExifMetadataInspector({ file, onFileCleaned, darkMode }) {
   const [metadata, setMetadata] = useState(null);
+  const [cleaning, setCleaning] = useState(false);
+  const [cleaned, setCleaned] = useState(false);
 
   useEffect(() => {
     if (!file) return;
@@ -36,11 +39,40 @@ function ExifMetadataInspector({ file, darkMode }) {
     };
   }, [file]);
 
+  const handleScrubExif = async () => {
+    if (!file) return;
+    setCleaning(true);
+    try {
+      const sanitizedFile = await stripExifMetadata(file);
+      setCleaned(true);
+      if (onFileCleaned) onFileCleaned(sanitizedFile);
+    } catch (err) {
+      console.error('Failed to scrub EXIF metadata:', err);
+    } finally {
+      setCleaning(false);
+    }
+  };
+
   if (!metadata) return null;
 
   return (
     <div className={`exif-metadata-inspector ${darkMode ? 'exif-metadata-inspector-dark' : ''}`}>
-      <h4 className="exif-inspector-title">📷 Photo Technical Metadata (EXIF)</h4>
+      <div className="flex justify-between items-center mb-2">
+        <h4 className="exif-inspector-title m-0">📷 Photo EXIF & Privacy Metadata</h4>
+        <button
+          type="button"
+          onClick={handleScrubExif}
+          disabled={cleaning || cleaned}
+          className={`px-2.5 py-1 text-xs font-semibold rounded border transition-colors ${
+            cleaned
+              ? 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/40 dark:text-green-300'
+              : 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700 disabled:opacity-50'
+          }`}
+        >
+          {cleaning ? 'Scrubbing EXIF...' : cleaned ? '✓ EXIF Privacy Cleaned' : '🔒 Scrub EXIF Metadata'}
+        </button>
+      </div>
+
       <div className="exif-grid">
         <div className="exif-item">
           <span className="exif-key">File Name</span>

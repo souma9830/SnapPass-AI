@@ -273,6 +273,30 @@ button {
   border-radius: 3px;
 }
 
+/* ── High Contrast & Keyboard Navigation Utility ───── */
+.high-contrast-mode {
+  --color-bg: #000000 !important;
+  --color-surface: #000000 !important;
+  --color-text: #ffffff !important;
+  --color-border: #ffff00 !important;
+  --color-primary: #ffff00 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.high-contrast-mode button,
+.high-contrast-mode input,
+.high-contrast-mode select,
+.high-contrast-mode a {
+  border-color: #ffff00 !important;
+  outline-color: #ffff00 !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 /* ── Responsive ─────────────────────────────────── */
 @media (max-width: 768px) {
   .page-content {
@@ -283,3 +307,4 @@ button {
     padding: var(--space-lg);
   }
 }
+

@@ -29,6 +29,7 @@ The service runs on `http://localhost:8000` by default.
 | `POST` | `/compliance/check` | Passport compliance check |
 | `POST` | `/compliance/check-batch` | Batch compliance check |
 | `POST` | `/compliance/auto-correct` | Auto-correct photo issues |
+| `POST` | `/compliance/analyze-lighting` | Biometric facial lighting & shadow analysis |
 
 ## Security Notes
 

@@ -41,3 +41,8 @@ cd frontend && npm run dev
 # Terminal 2: Backend (Express)
 cd backend && npm run dev
 ```
+
+## Batch Processing & Queue Architecture
+- `useBatchExport` hook supports automated 2-attempt retries for failed zip packages.
+- `BatchProcessingQueueModal` displays live queue progress, failed item retries, and item removal controls.
+

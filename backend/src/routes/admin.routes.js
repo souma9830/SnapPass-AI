@@ -2,6 +2,7 @@ import { Router } from 'express';
 import authMiddleware from '../middleware/auth.middleware.js';
 import { isAdmin } from '../middleware/role.middleware.js';
 import User from '../models/user.model.js';
+import { getAuditLogs, getAuditStats } from '../controllers/audit.controller.js';
 
 const router = Router();
 
@@ -39,5 +40,8 @@ router.delete('/users/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+router.get('/audit-logs', getAuditLogs);
+router.get('/audit-stats', getAuditStats);
 
 export default router;

@@ -72,7 +72,8 @@ function StudioAnalyticsDashboard({ darkMode }) {
               grossRevenue: metrics.grossRevenue,
               totalExpense: (metrics.sheetsPrinted * (Number(paperCost) + Number(inkCost))).toFixed(2),
               netProfit: metrics.netProfit,
-              profitMargin: metrics.profitMargin
+              profitMargin: metrics.profitMargin,
+              currencySymbol: '$',
             })}
             style={{
               padding: '10px 18px',

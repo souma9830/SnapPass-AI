@@ -94,16 +94,54 @@ This file documents the major endpoints, request structures, and JSON responses 
 
 ---
 
-## 3. System Diagnostics
+---
 
-### Health Status
-*   **Endpoint**: `GET /health`
-*   **Response (200 OK)**:
+## 4. Administrative Audit & Telemetry
+
+### Query Audit Logs
+* **Endpoint**: `GET /api/admin/audit-logs?page=1&limit=20&method=POST`
+* **Headers**: `Authorization: Bearer <ADMIN_JWT>`
+* **Response (200 OK)**:
     ```json
     {
-      "status": "ok",
-      "service": "SnapPass AI Backend",
-      "timestamp": "2026-06-05T11:00:00.000Z",
-      "uptime": 36.23
+      "success": true,
+      "data": {
+        "logs": [
+          {
+            "_id": "60d5ec49f1b2c80015f8e123",
+            "method": "POST",
+            "endpoint": "/api/photos/upload",
+            "statusCode": 200,
+            "durationMs": 142,
+            "ip": "127.0.0.1",
+            "userAgent": "Mozilla/5.0",
+            "createdAt": "2026-08-09T18:00:00.000Z"
+          }
+        ],
+        "pagination": {
+          "page": 1,
+          "limit": 20,
+          "total": 1,
+          "pages": 1
+        }
+      }
     }
     ```
+
+### Query Audit Traffic Statistics
+* **Endpoint**: `GET /api/admin/audit-stats`
+* **Headers**: `Authorization: Bearer <ADMIN_JWT>`
+* **Response (200 OK)**:
+    ```json
+    {
+      "success": true,
+      "data": {
+        "totalRequests24h": 1250,
+        "errorCount24h": 12,
+        "errorRate24h": "0.96",
+        "methodBreakdown": [{ "_id": "POST", "count": 800 }],
+        "topEndpoints": [{ "_id": "/api/photos/upload", "count": 450, "avgDuration": 125.4 }]
+      }
+    }
+    ```
+

@@ -30,6 +30,13 @@ export const COMPLIANCE_PRESETS = [
     settings: { brightness: 102, contrast: 105, saturation: 105, sharpness: 5, gamma: 1.1 },
     badge: 'Studio Polish',
   },
+  {
+    id: 'india_passport',
+    name: 'India Passport Matte',
+    description: 'Optimized RGB tonal distribution for Indian passport print specification.',
+    settings: { brightness: 104, contrast: 115, saturation: 102, sharpness: 10, gamma: 1.0 },
+    badge: 'India Standard',
+  },
 ];
 
 function PresetFilterManager({ activePresetId, onSelectPreset, onResetPreset, darkMode }) {

@@ -20,8 +20,8 @@ Upload → Auto-process → Generate a print-ready sheet — in seconds.</p>
 
 - [📌 What is SnapPass AI?](#-what-is-snappass-ai)
 - [📖 Architecture Overview](docs/ARCHITECTURE.md)
-- [📡 API Specifications](docs/API_DOCUMENTATION.md)
-- [🛠️ Developer Setup Guide](docs/DEVELOPER_SETUP.md)
+- [🛠️ Developer Setup & Technical Guide](docs/DEVELOPER_GUIDE.md)
+- [🤝 Extended Contribution Guidelines](docs/CONTRIBUTING_EXTENDED.md)
 - [✨ What It Does](#-what-it-does)
 - [📸 Website Preview](#-website-preview)
 - [🧭 Project Status](#-project-status)

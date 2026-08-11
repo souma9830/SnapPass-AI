@@ -7,6 +7,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import { config } from '../config/config.js';
+import { aiServiceAuthHeaders } from '../utils/aiClient.js';
 import { resolveUploadPath } from '../utils/uploadPaths.utils.js';
 
 export const complianceCheck = async (req, res, next) => {
@@ -80,7 +81,7 @@ export const complianceCheck = async (req, res, next) => {
     const response = await axios.post(
       `${config.aiServiceUrl}/check`,
       { file_path: filePath, size_preset: sizePreset },
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { 'Content-Type': 'application/json', ...aiServiceAuthHeaders() } }
     );
 
     const { computePassportComplianceScore } = await import('../utils/complianceRulesEngine.js');
@@ -176,7 +177,7 @@ export const complianceAutoCorrect = async (req, res, next) => {
     const response = await axios.post(
       `${config.aiServiceUrl}/auto-correct`,
       { file_path: filePath, issue },
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { 'Content-Type': 'application/json', ...aiServiceAuthHeaders() } }
     );
 
     return res.json({ success: true, data: response.data });

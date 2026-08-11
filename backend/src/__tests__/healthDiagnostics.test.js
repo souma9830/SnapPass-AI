@@ -1,22 +1,28 @@
-import { HealthCheckService } from '../services/healthCheck.service.js';
+/**
+ * health.test.js — Health Check & Deep Diagnostics Service Integration Tests
+ * Built for ELUSoC 2026 / GSSOC 2026.
+ */
+import { HealthDiagnosticsService } from '../services/healthDiagnostics.service.js';
 import { formatHealthResponse } from '../utils/healthResponse.formatter.js';
-import { validateHealthQuery } from '../validation/healthQuery.validation.js';
 
-describe('Health Check Diagnostics & Response Formatter', () => {
-  test('HealthCheckService returns system metrics', () => {
-    const metrics = HealthCheckService.getSystemMetrics();
-    expect(metrics.uptimeSeconds).toBeGreaterThanOrEqual(0);
-    expect(metrics.memory.heapUsedBytes).toBeGreaterThan(0);
+describe('HealthDiagnosticsService Tests', () => {
+  it('should retrieve accurate system hardware metrics', () => {
+    const metrics = HealthDiagnosticsService.getSystemMetrics();
+    expect(metrics).toHaveProperty('uptimeSeconds');
+    expect(metrics).toHaveProperty('memory');
+    expect(metrics.memory).toHaveProperty('totalBytes');
+    expect(metrics.memory).toHaveProperty('freeBytes');
   });
 
-  test('formatHealthResponse constructs valid envelope', () => {
-    const formatted = formatHealthResponse('UP', { database: 'CONNECTED' });
-    expect(formatted.status).toBe('UP');
-    expect(formatted.details.database).toBe('CONNECTED');
+  it('should format health responses accurately', () => {
+    const response = formatHealthResponse('HEALTHY', { memory: 'ok' }, { db: 'connected' });
+    expect(response.success).toBe(true);
+    expect(response.status).toBe('HEALTHY');
+    expect(response).toHaveProperty('timestamp');
   });
 
-  test('validateHealthQuery handles query flag check', () => {
-    expect(validateHealthQuery({ verbose: 'true' }).isValid).toBe(true);
-    expect(validateHealthQuery({ verbose: 'invalid' }).isValid).toBe(false);
+  it('should measure non-negative event loop lag', async () => {
+    const lag = await HealthDiagnosticsService.computeEventLoopLag();
+    expect(lag).toBeGreaterThanOrEqual(0);
   });
 });

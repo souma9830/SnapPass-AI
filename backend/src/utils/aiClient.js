@@ -2,8 +2,11 @@ import axios from 'axios';
 import FormData from 'form-data';
 import fs from 'fs';
 import { CircuitBreaker } from './circuitBreaker.js';
+import circuitBreakerTelemetryService from '../services/circuitBreakerTelemetry.service.js';
 
 const aiCircuitBreaker = new CircuitBreaker({ failureThreshold: 3, resetTimeout: 15000 });
+
+circuitBreakerTelemetryService.attach(aiCircuitBreaker, 'python-ai-service');
 
 /**
  * Headers every call to the Python AI service must carry. When

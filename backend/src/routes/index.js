@@ -22,6 +22,7 @@ import janitorRoutes from './janitor.routes.js';
 import batchExportRoutes from './batchExport.routes.js';
 import shareRoutes from './share.routes.js';
 import watermarkRoutes from '../../server/routes/watermarkRoutes.js';
+import telemetryRoutes from './telemetry.routes.js';
 
 const router = Router();
 
@@ -47,6 +48,7 @@ router.use('/cleanup', cleanupRoutes);
 router.use('/admin', janitorRoutes);
 router.use('/share', shareRoutes);
 router.use('/watermark', watermarkRoutes);
+router.use('/telemetry', telemetryRoutes);
 
 export { healthRoutes };
 export default router;

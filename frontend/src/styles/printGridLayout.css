@@ -1,0 +1,25 @@
+.print-grid-preview-container {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.print-sheet-paper {
+  background: white;
+  margin: 0 auto;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.print-photo-tile {
+  background: #e2e8f0;
+  border: 1px dashed #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

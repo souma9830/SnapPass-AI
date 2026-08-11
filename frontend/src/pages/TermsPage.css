@@ -9,6 +9,27 @@
     box-sizing: border-box;
 }
 
+.legal-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 8px 16px;
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.legal-page__back:hover {
+    background: var(--color-surface-alt, rgba(59, 130, 246, 0.08));
+    border-color: var(--color-primary, #3b82f6);
+}
+
 .terms-page__header {
     display: flex;
     flex-direction: column;

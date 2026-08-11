@@ -80,6 +80,7 @@ export const hi = {
     company: 'कंपनी',
     privacyPolicy: 'प्राइवेसी पॉलिसी',
     termsConditions: 'नियम एवं शर्तें',
+    goBack: 'वापस जाएं',
 
     contact: 'संपर्क',
 

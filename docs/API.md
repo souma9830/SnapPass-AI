@@ -2,6 +2,8 @@
 
 This file documents the major endpoints, request structures, and JSON responses exposed by the **SnapPass AI Backend API**.
 
+> For enterprise security guidelines and compliance matrices, see [ENTERPRISE_DEPLOYMENT_HARDENING.md](file:///c:/Users/babin/Desktop/ELUSoC_2026/SnapPass-AI/docs/ENTERPRISE_DEPLOYMENT_HARDENING.md) and [SECURITY_COMPLIANCE_MATRIX.md](file:///c:/Users/babin/Desktop/ELUSoC_2026/SnapPass-AI/docs/SECURITY_COMPLIANCE_MATRIX.md).
+
 ---
 
 ## 1. Authentication Endpoints

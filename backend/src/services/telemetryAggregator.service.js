@@ -1,36 +1,26 @@
 /**
- * telemetryAggregator.service.js — In-memory request telemetry sliding window.
+ * telemetryAggregator.service.js — System Telemetry Log Aggregator
+ * Built for ELUSoC 2026 / GSSOC 2026.
  */
-
-const latencies = [];
-let totalRequests = 0;
-let totalErrors = 0;
-
 export class TelemetryAggregatorService {
-  static record(durationMs, statusCode) {
-    totalRequests++;
-    if (statusCode >= 400) totalErrors++;
-    latencies.push(durationMs);
-    if (latencies.length > 1000) latencies.shift();
+  constructor() {
+    this.events = [];
   }
 
-  static getSummary() {
-    if (latencies.length === 0) return { totalRequests, totalErrors, avgMs: 0, p95Ms: 0 };
-    const sorted = [...latencies].sort((a, b) => a - b);
-    const sum = sorted.reduce((acc, val) => acc + val, 0);
-    const p95Idx = Math.floor(sorted.length * 0.95);
+  recordEvent(type, payload = {}) {
+    this.events.push({
+      type,
+      payload,
+      timestamp: new Date().toISOString(),
+    });
+  }
 
+  getSummary() {
     return {
-      totalRequests,
-      totalErrors,
-      avgMs: Math.round(sum / sorted.length),
-      p95Ms: sorted[p95Idx] || 0,
+      totalEvents: this.events.length,
+      latest: this.events.slice(-5),
     };
   }
-
-  static reset() {
-    latencies.length = 0;
-    totalRequests = 0;
-    totalErrors = 0;
-  }
 }
+
+export const telemetryAggregator = new TelemetryAggregatorService();

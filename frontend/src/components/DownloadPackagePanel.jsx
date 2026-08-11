@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './DownloadPackagePanel.css';
+import BatchExportModal from './BatchExportModal';
 import {
   compressImage,
   generatePdf,

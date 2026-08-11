@@ -1,9 +1,13 @@
+/**
+ * storageJanitor.test.js — Storage Janitor Service Tests
+ * Built for ELUSoC 2026 / GSSOC 2026.
+ */
 import { StorageJanitorService } from '../services/storageJanitor.service.js';
 
-describe('StorageJanitorService', () => {
-  it('handles non-existent directory safely', () => {
-    const res = StorageJanitorService.purgeStaleFiles('/non_existent_dir_xyz');
-    expect(res).toEqual({ purged: 0, freedBytes: 0, scanned: 0 });
+describe('StorageJanitorService Tests', () => {
+  it('should return initial zero counts for empty folder prune', async () => {
+    const result = await StorageJanitorService.pruneStaleFiles('./non_existent_folder_xyz', 3600000);
+    expect(result.deletedCount).toBe(0);
+    expect(result.reclaimedBytes).toBe(0);
   });
 });
-

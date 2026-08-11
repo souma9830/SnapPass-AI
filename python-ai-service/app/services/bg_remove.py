@@ -21,6 +21,9 @@ except ImportError:
 from PIL import Image
 import io
 from app.services.attire_swap import apply_attire_swap
+from app.services.alpha_matting_refiner import AlphaMattingRefiner
+
+matting_refiner = AlphaMattingRefiner()
 
 
 # Named colour presets — (R, G, B, A) tuples where A is always 255.

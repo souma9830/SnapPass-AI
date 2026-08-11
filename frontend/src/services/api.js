@@ -49,4 +49,9 @@ api.interceptors.response.use(
   }
 );
 
+export const checkFacialAsymmetry = async (filePath) => {
+  const response = await api.post('/compliance/asymmetry', { file_path: filePath });
+  return response.data;
+};
+
 export default api;

@@ -4,15 +4,51 @@ import ComplianceScoreGauge from './ComplianceScoreGauge';
 /**
  * ComplianceBreakdownCard — Detailed breakdown list displaying
  * checks, pass/fail status, scores, and AI recommendations.
+ *
+ * When onExportReport is provided, an "Export Report" button renders in
+ * the header and calls the callback with the serialized metrics payload.
  */
-export function ComplianceBreakdownCard({ metrics }) {
+export function ComplianceBreakdownCard({ metrics, onExportReport }) {
   if (!metrics) return null;
 
   const { totalScore, grade, status, checks } = metrics;
 
+  const handleExport = () => {
+    if (!onExportReport) return;
+    onExportReport({
+      totalScore,
+      grade,
+      status,
+      checks,
+      exportedAt: new Date().toISOString(),
+    });
+  };
+
   return (
     <div className="compliance-breakdown-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <ComplianceScoreGauge score={totalScore} grade={grade} status={status} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+        <ComplianceScoreGauge score={totalScore} grade={grade} status={status} />
+        {onExportReport && (
+          <button
+            type="button"
+            onClick={handleExport}
+            style={{
+              flexShrink: 0,
+              padding: '0.5rem 0.9rem',
+              borderRadius: '8px',
+              border: '1px solid rgba(59, 130, 246, 0.35)',
+              background: 'rgba(59, 130, 246, 0.12)',
+              color: '#93c5fd',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'background 200ms ease',
+            }}
+          >
+            Export Report
+          </button>
+        )}
+      </div>
       <div className="compliance-checks-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 600 }}>
           Detailed AI Inspection Rules

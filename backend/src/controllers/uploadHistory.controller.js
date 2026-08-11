@@ -2,7 +2,10 @@ import Upload from '../models/upload.model.js';
 
 export const getHistory = async (req, res, next) => {
   try {
-    const history = await Upload.find().sort({ createdAt: -1 }).lean();
+    // Scope to the requesting user — uploads are private (#1445).
+    const history = await Upload.find({ userId: req.user.id })
+      .sort({ createdAt: -1 })
+      .lean();
     res.json({ success: true, history });
   } catch (err) {
     next(err);
@@ -19,7 +22,9 @@ export const getUserUploadHistory = async (req, res, next) => {
       startDate,
       endDate,
     } = req.query;
-    const filter = {};
+    // Scope to the requesting user — without this, a logged-in user could
+    // page through every user's uploads (IDOR, #1445).
+    const filter = { userId: req.user.id };
 
     if (search) {
       filter.$or = [

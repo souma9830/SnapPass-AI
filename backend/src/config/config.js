@@ -9,6 +9,10 @@ export const config = {
     port: resolvePort(process.env.PORT, 5000),
     aiServiceUrl: process.env.AI_SERVICE_URL || 'http://localhost:8000',
     aiServiceApiKey: process.env.AI_SERVICE_API_KEY || '',
+    // When true, upload/process/download routes require a valid session
+    // token (authMiddleware). Off by default so the demo frontend (which
+    // has no real sign-in flow) keeps working; enable in production.
+    requireAuthForUploads: process.env.REQUIRE_AUTH_FOR_UPLOADS === 'true',
     MONGO_URI: process.env.MONGO_URI,
     CORS_ORIGIN: process.env.CORS_ORIGIN || "http://localhost:5173",
     MAX_FILE_SIZE: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024, // 10MB default

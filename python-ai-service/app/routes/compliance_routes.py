@@ -1,8 +1,26 @@
 from flask import Blueprint, request, jsonify
+import cv2
 from app.services.compliance_inspector import inspect_compliance
+from app.services.facial_asymmetry_analyzer import FacialAsymmetryAnalyzer
 from app.services.path_guard import safe_photo_path, validate_magic_bytes
 
 compliance_bp = Blueprint("compliance", __name__)
+asymmetry_analyzer = FacialAsymmetryAnalyzer()
+
+@compliance_bp.post("/asymmetry")
+def analyze_facial_asymmetry_route():
+    data = request.get_json(silent=True) or {}
+    file_path = data.get("file_path")
+    if not file_path:
+        return jsonify({"error": "file_path is required"}), 400
+
+    try:
+        resolved_path = safe_photo_path(file_path)
+        img = cv2.imread(resolved_path)
+        res = asymmetry_analyzer.analyze_facial_symmetry(img)
+        return jsonify(res)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @compliance_bp.post("/check")
 def compliance_check():

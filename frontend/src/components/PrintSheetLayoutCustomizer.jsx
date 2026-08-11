@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PAPER_PRESETS } from '../utils/printLayoutPresets';
+import PrintGridLayoutModal from './PrintGridLayoutModal';
 
-/**
- * PrintSheetLayoutCustomizer — UI control panel for selecting paper size,
- * toggling cut guides, and triggering high-DPI PDF downloads.
- */
 export function PrintSheetLayoutCustomizer({
   selectedPreset,
   onSelectPreset,
@@ -13,6 +10,7 @@ export function PrintSheetLayoutCustomizer({
   onDownloadPDF,
   isExporting = false,
 }) {
+  const [showGridModal, setShowGridModal] = useState(false);
   return (
     <div
       className="print-sheet-customizer"

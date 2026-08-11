@@ -1,15 +1,22 @@
 /**
- * healthResponse.formatter.js — RFC-compliant health response payload formatter.
+ * healthResponse.formatter.js — Standardized JSON Health Diagnostics Response Formatter
+ * Built for ELUSoC 2026 / GSSOC 2026 Monitoring Infrastructure.
  */
-
-export const formatHealthResponse = (status, details = {}) => {
-  const statusCode = status === 'UP' ? 200 : status === 'DEGRADED' ? 503 : 500;
+export function formatHealthResponse(status, metrics = {}, services = {}) {
   return {
+    success: status === 'UP' || status === 'HEALTHY',
     status,
-    statusCode,
     timestamp: new Date().toISOString(),
-    service: 'snappass-ai-backend',
-    version: process.env.npm_package_version || '1.0.0',
-    details,
+    metrics,
+    services,
   };
-};
+}
+
+export function formatDiagnosticsError(error) {
+  return {
+    success: false,
+    status: 'CRITICAL',
+    timestamp: new Date().toISOString(),
+    error: error.message || 'Health probe execution failure',
+  };
+}

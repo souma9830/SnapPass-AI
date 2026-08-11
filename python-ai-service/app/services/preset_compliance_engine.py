@@ -14,7 +14,7 @@ PRESET_RULES = {
 
 class PresetComplianceEngine:
     @staticmethod
-    def evaluate_compliance(face_confidence: float, eye_line_ratio: float, background_uniformity: float) -> dict:
+    def evaluate_compliance(face_confidence: float, eye_line_ratio: float, background_uniformity: float, glare_pct: float = 0.0) -> dict:
         score = 100.0
         reasons = []
 
@@ -30,6 +30,10 @@ class PresetComplianceEngine:
         if background_uniformity < 0.85:
             score -= 20.0
             reasons.append("Background contains noise or non-uniform shadows")
+
+        if glare_pct > 2.0:
+            score -= 15.0
+            reasons.append("Specular glare detected on face or glasses")
 
         score = max(0.0, min(100.0, score))
         compliant = score >= 75.0

@@ -75,7 +75,7 @@ export const generateSheet = async (req, res, next) => {
 
     // 6. Quantity boundary check (1 to 50)
     const parsedQuantity = parseInt(quantity, 10);
-    if (isNaN(parsedQuantity) || parsedQuantity < 1 || parsedQuantity > 50) {
+    if (Number.isNaN(parsedQuantity) || parsedQuantity < 1 || parsedQuantity > 50) {
       return res.status(400).json({ success: false, message: "Quantity must be an integer between 1 and 50." });
     }
 

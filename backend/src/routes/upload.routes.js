@@ -1,6 +1,6 @@
 import express from 'express';
 import { uploadPhoto, batchUpload } from '../controllers/upload.controller.js';
-import { uploadMiddleware, uploadSinglePhotoOrFile, validateImageChain } from '../middleware/upload.middleware.js';
+import { uploadMiddleware, uploadSinglePhotoOrFile, validateImageChain, validateImageChainBatch } from '../middleware/upload.middleware.js';
 import { uploadLimiter } from '../middleware/rateLimit.middleware.js';
 
 const router = express.Router();
@@ -20,6 +20,7 @@ router.post(
     next();
   },
   uploadMiddleware.array('files', MAX_BATCH_FILES),
+  validateImageChainBatch,
   batchUpload,
 );
 

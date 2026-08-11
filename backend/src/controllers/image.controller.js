@@ -11,6 +11,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import { config } from "../config/config.js";
 import { WebhookService } from "../services/webhook.service.js";
+import { aiServiceAuthHeaders } from '../utils/aiClient.js';
 import backgroundQualityRepairService from '../services/backgroundQualityRepair.service.js';
 
 const localFilename = fileURLToPath(import.meta.url);
@@ -85,7 +86,7 @@ export const processImage = async (req, res, next) => {
     try {
       const qualityCheck = await axios.post(`${config.aiServiceUrl}/face-quality-check`, 
         { file_path: filePath },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json", ...aiServiceAuthHeaders() } }
       );
       if (!qualityCheck.data.passed) {
         return res.status(422).json({
@@ -129,7 +130,7 @@ export const processImage = async (req, res, next) => {
     });
 
     const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, form, {
-      headers: form.getHeaders(),
+      headers: { ...form.getHeaders(), ...aiServiceAuthHeaders() },
       responseType: "arraybuffer",
     });
 
@@ -274,7 +275,7 @@ export const createProcessJob = async (req, res, next) => {
           const qualityCheck = await axios.post(
             `${config.aiServiceUrl}/face-quality-check`,
             { file_path: filePath },
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { 'Content-Type': 'application/json', ...aiServiceAuthHeaders() } }
           );
           if (!qualityCheck.data.passed) {
             const err = qualityCheck.data;
@@ -298,7 +299,7 @@ export const createProcessJob = async (req, res, next) => {
         updateJob(jobId, { progress: 40, stage: 'Sending to AI service' });
 
         const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
-          headers: uploadForm.getHeaders(),
+          headers: { ...uploadForm.getHeaders(), ...aiServiceAuthHeaders() },
           responseType: 'arraybuffer',
         });
 
@@ -469,7 +470,7 @@ export const retryProcessJob = async (req, res, next) => {
         updateJob(jobId, { progress: 40, stage: 'Sending to AI service' });
 
         const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
-          headers: uploadForm.getHeaders(),
+          headers: { ...uploadForm.getHeaders(), ...aiServiceAuthHeaders() },
           responseType: 'arraybuffer',
         });
 

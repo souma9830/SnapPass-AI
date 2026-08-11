@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import './UploadBox.css';
+import WebcamFaceAligner from './WebcamFaceAligner';
 import {
   validateImageFile,
   validateImageMagicBytes,

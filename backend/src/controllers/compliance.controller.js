@@ -8,6 +8,53 @@ import axios from 'axios';
 import fs from 'fs';
 import { config } from '../config/config.js';
 import { resolveUploadPath } from '../utils/uploadPaths.utils.js';
+import { complianceReportStreamer } from '../services/complianceReportStreamer.service.js';
+
+const parseFilterFromQuery = (query) => {
+  const filter = {};
+  if (query.method && /^(GET|POST|PUT|PATCH|DELETE)$/.test(query.method)) {
+    filter.method = query.method;
+  }
+  if (query.statusCode) {
+    const statusCode = parseInt(query.statusCode, 10);
+    if (Number.isInteger(statusCode) && statusCode >= 100 && statusCode <= 599) {
+      filter.statusCode = statusCode;
+    }
+  }
+  if (query.userId && /^[a-fA-F0-9]{24}$/.test(query.userId)) {
+    filter.userId = query.userId;
+  }
+  return filter;
+};
+
+export const complianceExportStream = async (req, res, next) => {
+  const stream = complianceReportStreamer.createStream({
+    filter: parseFilterFromQuery(req.query),
+  });
+
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="compliance-export-${Date.now()}.csv"`);
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Transfer-Encoding', 'chunked');
+
+  stream.on('error', (error) => {
+    console.error('[compliance-stream] export failed:', error.message);
+    if (!res.headersSent) {
+      return res
+        .status(500)
+        .json({ success: false, message: 'Compliance export stream failed.' });
+    }
+    res.end();
+  });
+
+  req.on('close', () => {
+    if (!res.writableEnded) {
+      stream.destroy();
+    }
+  });
+
+  stream.pipe(res);
+};
 
 export const complianceCheck = async (req, res, next) => {
   try {

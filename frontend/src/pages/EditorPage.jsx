@@ -582,6 +582,18 @@ function EditorPage({ darkMode, toggleTheme }) {
 
             <ComplianceBreakdownCard
               metrics={calculateComplianceMetrics(complianceData || {})}
+              onExportReport={(report) => {
+                const blob = new Blob(
+                  [JSON.stringify(report, null, 2)],
+                  { type: 'application/json' },
+                );
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `compliance-report-${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
             />
 
             <hr className="divider" />

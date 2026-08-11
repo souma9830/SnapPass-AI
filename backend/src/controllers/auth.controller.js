@@ -191,5 +191,8 @@ export const resetPassword = catchAsync(async (req, res) => {
   await passwordResetOtpService.verifyOtp(user._id, otp);
   // Update Password
   await authService.updatePassword(user._id, newPassword);
+  // Revoke all existing sessions: if the reset was triggered to recover
+  // from account takeover, the attacker's JWT/session must not survive (#1446).
+  await sessionService.invalidateAllUserSessions(user._id);
   sendResponse(res, 200, true, 'Password reset successfully', null);
 });

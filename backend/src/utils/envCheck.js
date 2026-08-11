@@ -1,5 +1,7 @@
 import logger from './logger.js';
 
+const KNOWN_DEFAULT_JWT_SECRET = 'snappass_dev_secret_key_change_in_production';
+
 /**
  * Validates that all required environment variables are configured.
  * Prints clean developer-friendly error blocks.
@@ -20,9 +22,25 @@ export function verifyEnvironment() {
     }
   }
 
+  // The JWT_SECRET fallback in config.js is a public, repo-known value, so
+  // ANY deployment without a real JWT_SECRET (missing or still the default)
+  // lets anyone forge valid session JWTs, including admin ones (#1448).
+  // Reject both cases in EVERY environment, not just production.
+  if (
+    !process.env.JWT_SECRET ||
+    process.env.JWT_SECRET === KNOWN_DEFAULT_JWT_SECRET
+  ) {
+    missing.push({
+      key: 'JWT_SECRET',
+      desc: process.env.JWT_SECRET === KNOWN_DEFAULT_JWT_SECRET
+        ? `Set to the known repo-default value; anyone can forge JWTs with it (${KNOWN_DEFAULT_JWT_SECRET})`
+        : 'Missing; config.js falls back to a public secret that allows forging JWTs'
+    });
+  }
+
   if (missing.length > 0) {
     console.error('\n================================================================');
-    console.error('⚠️  CRITICAL ERROR: MISSING ENVIRONMENT VARIABLES');
+    console.error('⚠️  CRITICAL ERROR: MISSING OR INSECURE ENVIRONMENT VARIABLES');
     console.error('================================================================');
     for (const item of missing) {
       console.error(`  - ${item.key}: ${item.desc}`);
@@ -32,8 +50,10 @@ export function verifyEnvironment() {
     console.error('See backend/.env.example for details.');
     console.error('================================================================\n');
     
-    // In production, exit immediately to prevent corrupted container boots
-    if (process.env.NODE_ENV === 'production') {
+    // A missing/public JWT_SECRET is a credential compromise in any
+    // environment, so exit instead of continuing (missing JWTs were
+    // previously tolerated outside production).
+    if (process.env.NODE_ENV === 'production' || missing.some(m => m.key === 'JWT_SECRET')) {
       process.exit(1);
     } else {
       logger.warn('Running with missing credentials. Some backend operations will fail.');

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
 import './TermsPage.css';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
@@ -20,6 +21,14 @@ const TermsPage = () => {
 
     return (
         <div className="terms-page page-content">
+            <button
+                className="legal-page__back"
+                onClick={() => window.history.back()}
+                aria-label="Go back to previous page"
+            >
+                <ArrowLeft size={18} />
+                {t.goBack || 'Go Back'}
+            </button>
             <motion.div
                 className="terms-page__header"
                 variants={fadeUpVariant}

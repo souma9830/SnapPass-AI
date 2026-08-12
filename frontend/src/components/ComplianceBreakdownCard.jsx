@@ -5,7 +5,7 @@ import ComplianceScoreGauge from './ComplianceScoreGauge';
  * ComplianceBreakdownCard — Detailed breakdown list displaying
  * checks, pass/fail status, scores, and AI recommendations.
  */
-export function ComplianceBreakdownCard({ metrics }) {
+export function ComplianceBreakdownCard({ metrics, onExportReport }) {
   if (!metrics) return null;
 
   const { totalScore, grade, status, checks } = metrics;
@@ -14,9 +14,28 @@ export function ComplianceBreakdownCard({ metrics }) {
     <div className="compliance-breakdown-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <ComplianceScoreGauge score={totalScore} grade={grade} status={status} />
       <div className="compliance-checks-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 600 }}>
-          Detailed AI Inspection Rules
-        </h4>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 600 }}>
+            Detailed AI Inspection Rules
+          </h4>
+          {onExportReport && (
+            <button
+              onClick={onExportReport}
+              style={{
+                fontSize: '0.75rem',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                backgroundColor: '#2563eb',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 600,
+              }}
+            >
+              Export Audit Summary
+            </button>
+          )}
+        </div>
         {checks.map((check) => (
           <div
             key={check.id}

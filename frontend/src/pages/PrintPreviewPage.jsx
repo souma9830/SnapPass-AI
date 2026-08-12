@@ -6,7 +6,6 @@ import CustomPaperSizeCalculator from '../components/CustomPaperSizeCalculator';
 import PrintCostEstimator from '../components/PrintCostEstimator';
 import PrintSheetLayoutCustomizer from '../components/PrintSheetLayoutCustomizer';
 import PrintBleedMarginAdjuster from '../components/PrintBleedMarginAdjuster';
-import CustomPaperSizeCalculator from '../components/CustomPaperSizeCalculator';
 import DownloadPackagePanel from '../components/DownloadPackagePanel';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import useBatchExport from '../hooks/useBatchExport';

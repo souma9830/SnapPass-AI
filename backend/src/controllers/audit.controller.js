@@ -1,4 +1,6 @@
 import AuditLog from '../models/auditLog.model.js';
+import { validateAuditExportQuery } from '../validation/auditQuery.validation.js';
+import { formatAuditCSV, formatAuditNDJSON, formatAuditJSON } from '../utils/auditFormatter.utils.js';
 
 export const getAuditLogs = async (req, res, next) => {
   try {
@@ -36,6 +38,52 @@ export const getAuditLogs = async (req, res, next) => {
         },
       },
     });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+// Alias so the /summary route (which historically referenced
+// `getAuditSummary`) resolves to the same stats logic.
+export const getAuditSummary = (req, res, next) => getAuditStats(req, res, next);
+
+export const exportAuditLogs = async (req, res, next) => {
+  try {
+    const { isValid, errors } = validateAuditExportQuery(req.query);
+    if (!isValid) {
+      return res.status(400).json({ success: false, errors });
+    }
+
+    const format = (req.query.format || 'json').toLowerCase();
+    const filter = {};
+    if (req.query.startDate || req.query.endDate) {
+      filter.createdAt = {};
+      if (req.query.startDate) filter.createdAt.$gte = new Date(req.query.startDate);
+      if (req.query.endDate) filter.createdAt.$lte = new Date(req.query.endDate);
+    }
+
+    const records = await AuditLog.find(filter).sort({ createdAt: -1 }).lean();
+
+    let body;
+    let contentType;
+    let extension;
+    if (format === 'csv') {
+      body = formatAuditCSV(records);
+      contentType = 'text/csv';
+      extension = 'csv';
+    } else if (format === 'ndjson') {
+      body = formatAuditNDJSON(records);
+      contentType = 'application/x-ndjson';
+      extension = 'ndjson';
+    } else {
+      body = formatAuditJSON(records);
+      contentType = 'application/json';
+      extension = 'json';
+    }
+
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="audit-export.${extension}"`);
+    return res.status(200).send(body);
   } catch (err) {
     return next(err);
   }

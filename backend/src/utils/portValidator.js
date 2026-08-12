@@ -3,7 +3,7 @@ const MAX_PORT = 65535;
 
 export function validatePort(port) {
   const parsed = parseInt(port, 10);
-  if (isNaN(parsed) || parsed < MIN_PORT || parsed > MAX_PORT) {
+  if (Number.isNaN(parsed) || parsed < MIN_PORT || parsed > MAX_PORT) {
     return null;
   }
   return parsed;

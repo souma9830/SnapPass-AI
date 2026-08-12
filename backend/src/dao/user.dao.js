@@ -33,6 +33,16 @@ export async function updateUserLastLogin(id) {
     return user;
 }
 
+export async function updateUserRole(id, role) {
+    const user = await User.findByIdAndUpdate(id, { role }, { returnDocument: "after" });
+    if (user) {
+        // Invalidate the cache so the updated role is immediately visible;
+        // findUserById caches the doc for 5 minutes (#1447).
+        await deleteCache(`user:${id}`);
+    }
+    return user;
+}
+
 export async function updateUserPassword(id, newPassword) {
     const user = await User.findById(id).select("+password");
     if (!user) return null;

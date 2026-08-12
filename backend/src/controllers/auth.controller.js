@@ -1,5 +1,6 @@
 import * as sessionService from '../services/session.service.js';
 import * as authService from '../service/auth.service.js';
+import { updateUserRole as daoUpdateUserRole } from '../dao/user.dao.js';
 import * as passwordResetOtpService from '../service/passwordResetOtp.service.js';
 import catchAsync from '../utils/catchAsync.js';
 import SecurityAudit from '../models/securityAudit.model.js';
@@ -168,10 +169,12 @@ export const updateRole = catchAsync(async (req, res) => {
   if (!['user', 'admin'].includes(role)) {
     return sendResponse(res, 400, false, 'Role must be "user" or "admin".', null);
   }
-  const user = await authService.getMe(userId);
+  // Update through the DAO: findUserById caches a JSON.parse'd plain object,
+  // which has no .save() — calling it caused a 500 on cache hits (#1447).
+  // findByIdAndUpdate + deleteCache works in both cache states
+  // (and clears the stale cached role).
+  const user = await daoUpdateUserRole(userId, role);
   if (!user) return sendResponse(res, 404, false, 'User not found.', null);
-  user.role = role;
-  await user.save();
   sendResponse(res, 200, true, 'Role updated successfully', { id: user._id, role: user.role });
 });
 

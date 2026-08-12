@@ -6,6 +6,7 @@ import authMiddleware from "../middleware/auth.middleware.js";
 import { otpActionLimiter, authLimiter } from "../middleware/rateLimit.middleware.js";
 import { authRateLimiter } from "../middleware/authRateLimiter.middleware.js";
 import { checkTokenBlacklist } from "../middleware/blacklist.middleware.js";
+import { isAdmin } from "../middleware/role.middleware.js";
 
 const router = Router();
 
@@ -78,6 +79,6 @@ router.post("/password-reset", authRateLimiter, otpActionLimiter, passwordResetV
  * @description Update a user's role (admin only)
  * @access Private/Admin
  */
-router.patch("/role", authMiddleware, authController.updateRole);
+router.patch("/role", authMiddleware, isAdmin, authController.updateRole);
 
 export default router;

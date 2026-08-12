@@ -5,7 +5,7 @@ Answers to the most common questions about setting up, running, testing, and dep
 ## Project basics
 
 ### What is SnapPass?
-SnapPass is an AI-powered passport-photo studio web app. It runs a React frontend, a Node/Express backend, and a Python AI microservice (`ai-server`) that performs image processing (background removal, upscaling, shadow correction, and more).
+SnapPass is an AI-powered passport-photo studio web app. It runs a React frontend, a Node/Express backend, and a Python AI microservice (`python-ai-service`, Flask) that performs image processing (background removal, upscaling, shadow correction, and more).
 
 ### What are the minimum requirements?
 - Node.js 18+ (LTS recommended) and npm
@@ -18,7 +18,7 @@ SnapPass is an AI-powered passport-photo studio web app. It runs a React fronten
 ```
 ├── frontend/         React/Vite web app
 ├── backend/          Node/Express API + middleware
-├── python-ai-service/  Python AI microservice (FastAPI)
+├── python-ai-service/  Python AI microservice (Flask)
 ├── docs/             Guides, API references, troubleshooting
 └── README.md
 ```
@@ -34,7 +34,7 @@ It runs in a virtual environment. Inside `python-ai-service/`:
 python3 -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+python main.py                   # Flask app, default port 8000
 ```
 If model download fails on first run (network/proxy), pre-download the model or set the model cache directory, then retry.
 

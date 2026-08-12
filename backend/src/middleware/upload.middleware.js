@@ -168,6 +168,50 @@ export const validateImageChain = async (req, res, next) => {
   }
 };
 
+/**
+ * Applies the same content validation as validateImageChain to every file
+ * in a batch upload (magic bytes, dimensions, compression ratio, EXIF
+ * scrub). Previously /api/upload/batch skipped all of these (#1486).
+ */
+export const validateImageChainBatch = async (req, res, next) => {
+  if (!req.files || req.files.length === 0) return next();
+
+  for (const file of req.files) {
+    const { path: filePath } = file;
+
+    const mbResult = await validateMagicBytes(filePath);
+    if (!mbResult.valid) {
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      return res.status(400).json({ success: false, message: mbResult.error });
+    }
+
+    const dimResult = await validateImageDimensions(filePath);
+    if (!dimResult.valid) {
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      return res
+        .status(400)
+        .json({ success: false, message: `File "${file.originalname}": ${dimResult.error}` });
+    }
+
+    const crResult = await validateCompressionRatio(filePath);
+    if (!crResult.valid) {
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      return res
+        .status(400)
+        .json({ success: false, message: `File "${file.originalname}": ${crResult.error}` });
+    }
+
+    try {
+      const { stripImageExifData } = await import('../utils/exifScrubber.js');
+      await stripImageExifData(filePath);
+    } catch (exifErr) {
+      console.warn('[UploadMiddleware] EXIF stripping warning:', exifErr.message);
+    }
+  }
+
+  next();
+};
+
 export const validateImageBuffer = async (req, res, next) => {
   if (!req.file) return next();
   try {

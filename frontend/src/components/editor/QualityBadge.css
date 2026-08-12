@@ -1,0 +1,16 @@
+.quality-score-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+}
+
+.quality-score-badge.high {
+  background: #10b981;
+}
+
+.quality-score-badge.medium {
+  background: #f59e0b;
+}

@@ -201,7 +201,7 @@ function EditorPage({ darkMode, toggleTheme }) {
         background,
         sizePreset,
         attire,
-      }).catch(() => {});
+      }).catch( => console.error());
       const currentSession = getSession() || {};
       const processedPhotos = currentSession.processedPhotos || [];
       const newPhoto = { processedUrl: resultUrl, filename: processFilename, background, sizePreset, attire };

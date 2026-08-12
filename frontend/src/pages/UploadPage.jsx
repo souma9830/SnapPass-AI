@@ -13,7 +13,6 @@ import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { iconMap } from '../data/UploadPageData';
 import { runImageDiagnostics } from '../utils/imageDiagnostics';
-import ExifMetadataInspector from '../components/ExifMetadataInspector';
 import './UploadPage.css';
 
 function UploadPage({ darkMode, toggleTheme }) {

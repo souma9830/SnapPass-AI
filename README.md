@@ -476,6 +476,9 @@ You are free to use, modify, and distribute this project for both personal and c
 - Ensure all required variables are defined.
 - Restart the development server after making changes.
 
+> For the full troubleshooting handbook (setup, emulator/CI failures, AI service
+> and deployment issues), see [docs/TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md).
+
 ## FAQ
 
 ### How do I start the project?
@@ -488,4 +491,11 @@ npm run dev
 
 ### How do I report a bug?
 Please open a GitHub issue with reproduction steps and relevant logs.
+
+### How do I run the AI service or the tests?
+See the [FAQ](docs/FAQ.md) — it covers the Python AI service setup, the full
+local stack (frontend, backend, AI service), default ports, and how to run the
+backend, frontend, and Python test suites.
+
+> Complete question & answer collection: [docs/FAQ.md](./docs/FAQ.md)
 

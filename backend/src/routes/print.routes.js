@@ -7,10 +7,11 @@
 import express from "express";
 import { generateSheet, getSizePresets } from "../controllers/print.controller.js";
 import { cacheMiddleware } from "../middleware/cache.middleware.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/generate-sheet", generateSheet);
+router.post("/generate-sheet", authMiddleware, generateSheet);
 router.get("/presets", cacheMiddleware(3600), getSizePresets);
 
 export default router;

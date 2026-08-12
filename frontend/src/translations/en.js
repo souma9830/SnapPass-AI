@@ -76,6 +76,7 @@ export const en = {
     company: 'Company',
     privacyPolicy: 'Privacy Policy',
     termsConditions: 'Terms & Conditions',
+    goBack: 'Go Back',
 
     contact: 'Contact',
 

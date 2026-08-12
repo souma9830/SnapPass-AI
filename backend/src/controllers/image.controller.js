@@ -11,6 +11,7 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import { config } from "../config/config.js";
 import { WebhookService } from "../services/webhook.service.js";
+import { aiServiceAuthHeaders } from '../utils/aiClient.js';
 import backgroundQualityRepairService from '../services/backgroundQualityRepair.service.js';
 
 const localFilename = fileURLToPath(import.meta.url);
@@ -85,7 +86,7 @@ export const processImage = async (req, res, next) => {
     try {
       const qualityCheck = await axios.post(`${config.aiServiceUrl}/face-quality-check`, 
         { file_path: filePath },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json", ...aiServiceAuthHeaders() } }
       );
       if (!qualityCheck.data.passed) {
         return res.status(422).json({
@@ -112,24 +113,24 @@ export const processImage = async (req, res, next) => {
     form.append("photo_size_preset", photoSizePreset);
     form.append("attire", attire);
 
-    const shouldCleanupLocal = Boolean(
-      config.cloudinary?.cloudName &&
-      config.cloudinary?.apiKey &&
-      config.cloudinary?.apiSecret
-    );
-
-    if (shouldCleanupLocal) {
-      res.on("finish", async () => {
-        try {
-          await fs.promises.unlink(filePath);
-        } catch (_error) {
-          // Best-effort cleanup, ignore failures.
-        }
-      });
-    }
+    const sourcePath = filePath;
+    // Delete the original upload once the response has been written to the
+    // client: the processed artifact is persisted in uploads/processed (or
+    // pushed to Cloudinary), so the source file is no longer needed by any
+    // downstream request. Closes the disk-exhaustion gap from #1485 even
+    // when Cloudinary is not configured. Success-only: a failed process
+    // keeps the source so the client can retry.
+    res.on("finish", async () => {
+      if (res.statusCode >= 400) return;
+      try {
+        await fs.promises.unlink(sourcePath);
+      } catch (_error) {
+        // Best-effort cleanup, ignore failures.
+      }
+    });
 
     const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, form, {
-      headers: form.getHeaders(),
+      headers: { ...form.getHeaders(), ...aiServiceAuthHeaders() },
       responseType: "arraybuffer",
     });
 
@@ -274,7 +275,7 @@ export const createProcessJob = async (req, res, next) => {
           const qualityCheck = await axios.post(
             `${config.aiServiceUrl}/face-quality-check`,
             { file_path: filePath },
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { 'Content-Type': 'application/json', ...aiServiceAuthHeaders() } }
           );
           if (!qualityCheck.data.passed) {
             const err = qualityCheck.data;
@@ -298,7 +299,7 @@ export const createProcessJob = async (req, res, next) => {
         updateJob(jobId, { progress: 40, stage: 'Sending to AI service' });
 
         const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
-          headers: uploadForm.getHeaders(),
+          headers: { ...uploadForm.getHeaders(), ...aiServiceAuthHeaders() },
           responseType: 'arraybuffer',
         });
 
@@ -317,16 +318,12 @@ export const createProcessJob = async (req, res, next) => {
         updateJob(jobId, { status: 'done', progress: 100, stage: 'Complete', processedUrl });
         await WebhookService.trigger(config.WEBHOOK_URL, 'image.processed', { jobId, processedUrl });
 
-        const shouldCleanupLocal = Boolean(
-          config.cloudinary?.cloudName &&
-          config.cloudinary?.apiKey &&
-          config.cloudinary?.apiSecret
-        );
-        if (shouldCleanupLocal) {
-          try {
-            await fs.promises.unlink(filePath);
-          } catch (_) {}
-        }
+        // The processed artifact is already persisted in uploads/processed,
+        // so the source file is no longer needed (see #1485). Best-effort
+        // and unconditional — Cloudinary config no longer gates cleanup.
+        try {
+          await fs.promises.unlink(filePath);
+        } catch (_) {}
       } catch (err) {
         updateJob(jobId, {
           status: 'failed',
@@ -473,7 +470,7 @@ export const retryProcessJob = async (req, res, next) => {
         updateJob(jobId, { progress: 40, stage: 'Sending to AI service' });
 
         const aiResponse = await axios.post(`${config.aiServiceUrl}/remove-bg`, uploadForm, {
-          headers: uploadForm.getHeaders(),
+          headers: { ...uploadForm.getHeaders(), ...aiServiceAuthHeaders() },
           responseType: 'arraybuffer',
         });
 

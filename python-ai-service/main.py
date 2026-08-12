@@ -7,6 +7,7 @@ Runs on http://localhost:8000
 import logging
 import os
 import re
+import hmac
 import uuid
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
@@ -16,6 +17,7 @@ import config
 from app.routes.process_routes import process_bp
 from app.routes.compliance_routes import compliance_bp
 from app.services.path_guard import safe_photo_path, validate_magic_bytes
+from app.services.errors import ai_error_handler
 
 logging.basicConfig(
     level=logging.INFO,
@@ -48,6 +50,24 @@ def check_payload_size():
         return jsonify({
             "error": f"Payload too large. Maximum allowed: {config.MAX_FILE_MB} MB."
         }), 413
+
+
+# API-key gate (#1488): when AI_SERVICE_API_KEY is configured, every
+# endpoint except /health must present the matching key in X-API-Key.
+# Without a configured key the service stays open (local development).
+PUBLIC_PATHS = {"/health"}
+
+
+@app.before_request
+def require_api_key():
+    if request.method == "OPTIONS" or request.path in PUBLIC_PATHS:
+        return None
+    if not config.AI_SERVICE_API_KEY:
+        return None
+    supplied = request.headers.get("X-API-Key", "")
+    if supplied and hmac.compare_digest(supplied, config.AI_SERVICE_API_KEY):
+        return None
+    return jsonify({"error": "Unauthorized: missing or invalid X-API-Key header"}), 401
 
 
 os.makedirs(config.UPLOAD_DIR, exist_ok=True)

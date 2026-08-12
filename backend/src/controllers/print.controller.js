@@ -9,6 +9,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "../config/config.js";
+import { aiServiceAuthHeaders } from '../utils/aiClient.js';
 import { PHOTO_SIZE_DETAILS } from "./presets.controller.js";
 import { resolveUploadPath } from "../utils/uploadPaths.utils.js";
 
@@ -89,7 +90,7 @@ export const generateSheet = async (req, res, next) => {
     const aiResponse = await axios.post(
       `${config.aiServiceUrl}/generate-sheet`,
       { photo_paths: filePaths, quantity: parsedQuantity, preset_id: photoSizePreset, layout },
-      { responseType: "arraybuffer" }
+      { headers: aiServiceAuthHeaders(), responseType: "arraybuffer" }
     );
 
     res.set("Content-Type", "image/png");

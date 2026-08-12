@@ -5,6 +5,16 @@ import { CircuitBreaker } from './circuitBreaker.js';
 
 const aiCircuitBreaker = new CircuitBreaker({ failureThreshold: 3, resetTimeout: 15000 });
 
+/**
+ * Headers every call to the Python AI service must carry. When
+ * AI_SERVICE_API_KEY is set, the Flask side requires it as X-API-Key
+ * (see python-ai-service/main.py, #1488).
+ */
+export const aiServiceAuthHeaders = () => {
+  const apiKey = process.env.AI_SERVICE_API_KEY;
+  return apiKey ? { 'X-API-Key': apiKey } : {};
+};
+
 export const forwardImageToAIService = async (filePath, options = {}) => {
   return aiCircuitBreaker.execute(async () => {
     const form = new FormData();
@@ -17,7 +27,7 @@ export const forwardImageToAIService = async (filePath, options = {}) => {
       process.env.AI_SERVICE_URL || 'http://localhost:5000/process',
       form,
       {
-        headers: form.getHeaders(),
+        headers: { ...form.getHeaders(), ...aiServiceAuthHeaders() },
         timeout: parseInt(process.env.AI_SERVICE_TIMEOUT, 10) || 10000
       }
     );

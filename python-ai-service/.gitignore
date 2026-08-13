@@ -12,3 +12,5 @@ uploads/
 *.jpeg
 *.png
 *.pdf
+# local test virtualenv
+.venv-test/

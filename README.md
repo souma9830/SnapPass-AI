@@ -23,6 +23,7 @@ Upload → Auto-process → Generate a print-ready sheet — in seconds.</p>
 - [🛠️ Developer Setup & Technical Guide](docs/DEVELOPER_GUIDE.md)
 - [🛡️ Enterprise Security & Hardening Guide](docs/ENTERPRISE_DEPLOYMENT_HARDENING.md)
 - [🤝 Extended Contribution Guidelines](docs/CONTRIBUTING_EXTENDED.md)
+- [🛠️ Troubleshooting & FAQ](docs/TROUBLESHOOTING.md)
 - [✨ What It Does](#-what-it-does)
 - [📸 Website Preview](#-website-preview)
 - [🧭 Project Status](#-project-status)

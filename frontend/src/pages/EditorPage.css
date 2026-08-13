@@ -9,6 +9,8 @@
   width: 100%;
   margin: 0 auto;
   padding: var(--space-lg, 1.5rem);
+  /* Clear the fixed navbar so hero content is not hidden beneath it */
+  padding-top: 90px;
   box-sizing: border-box;
   /* GPU acceleration hint for layout scaling */
   transform: translate3d(0, 0, 0);

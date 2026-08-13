@@ -8,10 +8,11 @@ import {
   complianceCheck,
   complianceAutoCorrect,
 } from '../controllers/compliance.controller.js';
+import { optionallyAuthenticated } from '../middleware/optionalAuth.middleware.js';
 
 const router = express.Router();
 
-router.post('/check', complianceCheck);
-router.post('/auto-correct', complianceAutoCorrect);
+router.post('/check', optionallyAuthenticated, complianceCheck);
+router.post('/auto-correct', optionallyAuthenticated, complianceAutoCorrect);
 
 export default router;

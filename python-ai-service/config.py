@@ -7,6 +7,9 @@ PORT = int(os.getenv("PORT", 8000))
 DEBUG = os.getenv("FLASK_DEBUG", "false").lower() == "true"
 UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")
 MAX_FILE_MB = int(os.getenv("MAX_FILE_MB", 16))
+# Shared secret required on every request via the X-API-Key header.
+# When empty, the service runs unauthenticated (local development only).
+AI_SERVICE_API_KEY = os.getenv("AI_SERVICE_API_KEY", "")
 
 TARGET_DPI = 300
 MAX_QUANTITY = 50

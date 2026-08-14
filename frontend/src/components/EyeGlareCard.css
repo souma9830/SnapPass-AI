@@ -1,0 +1,52 @@
+.eye-glare-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.glare-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.glare-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0;
+}
+
+.glare-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.glare-badge.pass {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.glare-badge.fail {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.glare-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #4b5563);
+}
+
+.glare-warning-text {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}

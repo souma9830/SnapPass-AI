@@ -1,0 +1,80 @@
+.quality-gauge-card {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #1e293b;
+  margin-top: 1rem;
+}
+
+.gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gauge-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #38bdf8;
+}
+
+.tier-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.tier-badge.excellent { background: #065f46; color: #34d399; }
+.tier-badge.good { background: #1e3a8a; color: #93c5fd; }
+.tier-badge.fair { background: #78350f; color: #fde047; }
+.tier-badge.poor { background: #991b1b; color: #fca5a5; }
+
+.gauge-score-display {
+  text-align: center;
+  margin: 0.75rem 0;
+}
+
+.score-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #38bdf8;
+}
+
+.score-max {
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.submetrics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.submetric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.submetric-row span {
+  width: 70px;
+}
+
+.bar-bg {
+  flex: 1;
+  height: 0.375rem;
+  background: #1e293b;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #0284c7;
+  border-radius: 9999px;
+}

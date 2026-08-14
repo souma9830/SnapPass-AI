@@ -14,6 +14,12 @@
   transform: translate3d(0, 0, 0);
 }
 
+.editor-page-shell {
+  width: 100%;
+  /* Clear the fixed navbar so hero content stays visible */
+  padding-top: var(--space-xxl, 140px);
+}
+
 .editor-toggle-dark {
   width: 100%;
   /* Allow wrapper to grow with content to prevent footer overlap */

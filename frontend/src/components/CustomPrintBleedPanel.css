@@ -1,0 +1,43 @@
+.bleed-panel-container {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.bleed-panel-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin-bottom: 0.75rem;
+}
+
+.grid-summary-bar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f3f4f6;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.summary-item {
+  color: #374151;
+}
+
+.control-field {
+  margin-bottom: 0.75rem;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #4b5563);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.field-slider {
+  width: 100%;
+}

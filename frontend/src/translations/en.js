@@ -223,6 +223,7 @@ export const en = {
 
     showcaseSubtitle:
       'Upload a portrait photo and let AI automatically remove the background, align your face and generate a professional passport photo sheet.',
+    backButton: 'Back',
     privacyPolicy: 'Privacy Policy',
 
     privacySubtitle: 'How we handle your data with transparency and care.',

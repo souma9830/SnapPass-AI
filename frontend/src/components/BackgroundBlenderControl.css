@@ -1,0 +1,65 @@
+.bg-blender-container {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.blender-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin-bottom: 0.75rem;
+}
+
+.preset-buttons-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.preset-color-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  border: 2px solid #d1d5db;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.preset-color-btn.active {
+  border-color: #3b82f6;
+  transform: scale(1.15);
+}
+
+.feather-slider-group {
+  margin-bottom: 0.75rem;
+}
+
+.slider-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #4b5563);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.feather-range {
+  width: 100%;
+}
+
+.apply-blend-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.apply-blend-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

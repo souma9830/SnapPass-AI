@@ -19,7 +19,6 @@ import useImageProcessor from '../hooks/useImageProcessor';
 import { iconMap, backgroundHexMap } from '../data/EditorPageData';
 import EditorPageDiagnostics from './EditorPageDiagnostics';
 import { ImageAdjustments } from '../components/ImageAdjustments';
-import PresetFilterManager from '../components/PresetFilterManager';
 import { cachePhotoOffline } from '../services/indexedDb';
 import api from '../services/api';
 import { autoEnhanceImage } from '../utils/imageEnhancer';
@@ -246,7 +245,7 @@ function EditorPage({ darkMode, toggleTheme }) {
     : backgroundHexMap[background] || '#ffffff';
 
   return (
-    <div className={darkMode ? 'editor-toggle-dark' : ''}>
+    <div className={darkMode ? 'editor-toggle-dark editor-page-shell' : 'editor-page-shell'}>
       <EditorPageDiagnostics
         sizePreset={sizePreset}
         background={background}

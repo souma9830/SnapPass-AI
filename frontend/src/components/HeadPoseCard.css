@@ -1,0 +1,85 @@
+.head-pose-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.head-pose-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.head-pose-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0;
+}
+
+.pose-status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+}
+
+.pose-status-badge.compliant {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.pose-status-badge.non-compliant {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.pose-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.pose-metric-item {
+  background: var(--bg-secondary, #f9fafb);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-secondary, #6b7280);
+}
+
+.metric-value {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+.metric-value.ok {
+  color: #10b981;
+}
+
+.metric-value.error {
+  color: #ef4444;
+}
+
+.pose-warning-list {
+  margin-top: 0.75rem;
+  padding-left: 0;
+  list-style: none;
+  font-size: 0.8rem;
+}
+
+.pose-warning-item {
+  color: #dc2626;
+  margin-bottom: 0.25rem;
+}

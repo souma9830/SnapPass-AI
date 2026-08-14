@@ -227,6 +227,7 @@ export const hi = {
 
     showcaseSubtitle:
       'एक पोर्ट्रेट फोटो अपलोड करें और AI को बैकग्राउंड हटाने, चेहरे को संरेखित करने और प्रोफेशनल पासपोर्ट फोटो शीट बनाने दें।',
+    backButton: 'वापस जाएं',
     privacyPolicy: 'गोपनीयता नीति',
 
     privacySubtitle:

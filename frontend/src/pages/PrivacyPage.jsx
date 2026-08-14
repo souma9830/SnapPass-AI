@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import './PrivacyPage.css';
 import { useLanguage } from '../context/LanguageContext';
@@ -7,6 +8,7 @@ import { translations } from '../translations/translations';
 
 const PrivacyPage = () => {
     const { language } = useLanguage();
+    const navigate = useNavigate();
     useDocumentMeta({ title: 'Privacy Policy', description: 'SnapPass AI privacy policy - how we handle your photos and data.' });
     const t = translations[language];
     const fadeUpVariant = {
@@ -20,6 +22,14 @@ const PrivacyPage = () => {
 
     return (
         <div className="privacy-page page-content">
+            <button
+                className="back-button"
+                onClick={() => navigate(-1)}
+                aria-label="Go back to previous page"
+            >
+                ← {t.backButton}
+            </button>
+
             <motion.div
                 className="privacy-page__header"
                 variants={fadeUpVariant}

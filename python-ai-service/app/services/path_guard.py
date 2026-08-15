@@ -6,14 +6,14 @@ the path through this module before touching the filesystem.
 """
 
 import pathlib
-from app.config import UPLOAD_DIR
+from app import config
 
 
 def safe_photo_path(raw: str) -> str:
     """Resolve raw to an absolute path inside UPLOAD_DIR.
 
-    Strips directory traversal by taking only the filename component, then
-    resolves and boundary-checks against UPLOAD_DIR using pathlib.Path.relative_to().
+    Resolves and boundary-checks the supplied relative path against UPLOAD_DIR
+    using pathlib.Path.relative_to().
 
     Args:
         raw: The photo_path value received from the request body.
@@ -26,8 +26,8 @@ def safe_photo_path(raw: str) -> str:
     """
     if not raw or not isinstance(raw, str):
         raise ValueError("file_path must be a non-empty string.")
-    allowed_dir = pathlib.Path(UPLOAD_DIR).resolve()
-    resolved = (allowed_dir / pathlib.Path(raw).name).resolve()
+    allowed_dir = pathlib.Path(config.UPLOAD_DIR).resolve()
+    resolved = (allowed_dir / raw).resolve()
     try:
         resolved.relative_to(allowed_dir)
     except ValueError:

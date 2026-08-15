@@ -1,117 +1,110 @@
 import React, { useState } from 'react';
-import LoadingSpinner from './LoadingSpinner';
-import SkeletonLoader from './SkeletonLoader';
 import './PhotoPreview.css';
+import VisualCropOverlay from './editor/VisualCropOverlay';
 
-/**
- * PhotoPreview — displays original and processed passport photo side by side.
- *
- * Props:
- *   originalUrl  (string) — blob URL or server URL of the original photo
- *   processedUrl (string) — URL of the AI-processed photo (optional)
- *   isProcessing (bool)   — shows loading state over the processed panel
- */
-function PhotoPreview({ originalUrl, processedUrl, isProcessing }) {
-  const [showGuidelines, setShowGuidelines] = useState(true);
-
-  const [imageLoaded, setImageLoaded] = useState(false);
+function PhotoPreview({
+  imageUrl,
+  filename,
+  onReset,
+  onProceed,
+  isUploading,
+  darkMode,
+  showOverlay = false,
+  zoom = 1,
+  rotation = 0,
+}) {
+  const [toggleOverlay, setToggleOverlay] = useState(showOverlay);
 
   return (
     <div className="photo-preview">
-      {/* Original */}
-      {originalUrl && (
-        <div className="photo-preview__panel">
-          <span className="photo-preview__label">Original</span>
-          <div className="photo-preview__frame photo-preview__frame--original">
-            <img
-              src={originalUrl}
-              alt="Original uploaded — before processing"
-              className="photo-preview__img"
-            />
-            
-            {/* Floating Glassmorphic Guidelines Toggle */}
-            <button
-              type="button"
-              className={`photo-preview__toggle-btn ${showGuidelines ? 'photo-preview__toggle-btn--active' : ''}`}
-              onClick={() => setShowGuidelines(!showGuidelines)}
-              title={showGuidelines ? 'Hide Passport Guidelines Overlay' : 'Show Passport Guidelines Overlay'}
+      <div className="photo-preview__panel">
+        <div className="photo-preview__label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              aria-hidden="true"
+              focusable="false"
             >
-              <svg className="photo-preview__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <line x1="9" y1="3" x2="9" y2="21" />
-                <line x1="15" y1="3" x2="15" y2="21" />
-                <line x1="3" y1="9" x2="21" y2="9" />
-                <line x1="3" y1="15" x2="21" y2="15" />
-              </svg>
-              <span className="photo-preview__toggle-text">Guidelines</span>
-            </button>
-
-            {/* Smart Compliance Guidelines Grid */}
-            {showGuidelines && (
-              <div className="photo-preview__overlay-grid">
-                {/* L-Shaped Outer Crop Corners */}
-                <div className="photo-preview__corner photo-preview__corner--tl" />
-                <div className="photo-preview__corner photo-preview__corner--tr" />
-                <div className="photo-preview__corner photo-preview__corner--bl" />
-                <div className="photo-preview__corner photo-preview__corner--br" />
-
-                {/* Vertical Symmetry Axis */}
-                <div className="photo-preview__guide photo-preview__guide--center-line" />
-
-                {/* Head Crown Target Region (Silhouette Oval) */}
-                <div className="photo-preview__guide photo-preview__guide--head-oval">
-                  <span className="photo-preview__guide-tag photo-preview__guide-tag--oval">CROWN LEVEL</span>
-                </div>
-
-                {/* Ideal Eye Alignment Level */}
-                <div className="photo-preview__guide photo-preview__guide--eye-line">
-                  <span className="photo-preview__guide-tag photo-preview__guide-tag--eye">EYES LEVEL</span>
-                </div>
-
-                {/* Ideal Chin Alignment Level */}
-                <div className="photo-preview__guide photo-preview__guide--chin-line">
-                  <span className="photo-preview__guide-tag photo-preview__guide-tag--chin">CHIN LEVEL</span>
-                </div>
-              </div>
+              <rect x="4" y="6" width="16" height="12" rx="3" />
+              <path d="M8 12h8" />
+              <path d="M12 9v6" />
+            </svg>
+            Uploaded Photo
+            {isUploading && (
+              <span className="photo-preview__processing-badge">
+                Processing...
+              </span>
             )}
           </div>
-        </div>
-      )}
 
-      {/* Processed */}
-      <div className="photo-preview__panel">
-        <span className="photo-preview__label">
-          Processed
-          {isProcessing && <span className="photo-preview__processing-badge">Processing…</span>}
-        </span>
-        <div className={`photo-preview__frame photo-preview__frame--processed${isProcessing ? ' photo-preview__frame--loading' : ''}`}>
-          {processedUrl && !isProcessing ? (
-            <>
-              {!imageLoaded && (
-                <div className="photo-preview__image-preloader">
-                  <LoadingSpinner size="md" />
-                </div>
-              )}
-              <img
-                src={processedUrl}
-                alt="AI-processed — background removed and centred"
-                className={`photo-preview__img photo-preview__img--processed ${imageLoaded ? 'photo-preview__img--loaded' : 'photo-preview__img--loading'}`}
-                onLoad={() => setImageLoaded(true)}
-              />
-            </>
-          ) : (
-            <div className="photo-preview__empty">
-              {isProcessing ? (
-                <div style={{ width: '100%', padding: '20px' }}>
-                  <SkeletonLoader type="editor" />
-                </div>
-              ) : (
-                <p className="photo-preview__empty-text">
-                  Upload and process a photo to preview the AI-generated result
-                </p>
-              )}
+          <button
+            type="button"
+            onClick={() => setToggleOverlay((prev) => !prev)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: toggleOverlay ? '#3b82f6' : '#94a3b8',
+              fontSize: '0.8rem',
+              cursor: 'pointer',
+            }}
+          >
+            {toggleOverlay ? 'Hide Guide' : 'Show Guide'}
+          </button>
+        </div>
+
+        <div
+          className={`photo-preview__frame ${isUploading ? 'photo-preview__frame--loading' : ''}`}
+          style={{ overflow: 'hidden', position: 'relative' }}
+        >
+          <img
+            src={imageUrl}
+            alt={filename}
+            className="photo-preview__img"
+            style={{
+              transform: `scale(${zoom}) rotate(${rotation}deg)`,
+              transition: 'transform 0.2s ease',
+            }}
+          />
+          <VisualCropOverlay visible={toggleOverlay} />
+          {toggleOverlay && (
+            <div className="photo-preview__overlay-grid" aria-hidden="true">
+              <div className="photo-preview__corner photo-preview__corner--tl" />
+              <div className="photo-preview__corner photo-preview__corner--tr" />
+              <div className="photo-preview__corner photo-preview__corner--bl" />
+              <div className="photo-preview__corner photo-preview__corner--br" />
+              <div className="photo-preview__guide--center-line" />
             </div>
           )}
+        </div>
+
+        <div
+          className="photo-preview__actions"
+          style={{
+            display: 'flex',
+            gap: 'var(--space-sm)',
+            marginTop: 'var(--space-sm)',
+          }}
+        >
+          <button
+            className="btn btn-ghost"
+            onClick={onReset}
+            disabled={isUploading}
+            aria-label="Reset and choose another photo"
+            style={{ flex: 1 }}
+          >
+            Re-upload
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={onProceed}
+            disabled={isUploading}
+            aria-label="Proceed to editor"
+            style={{ flex: 1 }}
+          >
+            {isUploading ? 'Processing...' : 'Edit Photo'}
+          </button>
         </div>
       </div>
     </div>

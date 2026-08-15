@@ -1,0 +1,54 @@
+import pytest
+import cv2
+import numpy as np
+import os
+from app.services.compliance_inspector import inspect_compliance
+
+def test_inspect_compliance_nonexistent():
+    report = inspect_compliance("nonexistent_file.jpg")
+    assert report["passed"] is False
+    assert report["hard_fail"] is True
+    assert any(item["id"] == "image_read" for item in report["items"])
+
+def test_inspect_compliance_no_face(tmp_path):
+    img_h, img_w = 400, 300
+    image = np.ones((img_h, img_w, 3), dtype=np.uint8) * 255
+    
+    test_file = str(tmp_path / "test_no_face.jpg")
+    cv2.imwrite(test_file, image)
+    
+    report = inspect_compliance(test_file, "35x45")
+    
+    assert report["passed"] is False
+    assert report["hard_fail"] is True
+    assert any(item["id"] == "face" for item in report["items"])
+
+def test_inspect_compliance_items_structure(tmp_path):
+    image = np.ones((400, 300, 3), dtype=np.uint8) * 200
+    test_file = str(tmp_path / "blank_photo.jpg")
+    cv2.imwrite(test_file, image)
+    
+    report = inspect_compliance(test_file, "35x45")
+    assert "items" in report
+    assert "overall_passed" in report
+
+def test_inspect_compliance_valid_scenario(tmp_path):
+    # Create a synthetic image suitable for inspection workflow
+    image = np.ones((600, 500, 3), dtype=np.uint8) * 240
+    test_file = str(tmp_path / "valid_passport.jpg")
+    cv2.imwrite(test_file, image)
+    
+    report = inspect_compliance(test_file, "35x45")
+    assert "passed" in report
+    assert "hard_fail" in report
+    assert isinstance(report["items"], list)
+
+def test_inspect_compliance_dimension_mismatch(tmp_path):
+    # Create an image with dimensions that violate preset requirements
+    image = np.ones((100, 100, 3), dtype=np.uint8) * 255
+    test_file = str(tmp_path / "invalid_dims.jpg")
+    cv2.imwrite(test_file, image)
+    
+    report = inspect_compliance(test_file, "51x51")
+    assert report["passed"] is False
+    assert any(item["id"] == "resolution" or item["id"] == "dimensions" for item in report["items"])

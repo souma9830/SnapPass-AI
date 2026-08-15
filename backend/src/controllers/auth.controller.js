@@ -1,71 +1,109 @@
-import * as authService  from "../service/auth.service.js";
-import * as passwordResetOtpService from "../service/passwordResetOtp.service.js";
-import { setToken } from "../utils/setToken.js";
-import catchAsync from "../utils/catchAsync.js";
-import { config } from "../config/config.js";
-import { sendEmail } from "../utils/sendEmail.js";
+import * as sessionService from '../services/session.service.js';
+import * as authService from '../service/auth.service.js';
+import * as passwordResetOtpService from '../service/passwordResetOtp.service.js';
+import catchAsync from '../utils/catchAsync.js';
+import SecurityAudit from '../models/securityAudit.model.js';
+import { logSecurityEvent } from '../services/auditLogger.service.js';
+import { config } from '../config/config.js';
+import { NotificationService } from '../services/notification.service.js';
+import { RevocationStoreService } from '../services/revocationStore.service.js';
+
 
 const sendResponse = (res, statusCode, success, message, data) => {
-    res.status(statusCode).json({
-        success,
-        message,
-        data,
-    });
-}
+  res.status(statusCode).json({
+    success,
+    message,
+    data,
+  });
+};
 
 export const register = catchAsync(async (req, res) => {
-    const user = await authService.registerUser(req.body);
-    setToken(res, user);
-    sendResponse(res, 201, true, "User registered successfully", {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-    });
+  const user = await authService.registerUser(req.body);
+  await sessionService.createSession(res, user, req.ip, req.headers['user-agent']);
+  sendResponse(res, 201, true, 'User registered successfully', {
+    id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    role: user.role,
+  });
 });
 
 export const login = catchAsync(async (req, res) => {
-    const { email, password } = req.body;
-    const user = await authService.loginUser(email, password);
-    setToken(res, user);
-    sendResponse(res, 200, true, "User logged in successfully", {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-    });
+  const { email, password } = req.body;
+  const user = await authService.loginUser(email, password);
+  await sessionService.createSession(res, user, req.ip, req.headers['user-agent']);
+  await SecurityAudit.create({
+    action: 'LOGIN_SUCCESS',
+    userId: user._id,
+    email: user.email,
+    ip: req.ip,
+    status: 'SUCCESS'
+  });
+  sendResponse(res, 200, true, 'User logged in successfully', {
+    id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    role: user.role,
+  });
 });
 
 export const getMe = catchAsync(async (req, res) => {
-    const user = await authService.getMe(req.user.id);
-    sendResponse(res, 200, true, "User data retrieved successfully", {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-    });
+  const user = await authService.getMe(req.user.id);
+  sendResponse(res, 200, true, 'User data retrieved successfully', {
+    id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    role: user.role,
+  });
 });
 
 export const logout = catchAsync(async (req, res) => {
-    const isProduction = config.NODE_ENV === "production";
-    res.clearCookie("token", {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        maxAge: 0
-    });
-    sendResponse(res, 200, true, "User logged out successfully", null);
+  const token = req.cookies?.token;
+  if (token) {
+    await sessionService.invalidateSession(token);
+  }
+  const isProduction = config.NODE_ENV === 'production';
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    maxAge: 0,
+    path: "/",
+  });
+  sendResponse(res, 200, true, 'User logged out successfully', null);
+});
+
+export const getActiveSessions = catchAsync(async (req, res) => {
+  const sessions = await sessionService.getActiveSessionsForUser(req.user.id);
+  sendResponse(res, 200, true, 'Active sessions retrieved successfully', sessions);
+});
+
+export const revokeSession = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  await sessionService.invalidateSessionById(id, req.user.id);
+  sendResponse(res, 200, true, 'Session revoked successfully', null);
+});
+
+export const bulkRevokeSessions = catchAsync(async (req, res) => {
+  const { sessionIds } = req.body;
+  if (!Array.isArray(sessionIds) || sessionIds.length === 0) {
+    return sendResponse(res, 400, false, 'sessionIds must be a non-empty array', null);
+  }
+  await sessionService.invalidateSessionsByIds(sessionIds, req.user.id);
+  sendResponse(res, 200, true, `${sessionIds.length} session(s) revoked successfully`, null);
 });
 
 export const requestPasswordReset = catchAsync(async (req, res) => {
-    const { email } = req.body;
-    
-    try {
-        const user = await authService.getUserByEmail(email);
-        
-        const otpRecord = await passwordResetOtpService.generateAndStoreOtp(user._id);
-        
-        const emailHtml = `
+  const { email } = req.body;
+
+  try {
+    const user = await authService.getUserByEmail(email);
+
+    const otpRecord = await passwordResetOtpService.generateAndStoreOtp(
+      user._id
+    );
+
+    const emailHtml = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
                 <div style="text-align: center; padding-bottom: 20px;">
                     <h2 style="color: #2563eb; margin: 0; font-size: 28px; font-weight: bold;">SnapPass AI</h2>
@@ -85,54 +123,73 @@ export const requestPasswordReset = catchAsync(async (req, res) => {
                 </div>
             </div>
         `;
-        
-        await sendEmail(email, "Password Reset OTP", emailHtml);
-    } catch (error) {
-        // If the error is simply that the user wasn't found, we silently ignore it 
-        // to prevent email enumeration. Otherwise, we rethrow the internal error.
-        if (error.statusCode !== 404 && error.name !== "NotFoundError") {
-            throw error;
-        }
-    }
-    
-    // Always return success to not leak account existence
-    sendResponse(res, 200, true, "If an account with that email exists, an OTP has been sent.", null);
-});
 
+    await NotificationService.sendEmail(email, 'Password Reset OTP', emailHtml);
+  } catch (error) {
+    // If the error is simply that the user wasn't found, we silently ignore it
+    // to prevent email enumeration. Otherwise, we rethrow the internal error.
+    if (error.statusCode !== 404 && error.name !== 'NotFoundError') {
+      throw error;
+    }
+  }
+
+  // Always return success to not leak account existence
+  sendResponse(
+    res,
+    200,
+    true,
+    'If an account with that email exists, an OTP has been sent.',
+    null
+  );
+});
 
 export const verifyPasswordResetOtp = catchAsync(async (req, res) => {
-    const { email, otp } = req.body;
-    let user;
-    try {
-        user = await authService.getUserByEmail(email);
-    } catch (error) {
-        // If user not found, return generic success to prevent email enumeration
-        if (error.statusCode === 404 || error.name === "NotFoundError") {
-            return sendResponse(res, 200, true, "OTP verified successfully", null);
-        }
-        throw error;
-    }
-    // Check if OTP is valid without consuming it yet
+  const { email, otp } = req.body;
+
+  // Return a generic response to prevent email enumeration.
+  // Do not let OTP validity / email existence differences leak via response.
+  const genericSuccessMessage =
+    'If the provided information is valid, verification succeeded.';
+
+  try {
+    const user = await authService.getUserByEmail(email);
+    // Validate OTP (may throw). Intentionally swallow any errors to keep response indistinguishable.
     await passwordResetOtpService.checkOtpValidity(user._id, otp);
-    sendResponse(res, 200, true, "OTP verified successfully", null);
+  } catch (error) {
+    // Intentionally ignore all errors (user not found, invalid/expired OTP, too many attempts, etc.)
+    // to avoid leaking account existence or OTP validity.
+  }
+
+  sendResponse(res, 200, true, genericSuccessMessage, null);
 });
 
+export const updateRole = catchAsync(async (req, res) => {
+  const { userId, role } = req.body;
+  if (!['user', 'admin'].includes(role)) {
+    return sendResponse(res, 400, false, 'Role must be "user" or "admin".', null);
+  }
+  const user = await authService.getMe(userId);
+  if (!user) return sendResponse(res, 404, false, 'User not found.', null);
+  user.role = role;
+  await user.save();
+  sendResponse(res, 200, true, 'Role updated successfully', { id: user._id, role: user.role });
+});
 
 export const resetPassword = catchAsync(async (req, res) => {
-    const { email, otp, newPassword } = req.body;
-    let user;
-    try {
-        user = await authService.getUserByEmail(email);
-    } catch (error) {
-        // If user not found, return generic success to prevent email enumeration
-        if (error.statusCode === 404 || error.name === "NotFoundError") {
-            return sendResponse(res, 200, true, "Password reset successfully", null);
-        }
-        throw error;
+  const { email, otp, newPassword } = req.body;
+  let user;
+  try {
+    user = await authService.getUserByEmail(email);
+  } catch (error) {
+    // If user not found, return generic success to prevent email enumeration
+    if (error.statusCode === 404 || error.name === 'NotFoundError') {
+      return sendResponse(res, 200, true, 'Password reset successfully', null);
     }
-    // Verify OTP
-    await passwordResetOtpService.verifyOtp(user._id, otp);
-    // Update Password
-    await authService.updatePassword(user._id, newPassword);
-    sendResponse(res, 200, true, "Password reset successfully", null);
+    throw error;
+  }
+  // Verify OTP
+  await passwordResetOtpService.verifyOtp(user._id, otp);
+  // Update Password
+  await authService.updatePassword(user._id, newPassword);
+  sendResponse(res, 200, true, 'Password reset successfully', null);
 });

@@ -19,6 +19,10 @@ Upload → Auto-process → Generate a print-ready sheet — in seconds.</p>
 ## 📚 Table of Contents
 
 - [📌 What is SnapPass AI?](#-what-is-snappass-ai)
+- [📖 Architecture Overview](docs/ARCHITECTURE.md)
+- [🛠️ Developer Setup & Technical Guide](docs/DEVELOPER_GUIDE.md)
+- [🛡️ Enterprise Security & Hardening Guide](docs/ENTERPRISE_DEPLOYMENT_HARDENING.md)
+- [🤝 Extended Contribution Guidelines](docs/CONTRIBUTING_EXTENDED.md)
 - [✨ What It Does](#-what-it-does)
 - [📸 Website Preview](#-website-preview)
 - [🧭 Project Status](#-project-status)
@@ -27,7 +31,7 @@ Upload → Auto-process → Generate a print-ready sheet — in seconds.</p>
 - [🚀 Getting Started](#-getting-started)
 - [🐳 Docker (Compose)](#-docker-compose)
 - [🗺️ App Flow (UI)](#️%EF%B8%8F-app-flow-ui)
-- [📡 API Endpoints](#-api-endpoints)
+- [📡 API Endpoints](docs/API_REFERENCE.md)
 - [🌍 Supported Passport Photo Sizes](#-supported-passport-photo-sizes)
 - [🔧 Environment Variables](#-environment-variables)
 - [🛣️ Roadmap](#️%EF%B8%8F-roadmap)
@@ -94,6 +98,8 @@ No expensive studio. No complicated software. Just upload, click, and print.
 | Backend (Express) | 🟡 Scaffold ready — needs controller logic |
 | Python AI Service | 🟡 Structure ready — needs OpenCV / rembg logic |
 | Database (MongoDB) | 🔲 Structure planned — not yet implemented |
+
+> **Security note:** The Python AI service now validates all client-supplied `file_path` values against the upload directory boundary and checks magic bytes before processing. Missing dependencies (e.g. `rembg`) are handled with graceful error messages instead of crashing the service.
 
 ---
 
@@ -247,9 +253,9 @@ npm install
 npm run dev
 ```
 
-Backend runs at [http://localhost:3000](http://localhost:3000).
+Backend runs at [http://localhost:5000](http://localhost:5000).
 
-Health check: `GET http://localhost:3000/health`
+Health check: `GET http://localhost:5000/health`
 
 ---
 
@@ -262,6 +268,8 @@ python main.py
 ```
 
 AI service runs at [http://localhost:8000](http://localhost:8000).
+
+> **Setup guide:** See [docs/PYTHON_AI_SETUP.md](docs/PYTHON_AI_SETUP.md) for endpoint details, security notes, and how to add new presets.
 
 ---
 
@@ -306,7 +314,20 @@ Home
 | `GET`  | `/api/process/preview/:filename` | Get processed preview |
 | `POST` | `/api/print/generate-sheet` | Generate A4 print sheet |
 | `GET`  | `/api/print/presets` | List size presets |
-| `GET`  | `/health` | Backend health check |
+| `GET`  | `/health` | Backend health check (always 200) |
+| `GET`  | `/health/readiness` | Readiness probe (200 = healthy, 503 = degraded) |
+
+### Print Sheet Generation — Input Validation
+
+The `/api/print/generate-sheet` endpoint validates all inputs and returns `400` for invalid values:
+
+| Field | Type | Constraints | Default |
+|-------|------|-------------|---------|
+| `quantity` | integer | 1–50 | 8 |
+| `bg_color` | array | Exactly 3 integers (0–255) | `[255, 255, 255]` |
+| `draw_guides` | boolean | `true`/`false` (string accepted) | `true` |
+| `page_size` | string | `a4`, `letter`, or `4x6` | `a4` |
+| `photo_path` / `photo_paths` | string / array | Valid filename(s) in uploads directory | — |
 
 ---
 
@@ -327,18 +348,18 @@ Home
 ### Frontend (`frontend/.env`)
 
 ```env
-VITE_API_URL=http://localhost:3000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ### Backend (`backend/.env`)
 
 ```env
-PORT=3000
+PORT=5000
 NODE_ENV=development
 AI_SERVICE_URL=http://localhost:8000
 UPLOAD_DIR=uploads
 MAX_FILE_SIZE=10485760
-CORS_ORIGIN=http://localhost:3000
+CORS_ORIGIN=http://localhost:5173
 MONGO_URI=mongodb://localhost:27017/snappass
 ```
 
@@ -370,6 +391,29 @@ MONGO_URI=mongodb://localhost:27017/snappass
 - [ ] Deploy guide (Vercel + Render + Railway)
 - [ ] PWA support
 - [ ] Dark mode
+
+---
+
+## 🔒 Security & Dependencies
+
+SnapPass AI uses **Dependabot** for automated dependency updates across all ecosystems:
+
+| Ecosystem | Location | Schedule |
+|-----------|----------|----------|
+| npm | `/frontend`, `/backend` | Every Monday |
+| pip | `/python-ai-service` | Every Tuesday |
+| Docker | All Dockerfiles | Every Wednesday |
+| GitHub Actions | `.github/workflows` | Every Thursday |
+
+All dependency PRs are automatically labeled `dependencies` and assigned to maintainers. We also run:
+
+- **npm audit** weekly to detect high/critical vulnerabilities
+- **Trivy** filesystem scan for container and infrastructure issues
+- **Semgrep** SAST analysis on every PR for JavaScript and Python
+- **OpenSSF Scorecard** to track overall security posture
+- **CodeQL** deep code analysis on every push to master
+
+For reporting security vulnerabilities, see our [SECURITY.md](SECURITY.md) policy.
 
 ---
 
@@ -419,3 +463,29 @@ You are free to use, modify, and distribute this project for both personal and c
 [⭐ Star on GitHub](https://github.com/souma9830/SnapPass-AI) · [🐞 Report a Bug](https://github.com/souma9830/SnapPass-AI/issues/new?template=bug_report.md) · [💡 Request a Feature](https://github.com/souma9830/SnapPass-AI/issues/new?template=feature_request.md)
 
 </div>
+
+## Troubleshooting
+
+### Installation fails
+- Ensure you are using the supported Node.js version.
+- Run `npm install` or `npm ci`.
+- Delete `node_modules` and reinstall dependencies if necessary.
+
+### Environment variables not loading
+- Verify that a `.env` file exists.
+- Ensure all required variables are defined.
+- Restart the development server after making changes.
+
+## FAQ
+
+### How do I start the project?
+Run:
+
+```bash
+npm install
+npm run dev
+```
+
+### How do I report a bug?
+Please open a GitHub issue with reproduction steps and relevant logs.
+

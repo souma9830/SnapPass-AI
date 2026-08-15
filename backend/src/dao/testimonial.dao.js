@@ -9,8 +9,22 @@ export async function insertSeedTestimonials(seedDocs) {
 }
 
 export async function findApprovedTestimonials() {
+  // Default fetch all approved testimonials, sorted newest first
   return Testimonial.find({ status: "approved" })
     .sort({ createdAt: -1 })
+    .select("-submitterIp -__v")
+    .lean();
+}
+
+// New paginated fetch for approved testimonials
+export async function findApprovedTestimonialsPaginated({ limit, skip }) {
+  // Ensure limit and skip are numbers
+  const numericLimit = Number(limit) || 20;
+  const numericSkip = Number(skip) || 0;
+  return Testimonial.find({ status: "approved" })
+    .sort({ createdAt: -1 })
+    .skip(numericSkip)
+    .limit(numericLimit)
     .select("-submitterIp -__v")
     .lean();
 }

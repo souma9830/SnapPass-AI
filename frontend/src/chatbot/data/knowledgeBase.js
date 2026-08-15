@@ -1365,4 +1365,19 @@ export const knowledgeBase = [
         answer:
             "Avoid blurry, dark, low-quality photos, side-facing poses, obstructed faces, sunglasses, hats, and busy backgrounds."
     },
+    {
+        question: "Does SnapPass AI work offline?",
+        keywords: ["offline", "no internet", "cached", "sync", "network status", "offline mode", "drafts"],
+        answer: "Yes, SnapPass AI includes offline sync and IndexedDB local draft caching so your edits are preserved even when disconnected."
+    },
+    {
+        question: "How do I export my photo sheet to PDF?",
+        keywords: ["pdf", "pdf export", "download pdf", "print sheet pdf", "crop marks"],
+        answer: "From the Print Preview page, you can choose 150/300/600 DPI target quality and export your photo sheet directly as a printable PDF."
+    },
+    {
+        question: "How do I change the application theme accent color?",
+        keywords: ["theme", "accent color", "palette", "dark mode", "high contrast", "customize colors"],
+        answer: "Click the Theme palette button in the top navigation bar to choose from custom accent colors and high-contrast mode."
+    }
 ];

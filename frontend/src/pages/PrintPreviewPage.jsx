@@ -1,12 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import QuantityInput from '../components/QuantityInput';
-import PrintButton from '../components/PrintButton';
+import PrintLayoutSelector from '../components/PrintLayoutSelector';
+import CustomPaperSizeCalculator from '../components/CustomPaperSizeCalculator';
+import PrintCostEstimator from '../components/PrintCostEstimator';
+import PrintSheetLayoutCustomizer from '../components/PrintSheetLayoutCustomizer';
+import PrintBleedMarginAdjuster from '../components/PrintBleedMarginAdjuster';
+import CustomPaperSizeCalculator from '../components/CustomPaperSizeCalculator';
+import DownloadPackagePanel from '../components/DownloadPackagePanel';
+import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import useBatchExport from '../hooks/useBatchExport';
 import './PrintPreviewPage.css';
 import EmptyState from '../components/EmptyState';
+import ConfirmModal from '../components/ConfirmModal';
+import ShareModal from '../components/share/ShareModal';
 import { motion } from 'framer-motion';
 import { generateSheet } from '../services/photoService';
-import { calculatePasswordStrength } from '../utils/passwordStrength';
+import { CustomPrintTemplateModal } from '../components/print/CustomPrintTemplateModal';
+import { PrintLayoutOptions } from '../components/editor/PrintLayoutOptions';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import {
@@ -15,31 +26,41 @@ import {
   saveSessionToHistory,
 } from '../utils/sessionManager';
 
-/**
- * PrintPreviewPage — Step 3 & 4.
- * Shows the processed photo in a simulated A4 sheet grid.
- * User picks quantity, then downloads or prints the sheet.
- */
 function PrintPreviewPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
-  const t = translations[language];
+  const t = translations[language] || translations.en;
   const { state } = useLocation();
   const savedSession = getSession();
+  useDocumentMeta({
+    title: 'Print Preview',
+    description: 'Preview and print your passport photos on A4 paper.',
+  });
 
+  const batchExport = useBatchExport();
   const [quantity, setQuantity] = useState(savedSession?.quantity || 6);
+  const [layout, setLayout] = useState('a4');
+  const [layoutOptions, setLayoutOptions] = useState({
+    paperSize: savedSession?.paperSize || 'A4',
+    spacing: savedSession?.spacing || 10,
+    margins: savedSession?.margins || 20,
+    orientation: savedSession?.orientation || 'portrait'
+  });
+  const [selectedDpi, setSelectedDpi] = useState(300);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
+  const [customPreset, setCustomPreset] = useState('35x45');
+  const [showGuides, setShowGuides] = useState(true);
   const [password, setPassword] = useState('');
   const [strength, setStrength] = useState(0);
   const [strengthLabel, setStrengthLabel] = useState('');
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const result = calculatePasswordStrength(password);
-      setStrength(result.score);
-      setStrengthLabel(result.label);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [password]);
+  const processedPhotos = state?.processedPhotos
+    ? [...state.processedPhotos]
+    : savedSession?.processedPhotos
+      ? [...savedSession.processedPhotos]
+      : [];
 
   useEffect(() => {
     const sessionData = {
@@ -48,21 +69,23 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
       filename: state?.filename || savedSession?.filename,
       background: state?.background || savedSession?.background,
       sizePreset: state?.sizePreset || savedSession?.sizePreset,
+      processedPhotos,
       quantity,
     };
 
-    if (sessionData.processedUrl) {
+    if (sessionData.processedUrl || sessionData.processedPhotos.length > 0) {
       saveSession(sessionData);
     }
-  }, [state, quantity]);
+  }, [state, quantity, processedPhotos, customPreset, showGuides, layout]);
 
-  const handleGenerateSheet = async () => {
+  const handleGenerateSheet = useCallback(async () => {
     setIsGenerating(true);
     try {
       const blob = await generateSheet({
-        filename: state?.filename || savedSession?.filename,
+        filenames: processedPhotos.map(p => p.filename),
         quantity,
-        photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
+        photoSizePreset: processedPhotos[0]?.sizePreset || state?.sizePreset || savedSession?.sizePreset,
+        layout,
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -77,7 +100,7 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
         background: state?.background || savedSession?.background,
         photoSizePreset: state?.sizePreset || savedSession?.sizePreset,
         quantity,
-        status: 'processed',
+        status: 'completed',
         outputStatus: 'downloaded',
         hasOutput: true,
         exportType: 'print-sheet',
@@ -86,25 +109,24 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
       alert(error.message || 'Sheet generation failed.');
     } finally {
       setIsGenerating(false);
+      setShowConfirm(false);
     }
-  };
+  }, [state, savedSession, quantity, layout, processedPhotos]);
 
   const handlePrintDirect = () => {
     window.print();
   };
 
-  // Build grid of photo slots
   const slots = Array.from({ length: quantity });
 
-  // If user lands here directly without uploading, redirect
-  if (!(state?.processedUrl || savedSession?.processedUrl)) {
+  if (processedPhotos.length === 0) {
     return (
       <EmptyState
         title={t.noProcessedPhoto}
         description={t.uploadBeforePrint}
         buttonText={t.uploadPhotoButton}
         darkMode={darkMode}
-        toggleTheme={toggleTheme}
+        redirectTo="/upload"
       />
     );
   }
@@ -144,7 +166,6 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
         </motion.div>
 
         <div className="print-page__layout">
-          {/* A4 Sheet Preview */}
           <motion.section
             className="print-page__sheet card"
             aria-label="A4 sheet preview"
@@ -159,19 +180,28 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               className="sheet-grid"
               style={{ '--cols': Math.ceil(Math.sqrt(quantity)) }}
             >
-              {slots.map((_, i) => (
-                <div key={i} className="sheet-slot">
-                  <img
-                    src={state?.processedUrl || savedSession?.processedUrl}
-                    alt={`Sheet slot ${i + 1}`}
-                    className="sheet-slot__img"
-                  />
-                </div>
-              ))}
+              {slots.map((_, i) => {
+                const photoToRender = processedPhotos[i % processedPhotos.length];
+                const rawUrl = photoToRender?.processedUrl || state?.processedUrl || savedSession?.processedUrl || '';
+                const displayUrl = rawUrl.startsWith('/') ? rawUrl : (rawUrl.startsWith('http') || rawUrl.startsWith('data:') || rawUrl.startsWith('blob:') ? rawUrl : `/${rawUrl}`);
+                return (
+                  <div key={i} className="sheet-slot">
+                    <img
+                      src={displayUrl}
+                      alt={`Sheet slot ${i + 1}`}
+                      className="sheet-slot__img"
+                      onError={(e) => {
+                        if (savedSession?.processedUrl && e.target.src !== savedSession.processedUrl) {
+                          e.target.src = savedSession.processedUrl;
+                        }
+                      }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </motion.section>
 
-          {/* Controls */}
           <motion.aside
             className="print-page__controls card"
             aria-label="Print settings"
@@ -206,6 +236,67 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               toggleTheme={toggleTheme}
               value={quantity}
               onChange={setQuantity}
+            />
+
+            <PrintBleedMarginAdjuster
+              bleedMm={layoutOptions.bleed || 2}
+              marginMm={layoutOptions.margins || 15}
+              onChangeBleed={(val) => setLayoutOptions((prev) => ({ ...prev, bleed: val }))}
+              onChangeMargin={(val) => setLayoutOptions((prev) => ({ ...prev, margins: val }))}
+              darkMode={darkMode}
+            />
+
+            <CustomPaperSizeCalculator
+              onApplyCustomPaper={(customSpec) =>
+                setLayoutOptions((prev) => ({ ...prev, paperSize: customSpec.label, ...customSpec }))
+              }
+              darkMode={darkMode}
+            />
+
+            <hr className="divider" />
+
+            <PrintLayoutSelector
+              selectedLayout={layout}
+              onChange={setLayout}
+              selectedDpi={selectedDpi}
+              onChangeDpi={setSelectedDpi}
+              darkMode={darkMode}
+            />
+
+            <CustomPaperSizeCalculator
+              onApplyCustomPaper={(customSpec) =>
+                setLayoutOptions((prev) => ({ ...prev, paperSize: customSpec.label, ...customSpec }))
+              }
+              darkMode={darkMode}
+            />
+
+            <PrintCostEstimator
+              photoCount={quantity}
+              darkMode={darkMode}
+            />
+
+            <PrintLayoutOptions
+              options={layoutOptions}
+              onChange={setLayoutOptions}
+            />
+
+            <hr className="divider" />
+
+            <PrintSheetLayoutCustomizer
+              selectedPreset={customPreset}
+              onSelectPreset={setCustomPreset}
+              showCropGuides={showGuides}
+              onToggleCropGuides={setShowGuides}
+              onDownloadPDF={handleGenerateSheet}
+              isExporting={isGenerating}
+            />
+
+            <PrintBleedMarginAdjuster
+              bleedMm={layoutOptions.bleed || 2}
+              marginMm={layoutOptions.margins || 15}
+              onChangeBleed={(val) => setLayoutOptions((prev) => ({ ...prev, bleed: val }))}
+              onChangeMargin={(val) => setLayoutOptions((prev) => ({ ...prev, margins: val }))}
+              darkMode={darkMode}
             />
 
             <hr className="divider" />
@@ -251,13 +342,74 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
 
             <hr className="divider" />
 
-            <PrintButton
-              onClick={handleGenerateSheet}
-              isLoading={isGenerating}
-              darkMode={darkMode}
-              toggleTheme={toggleTheme}
-              disabled={isGenerating || strength === 0}
+            <Link
+              to="/"
+              className={`btn btn-secondary ${darkMode ? 'btn-secondary-dark' : ''}`}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                background: 'rgba(59,130,246,0.1)',
+                color: '#3b82f6',
+                border: '1px dashed #3b82f6',
+                textDecoration: 'none'
+              }}
+            >
+              + Add another person
+            </Link>
+
+            <DownloadPackagePanel
+              processedUrl={state?.processedUrl || savedSession?.processedUrl}
+              originalFileName={state?.filename || savedSession?.filename}
             />
+
+            <button
+              onClick={() => batchExport.exportFiles(processedPhotos.map(p => p.filename))}
+              disabled={batchExport.exporting}
+              className={`btn ${darkMode ? 'btn-secondary-dark' : 'btn-secondary'}`}
+              style={{
+                marginTop: '10px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600'
+              }}
+            >
+              {batchExport.exporting ? 'Zipping...' : '📦 Export All as ZIP'}
+            </button>
+
+            <button
+              onClick={() => setShowShareModal(true)}
+              className={`btn ${darkMode ? 'btn-secondary-dark' : 'btn-secondary'}`}
+              style={{
+                marginTop: '10px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+                color: '#ffffff',
+                border: 'none',
+              }}
+            >
+              🔒 Share Expiring Link
+            </button>
 
             <button
               onClick={handlePrintDirect}
@@ -272,10 +424,10 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
                 padding: '12px',
                 borderRadius: '8px',
                 cursor: 'pointer',
-                fontWeight: '600'
+                fontWeight: '600',
               }}
             >
-              📷 Print Direct (A4 / PDF)
+              Print Direct (A4 / PDF)
             </button>
 
             <Link
@@ -289,9 +441,47 @@ function PrintPreviewPage({ darkMode, toggleTheme }) {
               </span>
               {t.backToEditor}
             </Link>
+
+            <Link
+              to="/"
+              className={`print-page__home-btn ${darkMode ? 'print-page__home-btn-dark' : ''}`}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M3 12l9-9 9 9" />
+                <path d="M5 10v9a1 1 0 0 0 1 1h3v-5h6v5h3a1 1 0 0 0 1-1v-9" />
+              </svg>
+              Back to Home
+            </Link>
           </motion.aside>
         </div>
       </div>
+
+      {showConfirm && (
+        <ConfirmModal
+          title="Generate Print Sheet?"
+          message={`This will create an A4 sheet with ${quantity} photos. You can download it as a PNG file.`}
+          confirmLabel="Generate"
+          cancelLabel="Cancel"
+          onConfirm={handleGenerateSheet}
+          onCancel={() => setShowConfirm(false)}
+          darkMode={darkMode}
+          loading={isGenerating}
+        />
+      )}
+
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        filename={state?.filename || savedSession?.filename || processedPhotos[0]?.filename || 'photo.jpg'}
+        originalName={state?.filename || savedSession?.filename}
+      />
     </div>
   );
 }

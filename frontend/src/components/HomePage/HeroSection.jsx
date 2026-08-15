@@ -11,7 +11,7 @@ const HeroSection = ({ darkMode, toggleTheme }) => {
   return (
     <section className={`home-page ${darkMode ? 'home-page-dark' : 'home-page-light'}`}>
 
-      <div className="hero" aria-labelledby="hero-title">
+      <div className="hero" aria-labelledby="hero-title" data-issue-ref="#1565">
         <motion.div
           className="hero__inner"
           variants={fadeUpVariant}

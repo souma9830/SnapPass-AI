@@ -39,6 +39,13 @@ export const features = [
   },
 ];
 
+export const stats = [
+  { value: '10K+', label: 'Photos Processed' },
+  { value: '50+', label: 'Countries Supported' },
+  { value: '99.9%', label: 'Face Detection Rate' },
+  { value: '4.7/5', label: 'User Rating' },
+];
+
 export const steps = [
   {
     label: 'Upload your photo',

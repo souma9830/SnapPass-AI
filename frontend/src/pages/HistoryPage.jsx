@@ -1,142 +1,266 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  getSessionHistory,
-  deleteSessionFromHistory,
-  clearSessionHistory,
-  saveSession,
-} from '../utils/sessionManager';
+import { motion } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations/translations';
+import useOfflineStorage from '../hooks/useOfflineStorage';
+import { useBatchExportQueue } from '../hooks/useBatchExportQueue';
+import BatchProcessingQueueModal from '../components/BatchProcessingQueueModal';
+import HistoryCard from '../components/HistoryCard';
+import useUploadSearch from '../hooks/useUploadSearch';
+import useHistory from '../hooks/useHistory';
 import './HistoryPage.css';
 
-function HistoryPage() {
+function HistoryPage({ darkMode }) {
+  const { language } = useLanguage();
+  const t = translations[language] || {};
   const navigate = useNavigate();
-  const [sessions, setSessions] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const { history = [], deleteSession, clearHistory } = useHistory();
+  const { cachedPhotos } = useOfflineStorage();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [isQueueModalOpen, setIsQueueModalOpen] = useState(false);
 
-  useEffect(() => {
-    loadSessions();
-  }, []);
+  const {
+    queue,
+    addToQueue,
+    clearCompleted,
+    updateItemStatus,
+    retryFailed,
+    removeFromQueue,
+  } = useBatchExportQueue();
 
-  const loadSessions = () => {
-    const history = getSessionHistory();
-    setSessions(history);
-  };
+  const combinedHistory = useMemo(() => {
+    const offlineItems = (cachedPhotos || []).map((photo) => ({
+      id: `offline-${photo.id}`,
+      filename: photo.filename || 'Cached Photo',
+      savedAt: photo.cachedAt,
+      isOffline: true,
+      status: 'completed',
+      processedUrl: photo.processedUrl,
+      sizePreset: photo.sizePreset || '35x45',
+      hasOutput: true,
+    }));
+    return [...offlineItems, ...history];
+  }, [cachedPhotos, history]);
 
-  const handleRestore = (session) => {
-    saveSession(session);
+  const {
+    searchTerm: search,
+    setSearchTerm: setSearch,
+    filteredItems: filtered,
+  } = useUploadSearch(combinedHistory);
 
-    if (session.step === 'upload') {
-      navigate('/upload');
-    } else if (session.step === 'editor') {
-      navigate('/editor');
-    } else if (session.step === 'print-preview') {
-      navigate('/print-preview');
+  const handleCardClick = (session) => {
+    if (session.hasOutput && session.processedUrl) {
+      navigate('/print-preview', {
+        state: {
+          processedUrl: session.processedUrl,
+          filename: session.filename,
+        },
+      });
     }
   };
 
-  const handleDelete = (sessionId) => {
-    deleteSessionFromHistory(sessionId);
-    loadSessions();
+  const handleBatchExport = () => {
+    if (filtered.length > 0) {
+      const itemsToExport = filtered.map((s) => ({
+        id: s.id,
+        title: s.filename || 'Passport Photo Session',
+        processedUrl: s.processedUrl,
+      }));
+      addToQueue(itemsToExport);
+      setIsQueueModalOpen(true);
+    }
   };
 
-  const handleClearAll = () => {
-    clearSessionHistory();
-    setSessions([]);
+  const handleClear = () => {
+    clearHistory();
+    setShowConfirm(false);
   };
-
-  const filteredSessions = sessions.filter((session) => {
-    const query = searchQuery.toLowerCase();
-    const filename = (session.filename || '').toLowerCase();
-    const step = (session.step || '').toLowerCase();
-    const preset = (session.photoSizePreset || '').toLowerCase();
-    return filename.includes(query) || step.includes(query) || preset.includes(query);
-  });
 
   return (
     <div className="history-page">
-      <div className="history-page__header">
-        <h1 className="history-page__title">Passport Session History</h1>
-        {sessions.length > 0 && (
-          <button className="history-page__clear-btn" onClick={handleClearAll}>
-            Clear History
-          </button>
-        )}
-      </div>
+      <motion.div
+        className="history-page__header"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="history-page__header-left">
+          <h1
+            className={`section-title ${darkMode ? 'section-title-dark' : ''}`}
+          >
+            {t.historyTitle || 'Session History'}
+          </h1>
+          <p
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : ''}`}
+          >
+            {t.historySubtitle || 'Review your past passport photo sessions'}
+          </p>
+        </div>
+        <div className="history-page__header-actions flex gap-2">
+          {filtered.length > 0 && (
+            <button
+              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"
+              onClick={handleBatchExport}
+              aria-label="Batch Export Queue"
+            >
+              Export Queue ({queue.length})
+            </button>
+          )}
+          {history.length > 0 && (
+            <button
+              className="history-page__clear-btn"
+              onClick={() => setShowConfirm(true)}
+              aria-label="Clear all history"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2l-1-14" />
+              </svg>
+              {t.clearAll || 'Clear All'}
+            </button>
+          )}
+        </div>
+      </motion.div>
 
-      {sessions.length > 0 && (
-        <div className="history-page__search-container">
+      {history.length > 0 && (
+        <div className="history-page__search">
+          <svg
+            className="history-page__search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
           <input
-            type="text"
             className="history-page__search-input"
-            placeholder="Search by filename, step or size preset..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            type="search"
+            placeholder={t.searchHistory || 'Search sessions...'}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label={t.searchHistory || 'Search sessions'}
           />
         </div>
       )}
 
-      {sessions.length === 0 ? (
-        <p className="history-page__empty">No saved sessions found.</p>
-      ) : filteredSessions.length === 0 ? (
-        <p className="history-page__empty">No matching sessions found.</p>
-      ) : (
-        <div className="history-page__list">
-          {filteredSessions.map((session) => (
-            <div key={session.id} className="history-page__card">
-              <div className="history-page__card-content">
-                <p className="history-page__filename">
-                  {session.filename || 'Untitled Session'}
-                </p>
-                <p className="history-page__step">Step: {session.step}</p>
-                {session.status && (
-                  <p className="history-page__status">
-                    Status: {session.status}
-                  </p>
-                )}
-                {session.photoSizePreset && (
-                  <p className="history-page__photo-size">
-                    Photo Size: {session.photoSizePreset}
-                  </p>
-                )}
-                {session.outputStatus && (
-                  <p className="history-page__output-status">
-                    Output: {session.outputStatus}
-                  </p>
-                )}
-                {session.hasOutput !== undefined && (
-                  <p className="history-page__has-output">
-                    Output Available: {session.hasOutput ? 'Yes' : 'No'}
-                  </p>
-                )}
-                {session.exportType && (
-                  <p className="history-page__export-type">
-                    Export Type: {session.exportType}
-                  </p>
-                )}
-                <p className="history-page__date">
-                  {new Date(session.savedAt).toLocaleString()}
-                </p>
-              </div>
-              <div className="history-page__card-actions">
-                <button
-                  className="history-page__restore-btn"
-                  onClick={() => handleRestore(session)}
-                >
-                  Restore
-                </button>
-                <button
-                  className="history-page__delete-btn"
-                  onClick={() => handleDelete(session.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
+      <div className="history-page__count">
+        {filtered.length === 0
+          ? search
+            ? t.noResults || 'No matching sessions'
+            : t.noHistory || 'No sessions yet'
+          : `${filtered.length} ${filtered.length === 1 ? 'session' : 'sessions'}`}
+      </div>
+
+      {filtered.length > 0 ? (
+        <motion.div
+          className="history-page__list"
+          role="list"
+          aria-label="Session history"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.05 } },
+          }}
+        >
+          {filtered.map((session) => (
+            <motion.div
+              key={session.id}
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+              }}
+            >
+              <HistoryCard
+                session={session}
+                onDelete={deleteSession}
+                onClick={handleCardClick}
+              />
+            </motion.div>
           ))}
+        </motion.div>
+      ) : (
+        <div className="history-page__empty">
+          <svg
+            className="history-page__empty-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="3" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <div className="history-page__empty-title">
+            {search
+              ? t.noSearchResults || 'No results found'
+              : t.noHistoryTitle || 'No session history'}
+          </div>
+          <div>
+            {search
+              ? t.tryDifferentSearch || 'Try a different search term'
+              : t.startWithUpload ||
+                'Upload and process a photo to get started'}
+          </div>
         </div>
       )}
+
+      {showConfirm && (
+        <div
+          className="history-page__confirm-overlay"
+          onClick={() => setShowConfirm(false)}
+        >
+          <div
+            className="history-page__confirm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="history-page__confirm-title">
+              {t.confirmClearTitle || 'Clear all history?'}
+            </div>
+            <div className="history-page__confirm-text">
+              {t.confirmClearText ||
+                'This will permanently delete all saved sessions. This action cannot be undone.'}
+            </div>
+            <div className="history-page__confirm-actions">
+              <button
+                className="history-page__confirm-cancel"
+                onClick={() => setShowConfirm(false)}
+              >
+                {t.cancel || 'Cancel'}
+              </button>
+              <button
+                className="history-page__confirm-delete"
+                onClick={handleClear}
+              >
+                {t.clearAll || 'Clear All'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <BatchProcessingQueueModal
+        isOpen={isQueueModalOpen}
+        onClose={() => setIsQueueModalOpen(false)}
+        queue={queue}
+        onClearCompleted={clearCompleted}
+        onRetry={retryFailed}
+        onRemove={removeFromQueue}
+      />
     </div>
   );
 }
 
+// Maintains default ES module export functionality
 export default HistoryPage;

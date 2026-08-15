@@ -3,16 +3,26 @@ import cv2
 from dataclasses import dataclass
 from typing import Tuple, Optional
 
+__all__ = [
+    "BLUR_THRESHOLD",
+    "MIN_FACE_W",
+    "MIN_FACE_H",
+    "FaceQualityReport",
+    "assess_face_quality"
+]
+
 BLUR_THRESHOLD = 80.0
 MIN_FACE_W = 300
 MIN_FACE_H = 375
 
 
+# Enhanced Face Quality Gate for Studio Passport Photo AI Pipeline
 @dataclass
 class FaceQualityReport:
     passed: bool
     face_count: int = 0
     blur_score: float = 0.0
+    quality_score: float = 0.0
     face_region: Optional[Tuple[int, int, int, int]] = None
     rejection_code: Optional[str] = None
     rejection_reason: Optional[str] = None
@@ -24,7 +34,7 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
     if not os.path.exists(image_path):
         return FaceQualityReport(
             passed=False,
-            rejection_code="FILE_NOT_FOUND",
+            rejection_code="UNREADABLE_FILE",
             rejection_reason="The specified image file does not exist.",
             user_hint="Please select and upload a valid image file."
         )
@@ -32,7 +42,7 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
     if os.path.getsize(image_path) == 0:
         return FaceQualityReport(
             passed=False,
-            rejection_code="EMPTY_FILE",
+            rejection_code="UNREADABLE_FILE",
             rejection_reason="The uploaded file is empty.",
             user_hint="The file appears to contain no data. Please upload a fresh photo.")
 
@@ -50,13 +60,13 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
             if not (is_jpeg or is_png or is_webp):
                 return FaceQualityReport(
                     passed=False,
-                    rejection_code="INVALID_FORMAT",
+                    rejection_code="INVALID_IMAGE_HEADER",
                     rejection_reason="Unapproved file format or invalid image header.",
                     user_hint="Only standard JPEG, PNG, or WebP images are accepted.")
     except Exception as e:
         return FaceQualityReport(
             passed=False,
-            rejection_code="UNREADABLE_IMAGE",
+            rejection_code="UNREADABLE_FILE",
             rejection_reason=f"Failed to read image headers: {str(e)}",
             user_hint="The file couldn't be opened. Please verify it isn't corrupted.")
 
@@ -97,19 +107,15 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
             rejection_reason=f"Image is too blurry (score: {blur_score:.1f}, minimum: {BLUR_THRESHOLD}).",
             user_hint="Take the photo in good lighting and hold the camera steady.")
 
-    # 2. Face count detection
-    cascade = cv2.CascadeClassifier(
-        cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
-    )
-    faces = cascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(
-            100,
-            100))
+    from app.services.face_detection import detect_largest_face
 
-    if len(faces) == 0:
+    # 2. Face count detection
+    faces_detected = []
+    face_rect = detect_largest_face(gray)
+    if face_rect is not None:
+        faces_detected.append(face_rect)
+
+    if len(faces_detected) == 0:
         return FaceQualityReport(
             passed=False,
             face_count=0,

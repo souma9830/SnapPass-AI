@@ -1,0 +1,87 @@
+.print-cost-estimator {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.print-cost-estimator-dark {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #f8fafc;
+}
+
+.cost-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 0.85rem 0;
+}
+
+.cost-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.cost-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cost-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.print-cost-estimator-dark .cost-label {
+  color: #94a3b8;
+}
+
+.cost-input {
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.85rem;
+  background: #ffffff;
+}
+
+.print-cost-estimator-dark .cost-input {
+  background: #1e293b;
+  border-color: #475569;
+  color: #ffffff;
+}
+
+.cost-summary-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.strike-cost {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.cost-savings-badge {
+  margin-top: 0.35rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.print-cost-estimator-dark .cost-savings-badge {
+  color: #34d399;
+}

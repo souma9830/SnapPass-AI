@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import { config } from "../config/config.js";
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import { config } from '../config/config.js';
 
 const userSchema = new mongoose.Schema(
   {
@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: ['user', 'admin'],
+      default: 'user',
     },
     lastLoginAt: {
       type: Date,
@@ -38,8 +38,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function hashPassword(next) {
-  if (!this.isModified("password")) {
+userSchema.index({ role: 1, createdAt: -1 });
+userSchema.index({ lastLoginAt: 1 });
+
+userSchema.pre('save', async function hashPassword(next) {
+  if (!this.isModified('password')) {
     return next();
   }
 
@@ -47,10 +50,12 @@ userSchema.pre("save", async function hashPassword(next) {
   next();
 });
 
-userSchema.methods.comparePassword = async function comparePassword(candidatePassword) {
+userSchema.methods.comparePassword = async function comparePassword(
+  candidatePassword
+) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;

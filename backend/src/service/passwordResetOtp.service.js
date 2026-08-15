@@ -5,7 +5,7 @@
 
 import bcrypt from "bcryptjs";
 import { createPasswordResetOtp, findLatestPendingOtp, incrementOtpAttempts, updateOtpState, invalidateAllPendingOtps, findLatestOtpIncludingExpired } from "../dao/passwordResetOtp.dao.js";
-import { generateOTP } from "../utils/generateOTP.js";
+import { generateOTP } from "../utils/security.js";
 import AppError from "../utils/errors/AppError.js";
 
 export async function generateAndStoreOtp(userId) {

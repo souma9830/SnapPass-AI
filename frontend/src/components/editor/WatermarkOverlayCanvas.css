@@ -1,0 +1,11 @@
+.watermark-overlay-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 32px;
+  font-weight: bold;
+  pointer-events: none;
+}

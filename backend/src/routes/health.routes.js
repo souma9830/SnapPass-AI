@@ -2,67 +2,37 @@ import express from 'express';
 import mongoose from 'mongoose';
 import axios from 'axios';
 import { config } from '../config/config.js';
+import { isRedisAvailable } from '../config/redis.js';
+import { HealthCheckService } from '../services/healthCheck.service.js';
+import { formatHealthResponse } from '../utils/healthResponse.formatter.js';
+import { validateHealthQuery } from '../validation/healthQuery.validation.js';
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.json(formatHealthResponse('UP'));
+});
+
+router.get('/health', (req, res) => {
+  const metrics = HealthCheckService.getSystemMetrics();
+  res.json(formatHealthResponse('UP', metrics));
+});
+
+router.get('/health/readiness', async (req, res) => {
+  const readiness = await HealthCheckService.performReadinessCheck();
+  const statusCode = readiness.status === 'UP' ? 200 : 503;
+  res.status(statusCode).json(readiness);
+});
+
+
 router.get('/diagnostics', async (req, res) => {
-  // Compute event loop lag
-  const start = Date.now();
-  await new Promise((resolve) => setImmediate(resolve));
-  const eventLoopLag = Date.now() - start;
-
-  const diagnostics = {
-    timestamp: new Date(),
-    uptime: process.uptime(),
-    process: {
-      pid: process.pid,
-      memoryUsage: process.memoryUsage(),
-      cpuUsage: process.cpuUsage(),
-      activeHandles: process._getActiveHandles ? process._getActiveHandles().length : 0,
-      activeRequests: process._getActiveRequests ? process._getActiveRequests().length : 0,
-      eventLoopLagMs: eventLoopLag
-    },
-    services: {
-      mongodb: 'unknown',
-      pythonService: 'unknown'
-    }
-  };
-
-  // 1. MongoDB Check
   try {
-    const dbState = mongoose.connection.readyState;
-    const states = {
-      0: 'disconnected',
-      1: 'connected',
-      2: 'connecting',
-      3: 'disconnecting'
-    };
-    diagnostics.services.mongodb = states[dbState] || 'unknown';
+    const diagnostics = await HealthDiagnosticsService.getFullDiagnostics();
+    const statusCode = diagnostics.status === 'HEALTHY' ? 200 : 503;
+    return res.status(statusCode).json(formatHealthResponse(diagnostics.status, diagnostics.metrics, diagnostics.services));
   } catch (err) {
-    diagnostics.services.mongodb = 'error: ' + err.message;
+    return res.status(500).json(formatDiagnosticsError(err));
   }
-
-  // 2. Python AI Service Check
-  try {
-    const pythonUrl = config.aiServiceUrl || 'http://localhost:8000';
-    const response = await axios.get(`${pythonUrl}/health`, { timeout: 3000 });
-    if (response.status === 200) {
-      diagnostics.services.pythonService = 'healthy';
-    } else {
-      diagnostics.services.pythonService = `unhealthy (status: ${response.status})`;
-    }
-  } catch (err) {
-    diagnostics.services.pythonService = 'offline/error: ' + err.message;
-  }
-
-  const isAllHealthy =
-    diagnostics.services.mongodb === 'connected' &&
-    diagnostics.services.pythonService === 'healthy';
-
-  return res.status(isAllHealthy ? 200 : 200).json({
-    status: isAllHealthy ? 'healthy' : 'degraded',
-    ...diagnostics
-  });
 });
 
 export default router;

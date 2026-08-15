@@ -191,7 +191,7 @@
   height: 60%;
   top: 15%;
   left: 23%;
-  border: 2px dashed rgba(244, 63, 94, 0.75); /* Neon rose */
+  border: 2px dashed var(--guide-color, rgba(244, 63, 94, 0.75)); /* Neon rose default */
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Perfect egg/head silhouette */
   box-shadow: 0 0 10px rgba(244, 63, 94, 0.15);
 }
@@ -208,13 +208,13 @@
 /* Eye Level Line (Dashed Neon Cyan) */
 .photo-preview__guide--eye-line {
   top: 45%;
-  border-top: 1.5px dashed rgba(6, 182, 212, 0.85);
+  border-top: 1.5px dashed var(--guide-color, rgba(6, 182, 212, 0.85));
 }
 
 /* Chin Level Line (Dashed Neon Emerald) */
 .photo-preview__guide--chin-line {
   top: 73%;
-  border-top: 1.5px dashed rgba(16, 185, 129, 0.85);
+  border-top: 1.5px dashed var(--guide-color, rgba(16, 185, 129, 0.85));
 }
 
 /* Guideline Tag Styling */

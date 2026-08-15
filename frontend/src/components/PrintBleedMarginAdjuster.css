@@ -1,0 +1,49 @@
+.print-bleed-margin-adjuster {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.print-bleed-margin-adjuster-dark {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #f8fafc;
+}
+
+.bleed-adjuster-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+}
+
+.bleed-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.bleed-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bleed-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.bleed-slider {
+  cursor: pointer;
+}
+
+.bleed-hint {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.print-bleed-margin-adjuster-dark .bleed-hint {
+  color: #94a3b8;
+}

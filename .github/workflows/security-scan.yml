@@ -1,0 +1,11 @@
+name: Security Linter & Code Scan
+
+on: [push, pull_request]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Bandit Security Scan
+        run: pip install bandit && bandit -r ./python-ai-service

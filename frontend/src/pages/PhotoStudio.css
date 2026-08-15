@@ -571,3 +571,10 @@
     color: white !important;
     border-color: #2563eb !important;
 }
+
+.comparison-section {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 16px;
+}

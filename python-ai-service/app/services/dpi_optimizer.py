@@ -1,6 +1,13 @@
 from PIL import Image
 import io
 
+__all__ = [
+    "TARGET_DPI",
+    "PRESETS",
+    "optimise_dpi",
+    "get_preset_dimensions",
+    "list_presets"
+]
 
 TARGET_DPI = 300  # standard for print-quality passport photos
 

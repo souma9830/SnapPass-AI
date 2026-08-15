@@ -217,6 +217,7 @@ def inspect_compliance(image_path: str, size_preset: Optional[str] = None) -> Di
     if image is None:
         return {
             "passed": False,
+            "overall_passed": False,
             "hard_fail": True,
             "items": [
                 {
@@ -239,6 +240,16 @@ def inspect_compliance(image_path: str, size_preset: Optional[str] = None) -> Di
 
     face_rect = _detect_face(gray)
     if not face_rect:
+        if w < 300 or h < 300:
+            items.append({
+                "id": "resolution",
+                "title": "Image resolution",
+                "status": "fail",
+                "detail": f"Image dimensions ({w}x{h}px) are too small.",
+                "code": "LOW_RESOLUTION",
+                "suggestion": "Upload a higher-resolution portrait.",
+                "auto_fixable": False,
+            })
         items.append({
             "id": "face",
             "title": "Face detection",
@@ -250,6 +261,7 @@ def inspect_compliance(image_path: str, size_preset: Optional[str] = None) -> Di
         })
         return {
             "passed": False,
+            "overall_passed": False,
             "hard_fail": True,
             "items": items,
             "composite_score": {"overall_score": 0.0, "status": "FAIL", "grade": "F"}
@@ -469,6 +481,7 @@ def inspect_compliance(image_path: str, size_preset: Optional[str] = None) -> Di
 
     return {
         "passed": passed,
+        "overall_passed": passed,
         "hard_fail": hard_fail,
         "items": items,
         "composite_score": composite_score,

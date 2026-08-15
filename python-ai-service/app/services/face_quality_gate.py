@@ -97,25 +97,14 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
             user_hint="Please verify the image is a standard RGB portrait."
         )
 
-    # 1. Blur detection
+    from app.services.face_detection import detect_faces
+
+    # Detect faces before evaluating face sharpness so a blank image is
+    # reported accurately as having no face rather than merely being blurry.
+    faces = detect_faces(gray)
     blur_score = float(cv2.Laplacian(gray, cv2.CV_64F).var())
-    if blur_score < BLUR_THRESHOLD:
-        return FaceQualityReport(
-            passed=False,
-            blur_score=blur_score,
-            rejection_code="FACE_TOO_BLURRY",
-            rejection_reason=f"Image is too blurry (score: {blur_score:.1f}, minimum: {BLUR_THRESHOLD}).",
-            user_hint="Take the photo in good lighting and hold the camera steady.")
 
-    from app.services.face_detection import detect_largest_face
-
-    # 2. Face count detection
-    faces_detected = []
-    face_rect = detect_largest_face(gray)
-    if face_rect is not None:
-        faces_detected.append(face_rect)
-
-    if len(faces_detected) == 0:
+    if len(faces) == 0:
         return FaceQualityReport(
             passed=False,
             face_count=0,
@@ -133,6 +122,16 @@ def assess_face_quality(image_path: str) -> FaceQualityReport:
             rejection_code="MULTIPLE_FACES_DETECTED",
             rejection_reason=f"{len(faces)} faces detected.",
             user_hint="Please upload a solo portrait with only one person in the frame.")
+
+    if blur_score < BLUR_THRESHOLD:
+        return FaceQualityReport(
+            passed=False,
+            face_count=1,
+            blur_score=blur_score,
+            face_region=faces[0],
+            rejection_code="FACE_TOO_BLURRY",
+            rejection_reason=f"Image is too blurry (score: {blur_score:.1f}, minimum: {BLUR_THRESHOLD}).",
+            user_hint="Take the photo in good lighting and hold the camera steady.")
 
     # 3. Face region size check
     x, y, w, h = faces[0]

@@ -1,8 +1,10 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import DelayedFallback from '../components/DelayedFallback';
-import RouteErrorBoundary from '../components/RouteErrorBoundary';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorBoundary from '../components/ErrorBoundary';
 import ScrollToTop from './ScrollToTop';
+import NavigationProgressBar from '../components/NavigationProgressBar';
+import RouteGuard from './RouteGuard';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const UploadPage = lazy(() => import('../pages/UploadPage'));
@@ -13,73 +15,52 @@ const TermsPage = lazy(() => import('../pages/TermsPage'));
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage'));
 const PhotoStudio = lazy(() => import('../pages/PhotoStudio'));
 const HistoryPage = lazy(() => import('../pages/HistoryPage'));
-const PassportComparatorPage = lazy(
-  () => import('../pages/PassportComparatorPage')
-);
+const SettingsPage = lazy(() => import('../pages/SettingsPage'));
+const DiagnosticsPage = lazy(() => import('../pages/DiagnosticsPage'));
+const PassportComparatorPage = lazy(() => import('../pages/PassportComparatorPage'));
+const SignIn = lazy(() => import('../pages/SignIn'));
+const SignUp = lazy(() => import('../pages/SignUp'));
+const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
+const ApiDocsPage = lazy(() => import('../pages/ApiDocsPage'));
+const CookiesPage = lazy(() => import('../pages/CookiesPage'));
+const QueuePage = lazy(() => import('../pages/QueuePage'));
+const SharedPhotoPage = lazy(() => import('../pages/SharedPhotoPage'));
+const AnalyticsPage = lazy(() => import('../pages/AnalyticsPage').then(m => ({ default: m.AnalyticsPage })));
 
-/**
- * AppRoutes — central route configuration for SnapPass AI.
- * Add new pages here so contributors can find all routes in one place.
- */
+
 function AppRoutes({ darkMode, toggleTheme }) {
   const location = useLocation();
 
   return (
-    <RouteErrorBoundary key={location.pathname}>
+    <ErrorBoundary key={location.pathname}>
+      <NavigationProgressBar />
       <ScrollToTop />
-      <Suspense fallback={<DelayedFallback delayMs={250} />}>
+      <Suspense fallback={<LoadingSpinner fullPage delayMs={250} />}>
         <Routes>
-          <Route
-            path="/"
-            element={<HomePage darkMode={darkMode} toggleTheme={toggleTheme} />}
-          />
-          <Route
-            path="/upload"
-            element={
-              <UploadPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/editor"
-            element={
-              <EditorPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/print-preview"
-            element={
-              <PrintPreviewPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <AdminDashboard darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
+          <Route path="/" element={<HomePage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/signin" element={<SignIn darkMode={darkMode} />} />
+          <Route path="/signup" element={<SignUp darkMode={darkMode} />} />
+          <Route path="/upload" element={<UploadPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/editor" element={<EditorPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/print-preview" element={<PrintPreviewPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/admin" element={<AdminDashboard darkMode={darkMode} toggleTheme={toggleTheme} />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/cookies" element={<CookiesPage darkMode={darkMode} />} />
           <Route path="/studio" element={<PhotoStudio />} />
-          <Route
-            path="/history"
-            element={
-              <HistoryPage darkMode={darkMode} toggleTheme={toggleTheme} />
-            }
-          />
-          <Route
-            path="/compare-requirements"
-            element={
-              <PassportComparatorPage
-                darkMode={darkMode}
-                toggleTheme={toggleTheme}
-              />
-            }
-          />
-          {/* Fallback — redirect unknown paths to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/settings" element={<SettingsPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/diagnostics" element={<DiagnosticsPage darkMode={darkMode} />} />
+          <Route path="/history" element={<HistoryPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/queue" element={<QueuePage darkMode={darkMode} />} />
+          <Route path="/compare-requirements" element={<PassportComparatorPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/api-docs" element={<ApiDocsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/share/:shareId" element={<SharedPhotoPage darkMode={darkMode} />} />
+          <Route path="/studio/analytics" element={<StudioAnalyticsDashboard darkMode={darkMode} />} />
+          <Route path="*" element={<NotFoundPage darkMode={darkMode} />} />
         </Routes>
       </Suspense>
-    </RouteErrorBoundary>
+    </ErrorBoundary>
   );
 }
 

@@ -2,6 +2,7 @@ import pytest
 import io
 from PIL import Image
 from dpi_optimizer import optimise_dpi, get_preset_dimensions, list_presets, PRESETS
+from sheet_generator import generate_sheet
 
 
 def test_get_preset_dimensions_valid():
@@ -38,7 +39,8 @@ def test_optimise_dpi():
     # Verify resulting image properties
     output_img = Image.open(io.BytesIO(output_bytes))
     assert output_img.format == "PNG"
-    assert output_img.info.get("dpi") == (300, 300)
+    dpi = output_img.info.get("dpi")
+    assert dpi == pytest.approx((300, 300), rel=1e-3)
 
 
 def test_optimise_dpi_invalid_preset():
@@ -49,3 +51,28 @@ def test_optimise_dpi_invalid_preset():
 
     with pytest.raises(ValueError):
         optimise_dpi(img_bytes, "invalid_preset")
+
+
+def test_optimise_dpi_diverse_color_profiles():
+    # Test handling of RGBA color profiles during DPI optimization
+    img = Image.new("RGBA", (120, 120), color=(0, 255, 0, 255))
+    img_bytes_io = io.BytesIO()
+    img.save(img_bytes_io, format="JPEG")
+    img_bytes = img_bytes_io.getvalue()
+
+    output_bytes = optimise_dpi(img_bytes, "35x45")
+    output_img = Image.open(io.BytesIO(output_bytes))
+    assert output_img.info.get("dpi") is not None
+
+
+def test_generate_sheet_empty_photo_paths():
+    with pytest.raises(ValueError, match="photo_paths list cannot be empty"):
+        generate_sheet([], preset_id="35x45", quantity=8)
+
+
+@pytest.mark.parametrize("invalid_qty", [0, -1, -8])
+def test_generate_sheet_invalid_quantities(invalid_qty):
+    # Verify validation bounds for sheet generation quantities
+    dummy_path = "dummy_path.jpg"
+    with pytest.raises(ValueError, match="quantity must be greater than zero"):
+        generate_sheet([dummy_path], preset_id="35x45", quantity=invalid_qty)

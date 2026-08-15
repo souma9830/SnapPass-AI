@@ -1,12 +1,12 @@
-
-
 import cv2
 import numpy as np
 from PIL import Image
 import io
 
+__all__ = ["FACE_HEIGHT_RATIO", "HEAD_TOP_PADDING_RATIO", "center_face"]
 
-# ICAO 9303 guideline:face should occupy 75 % of the image height
+# ICAO 9303 guideline: face should occupy 75 % of the image height.
+# Integrated with backend image controller processing and rembg background removal.
 FACE_HEIGHT_RATIO = 0.75
 
 # How far above the top of the detected face to place the top of the crop
@@ -24,7 +24,7 @@ def center_face(image_bytes: bytes) -> bytes:
     gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
     gray = cv2.equalizeHist(gray)
 
-    face_rect = _detect_face(gray)
+    face_rect = detect_largest_face(gray)
     if face_rect is None:
         raise ValueError(
             "No face detected in the image. "
@@ -79,24 +79,4 @@ def center_face(image_bytes: bytes) -> bytes:
 
 
 # Helpers
-def _detect_face(gray_image: np.ndarray):
-    """
-    Run OpenCV Haar cascade on a grayscale image.
-    Returns (x, y, w, h) of the largest detected face, or None.
-    """
-    cascade = cv2.CascadeClassifier(
-        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-    )
-    faces = cascade.detectMultiScale(
-        gray_image,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(60, 60),
-    )
-
-    if len(faces) == 0:
-        return None
-
-    # Pick the largest face by area
-    largest = max(faces, key=lambda r: r[2] * r[3])
-    return largest
+from app.services.face_detection import detect_largest_face

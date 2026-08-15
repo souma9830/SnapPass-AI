@@ -1,0 +1,22 @@
+.camera-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.camera-modal-card {
+  background: #111827;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.camera-video-preview {
+  width: 480px;
+  height: 360px;
+  border-radius: 8px;
+  background: black;
+}

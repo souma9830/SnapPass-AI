@@ -1,57 +1,16 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const uploadSchema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    fileId: {
-      type: String,
-      required: true,
-      unique: true,
-      index: true,
-    },
-    originalName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    fileUrl: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    mimeType: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    sizeBytes: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
-    status: {
-      type: String,
-      enum: ["uploaded", "processing", "processed", "failed"],
-      default: "uploaded",
-      index: true,
-    },
-    lastError: {
-      type: String,
-      default: null,
-      trim: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+const UploadSchema = new mongoose.Schema({
+  filename: { type: String, index: true },
+  originalImage: String,
+  status: { type: String, default: 'pending', index: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
+  fileSize: Number,
+  mimeType: String,
+  createdAt: { type: Date, default: Date.now, index: true },
+});
 
-uploadSchema.index({ user: 1, createdAt: -1 });
+UploadSchema.index({ userId: 1, createdAt: -1 });
+UploadSchema.index({ status: 1, createdAt: -1 });
 
-const Upload = mongoose.model("Upload", uploadSchema);
-
-export default Upload;
+export default mongoose.model('Upload', UploadSchema);

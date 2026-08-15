@@ -1,291 +1,649 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PhotoPreview from '../components/PhotoPreview';
-import BackgroundSelector from '../components/BackgroundSelector';
-import SizeSelector from '../components/SizeSelector';
-import { ButtonSpinner } from '../components/LoadingSpinner';
-import './EditorPage.css';
-import EmptyState from '../components/EmptyState';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
-import useImageProcessor from '../hooks/useImageProcessor';
 import { saveSession, getSession } from '../utils/sessionManager';
+import PresetFilterManager from '../components/PresetFilterManager';
+import HistogramAnalyzer from '../components/HistogramAnalyzer';
+import SizeSelector from '../components/SizeSelector';
+import BackgroundSelector from '../components/BackgroundSelector';
+import WatermarkOverlayManager from '../components/WatermarkOverlayManager';
+import ColorTemperatureAdjuster from '../components/ColorTemperatureAdjuster';
+import BackgroundColorPalettePicker from '../components/BackgroundColorPalettePicker';
+import AttireStudioSelector from '../components/AttireStudioSelector';
+import CompliancePanel from '../components/CompliancePanel';
+import { calculateComplianceMetrics } from '../services/aiComplianceService';
+import ComplianceBreakdownCard from '../components/ComplianceBreakdownCard';
+import useImageProcessor from '../hooks/useImageProcessor';
+import { iconMap, backgroundHexMap } from '../data/EditorPageData';
+import EditorPageDiagnostics from './EditorPageDiagnostics';
+import { ImageAdjustments } from '../components/ImageAdjustments';
+import PresetFilterManager from '../components/PresetFilterManager';
+import { cachePhotoOffline } from '../services/indexedDb';
+import api from '../services/api';
+import { autoEnhanceImage } from '../utils/imageEnhancer';
+import { AttireManualAdjuster } from '../components/AttireManualAdjuster';
+import { PhotoHistogramInspector } from '../components/editor/PhotoHistogramInspector';
+import { uploadPhoto } from '../services/photoService';
+import { BatchPresetConverterModal } from '../components/batch/BatchPresetConverterModal';
+import './EditorPage.css';
 
-/**
- * EditorPage — Step 2.
- * Shows preview of uploaded photo, lets user configure background + size,
- * then triggers AI processing before navigating to PrintPreviewPage.
- */
+const SIZE_PRESETS = [
+  { id: '35x45', label: 'India / UK Passport', dimensions: '35 × 45 mm' },
+  { id: '51x51', label: 'USA Visa', dimensions: '51 × 51 mm' },
+  { id: '33x48', label: 'Schengen Visa', dimensions: '33 × 48 mm' },
+  { id: '40x60', label: 'China Visa', dimensions: '40 × 60 mm' },
+  { id: '2x2in', label: 'US Passport', dimensions: '2 × 2 in' },
+];
+
 function EditorPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
-  const { state } = useLocation();
   const navigate = useNavigate();
-  const savedSession = getSession();
+  const location = useLocation();
+  const state = location.state || {};
 
-  // Only trust photo data from React Router navigation state (current page load).
-  // Restoring filename/fileSize from savedSession without a live localUrl creates
-  // a contradictory state where the editor shows metadata for an image it cannot
-  // display — the EmptyState handles the no-localUrl case correctly on its own.
-  const [photoData, setPhotoData] = useState({
-    localUrl: state?.localUrl || null,
-    filename: state?.filename || null,
-    fileSize: state?.fileSize || null,
+  const { processImage, processedUrl, isProcessing, error, reset } =
+    useImageProcessor();
+
+  // Selected editor preferences and local preview state containers
+  const [background, setBackground] = useState('white');
+  const [sizePreset, setSizePreset] = useState('35x45');
+  const [attire, setAttire] = useState('none');
+  const [filename, setFilename] = useState(state?.filename || '');
+  const [filters, setFilters] = useState({
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
   });
+  const [complianceData, setComplianceData] = useState(null);
+  const [complianceLoading, setComplianceLoading] = useState(false);
+  const [complianceError, setComplianceError] = useState(null);
+  const [cacheBuster, setCacheBuster] = useState(0);
+  const [attireScale, setAttireScale] = useState(1.0);
+  const [attireX, setAttireX] = useState(0);
+  const [attireY, setAttireY] = useState(0);
+  const [isAutoEnhanced, setIsAutoEnhanced] = useState(false);
+  const [enhancedDataUrl, setEnhancedDataUrl] = useState(null);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
 
-  const fileInputRef = useRef(null);
 
-  const [background, setBackground] = useState(
-    savedSession?.background || 'white'
+  const getBackendRoot = () => {
+    if (import.meta?.env?.VITE_API_URL) {
+      return import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '');
+    }
+    if (api.defaults?.baseURL) {
+      return api.defaults.baseURL.replace(/\/api\/?$/, '');
+    }
+    return '';
+  };
+  const backendRoot = getBackendRoot();
+
+  const resolveImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('data:') || path.startsWith('blob:') || path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    return backendRoot ? `${backendRoot}${path.startsWith('/') ? '' : '/'}${path}` : path.startsWith('/') ? path : `/${path}`;
+  };
+
+  const baseImageUrl = filename ? resolveImageUrl(`/uploads/${filename}`) : (state?.localUrl || state?.fileUrl || '');
+  const currentImageUrl = processedUrl
+    ? `${resolveImageUrl(processedUrl)}?t=${cacheBuster}`
+    : baseImageUrl
+      ? (baseImageUrl.includes('?') ? baseImageUrl : `${baseImageUrl}?t=${cacheBuster}`)
+      : '';
+
+  const runComplianceCheck = useCallback(
+    async (fileToCheck) => {
+      if (!fileToCheck) return;
+      setComplianceLoading(true);
+      setComplianceError(null);
+      try {
+        const resp = await api.post('/compliance/check', {
+          filename: fileToCheck,
+          sizePreset: sizePreset,
+        });
+        if (resp.data?.success) {
+          setComplianceData(resp.data.data);
+        } else {
+          setComplianceError(resp.data?.message || 'Compliance check failed');
+        }
+      } catch (err) {
+        setComplianceError(err.message || 'Failed to check compliance.');
+      } finally {
+        setComplianceLoading(false);
+      }
+    },
+    [sizePreset]
   );
-  const [sizePreset, setSizePreset] = useState(
-    savedSession?.sizePreset || '35x45'
-  );
-  const { processImage, isProcessing, error } = useImageProcessor();
 
   useEffect(() => {
-    // Only persist session when there is a live image in this page's context.
-    // Guarding on localUrl prevents a reloaded/empty editor from continuously
-    // writing an unusable 'editor' step back to localStorage.
-    if (!photoData?.localUrl) return;
+    runComplianceCheck(filename);
+  }, [filename, sizePreset, cacheBuster, runComplianceCheck]);
 
-    saveSession({
-      step: 'editor',
-      filename: photoData.filename,
-      fileSize: photoData.fileSize,
-      background,
-      sizePreset,
-    });
-  }, [photoData, background, sizePreset]);
+  const handleAutoCorrect = useCallback(
+    async (issue) => {
+      if (!filename) return;
+      setComplianceLoading(true);
+      setComplianceError(null);
+      try {
+        const resp = await api.post('/compliance/auto-correct', {
+          filename,
+          issue,
+        });
+        if (resp.data?.success) {
+          setCacheBuster((prev) => prev + 1);
+        } else {
+          setComplianceError(resp.data?.message || 'Auto-correct failed');
+          setComplianceLoading(false);
+        }
+      } catch (err) {
+        setComplianceError(err.message || 'Failed to auto-correct.');
+        setComplianceLoading(false);
+      }
+    },
+    [filename]
+  );
 
-  const iconMap = {
-    refresh: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M20 12a8 8 0 0 1-13.7 5.7" />
-        <path d="M4 12a8 8 0 0 1 13.7-5.7" />
-        <path d="M4 4v5h5" />
-        <path d="M20 20v-5h-5" />
-      </svg>
-    ),
-    spark: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 3l1.9 5.7L19 11l-5.1 2.3L12 19l-1.9-5.7L5 11l5.1-2.3L12 3z" />
-      </svg>
-    ),
+  const handleToggleEnhance = async () => {
+    if (!isAutoEnhanced) {
+      if (!enhancedDataUrl) {
+        setIsEnhancing(true);
+        try {
+          const targetUrl = baseImageUrl ? `${baseImageUrl}?t=${cacheBuster}` : state?.localUrl;
+          if (targetUrl) {
+            const enhanced = await autoEnhanceImage(targetUrl);
+            setEnhancedDataUrl(enhanced);
+          }
+        } catch (e) {
+          console.error('Enhancement failed', e);
+        } finally {
+          setIsEnhancing(false);
+        }
+      }
+      setIsAutoEnhanced(true);
+    } else {
+      setIsAutoEnhanced(false);
+    }
   };
 
-  const handleReplacePhoto = (event) => {
-    const file = event.target.files[0];
+  const displayImageUrl = isAutoEnhanced && enhancedDataUrl ? enhancedDataUrl : currentImageUrl;
 
-    if (!file) return;
+  useEffect(() => {
+    if (state?.filename) setFilename(state.filename);
+  }, [state?.filename]);
 
-    const newLocalUrl = URL.createObjectURL(file);
-
-    setPhotoData({
-      localUrl: newLocalUrl,
-      filename: file.name,
-      fileSize: file.size,
-    });
-  };
-
-  const handleProcess = async () => {
+  const handleProcess = useCallback(async () => {
+    if (!filename) return;
     try {
-      const processedUrl = await processImage({
-        filename: photoData.filename,
+      let processFilename = filename;
+      
+      if (isAutoEnhanced && enhancedDataUrl) {
+        const res = await fetch(enhancedDataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], 'enhanced.jpg', { type: 'image/jpeg' });
+        const uploadResult = await uploadPhoto(file);
+        processFilename = uploadResult.filename;
+      }
+
+      const resultUrl = await processImage({
+        filename: processFilename,
         backgroundColour: background,
         photoSizePreset: sizePreset,
+        attire,
       });
+      await cachePhotoOffline({
+        processedUrl: resultUrl,
+        filename: processFilename,
+        background,
+        sizePreset,
+        attire,
+      }).catch(() => {});
+      const currentSession = getSession() || {};
+      const processedPhotos = currentSession.processedPhotos || [];
+      const newPhoto = { processedUrl: resultUrl, filename: processFilename, background, sizePreset, attire };
 
+      saveSession({
+        ...currentSession,
+        step: 'editor',
+        processedUrl: resultUrl,
+        filename: processFilename,
+        background,
+        sizePreset,
+        attire,
+        processedPhotos: [...processedPhotos, newPhoto]
+      });
       navigate('/print-preview', {
-        state: {
-          processedUrl,
-          filename: photoData.filename,
-          background,
+        state: { 
+          processedUrl: resultUrl, 
+          filename: processFilename, 
+          background, 
           sizePreset,
+          processedPhotos: [...processedPhotos, newPhoto]
         },
       });
     } catch (err) {
-      console.error(err);
+      // error handled by hook
     }
-  };
-  // If user lands here directly without uploading, redirect
+  }, [filename, background, sizePreset, attire, processImage, navigate, isAutoEnhanced, enhancedDataUrl]);
 
-  if (!photoData?.localUrl) {
-    return (
-      <EmptyState
-        title={t.noPhotoSelected}
-        description={t.uploadBeforeEditor}
-        buttonText={t.goToUpload}
-        darkMode={darkMode}
-        toggleTheme={toggleTheme}
-      />
-    );
-  }
-
-  const fadeUpVariant = {
-    hidden: { opacity: 0, y: 30 },
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
     visible: (delay = 0) => ({
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: 'easeOut', delay },
+      transition: { duration: 0.5, ease: 'easeOut', delay },
     }),
   };
 
+  const presetInfo =
+    SIZE_PRESETS.find((p) => p.id === sizePreset) || SIZE_PRESETS[0];
+  const currentBgHex = background?.startsWith('#')
+    ? background
+    : backgroundHexMap[background] || '#ffffff';
+
   return (
-    <div className={`editor-toggle ${darkMode ? 'editor-toggle-dark' : ''}`}>
+    <div className={darkMode ? 'editor-toggle-dark' : ''}>
+      <EditorPageDiagnostics
+        sizePreset={sizePreset}
+        background={background}
+        attire={attire}
+        filename={filename}
+      />
       <div className="editor-page">
         <motion.div
           className="editor-page__header"
-          variants={fadeUpVariant}
+          variants={fadeUp}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={0.1} // Loads first
+          animate="visible"
+          custom={0.1}
         >
           <h1
-            className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}
+            className={`section-title ${darkMode ? 'section-title-dark' : ''}`}
           >
-            {t.editPhotoTitle}
+            {t.editorTitle || 'Edit Your Photo'}
           </h1>
           <p
-            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : ''}`}
           >
-            {t.editPhotoSubtitle}
+            {t.editorSubtitle ||
+              'Choose background, size, and attire before processing'}
           </p>
         </motion.div>
 
         <div className="editor-page__layout">
-          {/* Preview panel */}
-
-          <motion.section
-            className="editor-page__preview"
-            aria-label="Photo preview"
-            variants={fadeUpVariant}
+          <motion.div
+            className="editor-page__preview card"
+            variants={fadeUp}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            animate="visible"
             custom={0.2}
           >
-            <PhotoPreview
-              originalUrl={photoData.localUrl}
-              processedUrl={null}
-              isProcessing={isProcessing}
-            />
-          </motion.section>
+            <div
+              style={{
+                width: '100%',
+                aspectRatio: '3/4',
+                maxHeight: '500px',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                background: currentBgHex,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {state?.localUrl || filename ? (
+                <div
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                    }}
+                  >
+                    <img
+                      src={displayImageUrl}
+                      alt="Preview"
+                      onError={(e) => {
+                        if (filename && !e.target.dataset.retried) {
+                          e.target.dataset.retried = 'true';
+                          e.target.src = `/uploads/${filename}`;
+                        } else if (state?.localUrl) {
+                          e.target.src = state.localUrl;
+                        }
+                      }}
+                      style={{
+                        display: 'block',
+                        maxWidth: '100%',
+                        maxHeight: '450px',
+                        objectFit: 'contain',
+                        transition: 'opacity 0.3s ease, transform 0.3s ease',
+                        opacity: isProcessing || complianceLoading ? 0.5 : 1,
+                        filter: `brightness(${filters.brightness}%) contrast(${filters.contrast}%) saturate(${filters.saturation}%)`,
+                        transform: `rotate(${filters.rotation || 0}deg) scaleX(${filters.flipX ? -1 : 1}) scaleY(${filters.flipY ? -1 : 1})`,
+                      }}
+                    />
+                    {!isProcessing &&
+                      !complianceLoading &&
+                      complianceData?.meta && (
+                        <svg
+                          viewBox={`0 0 ${complianceData.meta.dimensions?.w || 600} ${complianceData.meta.dimensions?.h || 800}`}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            pointerEvents: 'none',
+                          }}
+                        >
+                          {/* 1. Center Vertical Line */}
+                          <line
+                            x1={(complianceData.meta.dimensions?.w || 600) / 2}
+                            y1={0}
+                            x2={(complianceData.meta.dimensions?.w || 600) / 2}
+                            y2={complianceData.meta.dimensions?.h || 800}
+                            stroke="rgba(239, 68, 68, 0.45)"
+                            strokeWidth={Math.max(
+                              2,
+                              Math.round(
+                                (complianceData.meta.dimensions?.w || 600) / 400
+                              )
+                            )}
+                            strokeDasharray="4 4"
+                          />
 
-          {/* Controls panel */}
-          <motion.aside
+                          {/* 2. Ideal Oval Positioning Template (US: 2x2in, India: 35x45mm) from presets.json */}
+                          <ellipse
+                            cx={(complianceData.meta.dimensions?.w || 600) / 2}
+                            cy={
+                              (complianceData.meta.dimensions?.h || 800) * 0.46
+                            }
+                            rx={
+                              (complianceData.meta.dimensions?.w || 600) * 0.22
+                            }
+                            ry={
+                              (complianceData.meta.dimensions?.h || 800) * 0.3
+                            }
+                            fill="none"
+                            stroke="rgba(255, 255, 255, 0.35)"
+                            strokeWidth={Math.max(
+                              2,
+                              Math.round(
+                                (complianceData.meta.dimensions?.w || 600) / 300
+                              )
+                            )}
+                          />
+
+                          {/* 3. Face Bounding Box (if detected) */}
+                          {complianceData.meta.face_rect && (
+                            <rect
+                              x={complianceData.meta.face_rect.x}
+                              y={complianceData.meta.face_rect.y}
+                              width={complianceData.meta.face_rect.w}
+                              height={complianceData.meta.face_rect.h}
+                              fill="none"
+                              stroke="#3b82f6"
+                              strokeWidth={Math.max(
+                                2,
+                                Math.round(
+                                  (complianceData.meta.dimensions?.w || 600) /
+                                    350
+                                )
+                              )}
+                              strokeDasharray="3 3"
+                              rx="4"
+                            />
+                          )}
+
+                          {/* 4. Eye line and circles (if detected) */}
+                          {complianceData.meta.eyes &&
+                            complianceData.meta.eyes.length === 2 && (
+                              <>
+                                <line
+                                  x1={complianceData.meta.eyes[0].x}
+                                  y1={complianceData.meta.eyes[0].y}
+                                  x2={complianceData.meta.eyes[1].x}
+                                  y2={complianceData.meta.eyes[1].y}
+                                  stroke="#10b981"
+                                  strokeWidth={Math.max(
+                                    2,
+                                    Math.round(
+                                      (complianceData.meta.dimensions?.w ||
+                                        600) / 400
+                                    )
+                                  )}
+                                />
+                                <circle
+                                  cx={complianceData.meta.eyes[0].x}
+                                  cy={complianceData.meta.eyes[0].y}
+                                  r={Math.max(
+                                    4,
+                                    Math.round(
+                                      (complianceData.meta.dimensions?.w ||
+                                        600) / 120
+                                    )
+                                  )}
+                                  fill="#10b981"
+                                />
+                                <circle
+                                  cx={complianceData.meta.eyes[1].x}
+                                  cy={complianceData.meta.eyes[1].y}
+                                  r={Math.max(
+                                    4,
+                                    Math.round(
+                                      (complianceData.meta.dimensions?.w ||
+                                        600) / 120
+                                    )
+                                  )}
+                                  fill="#10b981"
+                                />
+                              </>
+                            )}
+                        </svg>
+                      )}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    color: '#94a3b8',
+                    textAlign: 'center',
+                    padding: '2rem',
+                  }}
+                >
+                  {t.noPhotoPreview || 'Upload a photo first to see preview'}
+                </div>
+              )}
+            </div>
+            <div className="editor-page__info">
+              <div className="editor-info-row">
+                <span className="editor-info-label">{t.size || 'Size'}</span>
+                <span className="editor-info-value">
+                  {presetInfo.dimensions}
+                </span>
+              </div>
+              <div className="editor-info-row">
+                <span className="editor-info-label">
+                  {t.backgroundLabel || 'Background'}
+                </span>
+                <span
+                  className="editor-info-value"
+                  style={{ textTransform: 'capitalize' }}
+                >
+                  {background}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1rem' }}>
+              <BackgroundSelector
+                selected={background}
+                onChange={setBackground}
+              />
+              <BackgroundColorPalettePicker
+                selectedColor={background}
+                onChangeColor={setBackground}
+              />
+              <HistogramAnalyzer imageUrl={displayImageUrl} darkMode={darkMode} />
+            </div>
+          </motion.div>
+
+          <motion.div
             className="editor-page__controls card"
-            aria-label="Photo settings"
-            variants={fadeUpVariant}
+            variants={fadeUp}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            animate="visible"
             custom={0.3}
           >
-            <BackgroundSelector
-              selected={background}
-              onChange={setBackground}
+            <SizeSelector
+              presets={SIZE_PRESETS}
+              selected={sizePreset}
+              onChange={setSizePreset}
             />
 
             <hr className="divider" />
 
-            <SizeSelector selected={sizePreset} onChange={setSizePreset} />
+            <AttireSelector selected={attire} onChange={setAttire} />
+            <AttireStudioSelector selectedAttire={attire} onSelectAttire={setAttire} />
+            {attire !== 'none' && (
+              <AttireManualAdjuster
+                scale={attireScale}
+                xOffset={attireX}
+                yOffset={attireY}
+                onChangeScale={setAttireScale}
+                onChangeX={setAttireX}
+                onChangeY={setAttireY}
+              />
+            )}
+
+            <hr className="divider" />
+
+            <ImageAdjustments
+              filters={filters}
+              onChange={setFilters}
+              onReset={() => setFilters({ brightness: 100, contrast: 100, saturation: 100 })}
+            />
+
+            <ColorTemperatureAdjuster
+              temperature={filters.temperature || 0}
+              tint={filters.tint || 0}
+              onChangeTemperature={(val) => setFilters((prev) => ({ ...prev, temperature: val }))}
+              onChangeTint={(val) => setFilters((prev) => ({ ...prev, tint: val }))}
+              onReset={() => setFilters((prev) => ({ ...prev, temperature: 0, tint: 0 }))}
+              darkMode={darkMode}
+            />
+
+            <hr className="divider" />
+
+            <PresetFilterManager
+              activePresetId={filters.activePresetId}
+              onSelectPreset={(preset) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  ...preset.settings,
+                  activePresetId: preset.id,
+                }))
+              }
+              onResetPreset={() =>
+                setFilters({
+                  brightness: 100,
+                  contrast: 100,
+                  saturation: 100,
+                  activePresetId: null,
+                })
+              }
+              darkMode={darkMode}
+            />
+
+            <hr className="divider" />
+
+            <CompliancePanel
+              compliance={complianceData}
+              loading={complianceLoading}
+              error={complianceError}
+              onAutoCorrect={handleAutoCorrect}
+              darkMode={darkMode}
+            />
+
+            <ComplianceBreakdownCard
+              metrics={calculateComplianceMetrics(complianceData || {})}
+            />
+
+            <hr className="divider" />
+
+            <WatermarkOverlayManager
+              watermarkText={filters.watermarkText || 'DRAFT PROOF - SAMPLE ONLY'}
+              onWatermarkChange={(val) => setFilters((prev) => ({ ...prev, watermarkText: val }))}
+              isEnabled={filters.watermarkEnabled || false}
+              onToggleEnable={(enabled) => setFilters((prev) => ({ ...prev, watermarkEnabled: enabled }))}
+              darkMode={darkMode}
+            />
 
             <hr className="divider" />
 
             {error && (
               <div
                 className="editor-page__error"
-                style={{
-                  background: '#fef2f2',
-                  border: '1px solid #fca5a5',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  margin: '1rem 0',
-                  textAlign: 'center',
-                }}
+                role="alert"
+                style={{ marginBottom: '0.5rem' }}
               >
-                <p style={{ color: '#ef4444', fontWeight: 600, marginBottom: '6px', fontSize: '0.875rem' }}>
-                  {error.message || error}
-                </p>
-                {error.user_hint && (
-                  <p style={{ color: '#6b7280', fontSize: '0.8rem', marginBottom: '12px' }}>
-                    💡 {error.user_hint}
-                  </p>
-                )}
-                <button
-                  onClick={() => navigate('/upload')}
-                  style={{
-                    background: '#ef4444',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '8px 20px',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                  }}
-                >
-                  Try Again
-                </button>
+                {error}
               </div>
             )}
 
-            <div className="editor-page__info">
-              <p className="editor-info-row">
-                <span className="editor-info-label">{t.fileLabel}</span>
-                <span className="editor-info-value">{photoData.filename}</span>
-              </p>
-              <p className="editor-info-row">
-                <span className="editor-info-label">{t.sizeLabel}</span>
-                <span className="editor-info-value">
-                  {(photoData.fileSize / 1024).toFixed(1)} KB
+            <div className="toggle-switch-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', padding: '12px', background: darkMode ? 'rgba(59,130,246,0.15)' : 'rgba(59,130,246,0.1)', borderRadius: '8px', border: darkMode ? '1px dashed #60a5fa' : '1px dashed #3b82f6' }}>
+              <span style={{ fontWeight: '600', color: darkMode ? '#60a5fa' : '#3b82f6' }}>🪄 Auto-Enhance Lighting</span>
+              <label className="switch" style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px' }}>
+                <input
+                  type="checkbox"
+                  checked={isAutoEnhanced}
+                  onChange={handleToggleEnhance}
+                  disabled={!filename || isEnhancing}
+                  style={{ opacity: 0, width: 0, height: 0 }}
+                />
+                <span className="slider round" style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: isAutoEnhanced ? '#3b82f6' : (darkMode ? '#475569' : '#ccc'), transition: '.4s', borderRadius: '24px' }}>
+                  <span style={{ position: 'absolute', content: '""', height: '18px', width: '18px', left: isAutoEnhanced ? '23px' : '3px', bottom: '3px', backgroundColor: 'white', transition: '.4s', borderRadius: '50%' }} />
                 </span>
-              </p>
+              </label>
             </div>
 
-            {/* Hidden file input works exactly as before */}
-            <input
-              type="file"
-              accept=".jpg,.jpeg,.png,.webp"
-              ref={fileInputRef}
-              onChange={handleReplacePhoto}
-              style={{ display: 'none' }}
-            />
-
             <button
-              className="btn editor-page__replace-btn"
-              onClick={() => fileInputRef.current.click()}
+              className={`editor-page__process-btn ${darkMode ? 'editor-page__process-btn-dark' : ''}`}
+              onClick={handleProcess}
+              disabled={isProcessing || !filename}
+              aria-busy={isProcessing}
             >
               <span className="editor-page__btn-icon" aria-hidden="true">
-                {iconMap.refresh}
+                {isProcessing ? iconMap.refresh : iconMap.spark}
               </span>
-              {t.replacePhoto}
+              {isProcessing
+                ? t.processing || 'Processing...'
+                : t.processWithAI || 'Process with AI'}
             </button>
-
-            <button
-              className={`btn btn-primary editor-page__process-btn ${darkMode ? 'editor-page__process-btn-dark' : ''}`}
-              onClick={handleProcess}
-              disabled={isProcessing}
-            >
-              {isProcessing ? (
-                <>
-                  <ButtonSpinner /> {t.processingPhoto}
-                </>
-              ) : (
-                <>
-                  <span className="editor-page__btn-icon" aria-hidden="true">
-                    {iconMap.spark}
-                  </span>
-                  {t.processWithAI}
-                </>
-              )}
-            </button>
-          </motion.aside>
+          </motion.div>
         </div>
       </div>
+      <PassportAssistantChatbot />
+      <BatchPresetConverterModal
+        isOpen={isBatchModalOpen}
+        onClose={() => setIsBatchModalOpen(false)}
+        sourceImageUrl={currentDisplayUrl || ''}
+      />
     </div>
   );
 }

@@ -1,23 +1,68 @@
-/**
- * @description Middleware to authenticate users using JWT tokens stored in cookies.
- * @function authMiddleware
- * @returns {void} - Calls the next middleware if authentication is successful, otherwise throws an AuthError.
- * @throws {AuthError} - Throws an error if no token is provided or if the token is invalid.
- */
 import AuthError from "../utils/errors/AuthError.js";
-import jwt from "jsonwebtoken";
-import { config } from "../config/config.js";
+import { validateSession } from "../services/session.service.js";
+import SecurityAudit from "../models/securityAudit.model.js";
+import { tokenRevocationStore } from "../utils/tokenRevocationStore.js";
 
-export default function authMiddleware(req, res, next) {
-    const token = req.cookies.token;
-    if (!token) {
-        return next(new AuthError("No token provided"));
+export default async function authMiddleware(req, res, next) {
+    let token = req.cookies?.token;
+
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
     }
+
+    if (!token) {
+        await SecurityAudit.logSecurityEvent({
+            action: 'AUTH_FAILED',
+            email: 'anonymous',
+            ip: req.ip || req.socket?.remoteAddress || '127.0.0.1',
+            status: 'FAILURE',
+            severity: 'WARNING',
+            userAgent: req.headers['user-agent'] || '',
+            details: `No token provided for route ${req.method} ${req.originalUrl}`
+        }).catch(() => {});
+        return next(new AuthError("No authentication token provided"));
+    }
+
+    if (tokenRevocationStore.isRevoked(token)) {
+        await SecurityAudit.create({
+            action: 'AUTH_FAILED',
+            email: 'revoked-token',
+            ip: req.ip,
+            status: 'FAILURE',
+            severity: 'WARNING',
+            details: 'Attempt to use explicitly revoked JWT token'
+        }).catch(() => {});
+        return next(new AuthError("Token has been revoked"));
+    }
+
     try {
-        const decoded = jwt.verify(token, config.JWT_SECRET);
+        const decoded = await validateSession(token);
+        if (!decoded) {
+            await SecurityAudit.logSecurityEvent({
+                action: 'AUTH_FAILED',
+                email: 'revoked-session',
+                ip: req.ip || req.socket?.remoteAddress || '127.0.0.1',
+                status: 'FAILURE',
+                severity: 'WARNING',
+                userAgent: req.headers['user-agent'] || '',
+                details: `Session expired or revoked for route ${req.originalUrl}`
+            }).catch(() => {});
+            return next(new AuthError("Session has expired or has been revoked"));
+        }
+
         req.user = decoded;
+        res.setHeader('X-Authenticated-User', decoded.id || decoded.email || 'authenticated');
         next();
     } catch (error) {
-        return next(new AuthError("Invalid token"));
+        await SecurityAudit.logSecurityEvent({
+            action: 'AUTH_FAILED',
+            email: 'invalid-token',
+            ip: req.ip || req.socket?.remoteAddress || '127.0.0.1',
+            status: 'FAILURE',
+            severity: 'CRITICAL',
+            userAgent: req.headers['user-agent'] || '',
+            details: `Invalid token signature on ${req.originalUrl}: ${error.message}`
+        }).catch(() => {});
+        return next(new AuthError("Invalid authentication token"));
     }
 }

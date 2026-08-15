@@ -1,9 +1,18 @@
 .passport-comparator-page {
   min-height: 100vh;
   padding: 2rem 1rem;
+  background: var(--color-bg, transparent);
+  color: var(--color-text, inherit);
 }
 
 .passport-comparator-page__container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Dark Mode page wrapper support */
+[data-theme='dark'] .passport-comparator-page,
+.dark-mode .passport-comparator-page {
+  background: transparent;
+  color: #f1f5f9;
 }

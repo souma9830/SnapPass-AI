@@ -1,63 +1,175 @@
-import { config } from "../config/config.js";
+/**
+ * error.middleware.js — centralised error handling for the Express application.
+ *
+ * Responsibilities:
+ *   1. Translate well-known error types (Multer, Mongoose validation, JWT) into
+ *      meaningful HTTP status codes and user-friendly messages.
+ *   2. Never expose internal stack traces or error details in production
+ *      responses — those are logged server-side only.
+ *   3. Always include the correlationId so support teams can cross-reference
+ *      logs from the client error report.
+ *
+ * Error classification hierarchy:
+ *   MulterError        → 400 / 413 depending on the Multer error code
+ *   ValidationError    → 422 (Mongoose / express-validator)
+ *   SyntaxError (JSON) → 400
+ *   AppError           → uses the statusCode attached to the error object
+ *   Unhandled          → 500 (message hidden in production)
+ */
+
+import multer from 'multer';
+import logger from '../utils/logger.js';
+import { TelemetryLogger } from '../utils/telemetryLogger.js';
+import { config } from '../config/config.js';
+
+const isProduction = () => config.NODE_ENV === 'production';
 
 /**
- * @description A middleware function to handle errors in the application. It logs the error and sends a structured JSON response to the client.
- * @param {Error} err - The error object that was thrown.
- * @param {Object} req - The Express request object.
- * @param {Object} res - The Express response object.
- * @param {Function} next - The next middleware function in the stack.
+ * Map Multer error codes to HTTP status codes and actionable user messages.
  */
-const errorMiddleware = (
-  err,
-  req,
-  res,
-  next
-) => {
-  let error = { ...err };
-  error.message = err.message || "Internal Server Error";
-  error.statusCode = err.statusCode || err.status || 500;
+const MULTER_ERROR_MAP = {
+  LIMIT_FILE_SIZE: {
+    status: 413,
+    message: 'File is too large. Maximum allowed size is 10 MB.',
+  },
+  LIMIT_FILE_COUNT: {
+    status: 400,
+    message:
+      'Too many files uploaded at once. Please upload one photo at a time.',
+  },
+  LIMIT_UNEXPECTED_FILE: {
+    status: 400,
+    message:
+      'Unexpected form field. Use the "photo" field to upload your image.',
+  },
+  LIMIT_FIELD_COUNT: {
+    status: 400,
+    message: 'Too many form fields submitted.',
+  },
+  LIMIT_PART_COUNT: {
+    status: 400,
+    message: 'Multipart request has too many parts.',
+  },
+};
 
-  // Log non-operational errors
-  if (!err.isOperational) {
-    console.error("💥 SYSTEM ERROR:", err);
+/**
+ * Build a safe, sanitised error payload for the HTTP response.
+ * In production the `detail` key is omitted to avoid leaking internals.
+ */
+const buildPayload = (statusCode, message, correlationId, detail = null) => {
+  const payload = { success: false, message, correlationId };
+  if (!isProduction() && detail) {
+    payload.detail = detail;
+  }
+  return { statusCode, payload };
+};
+
+const errorMiddleware = (err, req, res, next) => {
+  // eslint-disable-line no-unused-vars
+  const correlationId = req.id || req.headers['x-request-id'] || null;
+
+  // ── Multer errors (file upload validation) ────────────────────────────────
+  if (err instanceof multer.MulterError) {
+    const mapped = MULTER_ERROR_MAP[err.code];
+    const status = mapped?.status ?? 400;
+    const message = mapped?.message ?? `Upload error: ${err.message}`;
+
+    logger.warn({
+      event: 'multer_error',
+      code: err.code,
+      correlationId,
+      path: req.path,
+    });
+
+    return res.status(status).json({ success: false, message, correlationId });
   }
 
-  // Handle Mongoose CastError (e.g. invalid ObjectId)
-  if (err.name === "CastError") {
-    error.message = `Resource not found with id of ${err.value}`;
-    error.statusCode = 404;
+  // ── Mongoose validation errors → 422 ─────────────────────────────────────
+  if (err.name === 'ValidationError' && err.errors) {
+    const messages = Object.values(err.errors)
+      .map((e) => e.message)
+      .join('; ');
+
+    logger.warn({
+      event: 'validation_error',
+      messages,
+      correlationId,
+      path: req.path,
+    });
+
+    const { payload } = buildPayload(422, messages, correlationId);
+    return res.status(422).json(payload);
   }
 
-  // Handle Mongo Duplicate Key Error
-  if (err.code === 11000) {
-    error.message = `Duplicate field value entered.`;
-    error.statusCode = 400;
+  // ── Malformed JSON body ───────────────────────────────────────────────────
+  if (err instanceof SyntaxError && 'body' in err) {
+    logger.warn({ event: 'malformed_json', correlationId, path: req.path });
+    const { payload } = buildPayload(
+      400,
+      'Malformed JSON in request body.',
+      correlationId
+    );
+    return res.status(400).json(payload);
   }
 
-  // Handle Mongoose ValidationError
-  if (err.name === "ValidationError") {
-    error.message = Object.values(err.errors).map(val => val.message).join(", ");
-    error.statusCode = 400;
+  // ── JWT / auth errors ─────────────────────────────────────────────────────
+  if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+    logger.warn({
+      event: 'jwt_error',
+      name: err.name,
+      correlationId,
+      path: req.path,
+    });
+    const msg =
+      err.name === 'TokenExpiredError'
+        ? 'Your session has expired. Please log in again.'
+        : 'Invalid authentication token.';
+    const { payload } = buildPayload(401, msg, correlationId);
+    return res.status(401).json(payload);
   }
 
-  // Handle JWT Errors
-  if (err.name === "JsonWebTokenError") {
-    error.message = "Invalid authentication token. Please log in again.";
-    error.statusCode = 401;
+  // ── Circuit Breaker Error ─────────────────────────────────────────────
+  if (err.message && err.message.startsWith('CircuitBreakerOpen')) {
+    logger.warn({ event: 'circuit_breaker_open', correlationId, path: req.path });
+    const { payload } = buildPayload(503, 'AI Processing Service is currently unavailable. Please try again shortly.', correlationId);
+    return res.status(503).json(payload);
   }
 
-  if (err.name === "TokenExpiredError") {
-    error.message = "Your session token has expired. Please log in again.";
-    error.statusCode = 401;
+  // ── Application errors (AppError / custom statusCode) ────────────────────
+  const statusCode = err.statusCode || 500;
+  const isServerError = statusCode >= 500;
+
+  if (isServerError) {
+    logger.error({
+      event: 'unhandled_error',
+      message: err.message,
+      stack: err.stack,
+      correlationId,
+      path: req.path,
+    });
+  } else {
+    logger.warn({
+      event: 'client_error',
+      message: err.message,
+      statusCode,
+      correlationId,
+      path: req.path,
+    });
   }
 
-  res.status(error.statusCode).json({
-    success: false,
-    status: error.statusCode >= 500 ? "error" : "fail",
-    message: error.message,
-    errors: err.errors || undefined,
-    stack: config.NODE_ENV === "development" ? err.stack : undefined,
-  });
+  const userMessage =
+    isServerError && isProduction()
+      ? 'An unexpected error occurred. Please try again later.'
+      : err.message || 'Internal Server Error';
+
+  const { payload } = buildPayload(
+    statusCode,
+    userMessage,
+    correlationId,
+    isServerError ? err.stack : null
+  );
+
+  return res.status(statusCode).json(payload);
 };
 
 export default errorMiddleware;

@@ -1,0 +1,1 @@
+exports.getDiagnostics = (req, res) => res.json({ status: 'UP', timestamp: new Date() });

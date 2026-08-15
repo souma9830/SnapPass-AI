@@ -4,20 +4,20 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { LanguageProvider } from './context/LanguageContext';
-import { ToastProvider } from './context/ToastContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import { GlobalErrorBoundary } from './components/common/GlobalErrorBoundary';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <LanguageProvider>
-          <ToastProvider>
+    <GlobalErrorBoundary>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <LanguageProvider>
             <App />
-          </ToastProvider>
-        </LanguageProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
+          </LanguageProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </GlobalErrorBoundary>
   </React.StrictMode>
 );

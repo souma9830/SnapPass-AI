@@ -1,0 +1,124 @@
+.preset-filter-manager {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.preset-filter-manager-dark {
+  background: rgba(15, 23, 42, 0.75);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #f8fafc;
+}
+
+.preset-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.preset-filter-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: inherit;
+}
+
+.preset-reset-btn {
+  background: transparent;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.preset-reset-btn:hover {
+  color: #2563eb;
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.preset-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  background: rgba(248, 250, 252, 0.9);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.preset-card-dark {
+  background: rgba(30, 41, 59, 0.8);
+  color: #cbd5e1;
+}
+
+.preset-card:hover {
+  transform: translateY(-2px);
+  border-color: #93c5fd;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.preset-card-active {
+  border-color: #3b82f6 !important;
+  background: rgba(239, 246, 255, 0.9) !important;
+}
+
+.preset-card-dark.preset-card-active {
+  background: rgba(30, 58, 138, 0.4) !important;
+  border-color: #60a5fa !important;
+}
+
+.preset-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+
+.preset-card-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: inherit;
+}
+
+.preset-card-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.preset-card-dark .preset-card-badge {
+  background: #1e3a8a;
+  color: #93c5fd;
+}
+
+.preset-card-desc {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.preset-card-dark .preset-card-desc {
+  color: #94a3b8;
+}

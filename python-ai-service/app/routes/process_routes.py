@@ -1,9 +1,13 @@
 import io
 import logging
+import os
+import uuid
 from flask import Blueprint, request, jsonify, send_file
+import config
 from app.services.bg_remove import remove_background
 from app.services.face_center import center_face
 from app.services.dpi_optimizer import optimise_dpi
+from app.services.path_guard import validate_magic_bytes
 
 logger = logging.getLogger(__name__)
 process_bp = Blueprint("process", __name__)
@@ -12,7 +16,7 @@ process_bp = Blueprint("process", __name__)
 @process_bp.post("/remove-bg")
 def remove_bg():
     """
-    Test endpoint — background removal only.
+    Background removal endpoint.
     POST multipart/form-data:
       - image             : photo file (required)
       - background_colour : "white" / "blue" / "#ff0000" (optional, default white)
@@ -27,13 +31,21 @@ def remove_bg():
         return jsonify({"success": False, "message": "Empty filename."}), 400
 
     bg_colour = request.form.get("background_colour", "white")
+    attire = request.form.get("attire", "none")
 
     preset = request.form.get("preset") or request.form.get(
         "photo_size_preset") or "35x45"
 
+    tmp_path = None
     try:
         image_bytes = file.read()
-        result_bytes = remove_background(image_bytes, bg_colour)
+        tmp_path = os.path.join(config.UPLOAD_DIR, f"_validate_{uuid.uuid4().hex}.tmp")
+        os.makedirs(config.UPLOAD_DIR, exist_ok=True)
+        with open(tmp_path, "wb") as _f:
+            _f.write(image_bytes)
+        validate_magic_bytes(tmp_path)
+
+        result_bytes = remove_background(image_bytes, bg_colour, attire)
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)
 
@@ -55,3 +67,9 @@ def remove_bg():
         # so internal filesystem paths and library internals are never exposed.
         logger.exception("Unhandled error in /remove-bg")
         return jsonify({"success": False, "message": "Background removal failed. Please try again."}), 500
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass

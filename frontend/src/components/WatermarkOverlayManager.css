@@ -1,0 +1,82 @@
+.watermark-overlay-manager {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.watermark-overlay-manager-dark {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #f8fafc;
+}
+
+.watermark-header {
+  display: flex;
+  align-items: center;
+}
+
+.watermark-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.watermark-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.watermark-options {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.watermark-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.watermark-overlay-manager-dark .field-label {
+  color: #94a3b8;
+}
+
+.watermark-input,
+.watermark-select {
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.85rem;
+  background: #ffffff;
+}
+
+.watermark-overlay-manager-dark .watermark-input,
+.watermark-overlay-manager-dark .watermark-select {
+  background: #1e293b;
+  border-color: #475569;
+  color: #ffffff;
+}
+
+.watermark-field-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.watermark-slider {
+  cursor: pointer;
+}

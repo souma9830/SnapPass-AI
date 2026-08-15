@@ -1,26 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UploadBox from '../components/UploadBox';
-import LoadingSpinner from '../components/LoadingSpinner';
-import usePhotoUpload from '../hooks/usePhotoUpload';
-import './UploadPage.css';
 import { motion } from 'framer-motion';
-
-import { tips, iconMap } from '../data/UploadPageData';
-import { fadeUpVariant } from '../animations/variants.js';
+import ExifMetadataInspector from '../components/ExifMetadataInspector';
+import PhotoQualityHealthMeter from '../components/PhotoQualityHealthMeter';
+import UploadBox from '../components/UploadBox';
+import PhotoPreview from '../components/PhotoPreview';
+import UploadProgress from '../components/UploadProgress';
+import usePhotoUpload from '../hooks/usePhotoUpload';
+import { useBatchUpload } from '../hooks/useBatchUpload';
+import { compressImage } from '../utils/imageCompression';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
-import { saveSession } from '../utils/sessionManager';
+import { iconMap } from '../data/UploadPageData';
+import { runImageDiagnostics } from '../utils/imageDiagnostics';
+import ExifMetadataInspector from '../components/ExifMetadataInspector';
+import './UploadPage.css';
 
-/**
- * UploadPage — Step 1 of the flow.
- * User selects a photo; we create a local object URL and navigate to EditorPage.
- */
 function UploadPage({ darkMode, toggleTheme }) {
   const { language } = useLanguage();
   const t = translations[language];
   const navigate = useNavigate();
-  const { uploadFile, uploadedFile, isUploading, error } = usePhotoUpload();
+  const {
+    uploadFile,
+    uploadedFile,
+    isUploading,
+    error,
+    uploadProgress,
+    reset,
+  } = usePhotoUpload();
+  const batchUpload = useBatchUpload({ concurrency: 3 });
+  const [isBatchMode, setIsBatchMode] = useState(false);
+
+  const [localPreview, setLocalPreview] = useState(null);
+  const [diagResults, setDiagResults] = useState(null);
 
   const tips = [
     { type: 'ok', text: t.tipPlainBg },
@@ -29,136 +41,187 @@ function UploadPage({ darkMode, toggleTheme }) {
     { type: 'no', text: t.tipAvoidAccessories },
   ];
 
-  const iconMap = {
-    ok: (
-      <svg
-        className={`tips ${darkMode ? 'tips-dark' : ''}`}
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="6" />
-        <path d="M8 12.5l2.5 2.5L16 9" />
-      </svg>
-    ),
-    no: (
-      <svg
-        className={`tips ${darkMode ? 'tips-dark' : ''}`}
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="6" />
-        <path d="M9 9l6 6M15 9l-6 6" />
-      </svg>
-    ),
-    lock: (
-      <svg
-        className={`tips ${darkMode ? 'tips-dark' : ''}`}
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <rect x="5" y="10" width="14" height="10" rx="3" />
-        <path d="M8 10V8a4 4 0 0 1 8 0v2" />
-      </svg>
-    ),
+  const fadeUp = {
+    hidden: { opacity: 0, y: 24 },
+    visible: (delay = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: 'easeOut', delay },
+    }),
   };
-  useEffect(() => {
-    if (!uploadedFile) return;
 
-    saveSession({
-      step: 'upload',
-      localUrl: uploadedFile.localUrl,
-      filename: uploadedFile.filename,
-      fileSize: uploadedFile.size,
-    });
+  const handleFileSelect = async (file) => {
+    if (isBatchMode) {
+      batchUpload.addFiles([file]);
+      return;
+    }
+    reset();
+    setDiagResults(null);
+    const diags = await runImageDiagnostics(file);
+    setDiagResults(diags);
+    const previewUrl = URL.createObjectURL(file);
+    setLocalPreview(previewUrl);
+    try {
+      const compressed = await compressImage(file, {
+        maxWidth: 2048,
+        maxHeight: 2048,
+        quality: 0.92,
+      });
+      await uploadFile(compressed);
+    } catch (err) {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setLocalPreview(null);
+    }
+  };
 
-    navigate('/editor', {
-      state: {
-        localUrl: uploadedFile.localUrl,
-        filename: uploadedFile.filename,
-        fileSize: uploadedFile.size,
-      },
-    });
-  }, [uploadedFile, navigate]);
+  const handleProceed = () => {
+    if (uploadedFile) {
+      navigate('/editor', {
+        state: {
+          filename: uploadedFile.filename,
+          fileUrl: uploadedFile.fileUrl,
+          localUrl: uploadedFile.localUrl || localPreview,
+        },
+      });
+    }
+  };
+
+  const handleReset = () => {
+    if (localPreview) {
+      URL.revokeObjectURL(localPreview);
+    }
+    setLocalPreview(null);
+    setDiagResults(null);
+    reset();
+    batchUpload.reset();
+  };
+
+  const displayUrl = uploadedFile?.localUrl || localPreview;
 
   return (
     <div className={`upload-toggle ${darkMode ? 'upload-toggle-dark' : ''}`}>
-      <div className={'upload-page'}>
+      <div className="upload-page page-content">
         <motion.div
           className="upload-page__header"
-          variants={fadeUpVariant}
+          variants={fadeUp}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
           custom={0.1}
         >
           <h1
-            className={`section-title ${darkMode ? 'section-title-dark' : ''}`}
+            className={`section-title ${darkMode ? 'section-title-dark' : 'section-title-light'}`}
           >
-            {t.uploadTitle}
+            {t.uploadPhoto}
           </h1>
           <p
-            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : ''}`}
+            className={`section-subtitle ${darkMode ? 'section-subtitle-dark' : 'section-subtitle-light'}`}
           >
             {t.uploadSubtitle}
           </p>
+          <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'center', gap: '8px', alignItems: 'center' }}>
+            <label style={{ fontSize: '0.9rem', color: darkMode ? '#cbd5e1' : '#475569', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={isBatchMode}
+                onChange={(e) => setIsBatchMode(e.target.checked)}
+                style={{ marginRight: '6px' }}
+              />
+              Enable Batch Processing Mode
+            </label>
+          </div>
         </motion.div>
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.2}
+        >
+          {displayUrl && !isBatchMode ? (
+            <>
+              <PhotoPreview
+                imageUrl={displayUrl}
+                filename={uploadedFile?.filename || 'preview'}
+                onReset={handleReset}
+                onProceed={handleProceed}
+                isUploading={isUploading}
+                darkMode={darkMode}
+              />
+              {uploadedFile?.file && (
+                <>
+                  <ExifMetadataInspector file={uploadedFile.file} darkMode={darkMode} />
+                  <PhotoQualityHealthMeter file={uploadedFile.file} complianceScore={88} darkMode={darkMode} />
+                </>
+              )}
+              {diagResults && (
+                <div aria-live="polite" aria-label="Image Diagnostics Results" style={{ marginTop: '15px', padding: '12px', borderRadius: '8px', background: diagResults.success ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)', border: diagResults.success ? '1px solid rgba(16,185,129,0.2)' : '1px solid rgba(239,68,68,0.2)', textAlign: 'left' }}>
+                  <p style={{ margin: '0 0 5px 0', fontSize: '0.85rem', fontWeight: '600', color: diagResults.success ? '#10b981' : '#ef4444' }}>
+                    {diagResults.success ? '✓ Image diagnostics passed' : '✗ Image diagnostics failed'}
+                  </p>
+                  {diagResults.errors.map((err, idx) => (
+                    <div key={idx} style={{ fontSize: '0.8rem', color: '#ef4444', margin: '2px 0' }}>• {err}</div>
+                  ))}
+                  {diagResults.warnings.map((warn, idx) => (
+                    <div key={idx} style={{ fontSize: '0.8rem', color: '#eab308', margin: '2px 0' }}>• {warn}</div>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <UploadBox onFileSelect={handleFileSelect} />
+              <div aria-live="polite">
+                <UploadProgress progress={uploadProgress} darkMode={darkMode} />
+              </div>
+            </>
+          )}
+        </motion.div>
+
         {error && (
-          <p className="upload-page__error" role="alert">
+          <motion.div
+            className="upload-page__error"
+            role="alert"
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={0.25}
+          >
             {error}
-          </p>
+          </motion.div>
         )}
 
-        {/* Tips */}
-        <div className="upload-page__tips">
-          {tips.map(({ type, text }, idx) => (
-            <motion.div
+        <motion.div
+          className="upload-page__tips"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.3}
+        >
+          {tips.map(({ type, text }) => (
+            <div
               key={text}
               className={`upload-tip ${darkMode ? 'upload-tip-dark' : 'upload-tip-light'}`}
-              variants={fadeUpVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={0.2 + idx * 0.1} // Staggers each tip by 100ms
             >
               <span className="upload-tip__icon" aria-hidden="true">
                 {iconMap[type]}
               </span>
               <span className="upload-tip__text">{text}</span>
-            </motion.div>
+            </div>
           ))}
-        </div>
-
-        {/* Upload Box (Wrapped in a motion div to animate together) */}
-        <motion.div
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={0.5} // Loads after the tips
-        >
-          {isUploading ? (
-            <LoadingSpinner message={t.uploadPreparing} size="lg" />
-          ) : (
-            <UploadBox onFileSelect={uploadFile} />
-          )}
         </motion.div>
 
-        <motion.p
+        <motion.div
           className={`upload-page__privacy ${darkMode ? 'upload-page__privacy-dark' : ''}`}
-          variants={fadeUpVariant}
+          variants={fadeUp}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          custom={0.6}
+          animate="visible"
+          custom={0.4}
         >
           <span className="upload-page__privacy-icon" aria-hidden="true">
             {iconMap.lock}
           </span>
-          {t.privacyMessage}
-        </motion.p>
+          <span>{t.uploadPrivacy}</span>
+        </motion.div>
       </div>
     </div>
   );

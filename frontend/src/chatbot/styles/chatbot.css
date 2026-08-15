@@ -477,3 +477,11 @@
     background: linear-gradient(135deg, #facc15, #e8c500);
     color: #0c0a00;
 }
+
+.chatbot-floating-button:focus-visible,
+.close-chat-btn:focus-visible,
+.prompt-chip:focus-visible,
+.chatbot-input-area input:focus-visible {
+    outline: 3px solid #3b82f6;
+    outline-offset: 2px;
+}

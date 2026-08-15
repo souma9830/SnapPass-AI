@@ -1,0 +1,70 @@
+.exif-metadata-inspector {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.exif-metadata-inspector-dark {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #f8fafc;
+}
+
+.exif-inspector-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+}
+
+.exif-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.6rem;
+}
+
+.exif-item {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.exif-metadata-inspector-dark .exif-item {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.exif-key {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.exif-metadata-inspector-dark .exif-key {
+  color: #94a3b8;
+}
+
+.exif-val {
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.val-pass {
+  color: #16a34a;
+}
+
+.exif-metadata-inspector-dark .val-pass {
+  color: #4ade80;
+}
+
+.val-warn {
+  color: #dc2626;
+}
+
+.exif-metadata-inspector-dark .val-warn {
+  color: #f87171;
+}

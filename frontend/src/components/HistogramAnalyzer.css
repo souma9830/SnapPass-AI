@@ -1,0 +1,107 @@
+.histogram-analyzer {
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.histogram-analyzer-dark {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #f8fafc;
+}
+
+.histogram-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.histogram-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.histogram-status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+
+.status-good {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.histogram-analyzer-dark .status-good {
+  background: rgba(22, 101, 52, 0.4);
+  color: #86efac;
+}
+
+.status-warn {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.histogram-analyzer-dark .status-warn {
+  background: rgba(146, 64, 14, 0.4);
+  color: #fde047;
+}
+
+.histogram-canvas-wrapper {
+  display: flex;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.histogram-analyzer-dark .histogram-canvas-wrapper {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.histogram-canvas {
+  width: 100%;
+  height: 90px;
+  border-radius: 4px;
+}
+
+.histogram-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.4rem;
+  border-radius: 6px;
+}
+
+.histogram-analyzer-dark .metric-item {
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.histogram-analyzer-dark .metric-label {
+  color: #94a3b8;
+}
+
+.metric-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: inherit;
+}

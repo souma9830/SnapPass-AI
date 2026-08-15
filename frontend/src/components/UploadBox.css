@@ -88,8 +88,35 @@
   width: 100%;
 }
 
-/* bug ->since there is no proper dark mode color variables , so applying dark mode theme  */
-/* dark mode variables */
+/* ── Validating state (async checks in progress) ─────── */
+.upload-box--validating {
+  cursor: not-allowed;
+  opacity: 0.75;
+  border-style: solid;
+  border-color: var(--color-primary);
+  pointer-events: none;
+}
+
+.upload-box--validating .upload-box__icon {
+  background: rgba(37, 99, 235, 0.18);
+}
+
+/* Spinner rotation for the validation SVG */
+@keyframes upload-box-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.upload-box__spinner {
+  animation: upload-box-spin 0.9s linear infinite;
+  transform-origin: center;
+}
+
+/* ── Dark mode ───────────────────────────────────────── */
 [data-theme='dark'] .upload-box {
   background: rgba(20, 20, 20, 0.6);
   border-color: rgba(63, 68, 74, 0.6);
@@ -99,4 +126,77 @@
 [data-theme='dark'] .upload-box:focus {
   background: rgba(30, 30, 30, 0.8);
   border-color: #3b82f6;
+}
+
+.upload-queue {
+  width: 100%;
+  margin-top: 12px;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+  padding-top: 8px;
+}
+
+.upload-queue__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary, #6b7280);
+  margin-bottom: 6px;
+}
+
+.upload-queue__badge {
+  background: var(--color-border, #e5e7eb);
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+
+.upload-queue__items {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.upload-queue__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  background: rgba(0,0,0,0.03);
+}
+
+.upload-queue__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+  color: var(--color-text, #111827);
+}
+
+.upload-queue__status {
+  font-weight: 600;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.upload-queue__item--queued .upload-queue__status { color: #6b7280; }
+.upload-queue__item--uploading .upload-queue__status { color: #3b82f6; }
+.upload-queue__item--done .upload-queue__status { color: #15803d; }
+.upload-queue__item--failed .upload-queue__status { color: #b91c1c; }
+.upload-queue__item--cancelled .upload-queue__status { color: #9ca3af; }
+
+.upload-queue__more {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #6b7280;
+  padding: 4px;
+}
+
+[data-theme='dark'] .upload-queue__item {
+  background: rgba(255,255,255,0.04);
+}
+
+[data-theme='dark'] .upload-queue__name {
+  color: #e5e7eb;
 }

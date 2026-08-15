@@ -1,6 +1,7 @@
 """Tests for shared face_detection helper."""
 import numpy as np
 import pytest
+from unittest.mock import patch
 from app.services.face_detection import detect_largest_face
 
 
@@ -9,7 +10,9 @@ class TestDetectLargestFace:
         gray = np.zeros((100, 100), dtype=np.uint8)
         assert detect_largest_face(gray) is None
 
-    def test_valid_face_image_returns_rect(self):
+    @patch("cv2.CascadeClassifier.detectMultiScale")
+    def test_valid_face_image_returns_rect(self, mock_detect):
+        mock_detect.return_value = np.array([[50, 50, 100, 100]])
         gray = np.zeros((200, 200), dtype=np.uint8)
         gray[50:150, 50:150] = 255
         rect = detect_largest_face(gray)

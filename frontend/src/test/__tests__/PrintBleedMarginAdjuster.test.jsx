@@ -3,23 +3,22 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import PrintBleedMarginAdjuster from '../../components/PrintBleedMarginAdjuster';
 
-describe('PrintBleedMarginAdjuster Component', () => {
-  it('renders sliders for bleed and page margins', () => {
-    const handleBleed = vi.fn();
-    const handleMargin = vi.fn();
+describe('PrintBleedMarginAdjuster', () => {
+  it('renders title and default 3mm bleed margin', () => {
+    render(<PrintBleedMarginAdjuster />);
+    expect(screen.getByTestId('bleed-margin-adjuster')).toBeInTheDocument();
+    expect(screen.getByText('Bleed Margin: 3 mm')).toBeInTheDocument();
+  });
 
-    render(
-      <PrintBleedMarginAdjuster
-        bleedMm={2}
-        marginMm={10}
-        onChangeBleed={handleBleed}
-        onChangeMargin={handleMargin}
-        darkMode={false}
-      />
+  it('triggers onUpdateBleed when range slider changes', () => {
+    const handleUpdate = vi.fn();
+    render(<PrintBleedMarginAdjuster onUpdateBleed={handleUpdate} />);
+
+    const slider = screen.getByTestId('bleed-range-slider');
+    fireEvent.change(slider, { target: { value: '5' } });
+
+    expect(handleUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({ bleedMm: 5 })
     );
-
-    expect(screen.getByText(/Print Bleed & Page Margins/i)).toBeInTheDocument();
-    expect(screen.getByText(/Photo Bleed \(2 mm\)/i)).toBeInTheDocument();
-    expect(screen.getByText(/Page Outer Margin \(10 mm\)/i)).toBeInTheDocument();
   });
 });

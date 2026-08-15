@@ -1,0 +1,86 @@
+.wardrobe-selector-card {
+  background: #0f172a;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #1e293b;
+}
+
+.wardrobe-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.wardrobe-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #38bdf8;
+}
+
+.category-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cat-btn {
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  background: #1e293b;
+  color: #94a3b8;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.cat-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.attire-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.75rem;
+}
+
+.attire-card {
+  background: #1e293b;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.attire-card.selected {
+  border-color: #38bdf8;
+  background: #0284c7;
+}
+
+.attire-color-swatch {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+.attire-info {
+  text-align: center;
+}
+
+.attire-name {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.attire-collar {
+  display: block;
+  font-size: 0.65rem;
+  color: #94a3b8;
+}

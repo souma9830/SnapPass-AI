@@ -4,11 +4,11 @@ class HeadPoseEstimator:
     def __init__(self, max_allowed_angle=5.0):
         self.max_allowed_angle = max_allowed_angle
 
-    def estimate_pose(self, 3d_landmarks):
+    def estimate_pose(self, landmarks_3d):
         """
         Estimates pitch, yaw, and roll inclination angles using 3D facial mesh points.
         """
-        if not 3d_landmarks or len(3d_landmarks) < 6:
+        if not landmarks_3d or len(landmarks_3d) < 6:
             return {
                 "compliant": False,
                 "error": "Insufficient 3D facial landmarks for pose matrix calculation."

@@ -17,5 +17,5 @@ ALLOWED_PRESETS = {
     "100x150", "25x25", "50x70", "45x45", "35x50",
 }
 
-# Environment assertions
-assert PORT > 0, 'PORT config cannot be zero'
+if PORT <= 0:
+    raise ValueError("PORT config must be greater than zero")

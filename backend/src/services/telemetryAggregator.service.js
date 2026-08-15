@@ -3,24 +3,33 @@
  * Built for ELUSoC 2026 / GSSOC 2026.
  */
 export class TelemetryAggregatorService {
-  constructor() {
-    this.events = [];
+  static durations = [];
+  static totalErrors = 0;
+
+  static reset() {
+    this.durations = [];
+    this.totalErrors = 0;
   }
 
-  recordEvent(type, payload = {}) {
-    this.events.push({
-      type,
-      payload,
-      timestamp: new Date().toISOString(),
-    });
+  static record(durationMs, statusCode) {
+    this.durations.push(durationMs);
+    if (statusCode >= 500) this.totalErrors += 1;
   }
 
-  getSummary() {
+  static getSummary() {
+    const sorted = [...this.durations].sort((a, b) => a - b);
+    const totalRequests = sorted.length;
+    const avgMs = totalRequests
+      ? sorted.reduce((total, duration) => total + duration, 0) / totalRequests
+      : 0;
+    const p95Index = totalRequests ? Math.min(totalRequests - 1, Math.ceil(totalRequests * 0.95) - 1) : 0;
     return {
-      totalEvents: this.events.length,
-      latest: this.events.slice(-5),
+      totalRequests,
+      totalErrors: this.totalErrors,
+      avgMs,
+      p95Ms: totalRequests ? sorted[p95Index] : 0,
     };
   }
 }
 
-export const telemetryAggregator = new TelemetryAggregatorService();
+export const telemetryAggregator = TelemetryAggregatorService;

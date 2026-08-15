@@ -21,7 +21,7 @@ import cleanupRoutes from './cleanup.routes.js';
 import janitorRoutes from './janitor.routes.js';
 import batchExportRoutes from './batchExport.routes.js';
 import shareRoutes from './share.routes.js';
-import complianceReportRoutes from '../../server/routes/complianceReportRoutes.js';
+import complianceReportRoutes from './complianceReport.routes.js';
 
 const router = Router();
 

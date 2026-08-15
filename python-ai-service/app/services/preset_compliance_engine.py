@@ -19,12 +19,12 @@ class PresetComplianceEngine:
         reasons = []
 
         if face_confidence < 0.80:
-            penalty = (0.80 - face_confidence) * 50
+            penalty = max(15.0, (0.80 - face_confidence) * 50)
             score -= penalty
             reasons.append("Low face detection confidence")
 
         if not (0.50 <= eye_line_ratio <= 0.70):
-            score -= 15.0
+            score -= 20.0
             reasons.append("Eye line out of optimal vertical ratio bounds (50%-70%)")
 
         if background_uniformity < 0.85:
@@ -36,7 +36,7 @@ class PresetComplianceEngine:
             reasons.append("Specular glare detected on face or glasses")
 
         score = max(0.0, min(100.0, score))
-        compliant = score >= 75.0
+        compliant = score >= 85.0
 
         return {
             "score": round(score, 2),

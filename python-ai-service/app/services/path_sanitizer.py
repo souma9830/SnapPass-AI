@@ -3,11 +3,12 @@ path_sanitizer.py — Path Traversal Security Sanitizer for Python Microservice
 Built for ELUSoC 2026 / GSSOC 2026.
 """
 import os
+import tempfile
 
 ALLOWED_UPLOAD_DIRS = [
     os.path.abspath("uploads"),
     os.path.abspath("temp"),
-    os.path.abspath("/tmp"),
+    os.path.abspath(tempfile.gettempdir()),
 ]
 
 def sanitize_file_path(input_path: str, allowed_dirs=None) -> str:

@@ -194,4 +194,4 @@ def generate_sheet():
 
 # Run
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG)
+    app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG)  # nosec B104

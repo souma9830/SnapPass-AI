@@ -4,18 +4,20 @@ import axios from 'axios';
 import { config } from '../config/config.js';
 import { isRedisAvailable } from '../config/redis.js';
 import { HealthCheckService } from '../services/healthCheck.service.js';
+import { HealthDiagnosticsService } from '../services/healthDiagnostics.service.js';
 import { formatHealthResponse } from '../utils/healthResponse.formatter.js';
+import { formatDiagnosticsError } from '../utils/dbStateFormatter.js';
 import { validateHealthQuery } from '../validation/healthQuery.validation.js';
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.json(formatHealthResponse('UP'));
+  res.json({ status: 'ok', service: 'SnapPass AI Backend API', timestamp: new Date().toISOString() });
 });
 
 router.get('/health', (req, res) => {
   const metrics = HealthCheckService.getSystemMetrics();
-  res.json(formatHealthResponse('UP', metrics));
+  res.json({ status: 'ok', service: 'SnapPass AI Backend', timestamp: new Date().toISOString(), metrics });
 });
 
 router.get('/health/readiness', async (req, res) => {

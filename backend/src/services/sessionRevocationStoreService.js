@@ -29,3 +29,5 @@ export class SessionRevocationStoreService {
 }
 
 export const fallbackRevocationStore = new SessionRevocationStoreService();
+export const revoke = fallbackRevocationStore.revoke.bind(fallbackRevocationStore);
+export const isRevoked = fallbackRevocationStore.isRevoked.bind(fallbackRevocationStore);

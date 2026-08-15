@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 from flask import Blueprint, request, jsonify, send_file
@@ -7,6 +8,7 @@ from app.services.face_center import center_face
 from app.services.dpi_optimizer import optimise_dpi
 from app.services.path_guard import validate_magic_bytes
 
+logger = logging.getLogger(__name__)
 process_bp = Blueprint("process", __name__)
 
 
@@ -67,10 +69,16 @@ def remove_bg():
         response.call_on_close(_cleanup)
         return response
     except ValueError as e:
-        return jsonify({"success": False, "message": str(e)}), 422
-    except Exception as e:
-        return jsonify(
-            {"success": False, "message": "Background removal failed.", "detail": str(e)}), 500
+        # Log the original message server-side for debugging but return a
+        # fixed client message — ValueError can originate from third-party
+        # libraries (Pillow, rembg) whose messages may include internal paths.
+        logger.warning("remove_bg validation error: %s", e)
+        return jsonify({"success": False, "message": "Invalid image or processing parameters. Please check your input and try again."}), 422
+    except Exception:
+        # Log full traceback server-side; return a generic message to the client
+        # so internal filesystem paths and library internals are never exposed.
+        logger.exception("Unhandled error in /remove-bg")
+        return jsonify({"success": False, "message": "Background removal failed. Please try again."}), 500
     finally:
         if tmp_path and os.path.exists(tmp_path):
             try:

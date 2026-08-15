@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import ShareLink from '../models/shareLink.model.js';
 import { successResponse, errorResponse } from '../utils/httpResponse.js';
+import anomalyDetectorService from '../services/anomalyDetector.service.js';
 
 /**
  * Parses duration options or minutes into milliseconds.
@@ -315,5 +316,23 @@ export const revokeShareLink = async (req, res, next) => {
     return successResponse(res, { shareId }, 'Share link revoked successfully.');
   } catch (err) {
     next(err);
+  }
+};
+
+export const getSecurityAnomalies = (_req, res, next) => {
+  try {
+    return successResponse(res, anomalyDetectorService.getSecurityMetrics(), 'Security anomaly metrics retrieved.');
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const unblockIp = (req, res, next) => {
+  try {
+    const ip = String(req.body?.ip || '').trim();
+    if (!ip) return errorResponse(res, 'IP address is required.', 400);
+    return successResponse(res, { ip, unblocked: anomalyDetectorService.unblockIp(ip) });
+  } catch (err) {
+    return next(err);
   }
 };

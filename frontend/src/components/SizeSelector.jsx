@@ -1,99 +1,103 @@
 import React, { useState } from 'react';
 import './SizeSelector.css';
 
-/**
- * SizeSelector — dropdown to pick a passport photo size preset.
- *
- * Props:
- *   selected  (string)        — currently selected preset id
- *   onChange  (fn(presetId))  — called on selection change
- *   presets   (array)         — optional array of preset objects;
- *                               defaults to built-in list
- */
+function SizeSelector({ presets = [], selected, onChange }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('All');
 
-const DEFAULT_PRESETS = [
-  { id: '35x45', label: 'Passport Size Photo — India / UK', width: 35, height: 45 },
-  { id: '51x51', label: 'Passport Size Photo — USA Visa', width: 51, height: 51 },
-  { id: '33x48', label: 'Passport Size Photo — Schengen Visa', width: 33, height: 48 },
-  { id: '40x60', label: 'Passport Size Photo — China Visa', width: 40, height: 60 },
-  { id: '2x2in', label: 'Passport Size Photo — US Passport', width: 50.8, height: 50.8 },
-  { id: '100x150', label: 'Postcard Size Photo', width: 100, height: 150 },
-  { id: '25x25', label: 'Stamp Size Photo', width: 25, height: 25 },
-  { id: '50x70', label: 'Passport Size Photo — Canada Passport', width: 50, height: 70 },
-  { id: '45x45', label: 'Passport Size Photo — Japan Passport / Visa', width: 45, height: 45 },
-  { id: '35x50', label: 'Passport Size Photo — Malaysia Passport', width: 35, height: 50 },
-];
+  const regions = ['All', 'Americas', 'Asia', 'Europe', 'Middle East', 'Oceania'];
 
-function SizeSelector({ selected = '35x45', onChange, presets = DEFAULT_PRESETS }) {
-  const [unit, setUnit] = useState('mm');
+  const filteredPresets = presets.filter((preset) => {
+    const matchesSearch =
+      !searchTerm ||
+      preset.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (preset.dimensions && preset.dimensions.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesRegion =
+      selectedRegion === 'All' || preset.region === selectedRegion;
+    return matchesSearch && matchesRegion;
+  });
 
-  const convertDimension = (value) => {
-    switch (unit) {
-      case 'cm':
-        return (value / 10).toFixed(1);
-
-      case 'in':
-        return (value / 25.4).toFixed(2);
-
-      default:
-        return value;
-    }
-  };
-
-  const currentPreset =
-    presets.find((preset) => preset.id === selected) || presets[0];
+  const selectedPresetObj = presets.find((p) => p.id === selected);
 
   return (
     <div className="size-selector">
-      <label className="size-selector__label" htmlFor="size-preset-select">
+      <span className="size-selector__label">
         <span className="size-selector__label-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
             <rect x="4" y="5" width="8" height="12" rx="2" />
             <rect x="12" y="7" width="8" height="12" rx="2" />
-            <path d="M7 9h2M7 12h2M15 11h2M15 14h2" />
           </svg>
         </span>
         Photo Size Preset
-      </label>
+      </span>
+
+      <div className="size-selector__filter-bar" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '0.75rem' }}>
+        <input
+          type="text"
+          placeholder="Search country or dimensions (e.g., Germany, 35x45)..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          aria-label="Filter photo presets"
+          className="size-selector__search-input"
+          style={{
+            padding: '0.4rem 0.75rem',
+            borderRadius: '6px',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            backgroundColor: 'rgba(15, 23, 42, 0.6)',
+            color: '#f8fafc',
+            fontSize: '0.8rem',
+          }}
+        />
+        <div className="size-selector__region-pills" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+          {regions.map((region) => (
+            <button
+              key={region}
+              type="button"
+              onClick={() => setSelectedRegion(region)}
+              style={{
+                padding: '0.2rem 0.55rem',
+                borderRadius: '9999px',
+                fontSize: '0.7rem',
+                fontWeight: 500,
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: selectedRegion === region ? '#3b82f6' : 'rgba(255, 255, 255, 0.08)',
+                color: selectedRegion === region ? '#ffffff' : '#94a3b8',
+                transition: 'all 200ms ease',
+              }}
+            >
+              {region}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="size-selector__controls">
         <select
-          id="size-preset-select"
           className="size-selector__select"
           value={selected}
           onChange={(e) => onChange && onChange(e.target.value)}
+          aria-label="Select passport photo size preset"
         >
-          {presets.map(({ id, label }) => (
-            <option key={id} value={id}>
-              {label}
+          {filteredPresets.map((preset) => (
+            <option key={preset.id} value={preset.id}>
+              {preset.label}
             </option>
           ))}
         </select>
-
-        <select
-          className="size-selector__select size-selector__unit-select"
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
-          aria-label="Measurement unit"
-        >
-          <option value="mm">mm</option>
-          <option value="cm">cm</option>
-          <option value="in">in</option>
-        </select>
       </div>
 
-      <p className="size-selector__dimensions">
-        📏 Dimensions:{' '}
-        {convertDimension(currentPreset.width)}
-        ×
-        {convertDimension(currentPreset.height)} {unit}
-      </p>
-
-      <p className="size-selector__hint">
-        Select the country/visa standard that matches your requirement.
-      </p>
+      {selectedPresetObj && (
+        <div className="size-selector__dimensions">
+          {selectedPresetObj.dimensions || `${selectedPresetObj.width || 35} x ${selectedPresetObj.height || 45} mm`}
+        </div>
+      )}
+      <div className="size-selector__hint">
+        Select the standard that matches your destination country requirements
+      </div>
     </div>
   );
 }
 
 export default SizeSelector;
+

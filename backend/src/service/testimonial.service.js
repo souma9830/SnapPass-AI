@@ -43,10 +43,20 @@ export async function ensureSeedTestimonials() {
   }
 }
 
-export async function getApprovedTestimonials(clientFingerprint = null) {
+/**
+ * Fetch approved testimonials with pagination support.
+ * @param {string|null} clientFingerprint
+ * @param {{page?: number, limit?: number}} options
+ */
+export async function getApprovedTestimonials(clientFingerprint = null, { page = 1, limit = 20 } = {}) {
   await ensureSeedTestimonials();
 
-  const testimonials = await testimonialDao.findApprovedTestimonials();
+  // Enforce limits
+  const numericLimit = Math.min(Number(limit) || 20, 100);
+  const numericPage = Math.max(Number(page) || 1, 1);
+  const numericSkip = (numericPage - 1) * numericLimit;
+
+  const testimonials = await testimonialDao.findApprovedTestimonialsPaginated({ limit: numericLimit, skip: numericSkip });
   const formatted = testimonials.map((item) =>
     formatTestimonial({
       ...item,

@@ -2,21 +2,20 @@ import React, { useMemo, useState } from 'react';
 import './PassportRequirementComparator.css';
 import { PASSPORT_REQUIREMENTS } from '../data/passportRequirements';
 
-/**
- * PassportRequirementComparator
- *
- * Allows users to compare passport and visa photo
- * requirements across multiple country presets.
- */
 function PassportRequirementComparator() {
   const [search, setSearch] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('All');
   const [selectedIds, setSelectedIds] = useState(['35x45', '2x2in']);
 
+  const regions = ['All', 'Asia', 'Europe', 'Americas', 'Oceania'];
+
   const filteredRequirements = useMemo(() => {
-    return PASSPORT_REQUIREMENTS.filter((requirement) =>
-      requirement.label.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [search]);
+    return PASSPORT_REQUIREMENTS.filter((requirement) => {
+      const matchesSearch = requirement.label.toLowerCase().includes(search.toLowerCase());
+      const matchesRegion = selectedRegion === 'All' || requirement.region === selectedRegion;
+      return matchesSearch && matchesRegion;
+    });
+  }, [search, selectedRegion]);
 
   const selectedRequirements = PASSPORT_REQUIREMENTS.filter((requirement) =>
     selectedIds.includes(requirement.id)
@@ -28,6 +27,15 @@ function PassportRequirementComparator() {
         ? current.filter((item) => item !== id)
         : [...current, id]
     );
+  };
+
+  const selectAllFiltered = () => {
+    const allFilteredIds = filteredRequirements.map((r) => r.id);
+    setSelectedIds((prev) => Array.from(new Set([...prev, ...allFilteredIds])));
+  };
+
+  const clearAllSelections = () => {
+    setSelectedIds([]);
   };
 
   const getHeadHeight = (headRatio) => {
@@ -43,9 +51,22 @@ function PassportRequirementComparator() {
       </h2>
 
       <p className="passport-comparator__description">
-        Compare passport and visa photo requirements across supported country
-        presets.
+        Compare passport and visa photo requirements across supported country presets and regions.
       </p>
+
+      <div className="passport-comparator__filter-bar" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
+        {regions.map((region) => (
+          <button
+            key={region}
+            type="button"
+            className={`passport-comparator__region-btn ${selectedRegion === region ? 'active' : ''}`}
+            onClick={() => setSelectedRegion(region)}
+            aria-pressed={selectedRegion === region}
+          >
+            {region}
+          </button>
+        ))}
+      </div>
 
       <div className="passport-comparator__search-wrapper">
         <input
@@ -65,6 +86,18 @@ function PassportRequirementComparator() {
             Clear
           </button>
         )}
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.85rem' }}>
+        <span>Showing {filteredRequirements.length} standard(s)</span>
+        <div>
+          <button type="button" onClick={selectAllFiltered} style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', marginRight: '10px' }}>
+            Select Filtered
+          </button>
+          <button type="button" onClick={clearAllSelections} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>
+            Clear Selection
+          </button>
+        </div>
       </div>
 
       <div className="passport-comparator__selection" role="group" aria-label="Select standards to compare">
@@ -91,7 +124,8 @@ function PassportRequirementComparator() {
                 onChange={() => handleSelection(requirement.id)}
                 tabIndex={-1}
               />
-              {requirement.label}
+              <span>{requirement.label}</span>
+              <span className="passport-comparator__region-tag">{requirement.region}</span>
             </label>
           ))
         )}
@@ -107,21 +141,19 @@ function PassportRequirementComparator() {
                 <th>DPI</th>
                 <th>Background</th>
                 <th>Head Size Ratio</th>
-                <th>Eye Position</th>
+                <th>Rules & Expression</th>
               </tr>
             </thead>
 
             <tbody>
               {selectedRequirements.map((requirement) => (
                 <tr key={requirement.id}>
-                  <td>{requirement.label}</td>
-                  <td>
-                    {requirement.width} × {requirement.height} mm
-                  </td>
+                  <td><strong>{requirement.label}</strong></td>
+                  <td>{requirement.width} × {requirement.height} mm</td>
                   <td>{requirement.dpi}</td>
                   <td>{requirement.background}</td>
                   <td>{requirement.headRatio}</td>
-                  <td>{requirement.eyePosition}</td>
+                  <td>{requirement.expressionRules || 'Standard'}</td>
                 </tr>
               ))}
             </tbody>
@@ -168,7 +200,7 @@ function PassportRequirementComparator() {
                     Head Ratio: {requirement.headRatio}
                   </p>
                   <p className="passport-comparator__preview-eye">
-                    Eye Position: {requirement.eyePosition}
+                    Rules: {requirement.expressionRules || 'Standard'}
                   </p>
                 </div>
               </div>

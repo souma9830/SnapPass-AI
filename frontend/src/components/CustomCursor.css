@@ -1,0 +1,129 @@
+/* ── CustomCursor Component Styles ────────────────────────────── */
+
+.custom-cursor-pointer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999999;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
+  will-change: transform;
+}
+
+/* 1. Glow Mode */
+.cursor-mode-glow {
+  width: 24px;
+  height: 24px;
+  background: rgba(6, 182, 212, 0.25);
+  border: 2px solid #06b6d4;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.8), inset 0 0 8px rgba(6, 182, 212, 0.5);
+}
+
+.cursor-mode-glow.cursor-hovering {
+  transform: translate(-50%, -50%) scale(1.6);
+  background: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.95);
+}
+
+/* 2. Trail Mode */
+.cursor-mode-trail {
+  width: 14px;
+  height: 14px;
+  background: #8b5cf6;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.9);
+}
+
+.cursor-mode-trail.cursor-hovering {
+  transform: translate(-50%, -50%) scale(1.8);
+  background: #ec4899;
+}
+
+.cursor-trail-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999998;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+  will-change: transform, opacity;
+}
+
+/* 3. Sparkle Mode */
+.cursor-mode-sparkle {
+  width: 20px;
+  height: 20px;
+  border: 2px dashed #f59e0b;
+  animation: cursorRotate 4s linear infinite;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.85);
+}
+
+.cursor-mode-sparkle.cursor-hovering {
+  transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+  border-color: #ef4444;
+  box-shadow: 0 0 22px rgba(239, 68, 68, 0.95);
+}
+
+/* 4. Orbit Mode */
+.cursor-mode-orbit {
+  width: 28px;
+  height: 28px;
+  border: 2px dashed #ec4899;
+  box-shadow: 0 0 18px rgba(236, 72, 153, 0.7);
+  animation: cursorOrbit 2.5s linear infinite;
+}
+
+.cursor-mode-orbit.cursor-hovering {
+  transform: translate(-50%, -50%) scale(1.4);
+  border-color: #3b82f6;
+  box-shadow: 0 0 26px rgba(59, 130, 246, 0.9);
+}
+
+@keyframes cursorRotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes cursorOrbit {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+/* Cursor Control Panel Widget */
+.cursor-widget-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 80px;
+  z-index: 999900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  font-size: 0.8rem;
+  color: #f8fafc;
+}
+
+.cursor-widget-select {
+  background: rgba(30, 41, 59, 0.9);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.cursor-widget-select:focus {
+  border-color: #3b82f6;
+}

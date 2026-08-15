@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+**/node_modules/**
+
+# Build outputs
+dist/
+build/
+.next/
+
+# Environment
+.env
+.env.example
+.env.*
+!.env.example
+
+# Generated files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Binary/media
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.ico
+*.svg
+*.woff
+*.woff2
+*.eot
+*.ttf
+*.mp4
+*.webm
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Vite timestamp files
+*.timestamp-*

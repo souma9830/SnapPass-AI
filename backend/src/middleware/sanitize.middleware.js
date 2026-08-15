@@ -1,40 +1,50 @@
-import mongoSanitize from "express-mongo-sanitize";
+import { sanitizePayloadDeep } from '../utils/payloadSanitizer.utils.js';
 
-// Helper to recursively strip HTML tags from strings and protect against prototype pollution
-const cleanHtmlTags = (val) => {
-  if (typeof val === "string") {
-    // Strip HTML tag brackets and potential XSS script syntax
-    return val.replace(/<[^>]*>/g, "").replace(/[<>]/g, "").trim();
+const SENSITIVE_KEYS = new Set(['password', 'token', 'secret', 'apiKey']);
+
+const sanitizeValue = (value) => {
+  if (typeof value === 'string') {
+    return sanitizePayloadDeep(value);
   }
-  if (Array.isArray(val)) {
-    return val.map(cleanHtmlTags);
+  if (Array.isArray(value)) {
+    return value.map(sanitizeValue);
   }
-  if (typeof val === "object" && val !== null) {
-    for (const key in val) {
-      if (Object.prototype.hasOwnProperty.call(val, key)) {
-        // Prevent Prototype Pollution
-        if (key === "__proto__" || key === "constructor" || key === "prototype") {
-          delete val[key];
-          continue;
-        }
-        val[key] = cleanHtmlTags(val[key]);
-      }
+  if (value && typeof value === 'object') {
+    return sanitizeObject(value);
+  }
+  return value;
+};
+
+
+const sanitizeObject = (obj) => {
+  const sanitized = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (SENSITIVE_KEYS.has(key)) {
+      sanitized[key] = value;
+    } else {
+      sanitized[key] = sanitizeValue(value);
     }
   }
-  return val;
+  return sanitized;
 };
 
 export const sanitizeInput = (req, res, next) => {
-  // Apply mongo sanitize on body, params, headers, query
-  if (req.body) mongoSanitize.sanitize(req.body);
-  if (req.query) mongoSanitize.sanitize(req.query);
-  if (req.params) mongoSanitize.sanitize(req.params);
-
-  // Apply custom HTML XSS cleaning
-  if (req.body) req.body = cleanHtmlTags(req.body);
-  if (req.query) req.query = cleanHtmlTags(req.query);
-  if (req.params) req.params = cleanHtmlTags(req.params);
-
+  if (req.body && typeof req.body === 'object' && !Array.isArray(req.body)) {
+    req.body = sanitizeObject(req.body);
+  }
+  if (req.query) {
+    for (const key of Object.keys(req.query)) {
+      if (typeof req.query[key] === 'string') {
+        req.query[key] = sanitizeValue(req.query[key]);
+      }
+    }
+  }
+  if (req.params) {
+    for (const key of Object.keys(req.params)) {
+      if (typeof req.params[key] === 'string') {
+        req.params[key] = sanitizeValue(req.params[key]);
+      }
+    }
+  }
   next();
 };
-

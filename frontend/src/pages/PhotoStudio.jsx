@@ -14,6 +14,7 @@ import {
     Focus,
     CloudMoon,
     SunMedium,
+    Sparkles,
 } from "lucide-react";
 import "./PhotoStudio.css";
 import { useLanguage } from '../context/LanguageContext';
@@ -22,6 +23,10 @@ import {
     DEFAULT_ADJUSTMENTS,
     renderAdjustedImageDataUrl,
 } from '../utils/imageAdjustments';
+import ComparisonSlider from '../components/ComparisonSlider';
+import useProcessImage from '../hooks/useProcessImage';
+import usePhotoUpload from '../hooks/usePhotoUpload';
+
 
 const ADJUSTMENT_TOOLS = [
     { id: 'brightness', labelKey: 'brightness', min: 0, max: 200, format: (v) => `${v}%` },
@@ -47,7 +52,16 @@ const TOOL_BUTTONS = [
 function PhotoStudio() {
     const { language } = useLanguage();
     const t = translations[language];
+    const processor = useProcessImage();
+    const { uploadFile, uploadedFile, isUploading: isUploadingToServer, error: uploadError } = usePhotoUpload();
+
+    const apiBaseUrl =
+        import.meta.env.VITE_API_URL ??
+        (import.meta.env.DEV ? 'http://localhost:5005/api' : '/api');
+    const backendRoot = apiBaseUrl.replace(/\/api\/?$/, '');
+
     const [imageSrc, setImageSrc] = useState(null);
+    // Base64 and blob reference links for local preview renders
     const [croppedImageSrc, setCroppedImageSrc] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [isRenderingPreview, setIsRenderingPreview] = useState(false);
@@ -70,7 +84,7 @@ function PhotoStudio() {
         filter: `brightness(${adjustments.brightness}%) contrast(${adjustments.contrast}%) saturate(${adjustments.saturation}%)`
     }), [adjustments.brightness, adjustments.contrast, adjustments.saturation]);
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (file && file.type.startsWith("image/")) {
             setFileName(file.name);
@@ -84,10 +98,18 @@ function PhotoStudio() {
                 setIsCropping(false);
                 setActiveTool(null);
                 setAdjustments(DEFAULT_ADJUSTMENTS);
+                processor.reset();
             };
             reader.readAsDataURL(file);
+
+            try {
+                await uploadFile(file);
+            } catch (err) {
+                console.error("Auto upload failed:", err);
+            }
         }
     };
+
 
     const onImageLoad = useCallback((e) => {
         imgRef.current = e.currentTarget;
@@ -111,6 +133,7 @@ function PhotoStudio() {
     };
 
     const handleCropAction = () => {
+        // Apply target crop bounds matching the eye/chin constraints in presets.json
         if (isCropping) {
             if (!imgRef.current || !completedCrop || completedCrop.width <= 0 || completedCrop.height <= 0) {
                 setIsCropping(false);
@@ -155,16 +178,21 @@ function PhotoStudio() {
         setCompletedCrop(null);
         setIsCropping(false);
         setActiveTool(null);
+        processor.reset();
+        if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
     const handleDownload = async () => {
-        if (!workingSource) return;
+        const sourceToDownload = processor.processedUrl
+            ? `${backendRoot}${processor.processedUrl}`
+            : (workingSource ? await renderAdjustedImageDataUrl(workingSource, adjustments) : null);
+
+        if (!sourceToDownload) return;
 
         try {
-            const dataUrl = await renderAdjustedImageDataUrl(workingSource, adjustments);
             const link = document.createElement("a");
             link.download = `edited-${fileName}`;
-            link.href = dataUrl;
+            link.href = sourceToDownload;
             link.click();
         } catch {
             // Preview/download failed silently; user can retry.
@@ -213,7 +241,11 @@ function PhotoStudio() {
 
     const previewImageSrc = showOriginal
         ? workingSource
-        : (isCropping ? imageSrc : (previewUrl || workingSource));
+        : (isCropping
+            ? imageSrc
+            : (processor.processedUrl
+                ? `${backendRoot}${processor.processedUrl}`
+                : (previewUrl || workingSource)));
 
     return (
         <div className="photo-studio-page">
@@ -249,6 +281,10 @@ function PhotoStudio() {
                             <Upload className="upload-icon" size={48} />
                             <p>{t.clickUploadPhoto}</p>
                             <span className="upload-hint">{t.uploadFormats}</span>
+                        </div>
+                    ) : showOriginal && previewImageSrc && imageSrc ? (
+                        <div className="comparison-section">
+                            <ComparisonSlider beforeSrc={imageSrc} afterSrc={previewImageSrc} alt="Photo edit comparison" />
                         </div>
                     ) : (
                         <div className={`image-container crop-container ${isRenderingPreview ? 'image-container--rendering' : ''}`}>
@@ -353,11 +389,48 @@ function PhotoStudio() {
                         <div className="toolbar-divider" />
 
                         <div className="toolbar-group">
+                            <button
+                                className="export-btn"
+                                onClick={() => {
+                                    if (uploadedFile?.filename) {
+                                        processor.startProcessing({
+                                            filename: uploadedFile.filename,
+                                            backgroundColour: 'white',
+                                            photoSizePreset: '35x45',
+                                            attire: 'none'
+                                        });
+                                    }
+                                }}
+                                disabled={processor.status === 'processing' || !imageSrc || isUploadingToServer || !uploadedFile?.filename}
+                                title="Process with AI"
+                            >
+                                <Sparkles size={18} />
+                                <span className="hide-mobile">
+                                    {isUploadingToServer ? "Uploading..." : (processor.status === 'processing' ? "Processing..." : "AI Process")}
+                                </span>
+                            </button>
                             <button className="export-btn tour-download" onClick={handleDownload} disabled={isCropping}>
                                 <Download size={18} />
                                 <span className="hide-mobile">{t.download}</span>
                             </button>
                         </div>
+                        {processor.status !== 'idle' && processor.status !== 'failed' && (
+                            <div className="processing-bar">
+                                <div className="processing-bar__fill" style={{ width: `${processor.progress}%` }} />
+                                <span className="processing-bar__label">{processor.stage || processor.status} ({processor.progress}%)</span>
+                            </div>
+                        )}
+                        {processor.status === 'failed' && (
+                            <div className="processing-bar processing-bar--error">
+                                <span className="processing-bar__label">Failed: {processor.error}</span>
+                                <button className="btn btn-xs btn-outline" onClick={processor.reset}>Dismiss</button>
+                            </div>
+                        )}
+                        {processor.status === 'done' && (
+                            <div className="processing-bar processing-bar--done">
+                                <span className="processing-bar__label">Processing complete!</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

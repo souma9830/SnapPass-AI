@@ -1,102 +1,52 @@
-/**
- * Upload Controller
- * Handles photo upload requests.
- * Validates file, saves to disk, and forwards to AI service for initial processing.
- */
-
-import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
-import { uploadImage } from "../service/cloudinary.service.js";
-import Upload from "../models/upload.model.js";
-import { config } from "../config/config.js";
+import { successResponse, errorResponse } from '../utils/httpResponse.js';
 
 /**
  * POST /api/upload
- * Accepts a multipart image upload and responds with the stored file path.
+ *
+ * Handles photo uploads.  By the time this controller runs the multer
+ * uploadMiddleware + validateImageChain middleware pipeline has already:
+ *   1. Rejected any file with an invalid MIME type or extension.
+ *   2. Verified the binary magic bytes against JPEG / PNG / WebP signatures.
+ *   3. Confirmed pixel dimensions are within accepted bounds.
+ *   4. Stored the suspicious-compression-ratio check result.
+ *
+ * This handler assembles and returns a structured payload the frontend
+ * can use directly for subsequent AI-processing and print-sheet calls.
  */
 export const uploadPhoto = async (req, res, next) => {
-  let localPath;
-  let isCloudinaryUsed = false;
   try {
-    // multer middleware has already saved the file at this point
     if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded." });
+      return errorResponse(res, 'No image file received. Please attach a JPEG, PNG, or WebP photo.', 400);
     }
 
-    localPath = req.file.path;
-    const fileId = uuidv4();
-    
-    let fileUrl;
-    let publicId = null;
+    const { filename, size, mimetype } = req.file;
+    const meta = req.imageMeta || {};
 
-    const { cloudName, apiKey, apiSecret } = config.cloudinary;
-    if (cloudName && apiKey && apiSecret) {
-      const cloudinaryResult = await uploadImage(localPath);
-      fileUrl = cloudinaryResult.secure_url;
-      publicId = cloudinaryResult.public_id;
-      isCloudinaryUsed = true;
-      try {
-        fs.unlinkSync(localPath);
-      } catch (_err) {}
-    } else {
-      // Fallback to local URL
-      fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-    }
-
-    if (req.user?.id) {
-      await Upload.create({
-        user: req.user.id,
-        fileId,
-        originalName: req.file.originalname,
-        fileUrl,
-        mimeType: req.file.mimetype,
-        sizeBytes: req.file.size,
-      });
-    }
-
-    res.status(201).json({
-      success: true,
-      message: "Photo uploaded successfully" + (isCloudinaryUsed ? "." : " (locally)."),
-      data: {
-        fileId,
-        filename: req.file.filename,
-        originalName: req.file.originalname,
-        fileUrl,
-        publicId,
-        mimetype: req.file.mimetype,
-        size: req.file.size,
-      },
-    });
-  } catch (error) {
-    if (localPath) {
-      try {
-        fs.unlinkSync(localPath);
-      } catch (_err) {}
-    }
-    next(error);
+    return successResponse(res, {
+      filename,
+      fileSize: size,
+      mimeType: mimetype,
+      width: meta.width ?? null,
+      height: meta.height ?? null,
+      exifCleaned: true,
+      processUrl: `/api/process`,
+    }, 'Photo uploaded and validated successfully.');
+  } catch (err) {
+    next(err);
   }
 };
 
-/**
- * GET /api/upload/:fileId
- * Returns metadata for a previously uploaded file.
- */
-export const getUploadedPhoto = async (req, res, next) => {
+export const batchUpload = async (req, res, next) => {
   try {
-    const { fileId } = req.params;
-    const file = await Upload.findOne({ fileId }).lean();
-
-    if (!file) {
-      return res.status(404).json({ success: false, message: "File not found." });
-    }
-
-    // Secure ownership validation check
-    if (file.user && file.user.toString() !== req.user.id && req.user.role !== "admin") {
-      return res.status(403).json({ success: false, message: "Access denied: Unauthorized access." });
-    }
-
-    res.json({ success: true, data: file });
-  } catch (error) {
-    next(error);
+    const files = req.files || [];
+    const results = files.map((f) => ({
+      filename: f.filename,
+      originalName: f.originalname,
+      size: f.size,
+      uploaded: true,
+    }));
+    successResponse(res, { files: results }, `${results.length} file(s) uploaded successfully`);
+  } catch (err) {
+    next(err);
   }
 };

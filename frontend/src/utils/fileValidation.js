@@ -1,0 +1,115 @@
+import { readFileBytes, detectImageFormat } from './magicBytes';
+
+export const ACCEPTED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+export const ACCEPTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+export const MAX_FILE_SIZE_MB = 10;
+export const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+export const MIN_WIDTH = 200;
+export const MIN_HEIGHT = 200;
+export const MAX_WIDTH = 5000;
+export const MAX_HEIGHT = 5000;
+export const MIN_PRINT_WIDTH = 400;
+export const MIN_PRINT_HEIGHT = 400;
+export const MAX_PIXEL_DIMENSION = 8000;
+
+const ALLOWED_TYPES = ACCEPTED_MIME_TYPES;
+
+export function validateFileType(file) {
+  if (!file) return 'No file provided';
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return `Unsupported file type "${file.type}". Allowed: JPEG, PNG, WebP`;
+  }
+  return '';
+}
+
+export function validateFileSize(file) {
+  if (!file) return 'No file provided';
+  if (file.size === 0) return 'File size is 0 bytes. Please upload a valid image';
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    const mb = (file.size / (1024 * 1024)).toFixed(1);
+    return `File size is ${mb}MB. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB`;
+  }
+  return '';
+}
+
+export function validateFileDimensions(file) {
+  return new Promise((resolve) => {
+    if (!file) {
+      resolve('No file provided');
+      return;
+    }
+
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      if (img.width < MIN_WIDTH || img.height < MIN_HEIGHT) {
+        resolve(
+          `Image too small (${img.width}×${img.height}). Minimum ${MIN_WIDTH}×${MIN_HEIGHT}px`
+        );
+      } else if (img.width > MAX_WIDTH || img.height > MAX_HEIGHT) {
+        resolve(
+          `Image too large (${img.width}×${img.height}). Maximum ${MAX_WIDTH}×${MAX_HEIGHT}px`
+        );
+      } else {
+        resolve('');
+      }
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve('Could not read image dimensions');
+    };
+
+    img.src = url;
+  });
+}
+
+export async function validatePhotoFile(file) {
+  const errors = [];
+  const typeErr = validateFileType(file);
+  if (typeErr) errors.push(typeErr);
+
+  const sizeErr = validateFileSize(file);
+  if (sizeErr) errors.push(sizeErr);
+
+  if (!errors.length) {
+    const dimErr = await validateFileDimensions(file);
+    if (dimErr) errors.push(dimErr);
+  }
+
+  return errors;
+}
+
+export function validateImageFile(file) {
+  const typeErr = validateFileType(file);
+  if (typeErr) return { valid: false, error: typeErr };
+
+  const sizeErr = validateFileSize(file);
+  if (sizeErr) return { valid: false, error: sizeErr };
+
+  return { valid: true, error: '' };
+}
+
+export async function validateImageMagicBytes(file) {
+  if (!file || file.size === 0) return false;
+  try {
+    const bytes = await readFileBytes(file);
+    return detectImageFormat(bytes) !== null;
+  } catch {
+    return false;
+  }
+}
+
+export async function validateImageDimensions(file) {
+  const dimErr = await validateFileDimensions(file);
+  if (dimErr) return { valid: false, error: dimErr };
+  return { valid: true };
+}
+
+export function validateCompressionRatio(originalBytes, newBytes) {
+  if (!originalBytes || !newBytes) return { valid: true, ratio: 1.0 };
+  const ratio = newBytes / originalBytes;
+  return { valid: ratio >= 0.05, ratio: parseFloat(ratio.toFixed(2)) };
+}

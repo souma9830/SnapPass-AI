@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { AlertCircle, CheckCircle, Info, X } from 'lucide-react';
-import './Toast.css';
+import './layout/Toast.css';
 
 const Toast = ({ message, type = 'info', duration = 3000, onClose }) => {
   useEffect(() => {
@@ -24,7 +24,7 @@ const Toast = ({ message, type = 'info', duration = 3000, onClose }) => {
   };
 
   return (
-    <div className={`toast-message ${type}`} role="alert">
+    <div className={`toast-message ${type}`} role="alert" aria-live="assertive">
       {getIcon()}
       <span className="toast-text">{message}</span>
       <button className="toast-close-btn" onClick={onClose} aria-label="Close message">

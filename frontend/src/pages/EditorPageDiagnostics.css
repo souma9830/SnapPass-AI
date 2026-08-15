@@ -1,0 +1,9 @@
+/* Diagnostics panel styling for the developer console */
+.editor-page-diagnostics-indicator {
+  position: absolute;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+  pointer-events: none;
+  content: 'editor-ready';
+}

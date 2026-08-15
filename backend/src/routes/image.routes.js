@@ -1,15 +1,10 @@
-/**
- * Image Processing Routes
- * POST /api/process        — Process uploaded image (bg removal, face centre, resize)
- * GET  /api/process/preview/:filename — Get preview of processed image
- */
-
-import express from "express";
-import { processImage, getPreview } from "../controllers/image.controller.js";
-
+import express from 'express';
+import { processImage } from '../controllers/image.controller.js';
+import { sanitizeInput } from '../middleware/sanitize.middleware.js';
 const router = express.Router();
 
-router.post("/", processImage);
-router.get("/preview/:filename", getPreview);
+// Image processing router communicating with the Python AI Flask service
+router.post('/', sanitizeInput, processImage);
+router.post('/process', sanitizeInput, processImage);
 
 export default router;

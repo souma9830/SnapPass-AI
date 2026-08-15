@@ -1,98 +1,203 @@
 /**
- * Centralized passport and visa requirement definitions.
- *
- * This dataset is shared between:
- * - Size selector presets
- * - Requirement comparison tools
- * - Future country-specific guidance features
+ * Centralized passport and visa requirement definitions with region tagging and compliance specs.
  */
 
 export const PASSPORT_REQUIREMENTS = [
   {
     id: '35x45',
     label: 'Passport Size Photo — India / UK',
+    region: 'Asia',
     width: 35,
     height: 45,
     dpi: 300,
     background: 'White or light plain background',
     headRatio: '70-80%',
     eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, mouth closed',
   },
-
   {
     id: '51x51',
     label: 'Passport Size Photo — USA Visa',
+    region: 'Americas',
     width: 51,
     height: 51,
     dpi: 300,
     background: 'Plain white background',
     headRatio: '50-70%',
     eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, no eyeglasses',
   },
-
   {
     id: '33x48',
     label: 'Passport Size Photo — Schengen Visa',
+    region: 'Europe',
     width: 33,
     height: 48,
     dpi: 300,
     background: 'Light background',
     headRatio: '70-80%',
     eyePosition: 'Centered',
+    expressionRules: 'Neutral, looking directly at camera',
   },
-
   {
     id: '40x60',
     label: 'Passport Size Photo — China Visa',
+    region: 'Asia',
     width: 40,
     height: 60,
     dpi: 300,
     background: 'White background',
     headRatio: '70-80%',
     eyePosition: 'Centered',
+    expressionRules: 'No jewelry, ears fully visible',
   },
-
   {
     id: '2x2in',
     label: 'Passport Size Photo — US Passport',
+    region: 'Americas',
     width: 50.8,
     height: 50.8,
     dpi: 300,
     background: 'Plain white background',
     headRatio: '50-69%',
     eyePosition: '28-35 mm from bottom',
+    expressionRules: 'No glasses, full face front view',
   },
-
   {
     id: '50x70',
     label: 'Passport Size Photo — Canada Passport',
+    region: 'Americas',
     width: 50,
     height: 70,
     dpi: 300,
     background: 'White background',
     headRatio: '70-80%',
     eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, commercial photographer stamp',
   },
-
   {
     id: '45x45',
     label: 'Passport Size Photo — Japan Passport / Visa',
+    region: 'Asia',
     width: 45,
     height: 45,
     dpi: 300,
     background: 'Plain background',
     headRatio: '70-80%',
     eyePosition: 'Centered',
+    expressionRules: 'No headwear unless religious',
   },
-
   {
     id: '35x50',
     label: 'Passport Size Photo — Malaysia Passport',
+    region: 'Asia',
     width: 35,
     height: 50,
     dpi: 300,
     background: 'White background',
     headRatio: '70-80%',
     eyePosition: 'Centered',
+    expressionRules: 'Dark clothing recommended',
+  },
+  {
+    id: '35x45_aus',
+    label: 'Passport Size Photo — Australia Passport',
+    region: 'Oceania',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Plain light gray or white',
+    headRatio: '75-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Mouth closed, no smiling',
+  },
+  {
+    id: '35x45_sg',
+    label: 'Passport Size Photo — Singapore Passport',
+    region: 'Asia',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Matt white background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Shoulders visible, even lighting',
+  },
+  {
+    id: '35x45_de',
+    label: 'Passport Size Photo — Germany / Schengen Biometric',
+    region: 'Europe',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Neutral light gray or white',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, look straight into camera',
+  },
+  {
+    id: '50x70_br',
+    label: 'Passport Size Photo — Brazil Passport',
+    region: 'Americas',
+    width: 50,
+    height: 70,
+    dpi: 300,
+    background: 'Plain white background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, no reflections on glasses',
+  },
+  {
+    id: '40x60_uae',
+    label: 'Passport Size Photo — UAE Residency / Visa',
+    region: 'Middle East',
+    width: 40,
+    height: 60,
+    dpi: 300,
+    background: 'White background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Frontal pose, clear facial contour',
+  },
+  {
+    id: '35x45_kr',
+    label: 'Passport Size Photo — South Korea Passport',
+    region: 'Asia',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Plain white background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Natural expression, ears uncovered',
+  },
+  {
+    id: '35x45_in_matte',
+    label: 'Passport Size Photo — India Passport Matte',
+    region: 'Asia',
+    width: 35,
+    height: 45,
+    dpi: 300,
+    background: 'Off-white / Light Grey plain background',
+    headRatio: '70-80%',
+    eyePosition: 'Centered',
+    expressionRules: 'Neutral expression, matte finish paper requirement',
   },
 ];
+
+export function getRequirementsByRegion(region) {
+  if (!region || region === 'All') return PASSPORT_REQUIREMENTS;
+  return PASSPORT_REQUIREMENTS.filter((item) => item.region === region);
+}
+
+export function searchPresets(query) {
+  if (!query) return PASSPORT_REQUIREMENTS;
+  const q = query.toLowerCase();
+  return PASSPORT_REQUIREMENTS.filter(
+    (item) =>
+      item.label.toLowerCase().includes(q) ||
+      item.region.toLowerCase().includes(q) ||
+      item.id.toLowerCase().includes(q)
+  );
+}
+

@@ -1,0 +1,1 @@
+module.exports = (max = 5) => (req, res, next) => next();

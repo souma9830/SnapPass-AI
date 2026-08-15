@@ -1,0 +1,159 @@
+.diagnostics-layout {
+  min-height: calc(100vh - 80px);
+  padding: 40px 20px;
+  background: var(--bg-fallback, #f9fafb);
+  color: var(--text-color, #1f2937);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.diagnostics-layout--dark {
+  background: #111827;
+  color: #f3f4f6;
+  --bg-card: #1f2937;
+  --border-color: #374151;
+}
+
+.diagnostics-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.diagnostics-header {
+  margin-bottom: 30px;
+}
+
+.diagnostics-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.diagnostics-subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.diagnostics-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .diagnostics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.diagnostics-card {
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background: var(--bg-card, #ffffff);
+}
+
+.card-sec-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.check-description {
+  font-size: 0.88rem;
+  opacity: 0.75;
+  margin-bottom: 20px;
+}
+
+.check-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border-color, #e5e7eb);
+  font-size: 0.92rem;
+}
+
+.stat-label {
+  font-weight: 600;
+}
+
+.stat-value {
+  opacity: 0.9;
+}
+
+.stat-value.success {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.stat-value.danger {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.run-checks-btn {
+  width: 100%;
+  padding: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.report-viewer-card {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.copy-report-btn {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.report-code-block {
+  flex: 1;
+  padding: 16px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #38bdf8;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.88rem;
+  overflow: auto;
+  max-height: 450px;
+}
+
+.report-empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  opacity: 0.6;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.report-empty-state p {
+  font-size: 0.92rem;
+}

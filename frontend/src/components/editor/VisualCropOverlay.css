@@ -1,0 +1,34 @@
+.visual-crop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visual-crop-overlay__guide-box {
+  width: 60%;
+  height: 75%;
+  border: 2px dashed rgba(37, 99, 235, 0.6);
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.25);
+  position: relative;
+}
+
+.visual-crop-overlay__label {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.85);
+  color: #38bdf8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}

@@ -1,0 +1,47 @@
+.processing-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.processing-status__indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.processing-status--queued .processing-status__indicator {
+  background: #94a3b8;
+}
+
+.processing-status--processing .processing-status__indicator {
+  background: #3b82f6;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.processing-status--done .processing-status__indicator {
+  background: #22c55e;
+}
+
+.processing-status--failed .processing-status__indicator {
+  background: #ef4444;
+}
+
+.processing-status__error {
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

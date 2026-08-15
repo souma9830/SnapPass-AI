@@ -1,0 +1,111 @@
+.biometric-mesh-card {
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  border: 1px solid #1e293b;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.biometric-mesh-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.biometric-mesh-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.compliance-badge {
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.compliance-badge.pass {
+  background-color: #065f46;
+  color: #34d399;
+}
+
+.compliance-badge.fail {
+  background-color: #991b1b;
+  color: #fca5a5;
+}
+
+.biometric-mesh-canvas-container {
+  position: relative;
+  background-color: #020617;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.biometric-mesh-svg {
+  background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+}
+
+.mesh-point.eye-point {
+  fill: #38bdf8;
+}
+
+.mesh-point.nose-point {
+  fill: #f59e0b;
+}
+
+.mesh-point.jaw-point {
+  fill: #a855f7;
+}
+
+.biometric-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.metric-item {
+  background: #1e293b;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  text-align: center;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.metric-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.biometric-warnings-list {
+  margin-top: 1rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+}
+
+.biometric-warnings-list h4 {
+  font-size: 0.85rem;
+  color: #f87171;
+  margin: 0 0 0.25rem 0;
+}
+
+.biometric-warnings-list ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.75rem;
+  color: #fca5a5;
+}

@@ -9,6 +9,20 @@ import from this module instead of rebuilding the cascade locally.
 import cv2
 
 
+def detect_faces(gray_image: cv2.Mat):
+    """Return all frontal-face rectangles detected in a grayscale image."""
+    cascade = cv2.CascadeClassifier(
+        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+    )
+    faces = cascade.detectMultiScale(
+        gray_image,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(60, 60),
+    )
+    return [tuple(int(value) for value in rect) for rect in faces]
+
+
 def detect_largest_face(gray_image: cv2.Mat):
     """Run OpenCV Haar cascade on a grayscale image.
 
@@ -19,15 +33,7 @@ def detect_largest_face(gray_image: cv2.Mat):
         Tuple (x, y, w, h) of the largest detected face, or None if
         no face was found.
     """
-    cascade = cv2.CascadeClassifier(
-        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-    )
-    faces = cascade.detectMultiScale(
-        gray_image,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(60, 60),
-    )
+    faces = detect_faces(gray_image)
 
     if len(faces) == 0:
         return None

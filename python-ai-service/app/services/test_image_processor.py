@@ -57,7 +57,7 @@ def test_optimise_dpi_diverse_color_profiles():
     # Test handling of RGBA color profiles during DPI optimization
     img = Image.new("RGBA", (120, 120), color=(0, 255, 0, 255))
     img_bytes_io = io.BytesIO()
-    img.save(img_bytes_io, format="JPEG")
+    img.save(img_bytes_io, format="PNG")
     img_bytes = img_bytes_io.getvalue()
 
     output_bytes = optimise_dpi(img_bytes, "35x45")

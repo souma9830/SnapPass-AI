@@ -1,4 +1,5 @@
 import { HealthCheckService } from '../healthCheck.service.js';
+import mongoose from 'mongoose';
 
 jest.mock('mongoose', () => ({
   connection: { readyState: 1 },
@@ -18,11 +19,10 @@ describe('HealthCheckService', () => {
 
 
   it('returns DEGRADED when MongoDB is unavailable', async () => {
-    jest.doMock('mongoose', () => ({
-      connection: { readyState: 0 },
-    }));
+    mongoose.connection.readyState = 0;
     const result = await HealthCheckService.performReadinessCheck();
     expect(result.status).toBe('DEGRADED');
+    mongoose.connection.readyState = 1;
   });
 
 

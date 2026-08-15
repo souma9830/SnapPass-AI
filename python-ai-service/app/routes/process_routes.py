@@ -1,3 +1,5 @@
+import io
+import logging
 import os
 import uuid
 from flask import Blueprint, request, jsonify, send_file
@@ -7,6 +9,7 @@ from app.services.face_center import center_face
 from app.services.dpi_optimizer import optimise_dpi
 from app.services.path_guard import validate_magic_bytes
 
+logger = logging.getLogger(__name__)
 process_bp = Blueprint("process", __name__)
 
 
@@ -46,31 +49,24 @@ def remove_bg():
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)
 
-        filename = f"{uuid.uuid4().hex}.png"
-        save_path = os.path.join(config.UPLOAD_DIR, filename)
-        with open(save_path, "wb") as f:
-            f.write(final_image)
-
-        response = send_file(
-            save_path,
-            mimetype="image/png",
-            as_attachment=False,
-            download_name=filename,
-        )
-
-        def _cleanup():
-            try:
-                os.unlink(save_path)
-            except OSError:
-                pass
-
-        response.call_on_close(_cleanup)
-        return response
+        # Stream result directly from memory — no temp file written to disk.
+        # This prevents unbounded disk growth from accumulated output images.
+        # as_attachment=False serves the image inline; download_name is omitted
+        # because it has no effect without as_attachment=True.
+        buf = io.BytesIO(final_image)
+        buf.seek(0)
+        return send_file(buf, mimetype="image/png", as_attachment=False)
     except ValueError as e:
-        return jsonify({"success": False, "message": str(e)}), 422
-    except Exception as e:
-        return jsonify(
-            {"success": False, "message": "Background removal failed.", "detail": str(e)}), 500
+        # Log the original message server-side for debugging but return a
+        # fixed client message — ValueError can originate from third-party
+        # libraries (Pillow, rembg) whose messages may include internal paths.
+        logger.warning("remove_bg validation error: %s", e)
+        return jsonify({"success": False, "message": "Invalid image or processing parameters. Please check your input and try again."}), 422
+    except Exception:
+        # Log full traceback server-side; return a generic message to the client
+        # so internal filesystem paths and library internals are never exposed.
+        logger.exception("Unhandled error in /remove-bg")
+        return jsonify({"success": False, "message": "Background removal failed. Please try again."}), 500
     finally:
         if tmp_path and os.path.exists(tmp_path):
             try:

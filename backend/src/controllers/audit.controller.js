@@ -1,4 +1,6 @@
 import AuditLog from '../models/auditLog.model.js';
+import { formatAuditCSV, formatAuditNDJSON, formatAuditJSON } from '../utils/auditFormatter.utils.js';
+import { validateAuditExportQuery } from '../validation/auditQuery.validation.js';
 
 export const getAuditLogs = async (req, res, next) => {
   try {
@@ -69,6 +71,39 @@ export const getAuditStats = async (req, res, next) => {
         topEndpoints,
       },
     });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const exportAuditLogs = async (req, res, next) => {
+  try {
+    const { format = 'csv', startDate, endDate } = req.query;
+    const validation = validateAuditExportQuery(req.query);
+    if (!validation.isValid) {
+      return res.status(400).json({ success: false, errors: validation.errors });
+    }
+
+    const filter = {};
+    if (startDate || endDate) {
+      filter.createdAt = {};
+      if (startDate) filter.createdAt.$gte = new Date(startDate);
+      if (endDate) filter.createdAt.$lte = new Date(endDate);
+    }
+    const logs = await AuditLog.find(filter).sort({ createdAt: -1 }).limit(1000).lean();
+
+    if (format.toLowerCase() === 'csv') {
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="audit-logs.csv"');
+      return res.send(formatAuditCSV(logs));
+    }
+    if (format.toLowerCase() === 'ndjson') {
+      res.setHeader('Content-Type', 'application/x-ndjson');
+      res.setHeader('Content-Disposition', 'attachment; filename="audit-logs.ndjson"');
+      return res.send(formatAuditNDJSON(logs));
+    }
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(formatAuditJSON(logs));
   } catch (err) {
     return next(err);
   }

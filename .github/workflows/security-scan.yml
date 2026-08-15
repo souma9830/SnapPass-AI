@@ -8,4 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run Bandit Security Scan
-        run: pip install bandit && bandit -r ./python-ai-service
+        run: pip install bandit && bandit -r ./python-ai-service -ll

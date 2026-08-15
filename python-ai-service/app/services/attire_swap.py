@@ -14,6 +14,10 @@ def apply_attire_swap(
     Detects the face in the transparent foreground image and aligns/overlays
     the specified formal attire template over the user's shoulders.
     """
+    supported_attire = {"male_suit", "female_blazer"}
+    if attire_name not in supported_attire:
+        raise ValueError(f"Unsupported attire preset: '{attire_name}'.")
+
     # 1. Convert PIL Image to OpenCV BGR for face detection
     img_np = np.array(foreground)
     
@@ -23,16 +27,18 @@ def apply_attire_swap(
     gray = cv2.equalizeHist(gray)
     
     # 2. Detect face using shared Haar cascade helper
-    from app.services.face_detection import detect_largest_face
-    face_rect = detect_largest_face(gray)
-    if face_rect is None:
+    from app.services.face_detection import detect_faces
+    faces = detect_faces(gray)
+    if not faces:
         raise ValueError(
             "Could not detect face for attire alignment. "
             "Please ensure your face is clearly visible, well-lit, and facing the camera directly."
         )
+    if len(faces) > 1:
+        raise ValueError("Multiple faces detected; attire alignment requires one face.")
 
     # Get the largest face
-    fx, fy, fw, fh = face_rect
+    fx, fy, fw, fh = faces[0]
     
     # 3. Load the attire template
     assets_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "attire")

@@ -1,0 +1,38 @@
+.rate-limit-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.rate-limit-badge.warning {
+  background-color: #451a03;
+  color: #fde047;
+  border: 1px solid #78350f;
+}
+
+.rate-limit-badge.critical {
+  background-color: #450a0a;
+  color: #fca5a5;
+  border: 1px solid #7f1d1d;
+  animation: pulse-border 2s infinite;
+}
+
+.alert-msg {
+  flex: 1;
+}
+
+.alert-time {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}

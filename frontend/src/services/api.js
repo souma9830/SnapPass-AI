@@ -54,4 +54,9 @@ export const checkFacialAsymmetry = async (filePath) => {
   return response.data;
 };
 
+export const detectFaces = async (filename) => {
+  const response = await api.post('/face-detection', { filename });
+  return response.data;
+};
+
 export default api;

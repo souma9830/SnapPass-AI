@@ -96,6 +96,73 @@ def face_quality_check():
         return jsonify({"error": str(e)}), 500
 
 
+# Multi-Face Detection
+@app.route("/detect-faces", methods=["POST"])
+@limiter.limit("20 per minute")
+def detect_faces():
+    """Detect all faces in an uploaded image and return bounding boxes.
+
+    Accepts multipart/form-data with an ``image`` field (file upload)
+    OR a JSON body with a ``file_path`` field pointing to a local file.
+
+    Returns JSON:
+        {
+          "faces": [ {"index": 0, "x": .., "y": .., "w": .., "h": ..}, ... ],
+          "image_width": 600,
+          "image_height": 800
+        }
+    """
+    import cv2
+    import numpy as np
+    from app.services.face_detection import detect_all_faces
+
+    file_path = None
+    tmp_path = None
+
+    if request.content_type and "multipart" in request.content_type:
+        image_file = request.files.get("image")
+        if not image_file:
+            return jsonify({"error": "No image file provided"}), 400
+        tmp_path = os.path.join(
+            config.UPLOAD_DIR, f"detect_{uuid.uuid4().hex}.tmp"
+        )
+        image_file.save(tmp_path)
+        file_path = tmp_path
+    else:
+        data = request.get_json(silent=True) or {}
+        raw_path = data.get("file_path")
+        if not raw_path:
+            return jsonify({"error": "file_path or image upload is required"}), 400
+        try:
+            file_path = safe_photo_path(raw_path)
+            validate_magic_bytes(file_path)
+        except ValueError as exc:
+            return jsonify({"error": str(exc)}), 400
+
+    try:
+        img = cv2.imread(file_path)
+        if img is None:
+            return jsonify({"error": "Could not read image"}), 400
+
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        h, w = gray.shape[:2]
+        faces = detect_all_faces(gray)
+
+        return jsonify({
+            "faces": faces,
+            "image_width": w,
+            "image_height": h,
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if tmp_path:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+
+
 # Sheet Generator
 @app.route("/generate-sheet", methods=["POST"])
 @limiter.limit("10 per minute")

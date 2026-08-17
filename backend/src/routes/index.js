@@ -22,6 +22,7 @@ import janitorRoutes from './janitor.routes.js';
 import batchExportRoutes from './batchExport.routes.js';
 import shareRoutes from './share.routes.js';
 import complianceReportRoutes from '../../server/routes/complianceReportRoutes.js';
+import faceDetectionRoutes from './faceDetection.routes.js';
 
 const router = Router();
 
@@ -46,6 +47,7 @@ router.use('/admin', adminRoutes);
 router.use('/cleanup', cleanupRoutes);
 router.use('/admin', janitorRoutes);
 router.use('/share', shareRoutes);
+router.use('/face-detection', faceDetectionRoutes);
 router.use('/compliance-stream', complianceReportRoutes);
 
 export { healthRoutes };

@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify, send_file
 import config
 from app.services.bg_remove import remove_background
 from app.services.face_center import center_face
+from app.services.face_align import auto_rotate
 from app.services.dpi_optimizer import optimise_dpi
 from app.services.path_guard import validate_magic_bytes
 
@@ -42,6 +43,12 @@ def remove_bg():
             _f.write(image_bytes)
         validate_magic_bytes(tmp_path)
 
+        try:
+            align_result = auto_rotate(image_bytes)
+            image_bytes = align_result.corrected_bytes
+        except ValueError:
+            pass
+
         result_bytes = remove_background(image_bytes, bg_colour, attire)
         centered = center_face(result_bytes)
         final_image = optimise_dpi(centered, preset)
@@ -71,6 +78,67 @@ def remove_bg():
     except Exception as e:
         return jsonify(
             {"success": False, "message": "Background removal failed.", "detail": str(e)}), 500
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+
+
+@process_bp.post("/auto-rotate")
+def rotate_image():
+    """
+    Auto-rotate endpoint — detects face tilt and corrects it.
+    POST multipart/form-data:
+      - image : photo file (required)
+    Returns the corrected PNG directly in the response.
+    """
+    if "image" not in request.files:
+        return jsonify({"success": False, "message": "No image file provided."}), 400
+
+    file = request.files["image"]
+    if file.filename == "":
+        return jsonify({"success": False, "message": "Empty filename."}), 400
+
+    tmp_path = None
+    try:
+        image_bytes = file.read()
+        tmp_path = os.path.join(config.UPLOAD_DIR, f"_validate_{uuid.uuid4().hex}.tmp")
+        os.makedirs(config.UPLOAD_DIR, exist_ok=True)
+        with open(tmp_path, "wb") as _f:
+            _f.write(image_bytes)
+        validate_magic_bytes(tmp_path)
+
+        result = auto_rotate(image_bytes)
+
+        filename = f"{uuid.uuid4().hex}.png"
+        save_path = os.path.join(config.UPLOAD_DIR, filename)
+        with open(save_path, "wb") as f:
+            f.write(result.corrected_bytes)
+
+        response = send_file(
+            save_path,
+            mimetype="image/png",
+            as_attachment=False,
+            download_name=filename,
+        )
+
+        def _cleanup():
+            try:
+                os.unlink(save_path)
+            except OSError:
+                pass
+
+        response.call_on_close(_cleanup)
+        response.headers["X-Roll-Degrees"] = str(result.roll_degrees)
+        response.headers["X-Eyes-Detected"] = str(result.eyes_detected).lower()
+        return response
+    except ValueError as e:
+        return jsonify({"success": False, "message": str(e)}), 422
+    except Exception as e:
+        return jsonify(
+            {"success": False, "message": "Auto-rotation failed.", "detail": str(e)}), 500
     finally:
         if tmp_path and os.path.exists(tmp_path):
             try:

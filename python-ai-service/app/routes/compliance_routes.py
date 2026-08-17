@@ -93,25 +93,39 @@ def compliance_auto_correct():
             return jsonify({"error": "Could not read image"}), 400
 
         if issue == "tilt":
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            from app.services.compliance_inspector import _detect_face, _detect_eyes_and_get_tilt
-            face_rect = _detect_face(gray)
-            if not face_rect:
-                return jsonify({"error": "No face detected for auto-tilt alignment"}), 422
+            from app.services.face_align import auto_rotate
+            with open(file_path, "rb") as f:
+                img_bytes = f.read()
 
-            roll_deg, _ = _detect_eyes_and_get_tilt(gray, face_rect)
-            if abs(roll_deg) < 0.1:
-                return jsonify({"success": True, "message": "Head is already level"})
+            try:
+                result = auto_rotate(img_bytes)
+                with open(file_path, "wb") as f:
+                    f.write(result.corrected_bytes)
+                if abs(result.roll_degrees) < 0.1:
+                    return jsonify({"success": True, "message": "Head is already level"})
+                return jsonify({"success": True, "message": "Tilt corrected successfully", "roll_degrees": result.roll_degrees})
+            except ValueError as ve:
+                return jsonify({"error": str(ve)}), 422
 
-            h, w = image.shape[:2]
-            fx, fy, fw, fh = face_rect
-            center = (fx + fw // 2, fy + fh // 2)
+        elif issue == "auto-rotate":
+            from app.services.face_align import auto_rotate
+            with open(file_path, "rb") as f:
+                img_bytes = f.read()
 
-            matrix = cv2.getRotationMatrix2D(center, -roll_deg, 1.0)
-            rotated = cv2.warpAffine(image, matrix, (w, h), borderMode=cv2.BORDER_CONSTANT, borderValue=(255, 255, 255))
-
-            cv2.imwrite(file_path, rotated)
-            return jsonify({"success": True, "message": "Tilt corrected successfully"})
+            try:
+                result = auto_rotate(img_bytes)
+                with open(file_path, "wb") as f:
+                    f.write(result.corrected_bytes)
+                if abs(result.roll_degrees) < 0.1:
+                    return jsonify({"success": True, "message": "Image is already level"})
+                return jsonify({
+                    "success": True,
+                    "message": "Auto-rotation applied",
+                    "roll_degrees": result.roll_degrees,
+                    "eyes_detected": result.eyes_detected,
+                })
+            except ValueError as ve:
+                return jsonify({"error": str(ve)}), 422
 
         elif issue == "center" or issue == "dimensions":
             from app.services.face_center import center_face

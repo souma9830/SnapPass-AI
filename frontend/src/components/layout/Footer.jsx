@@ -1,14 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Mail,
-  ShieldCheck,
-  Globe,
-  BadgeCheck,
-  ArrowRight,
-  Share2,
-  User,
-} from 'lucide-react';
+import { Mail, ShieldCheck, Globe, BadgeCheck, ArrowRight } from 'lucide-react';
+import { FaLinkedinIn, FaFacebookF, FaGithub } from 'react-icons/fa';
 
 import './Footer.css';
 import { useLanguage } from '../../context/LanguageContext';
@@ -157,7 +150,7 @@ function Footer({ darkMode }) {
                 className="footer__social-link"
                 aria-label="LinkedIn"
               >
-                <Globe size={18} aria-hidden="true" />
+                <FaLinkedinIn size={16} aria-hidden="true" />
               </a>
 
               <a
@@ -165,7 +158,7 @@ function Footer({ darkMode }) {
                 className="footer__social-link"
                 aria-label="Facebook"
               >
-                <Share2 size={18} aria-hidden="true" />
+                <FaFacebookF size={16} aria-hidden="true" />
               </a>
 
               <a
@@ -173,7 +166,7 @@ function Footer({ darkMode }) {
                 className="footer__social-link"
                 aria-label="GitHub"
               >
-                <User size={18} aria-hidden="true" />
+                <FaGithub size={16} aria-hidden="true" />
               </a>
             </div>
           </div>
